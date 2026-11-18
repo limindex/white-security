@@ -31,5 +31,6 @@ User::create(['email' => $data['email'], 'password' => Hash::make($data['passwor
 if (Auth::attempt(['email' => $data['email'], 'password' => $data['password']])) {
     $request->session()->regenerate();
 }
-// 드라이버(bcrypt→argon2id)를 바꿀 때는 HASH_VERIFY 때문에 옛 해시 로그인이 실패하므로 Hashing 문서의 이전 절차를 따른다
+// 드라이버(bcrypt→argon2id)를 바꾸면 알고리즘 확인(HASH_VERIFY) 때문에 옛 해시 로그인이 실패하므로
+// 옮기는 기간에만 HASH_VERIFY=false 로 두고, 옛 해시가 모두 새 방식으로 바뀐 뒤 다시 켠다
 ```
