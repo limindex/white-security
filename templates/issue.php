@@ -111,7 +111,7 @@ if ($issue->revisions) {
 <?php foreach (['bad' => '✗ 취약 코드', 'good' => '✓ 안전 코드'] as $kind => $label): ?>
 <figure class="ws-snippet ws-snippet--<?= $kind ?>">
 <figcaption><span class="ws-snippet-label"><?= $label ?></span><button type="button" class="ws-copy" data-copy aria-label="<?= Site::e(Site::langLabel($lang)) ?> <?= $kind === 'bad' ? '취약' : '안전' ?> 코드 복사"><span class="ws-tx">복사</span></button></figcaption>
-<pre tabindex="0"><code class="lang-<?= Site::e($lang) ?>"><?= Site::e($pair[$kind]) ?></code></pre>
+<pre tabindex="0"><code class="lang-<?= Site::e(Stacks::lang($lang)) ?>"><?= Site::e($pair[$kind]) ?></code></pre>
 </figure>
 <?php endforeach ?>
 </div>

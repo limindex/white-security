@@ -108,4 +108,5 @@ $tabs = ['claude' => 'Claude Code', 'cli' => 'Codex·Cursor 등 (terminal)', 'co
 <li>흔한 실수를 줄이는 용도이며 보안 감사·침투 테스트의 대체 수단 아님.</li>
 </ul>
 </section>
+<?= $site->render('_stacks', []) ?>
 </div>

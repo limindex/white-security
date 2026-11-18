@@ -30,6 +30,7 @@
 <h2>작성 기준</h2>
 <p>OWASP·CWE·국내 진단가이드 등 <?= count($site->repo->frameworks()) ?>개 기준에 맞춰 작성 · <a href="<?= Site::e($site->url('coverage')) ?>">점검 기준 대응표</a></p>
 </section>
+<?= $site->render('_stacks', []) ?>
 <section class="ws-sec">
 <h2>라이선스</h2>
 <p>문서와 스킬 본문은 CC BY-SA 4.0, 예시 코드와 스크립트는 MIT. <?php if ($site->pageOn('sources')): ?>자세한 내용은 <a href="<?= Site::e($site->url('sources')) ?>">출처·라이선스</a>.<?php endif ?></p>

@@ -12,7 +12,7 @@ final class Site
         'severity' => ['title' => '심각도 기준', 'section' => '시작하기', 'lead' => '위험·주의·참고 등급의 판정 기준 · 영향과 악용 쉬움의 조합'],
         'guide' => ['title' => '문서 읽는 법', 'section' => '시작하기', 'lead' => '문서 번호 체계·절 구성·문서 정보·기준 번호의 의미'],
         'glossary' => ['title' => '용어 사전', 'section' => '참고', 'lead' => '보안 업계 용어와 공식 용어의 쉬운 풀이·관련 이슈'],
-        'coverage' => ['title' => '점검 기준 대응표', 'section' => '참고', 'nav' => false, 'lead' => '공인 보안 기준 8종의 항목별 대응 이슈와 빈칸'],
+        'coverage' => ['title' => '점검 기준 대응표', 'section' => '참고', 'nav' => false, 'lead' => '공인 보안 기준의 항목별 대응 이슈와 빈칸'],
         'changelog' => ['title' => '개정 이력', 'section' => '참고', 'lead' => '스킬과 문서의 버전별 변경 내역'],
         'sources' => ['title' => '출처·라이선스', 'section' => '참고', 'lead' => '문서·코드·글꼴의 라이선스와 인용 원칙'],
     ];
@@ -23,7 +23,6 @@ final class Site
     public const BRAND_DESC = '바이브 코딩 보안 가이드';
     private const ID_RE = '/^WS-[A-Z]{2,5}-\d{3}$/';
     public const SEVERITY_LABELS = ['high' => '위험', 'medium' => '주의', 'low' => '참고'];
-    public const LANG_LABELS = ['python' => 'Python', 'php' => 'PHP', 'js' => 'JavaScript', 'ts' => 'TypeScript', 'go' => 'Go', 'java' => 'Java', 'ruby' => 'Ruby', 'shell' => 'Shell', 'yaml' => 'YAML'];
 
     public readonly DateTimeImmutable $today;
 
@@ -73,7 +72,34 @@ final class Site
         return $id;
     }
 
-    public static function langLabel(string $lang): string { return self::LANG_LABELS[$lang] ?? $lang; }
+    /** 코드 탭 이름(data/stacks.json 의 label) */
+    public static function langLabel(string $lang): string { return Stacks::label($lang); }
+
+    /**
+     * 지원 스택: 이슈에 코드 예시가 하나라도 있는 스택만 묶음별로(이슈 0개는 적지 않는다). 기타(설정·파일 형식) 묶음은 뺀다.
+     * items 는 묶음 이름에 이미 들어 있는 이름(Python·JavaScript·TypeScript·PHP)을 뺀 나머지 label.
+     * @return list<array{name:string,items:list<string>}>
+     */
+    public function supportedStacks(): array
+    {
+        $used = [];
+        foreach ($this->repo->all() as $i) foreach (array_keys($i->code) as $k) $used[$k] = true;
+        $by = Stacks::byKey();
+        $out = [];
+        foreach (Stacks::groups() as $g) {
+            if ($g['id'] === 'other') continue;
+            $own = preg_split('/·/u', $g['name']);
+            $items = [];
+            $any = false;
+            foreach ($by as $s) {
+                if ($s['stack'] !== $g['id'] || !isset($used[$s['key']])) continue;
+                $any = true;
+                if (!in_array($s['label'], $own, true)) $items[] = $s['label'];
+            }
+            if ($any) $out[] = ['name' => $g['name'], 'items' => $items];
+        }
+        return $out;
+    }
 
     /** 머리말 maps 키 → 화면 이름 (data/frameworks 가 출처, 모르는 키는 키 그대로) */
     public static function mapLabel(string $key): string { return Coverage::names()[$key] ?? $key; }
