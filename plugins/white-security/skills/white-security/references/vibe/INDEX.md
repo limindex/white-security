@@ -2,7 +2,7 @@
 # vibe · AI 코딩 도구
 
 When: AI 코딩 도구에 코드 작성·설정 변경·명령 실행을 맡기는 경우
-Match code signals to the lines below, then read only the matching issue file (`<ID>.md` in this folder), at most 2.
+Signals are candidates, not findings: open the matching `<ID>.md` here (max 2 per task) and decide with its checks (constant or request value?).
 Stacks: Python · JavaScript · Shell · JSON
 
 - `tools=` `@tool` `function_declarations` `tool_calls` `function_call` → WS-AGT-001 Excessive Agency

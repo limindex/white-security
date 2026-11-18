@@ -1,17 +1,6 @@
 <!-- generated from white-security issues; do not edit -->
 # WS-AUTH-006 Mass Assignment (대량 할당·속성 수준 권한)
 
-심각도: 위험
-기준: OWASP Top 10:2025 A01(접근 통제 실패) · OWASP API 2023 API3(객체 속성 수준 권한 검증 실패) · ASVS 5.0 V8.2.3 · ASVS 5.0 V15.3.3 · CWE-915 · CWE-863(잘못된 권한 부여) · 국내 보안약점 49 입력데이터 검증 및 표현-15(보안기능 결정에 사용되는 부적절한 입력값) · 기반시설 웹 21 IN(불충분한 권한 검증)
-
-## 점검 항목
-
-- 생성·수정 API는 바꿔도 되는 필드만 허용 목록(검증 규칙·DTO·serializer `fields`)으로 받아야 한다.
-- 역할·권한·포인트·잔액·소유자·결제 상태는 요청 값으로 바꾸지 않아야 한다.
-- Laravel은 `$guarded = []`·`Model::unguard()`·요청 값을 넣은 `forceFill()`을 쓰지 않아야 한다.
-- 관리자용 수정 API와 일반 사용자용 수정 API는 허용 필드를 따로 둬야 한다.
-- 응답은 필요한 필드만 골라 보내야 한다(비밀번호 해시·내부 메모 제외).
-
 ## 탐지 규칙
 
 - **찾는 곳**: `$guarded = []`, `$request->all()`, `forceFill(`, `"__all__"`, `data: body`, `**payload`, 그 밖에 ...body 펼치기, model_dump() 결과를 그대로 넘기는 갱신, setattr 반복, Object.assign.
@@ -21,4 +10,15 @@
 - **보고 예**: `[위험] WS-AUTH-006 app/api/me/route.ts:9 — 요청 JSON 을 그대로 prisma.user.update 의 data 로 넘겨 role 변경 가능 → zod strict 스키마로 nickname·marketingOptIn 만 받기`
 - **고칠 방법**: 허용 목록 방식으로 바꿔야 한다(막을 필드 목록이 아니라 받을 필드 목록). 응답도 `select`·응답 스키마로 필드를 골라야 한다.
 
+## 점검 항목
+
+- 생성·수정 API는 바꿔도 되는 필드만 허용 목록(검증 규칙·DTO·serializer `fields`)으로 받아야 한다.
+- 역할·권한·포인트·잔액·소유자·결제 상태는 요청 값으로 바꾸지 않아야 한다.
+- Laravel은 `$guarded = []`·`Model::unguard()`·요청 값을 넣은 `forceFill()`을 쓰지 않아야 한다.
+- 관리자용 수정 API와 일반 사용자용 수정 API는 허용 필드를 따로 둬야 한다.
+- 응답은 필요한 필드만 골라 보내야 한다(비밀번호 해시·내부 메모 제외).
+
 Code examples (read only the file for the stack you are writing): `WS-AUTH-006.code.laravel.md` (Laravel) · `WS-AUTH-006.code.nextjs.md` (Next.js) · `WS-AUTH-006.code.django.md` (Django)
+
+기본 심각도: 위험
+기준: OWASP Top 10:2025 A01(접근 통제 실패) · OWASP API 2023 API3(객체 속성 수준 권한 검증 실패) · ASVS 5.0 V8.2.3 · ASVS 5.0 V15.3.3 · CWE-915 · CWE-863(잘못된 권한 부여) · 국내 보안약점 49 입력데이터 검증 및 표현-15(보안기능 결정에 사용되는 부적절한 입력값) · 기반시설 웹 21 IN(불충분한 권한 검증)

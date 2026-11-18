@@ -1,18 +1,6 @@
 <!-- generated from white-security issues; do not edit -->
 # WS-INJ-004 NoSQL·LDAP·XPath Injection (NoSQL·LDAP·XPath 삽입)
 
-심각도: 위험
-기준: OWASP Top 10:2025 A05(삽입) · ASVS 5.0 V1.2.4 · ASVS 5.0 V1.2.6 · ASVS 5.0 V1.2.7 · ASVS 5.0 V15.3.5 · CWE-943 · CWE-90 · CWE-643 · CWE-20(입력값 검증 미흡) · 국내 보안약점 49 입력데이터 검증 및 표현-9(XML 삽입) · 국내 보안약점 49 입력데이터 검증 및 표현-10(LDAP 삽입) · 기반시설 웹 21 CI(코드 인젝션)
-
-## 점검 항목
-
-- NoSQL 조회 값은 스키마 검증이나 `String()`으로 기대한 형인지 확인해야 한다.
-- 요청 본문을 조회 조건 객체로 통째로 넘기지 않아야 한다.
-- `$where`·`$function`·`mapReduce`처럼 서버에서 JS를 돌리는 기능은 쓰지 않아야 한다.
-- Mongoose는 `sanitizeFilter` 옵션을 켜 둬야 한다.
-- LDAP 필터 값은 `escape_filter_chars`로, DN 값은 DN용 이스케이프로 처리해야 한다.
-- XPath 식에 입력을 이어 붙이지 말고 변수 바인딩이나 허용 목록 검사를 거쳐야 한다.
-
 ## 탐지 규칙
 
 - **찾는 곳**: `findOne(req.body`, `find(req.query`, `$where`, `ldap_search(`, `xpath(`, 그 밖에 req.body·req.query 를 받는 findOne·updateOne·aggregate, ldap3 search 필터, 문자열로 만든 LDAP 필터.
@@ -23,4 +11,16 @@
 - **보고 예**: `[위험] WS-INJ-004 routes/auth.js:9 — req.body.password 를 형 확인 없이 findOne 조건에 넣음 → 문자열 확인 후 해시 비교, mongoose sanitizeFilter 켜기`
 - **고칠 방법**: 조회 직전에 형 확인을 넣고, 같은 모델을 쓰는 다른 라우트에도 같은 검사가 있는지 확인해야 한다.
 
+## 점검 항목
+
+- NoSQL 조회 값은 스키마 검증이나 `String()`으로 기대한 형인지 확인해야 한다.
+- 요청 본문을 조회 조건 객체로 통째로 넘기지 않아야 한다.
+- `$where`·`$function`·`mapReduce`처럼 서버에서 JS를 돌리는 기능은 쓰지 않아야 한다.
+- Mongoose는 `sanitizeFilter` 옵션을 켜 둬야 한다.
+- LDAP 필터 값은 `escape_filter_chars`로, DN 값은 DN용 이스케이프로 처리해야 한다.
+- XPath 식에 입력을 이어 붙이지 말고 변수 바인딩이나 허용 목록 검사를 거쳐야 한다.
+
 Code examples (read only the file for the stack you are writing): `WS-INJ-004.code.express.md` (Express) · `WS-INJ-004.code.fastapi.md` (FastAPI) · `WS-INJ-004.code.python.md` (Python)
+
+기본 심각도: 위험
+기준: OWASP Top 10:2025 A05(삽입) · ASVS 5.0 V1.2.4 · ASVS 5.0 V1.2.6 · ASVS 5.0 V1.2.7 · ASVS 5.0 V15.3.5 · CWE-943 · CWE-90 · CWE-643 · CWE-20(입력값 검증 미흡) · 국내 보안약점 49 입력데이터 검증 및 표현-9(XML 삽입) · 국내 보안약점 49 입력데이터 검증 및 표현-10(LDAP 삽입) · 기반시설 웹 21 CI(코드 인젝션)

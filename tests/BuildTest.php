@@ -72,7 +72,8 @@ test('build: 스킬 references — 플러그인 폴더에 묶음별 INDEX·이�
     assert_true(!is_file("$ref/people/WS-PPL-001.md") && !is_dir("$ref/people"), 'site_only 제외');
     assert_true(is_file("$ref/web/INDEX.md") && !is_file("$ref/INDEX.md"), '묶음 INDEX 만');
     assert_contains('plugins/white-security/skills/white-security/references', $out);
-    assert_contains('SKILL.md', $out); // SKILL.md 가 없으면 라우팅 표를 넣지 않았다고 알린다
+    assert_contains('SKILL.md 라우팅 표를 갱신했습니다', $out);
+    assert_contains('description', $out); // 항상 로드되는 설명의 길이·토큰 추정을 알린다
 });
 
 test('build: 같은 입력이면 출력이 바이트까지 같다', function () {

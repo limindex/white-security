@@ -2,7 +2,7 @@
 # ai-use · AI 활용
 
 When: AI에 문서·웹페이지·메일을 읽히거나 요약시키는 기능, AI API 호출, 문서 검색 답변(RAG), AI 답변을 화면·판단에 쓰는 기능
-Match code signals to the lines below, then read only the matching issue file (`<ID>.md` in this folder), at most 2.
+Signals are candidates, not findings: open the matching `<ID>.md` here (max 2 per task) and decide with its checks (constant or request value?).
 Stacks: Python · JavaScript · PHP
 
 - `eval(` `exec(` `subprocess.` `shell_exec(` `cursor.execute(` `innerHTML =` `dangerouslySetInnerHTML` `v-html` → WS-LLM-001 Improper Output Handling

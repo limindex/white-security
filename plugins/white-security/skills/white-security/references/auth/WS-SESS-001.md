@@ -1,18 +1,6 @@
 <!-- generated from white-security issues; do not edit -->
 # WS-SESS-001 Broken Session Management (세션·토큰 관리 미흡)
 
-심각도: 위험
-기준: OWASP Top 10:2025 A07(인증 실패) · OWASP API 2023 API2(인증 실패) · ASVS 5.0 V7.2.4 · ASVS 5.0 V7.4.1 · ASVS 5.0 V9.1.1 · ASVS 5.0 V9.1.2 · ASVS 5.0 V9.2.1 · ASVS 5.0 V9.2.3 · ASVS 5.0 V3.3.1 · ASVS 5.0 V3.3.4 · CWE-384 · CWE-347 · CWE-613 · CWE-1004 · CWE-614 · 국내 보안약점 49 보안기능-10(부적절한 전자서명 확인) · 국내 보안약점 49 보안기능-12(사용자 하드디스크에 저장되는 쿠키를 통한 정보 노출) · 기반시설 웹 21 IS(불충분한 세션 관리) · 기반시설 웹 21 CC(쿠키 변조)
-
-## 점검 항목
-
-- 로그인·권한 상승 때 세션 ID를 새로 만들고, 로그아웃 때 서버 쪽 세션을 지워야 한다.
-- JWT는 서명을 확인하는 함수로 읽어야 하고, 내용만 읽는 `decode`를 믿지 않아야 한다.
-- 허용 알고리즘은 하나로 고정하고 `exp`·`iss`·`aud`를 검사해야 한다.
-- 서명 키는 32바이트 이상 무작위 값으로 코드 밖에 둬야 한다(HS256 기준).
-- 세션 쿠키는 `HttpOnly`·`Secure`·`SameSite`를 켜고, 로그인 토큰은 가능하면 `localStorage`를 피해야 한다.
-- 세션에는 비활동·최대 유지 시간을 두고, 비밀번호 변경 때 다른 세션을 끊을 수 있어야 한다.
-
 ## 탐지 규칙
 
 - **찾는 곳**: `jwt.decode(`, `decodeJwt(`, `jwtVerify(`, `ignoreExpiration`, `verify_signature`, `session_regenerate_id(`, 그 밖에 jsonwebtoken·PyJWT·jose 사용, config/session.php, 쿠키 옵션(httpOnly·secure·sameSite), localStorage 에 토큰 저장.
@@ -23,4 +11,16 @@
 - **보고 예**: `[위험] WS-SESS-001 app/auth.py:12 — jwt.decode 에 verify_signature False 로 서명을 확인하지 않음 → 키와 algorithms=["HS256"], audience·issuer, require exp 로 검증`
 - **고칠 방법**: 토큰은 검증 함수 하나로만 읽게 모아야 하고, 세션은 로그인·로그아웃·비밀번호 변경 때 서버에서 새로 만들거나 지워야 한다.
 
+## 점검 항목
+
+- 로그인·권한 상승 때 세션 ID를 새로 만들고, 로그아웃 때 서버 쪽 세션을 지워야 한다.
+- JWT는 서명을 확인하는 함수로 읽어야 하고, 내용만 읽는 `decode`를 믿지 않아야 한다.
+- 허용 알고리즘은 하나로 고정하고 `exp`·`iss`·`aud`를 검사해야 한다.
+- 서명 키는 32바이트 이상 무작위 값으로 코드 밖에 둬야 한다(HS256 기준).
+- 세션 쿠키는 `HttpOnly`·`Secure`·`SameSite`를 켜고, 로그인 토큰은 가능하면 `localStorage`를 피해야 한다.
+- 세션에는 비활동·최대 유지 시간을 두고, 비밀번호 변경 때 다른 세션을 끊을 수 있어야 한다.
+
 Code examples (read only the file for the stack you are writing): `WS-SESS-001.code.laravel.md` (Laravel) · `WS-SESS-001.code.nextjs.md` (Next.js) · `WS-SESS-001.code.fastapi.md` (FastAPI)
+
+기본 심각도: 위험
+기준: OWASP Top 10:2025 A07(인증 실패) · OWASP API 2023 API2(인증 실패) · ASVS 5.0 V7.2.4 · ASVS 5.0 V7.4.1 · ASVS 5.0 V9.1.1 · ASVS 5.0 V9.1.2 · ASVS 5.0 V9.2.1 · ASVS 5.0 V9.2.3 · ASVS 5.0 V3.3.1 · ASVS 5.0 V3.3.4 · CWE-384 · CWE-347 · CWE-613 · CWE-1004 · CWE-614 · 국내 보안약점 49 보안기능-10(부적절한 전자서명 확인) · 국내 보안약점 49 보안기능-12(사용자 하드디스크에 저장되는 쿠키를 통한 정보 노출) · 기반시설 웹 21 IS(불충분한 세션 관리) · 기반시설 웹 21 CC(쿠키 변조)

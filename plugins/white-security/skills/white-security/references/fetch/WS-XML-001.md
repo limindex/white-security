@@ -1,18 +1,6 @@
 <!-- generated from white-security issues; do not edit -->
 # WS-XML-001 XXE · Billion Laughs
 
-심각도: 위험
-기준: OWASP Top 10:2025 A02(보안 설정 오류) · ASVS 5.0 V1.5 · CWE-611 · CWE-776 · 국내 보안약점 49 입력데이터 검증 및 표현-8(부적절한 XML 외부 개체 참조)
-
-## 점검 항목
-
-- 외부에서 온 XML에 DTD(`<!DOCTYPE`)가 있으면 거절해야 한다. DTD가 꼭 필요하면 외부 개체·외부 DTD 로딩을 끄고 개체 확장 한도를 둬야 하며, XInclude와 XSLT의 외부 문서 불러오기도 꺼야 한다.
-- Python: 외부 XML은 표준 `xml.*` 대신 `defusedxml`(`forbid_dtd=True`)로 읽어야 한다. lxml은 `resolve_entities=False`, `no_network=True`, `load_dtd=False`로 둬야 하고, 표준 모듈을 써야 하면 `pyexpat.EXPAT_VERSION`이 2.7.2 이상인지 확인해야 한다.
-- PHP: 외부 XML에 `LIBXML_NOENT`, `LIBXML_DTDLOAD`, `LIBXML_DTDVALID`, `LIBXML_PARSEHUGE`를 쓰지 않아야 한다. PHP 8.4 이상·libxml 2.13 이상이면 `LIBXML_NO_XXE` 사용 가능. `libxml_disable_entity_loader()`는 PHP 8.0부터 폐기된 함수라 기대지 않아야 한다.
-- Node: `libxmljs`에서 `noent: true`를 쓰지 않아야 하고, `fast-xml-parser`는 `processEntities: false`로 둬야 한다.
-- 요청 본문·업로드 파일·압축을 푼 뒤의 크기에 각각 상한을 둬야 하고, 파서 오류 원문은 응답에 넣지 않아야 한다(읽어 온 파일 내용이 오류 문장에 섞여 나올 수 있음).
-- SVG, 오피스 파일, RSS, SAML 응답처럼 XML인 줄 모르고 다루는 형식도 같은 파서 설정을 거쳐야 한다.
-
 ## 탐지 규칙
 
 - **찾는 곳**: XML 파싱 호출과 입력 출처(Python `etree.fromstring(`, `lxml.etree.XMLParser(`, `xml.etree` · PHP `simplexml_load_string(`, `loadXML(`, `LIBXML_NOENT` · Node `libxmljs`, `fast-xml-parser` · 그 밖에 Python `xml.dom.minidom`, `xml.sax`, `etree.parse(` · PHP `DOMDocument::load(`, `simplexml_load_file(`, `XMLReader` · Node `parseXml(`, `xml2js`, `@xmldom/xmldom`).
@@ -23,4 +11,16 @@
 - **보고 예**: `[위험] WS-XML-001 api/import.py:27 — 업로드한 XML을 resolve_entities=True 인 lxml 파서로 읽음(XXE) → defusedxml.ElementTree.fromstring(data, forbid_dtd=True) 로 바꿈`
 - **고칠 방법**: 정상 문서에 DTD가 정말 필요한지 먼저 확인하고(대부분 불필요) DTD 거절을 기본으로 둬야 한다. 보고에는 XXE면 CWE-611, 엔티티 폭탄이면 CWE-776을 함께 적어야 한다.
 
+## 점검 항목
+
+- 외부에서 온 XML에 DTD(`<!DOCTYPE`)가 있으면 거절해야 한다. DTD가 꼭 필요하면 외부 개체·외부 DTD 로딩을 끄고 개체 확장 한도를 둬야 하며, XInclude와 XSLT의 외부 문서 불러오기도 꺼야 한다.
+- Python: 외부 XML은 표준 `xml.*` 대신 `defusedxml`(`forbid_dtd=True`)로 읽어야 한다. lxml은 `resolve_entities=False`, `no_network=True`, `load_dtd=False`로 둬야 하고, 표준 모듈을 써야 하면 `pyexpat.EXPAT_VERSION`이 2.7.2 이상인지 확인해야 한다.
+- PHP: 외부 XML에 `LIBXML_NOENT`, `LIBXML_DTDLOAD`, `LIBXML_DTDVALID`, `LIBXML_PARSEHUGE`를 쓰지 않아야 한다. PHP 8.4 이상·libxml 2.13 이상이면 `LIBXML_NO_XXE` 사용 가능. `libxml_disable_entity_loader()`는 PHP 8.0부터 폐기된 함수라 기대지 않아야 한다.
+- Node: `libxmljs`에서 `noent: true`를 쓰지 않아야 하고, `fast-xml-parser`는 `processEntities: false`로 둬야 한다.
+- 요청 본문·업로드 파일·압축을 푼 뒤의 크기에 각각 상한을 둬야 하고, 파서 오류 원문은 응답에 넣지 않아야 한다(읽어 온 파일 내용이 오류 문장에 섞여 나올 수 있음).
+- SVG, 오피스 파일, RSS, SAML 응답처럼 XML인 줄 모르고 다루는 형식도 같은 파서 설정을 거쳐야 한다.
+
 Code examples (read only the file for the stack you are writing): `WS-XML-001.code.python.md` (Python) · `WS-XML-001.code.js.md` (JavaScript) · `WS-XML-001.code.php.md` (PHP)
+
+기본 심각도: 위험
+기준: OWASP Top 10:2025 A02(보안 설정 오류) · ASVS 5.0 V1.5 · CWE-611 · CWE-776 · 국내 보안약점 49 입력데이터 검증 및 표현-8(부적절한 XML 외부 개체 참조)

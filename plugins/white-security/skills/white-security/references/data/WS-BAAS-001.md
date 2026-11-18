@@ -1,18 +1,6 @@
 <!-- generated from white-security issues; do not edit -->
 # WS-BAAS-001 Missing RLS (Supabase 행 수준 보안 누락)
 
-심각도: 위험
-기준: OWASP Top 10:2025 A01(접근 통제 실패) · OWASP Top 10:2025 A02(보안 설정 오류) · OWASP API 2023 API1(객체 수준 권한 검증 실패) · OWASP API 2023 API8(보안 설정 오류) · ASVS 5.0 V8.2.2 · ASVS 5.0 V8.3.1 · ASVS 5.0 V13.3.2 · CWE-284(접근 통제 미흡) · CWE-862(권한 검사 누락) · CWE-639(사용자 제어 키를 통한 권한 우회) · CWE-798 · 국내 보안약점 49 보안기능-2(부적절한 인가) · 국내 보안약점 49 보안기능-6(하드코드된 중요정보) · 기반시설 웹 21 IN(불충분한 권한 검증)
-
-## 점검 항목
-
-- public 스키마의 모든 테이블에 RLS를 켜야 한다.
-- 정책은 `using (true)` 대신 `(select auth.uid()) = user_id`처럼 본인 행만 허용해야 한다.
-- update 정책에는 `with check`도 넣어 남의 user_id로 바꾸지 못하게 해야 한다.
-- 권한 판단에 사용자가 고칠 수 있는 `user_metadata`를 쓰지 않아야 한다.
-- 뷰는 `security_invoker = true`로 만들어 RLS를 건너뛰지 않게 해야 한다.
-- service_role·`sb_secret_` 키는 서버에만 두고, 브라우저엔 publishable 키만 써야 한다.
-
 ## 탐지 규칙
 
 - **찾는 곳**: `service_role`, `sb_secret_`, `createClient(`, `using (true)`, `disable row level security`, `security definer`, `user_metadata`, `storage.objects`, 그 밖에 security_invoker, Supabase 마이그레이션의 create table, NEXT_PUBLIC_·VITE_·EXPO_PUBLIC_ 환경 변수.
@@ -23,4 +11,16 @@
 - **보고 예**: `[위험] WS-BAAS-001 supabase/migrations/0001_init.sql:3 — notes 테이블에 RLS 없음, anon 키로 전체 조회 가능 → enable row level security 와 본인 행 정책 추가`
 - **고칠 방법**: RLS를 켜는 마이그레이션을 새로 추가해야 하고, 기존 화면의 조회마다 정책이 허용하는지 다른 계정으로 확인해야 한다.
 
+## 점검 항목
+
+- public 스키마의 모든 테이블에 RLS를 켜야 한다.
+- 정책은 `using (true)` 대신 `(select auth.uid()) = user_id`처럼 본인 행만 허용해야 한다.
+- update 정책에는 `with check`도 넣어 남의 user_id로 바꾸지 못하게 해야 한다.
+- 권한 판단에 사용자가 고칠 수 있는 `user_metadata`를 쓰지 않아야 한다.
+- 뷰는 `security_invoker = true`로 만들어 RLS를 건너뛰지 않게 해야 한다.
+- service_role·`sb_secret_` 키는 서버에만 두고, 브라우저엔 publishable 키만 써야 한다.
+
 Code examples (read only the file for the stack you are writing): `WS-BAAS-001.code.supabase.md` (Supabase) · `WS-BAAS-001.code.sql.md` (SQL) · `WS-BAAS-001.code.nextjs.md` (Next.js)
+
+기본 심각도: 위험
+기준: OWASP Top 10:2025 A01(접근 통제 실패) · OWASP Top 10:2025 A02(보안 설정 오류) · OWASP API 2023 API1(객체 수준 권한 검증 실패) · OWASP API 2023 API8(보안 설정 오류) · ASVS 5.0 V8.2.2 · ASVS 5.0 V8.3.1 · ASVS 5.0 V13.3.2 · CWE-284(접근 통제 미흡) · CWE-862(권한 검사 누락) · CWE-639(사용자 제어 키를 통한 권한 우회) · CWE-798 · 국내 보안약점 49 보안기능-2(부적절한 인가) · 국내 보안약점 49 보안기능-6(하드코드된 중요정보) · 기반시설 웹 21 IN(불충분한 권한 검증)

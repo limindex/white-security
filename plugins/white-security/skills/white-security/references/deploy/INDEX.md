@@ -2,7 +2,7 @@
 # deploy · 설정·배포
 
 When: 설정 파일·키·서버·컨테이너·배포 환경
-Match code signals to the lines below, then read only the matching issue file (`<ID>.md` in this folder), at most 2.
+Signals are candidates, not findings: open the matching `<ID>.md` here (max 2 per task) and decide with its checks (constant or request value?).
 Stacks: Python · FastAPI · Django · Flask · JavaScript · Next.js · PHP · Laravel · Supabase · Shell · YAML · Dockerfile · Nginx
 
 - `APP_DEBUG=true` `DEBUG = True` `debug=True` `FLASK_DEBUG` `manage.py runserver` `flask run` → WS-CFG-001 Debug Mode in Production
