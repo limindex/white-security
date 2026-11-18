@@ -2,7 +2,8 @@
 /**
  * 스킬 설치: 탭(Claude Code · 직접 복사) → 번호 단계(명령 한 상자 하나 + 짧은 설명 + 예시 출력) → Troubleshooting.
  * 명령 값은 data/site.json(marketplace · plugin_id · github)에서만. 비면 명령을 그리지 않는다.
- * 탭은 설치와 발동을 손으로 확인한 도구만(설계 11절). Codex·Cursor 등은 실제 확인 뒤에 탭을 다시 연다.
+ * 탭은 설치와 발동을 손으로 확인한 도구만(설계 11절). Codex·Cursor·직접 복사는 실제 확인 뒤에 다시 연다
+ * (직접 복사는 스킬 분리 11-18 뒤 검토 에이전트·규칙 폴더 허용이 따라가지 않아 숨김. 패널은 $tabs 에 'copy' 를 더하면 다시 나옴).
  * 설명 문장은 한국어(터미널·저장소·명령), 화면 라벨·고유명사(Marketplace·Plugin·command·Claude Code…)는 원문 그대로.
  * @var Site $site @var string $title @var string $lead
  */
@@ -31,10 +32,10 @@ $step = fn(int $n, string $head, string $tag, string $desc, string $body): strin
 /** 사용법 안내: 큰 줄 = 한마디 프롬프트, 작은 줄 = 확실하게 실행하려면(command 또는 스킬 이름 프롬프트) */
 $use = fn(string $sub): string => $prompt('보안 점검해 줘')
     . '<div class="ws-step-sub"><p class="ws-step-sub-h">확실하게 실행하려면</p>' . $sub . '</div>';
-$tabs = ['claude' => 'Claude Code', 'copy' => '직접 복사'];
+$tabs = ['claude' => 'Claude Code'];
 $report = $site->render('_report', []);
 /** 첫 실행 허용 안내(Plugin 설치만): 스킬은 allowed-tools 로 자기 설치 폴더만 읽음(훅·설정 변경 없음) */
-$allow = '<p class="ws-step-note">' . Site::t('처음 쓸 때 Claude Code가 White Security 스킬 실행 허용을 한 번 확인. 허용 범위는 이 스킬의 규칙 폴더 읽기뿐이며 훅 설치나 설정 변경 없음.') . '</p>';
+$allow = '<p class="ws-step-note">' . Site::t('보안 점검을 처음 요청할 때 Claude Code가 검토 스킬 실행 허용을 한 번 확인. 허용 범위는 이 Plugin의 규칙 폴더 읽기뿐이며 훅 설치나 설정 변경 없음. 코드 작성 중 자동 점검은 허용 확인 없이 동작.') . '</p>';
 ?>
 <div class="ws-page">
 <?= $site->render('_pagehead', ['title' => $title, 'lead' => $lead]) ?>
@@ -44,14 +45,17 @@ $allow = '<p class="ws-step-note">' . Site::t('처음 쓸 때 Claude Code가 Whi
 <p class="ws-note"><span class="ws-tx">공개 전 · 설치 명령은 저장소 공개 후 동작</span></p>
 <?php endif ?>
 
-<div class="ws-itabs" data-tabs>
+<?php $multi = count($tabs) > 1; ?>
+<div class="ws-itabs"<?= $multi ? ' data-tabs' : '' ?>>
+<?php if (count($tabs) > 1): ?>
 <div class="ws-itabs-list" role="tablist" aria-label="설치 방법">
 <?php foreach ($tabs as $id => $label): ?>
 <button type="button" role="tab" id="tab-inst-<?= $id ?>" aria-controls="inst-<?= $id ?>" aria-selected="<?= $id === 'claude' ? 'true' : 'false' ?>" class="ws-itab"><span class="ws-tx"><?= Site::e($label) ?></span></button>
 <?php endforeach ?>
 </div>
+<?php endif ?>
 
-<section class="ws-ipanel" id="inst-claude" role="tabpanel" aria-labelledby="tab-inst-claude">
+<section class="ws-ipanel<?= $multi ? '' : ' ws-ipanel--solo' ?>" id="inst-claude"<?= $multi ? ' role="tabpanel" aria-labelledby="tab-inst-claude"' : '' ?>>
 <h2 class="ws-ipanel-h">Claude Code</h2>
 <ol class="ws-steps">
 <?= $step(1, '준비 확인', '', '터미널에서 실행. Claude Code 대화창이 열리면 준비 완료, 없으면 <a href="https://code.claude.com/docs/en/setup" rel="noopener noreferrer">Claude Code 공식 설치 문서</a> 참고.',
@@ -65,6 +69,7 @@ $allow = '<p class="ws-step-note">' . Site::t('처음 쓸 때 Claude Code가 Whi
 </ol>
 </section>
 
+<?php if (isset($tabs['copy'])): ?>
 <section class="ws-ipanel" id="inst-copy" role="tabpanel" aria-labelledby="tab-inst-copy">
 <h2 class="ws-ipanel-h">직접 복사</h2>
 <ol class="ws-steps">
@@ -76,6 +81,7 @@ $allow = '<p class="ws-step-note">' . Site::t('처음 쓸 때 Claude Code가 Whi
     $use($prompt($pluginName . ' 스킬로 보안 점검해 줘')) . $report) ?>
 </ol>
 </section>
+<?php endif ?>
 </div>
 
 <details class="ws-trouble">
@@ -94,8 +100,8 @@ $allow = '<p class="ws-step-note">' . Site::t('처음 쓸 때 Claude Code가 Whi
 <h2>설치 후 동작</h2>
 <ul>
 <li>대화창에 “보안 점검해 줘” 한마디면 위험·주의·참고 등급별 보고. 등급 뜻은 <a href="<?= Site::e($site->url('severity')) ?>">심각도 기준</a>.</li>
-<li>확실하게 실행하려면 <code>/<?= Site::e($pluginName ?: 'white-security') ?>:review</code>. 직접 복사로 설치했다면 “<?= Site::e($pluginName ?: 'white-security') ?> 스킬로 보안 점검해 줘”.</li>
-<li>코드 작성·수정 중 위험한 코드는 별도 요청 없이 스킬이 자동 점검.</li>
+<li>확실하게 실행하려면 <code>/<?= Site::e($pluginName ?: 'white-security') ?>:review</code>.</li>
+<li>코드 작성·수정 중 위험한 코드는 별도 요청 없이 스킬이 자동 점검. 파일 읽기·허용 확인 없음.</li>
 <li>흔한 실수를 줄이는 용도이며 보안 감사·침투 테스트의 대체 수단 아님.</li>
 </ul>
 </section>

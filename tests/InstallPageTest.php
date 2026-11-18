@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/support.php';
 
-/** 설치 페이지: 탭(Claude Code · 직접 복사, 확인한 도구만) · 번호 단계 · command 한 상자 하나 · 예시 출력 · 보고 예시 표 · Troubleshooting */
+/** 설치 페이지: Claude Code 하나(확인한 도구만, 직접 복사·Codex·Cursor 는 실측 뒤) · 번호 단계 · command 한 상자 하나 · 예시 출력 · 보고 예시 표 · Troubleshooting */
 const INST_JSON = '{"publisher": "LimIndex", "github": "https://github.com/limindex/white-security", "marketplace": "limindex/skills", "plugin_id": "white-security@limindex", "released": false}';
 
 function inst_body(?string $json = INST_JSON): string
@@ -11,12 +11,14 @@ function inst_body(?string $json = INST_JSON): string
     return (new Site(Repository::load($root), '/white-security/', 'live', new DateTimeImmutable('2026-11-18')))->route('install')['body'];
 }
 
-test('설치: 탭 2개(확인한 도구만), Claude Code 가 첫 탭, Codex·Cursor 탭 없음', function () {
+test('설치: 확인한 도구만 — Claude Code 판 하나(탭 줄 없음), 직접 복사·Codex·Cursor 없음', function () {
     $b = nw_strip(inst_body());
-    assert_true((bool)preg_match_all('#<button type="button" role="tab"[^>]*>(?:<span class="ws-tx">)?([^<]+)#u', $b, $m), '탭');
-    assert_same(['Claude Code', '직접 복사'], $m[1]);
+    assert_true(!str_contains($b, 'role="tab"'), '판이 하나면 탭 줄 없음');
+    assert_contains('id="inst-claude"', $b);
+    assert_true(!str_contains($b, 'inst-copy') && !str_contains($b, 'git clone'), '직접 복사 숨김(스킬 분리 뒤 검토 에이전트·규칙 폴더 허용이 따라가지 않음, 이름 review 가 개인 스킬과 겹침)');
     assert_true(!str_contains($b, 'inst-cli') && !str_contains($b, 'npx skills'), '확인 전 도구 탭 없음');
-    assert_true((bool)preg_match('#<div class="ws-itabs" data-tabs>#', $b), '탭 묶음');
+    assert_true((bool)preg_match('#<div class="ws-itabs">#', $b) && !str_contains($b, 'data-tabs') && !str_contains($b, 'role="tabpanel"'), '판 하나: 탭 역할 없음');
+    assert_contains('ws-ipanel--solo', $b);
 });
 
 test('설치(Claude Code): 번호 단계 4개, command 는 한 상자에 하나, 순서·조건 표시', function () {
@@ -68,16 +70,10 @@ test('용어: 화면 라벨·고유명사는 원문, 설명 문장은 한국어(
     foreach (['terminal에서', 'repository를', 'repository 공개', 'command는', 'command 입력'] as $w) assert_true(!str_contains($i, $w), "설명 문장 속 영문: $w");
 });
 
-test('설치(직접 복사): 스킬 폴더 경로는 plugins/white-security/skills/white-security (SkillExport::SKILL_DIR)', function () {
-    $b = inst_body();
-    assert_true((bool)preg_match('#<section[^>]*id="inst-copy"[^>]*>(.*?)</section>#s', $b, $m), '직접 복사 판');
-    assert_contains('cp -r white-security/' . SkillExport::SKILL_DIR . ' ~/.claude/skills/', html_entity_decode($m[1]));
-});
-
-test('설치: 사용법 안내 순서 — 큰 줄 "보안 점검해 줘", 작은 줄 확실하게 실행(/white-security:review · 스킬 이름 포함 프롬프트)', function () {
+test('설치: 사용법 안내 순서 — 큰 줄 "보안 점검해 줘", 작은 줄 확실하게 실행(/white-security:review)', function () {
     $b = nw_strip(inst_body());
     preg_match_all('#<section[^>]*id="inst-(claude|copy)"[^>]*>(.*?)</section>#s', $b, $m, PREG_SET_ORDER);
-    assert_same(2, count($m));
+    assert_same(1, count($m));
     foreach ($m as [, $id, $p]) {
         $main = strpos($p, '<code>보안 점검해 줘</code>');
         $sub = strpos($p, 'ws-step-sub');
@@ -87,7 +83,6 @@ test('설치: 사용법 안내 순서 — 큰 줄 "보안 점검해 줘", 작은
         assert_true(!str_contains($p, '이 프로젝트 보안 점검해 줘'), "$id: 옛 문구 없음");
     }
     assert_true((bool)preg_match('#ws-step-sub.*<code>/white-security:review</code>#s', $m[0][2]), 'Claude Code: command');
-    assert_contains('<code>white-security 스킬로 보안 점검해 줘</code>', $m[1][2]);
     assert_true(!str_contains($m[0][2], 'white-security 스킬로 보안 점검해 줘'), 'Claude Code 탭엔 스킬 이름 문구 없음');
     assert_contains('코드 작성·수정 중 위험한 코드는 별도 요청 없이 스킬이 자동 점검', $b);
 });
@@ -99,10 +94,13 @@ test('보고 예시: 설치·심각도 기준이 같은 표(등급·문서 번�
     $tbl = fn(string $b) => preg_match('#<table class="ws-table ws-table--report">.*?</table>#s', $b, $m) ? $m[0] : '';
     $a = $tbl($s->route('install')['body']); $b = $tbl($s->route('severity')['body']);
     assert_true($a !== '' && $a === $b, '같은 표');
-    foreach (['등급', '문서 번호', '파일:줄', '이유', '고칠 방법'] as $h) assert_contains('<th scope="col">' . $h . '</th>', $a);
-    $skill = file_get_contents(__DIR__ . '/../' . SkillExport::SKILL_DIR . '/SKILL.md');
+    foreach (['등급', '문서 번호', '파일:줄', '영향', '이유', '고칠 방법'] as $h) assert_contains('<th scope="col">' . $h . '</th>', $a);
+    $skill = file_get_contents(__DIR__ . '/../' . SkillExport::REVIEW_DIR . '/SKILL.md');
     assert_contains('`[위험|주의|참고] <id> <file:line> — <reason> → <fix>`', $skill);
-    assert_contains('<code class="ws-code-line">[위험|주의|참고] &lt;문서 번호&gt; &lt;파일:줄&gt; — &lt;이유&gt; → &lt;고칠 방법&gt;', nw_strip($s->route('severity')['body']));
-    $review = file_get_contents(__DIR__ . '/../' . SkillExport::SKILL_DIR . '/references/review.md');
-    assert_contains('| # | id | 파일:줄 | 이유 | 고칠 방법 |', $review);
+    // 상시 메모는 쉬운 말 + 괄호 id(스킬 분리 11-18): 사이트 예시와 상시 스킬 예시가 같은 모양
+    $always = file_get_contents(__DIR__ . '/../' . SkillExport::SKILL_DIR . '/SKILL.md');
+    assert_contains('`보안 메모: 검색어를 SQL 자리표시자로 넘김 (WS-INJ-001).', $always);
+    assert_contains('<code class="ws-code-line">보안 메모: 검색어를 SQL 자리표시자로 넘김 (WS-INJ-001).</code>', nw_strip($s->route('severity')['body']));
+    $review = file_get_contents(__DIR__ . '/../' . SkillExport::REF_DIR . '/review.md');
+    assert_contains('| # | id | 파일:줄 | 영향 | 이유 | 고칠 방법 |', $review);
 });

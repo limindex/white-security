@@ -108,7 +108,7 @@ $examples = [
 <dl class="ws-deflist">
 <div><dt>이슈 문서</dt><dd>제목 아래 심각도 배지와 심각도 근거(영향·악용 두 줄)</dd></div>
 <div><dt>검토 요청 보고</dt><dd>같은 세 등급으로 묶은 표. 행마다 문서 번호·파일:줄·이유·고칠 방법.</dd></div>
-<div><dt>코드 작성 중 메모</dt><dd>같은 칸을 한 줄로 씀.<code class="ws-code-line"><?= implode(' ', array_map(fn(string $t): string => '<span class="ws-nw">' . Site::e($t) . '</span>', ['[위험|주의|참고]', '<문서 번호>', '<파일:줄>', '— <이유>', '→ <고칠 방법>'])) ?></code></dd></div>
+<div><dt>코드 작성 중 메모</dt><dd>응답 끝 1~2줄. 쉬운 말 먼저, 문서 번호는 괄호.<code class="ws-code-line"><?= Site::e('보안 메모: 검색어를 SQL 자리표시자로 넘김 (WS-INJ-001).') ?></code></dd></div>
 <div><dt>환경에 따른 차이</dt><dd>실제 환경에 따라 보고 등급과 문서 등급이 다를 수 있음. 관리자 로그인 뒤에만 있는 기능은 악용 쉬움 한 단계 하향.</dd></div>
 </dl>
 <?= $site->render('_report', []) ?>
