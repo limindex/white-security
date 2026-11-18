@@ -1,0 +1,29 @@
+<!-- generated from white-security issues; do not edit -->
+# WS-INJ-002 코드 예시 — Laravel
+
+✗ 취약 코드 (vulnerable example — do not use)
+
+```php
+public function zip(Request $request)
+{
+    $dir = $request->input('folder');
+    shell_exec("cd storage/app/exports && zip -r out.zip $dir");   // 입력이 셸 문자열에 들어간다
+    return response()->download(storage_path('app/exports/out.zip'));
+}
+```
+
+✓ 안전 코드 (safe example)
+
+```php
+use Illuminate\Support\Facades\Process;
+
+public function zip(Request $request)
+{
+    $data = $request->validate(['folder' => ['required', 'string', 'regex:/^[a-z0-9_]{1,40}$/']]); // 형식 검사
+    $result = Process::path(storage_path('app/exports'))
+        ->timeout(60)
+        ->run(['zip', '-r', 'out.zip', $data['folder']]);   // 배열 = 셸 없이 인자 목록
+    abort_unless($result->successful(), 500);
+    return response()->download(storage_path('app/exports/out.zip'));
+}
+```

@@ -64,7 +64,7 @@ sources:
 
 ## 탐지 규칙
 
-- **찾는 곳**: `move_uploaded_file(`, `getClientOriginalName(`, `public_path(`, `file_put_contents(`, `storeAs(`, `location ~ \.php$`, `.htaccess`, `AddHandler`, 업로드 폴더(`uploads/`, `public/`, `public_html/`)에 쓰는 코드.
+- **찾는 곳**: `move_uploaded_file(`, `getClientOriginalName(`, `public_path(`, `location ~ \.php$`, `.htaccess`, 그 밖에 file_put_contents·storeAs·Apache AddHandler, 업로드 폴더(uploads·public·public_html)에 쓰는 코드.
 - **검사 1 — 웹 루트 안 저장**: 지적할 때: 업로드·쓰기 경로가 웹 루트(`public/`, `public_html/`, `www/`, `static/`) 안이고 이름이나 확장자를 요청 값에서 가져오는 경우. / 지적하지 않을 때: 웹 루트 밖·객체 저장소에 서버가 만든 이름으로 저장하고, 컨트롤러가 권한 확인 뒤 내려주는 경우.
 - **검사 2 — 실행 차단 없음**: 지적할 때: 웹에서 열리는 업로드 폴더에 Nginx·Apache의 스크립트 실행 차단이 없는 경우. 업로드로 `.htaccess`를 덮어쓸 수 있는 경우. / 지적하지 않을 때: 업로드 경로에 실행 차단(`return 403`, 정적 제공만)이 있거나, PHP 처리가 진입 파일(`index.php`) 하나에만 연결된 경우.
 - **검사 3 — 요청이 정한 파일 쓰기**: 지적할 때: 요청 값이 경로·확장자·내용을 함께 정해 웹에서 열리는 곳에 쓰는 경우(테마·템플릿 편집, 설치 마법사, 로그 경로 설정). / 지적하지 않을 때: 경로·확장자가 코드에 고정되고 내용은 데이터로만 저장되는 경우.
