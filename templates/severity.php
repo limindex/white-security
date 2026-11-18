@@ -51,7 +51,7 @@ $examples = [
 <thead><tr><th scope="col">단계</th><th scope="col">기준</th></tr></thead>
 <tbody>
 <?php foreach ($impact as [$name, $desc]): ?>
-<tr><th scope="row"><?= Site::e($name) ?></th><td><?= Site::e($desc) ?></td></tr>
+<tr><th scope="row"><?= Site::e($name) ?></th><td><?= Site::t($desc) ?></td></tr>
 <?php endforeach ?>
 </tbody>
 </table>
@@ -66,7 +66,7 @@ $examples = [
 <thead><tr><th scope="col">단계</th><th scope="col">기준</th></tr></thead>
 <tbody>
 <?php foreach ($ease as [$name, $desc]): ?>
-<tr><th scope="row"><?= Site::e($name) ?></th><td><?= Site::e($desc) ?></td></tr>
+<tr><th scope="row"><?= Site::e($name) ?></th><td><?= Site::t($desc) ?></td></tr>
 <?php endforeach ?>
 </tbody>
 </table>

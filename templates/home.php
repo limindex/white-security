@@ -82,7 +82,7 @@ $first = array_slice($site->repo->start(), 0, 3);
 <?php if ($list): ?>
 <ul class="ws-grp-issues">
 <?php foreach ($list as $i): ?>
-<li><a href="<?= Site::e($site->url('issues/' . $i->id)) ?>"><?= Site::t($i->title) ?></a></li>
+<li><a href="<?= Site::e($site->url('issues/' . $i->id)) ?>"><span class="ws-tx"><?= Site::t($i->title) ?></span></a></li>
 <?php endforeach ?>
 </ul>
 <?php endif ?>

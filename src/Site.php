@@ -211,6 +211,44 @@ final class Site
         return array_slice($rows, 0, $n);
     }
 
+    /**
+     * 개정 이력 페이지: 모든 이슈의 개정 기록 전부, 날짜 최신순·같은 날은 id 순.
+     * @return list<array{issue:Issue,date:string,note:string}>
+     */
+    public function allRevisions(): array
+    {
+        $rows = [];
+        foreach ($this->repo->all() as $i) {
+            foreach ($i->revisions as $r) $rows[] = ['issue' => $i, 'date' => $r['date'], 'note' => $r['note']];
+        }
+        usort($rows, fn($a, $b) => [$b['date'], $a['issue']->id] <=> [$a['date'], $b['issue']->id]);
+        return $rows;
+    }
+
+    /**
+     * 출처·라이선스 페이지: 이슈들이 인용한 자료(주소 기준 중복 제거), 기관 주소·제목 순, 인용한 이슈 번호 포함.
+     * @return list<array{title:string,url:string,year:int,host:string,ids:list<string>}>
+     */
+    public function sourceIndex(): array
+    {
+        $by = [];
+        foreach ($this->repo->all() as $i) {
+            foreach ($i->sources as $s) {
+                $u = $s['url'];
+                if (!isset($by[$u])) {
+                    $host = (string)parse_url($u, PHP_URL_HOST);
+                    $by[$u] = ['title' => $s['title'], 'url' => $u, 'year' => (int)$s['year'], 'host' => (string)preg_replace('/^www\./', '', $host), 'ids' => []];
+                }
+                if (!in_array($i->id, $by[$u]['ids'], true)) $by[$u]['ids'][] = $i->id;
+            }
+        }
+        $rows = array_values($by);
+        foreach ($rows as &$r) sort($r['ids']);
+        unset($r);
+        usort($rows, fn($a, $b) => [$a['host'], mb_strtolower($a['title'])] <=> [$b['host'], mb_strtolower($b['title'])]);
+        return $rows;
+    }
+
     /** 출력용 이스케이프 */
     public static function e(string $s): string { return htmlspecialchars($s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
 
