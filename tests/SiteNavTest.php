@@ -221,7 +221,7 @@ test('기준 번호 칩: 기준 한 줄 풀이(about)가 칩 안에 있고 aria-
     assert_same(count($all[1]), count(array_unique($all[1])), '풀이 id 중복 없음');
 });
 
-test('data/frameworks: 8종 모두 about 한 줄 풀이', function () {
+test('data/frameworks: 기준 파일 모두 about 한 줄 풀이', function () {
     $repo = Repository::load(__DIR__ . '/..');
     assert_same([], array_filter($repo->errors(), fn($e) => str_contains($e, 'frameworks')));
     foreach ($repo->frameworks() as $fw) {
@@ -232,7 +232,7 @@ test('data/frameworks: 8종 모두 about 한 줄 풀이', function () {
 
 test('소개: 점검 기준 대응표 링크 한 줄과 사용 방법(한마디 → 확실하게 → 자동 점검)', function () {
     $b = nav_site()->route('about')['body'];
-    assert_true((bool)preg_match('#8개 기준에 맞춰 작성.*href="/white-security/coverage"[^>]*>점검 기준 대응표#su', $b), '대응표 링크');
+    assert_true((bool)preg_match('#9개 기준에 맞춰 작성.*href="/white-security/coverage"[^>]*>점검 기준 대응표#su', $b), '대응표 링크');
     $p1 = strpos($b, '보안 점검해 줘</code> 한마디'); $p2 = strpos($b, '확실하게 실행하려면'); $p3 = strpos($b, '별도 요청 없이 자동 점검');
     assert_true($p1 !== false && $p2 > $p1 && $p3 > $p2, '사용법 순서');
 });

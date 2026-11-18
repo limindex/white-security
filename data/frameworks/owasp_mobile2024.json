@@ -1,0 +1,60 @@
+{
+  "id": "owasp_mobile2024",
+  "name": "OWASP Mobile Top 10 2024",
+  "short": "OWASP Mobile 2024",
+  "year": 2024,
+  "about": "OWASP Mobile Top 10 2024 — OWASP가 꼽은 모바일 앱의 가장 흔한 보안 위험 10가지",
+  "url": "https://owasp.org/www-project-mobile-top-10/2023-risks/",
+  "items": [
+    {
+      "id": "M1",
+      "title": "Improper Credential Usage",
+      "title_ko": "자격 증명 부적절 사용"
+    },
+    {
+      "id": "M2",
+      "title": "Inadequate Supply Chain Security",
+      "title_ko": "공급망 보안 미흡"
+    },
+    {
+      "id": "M3",
+      "title": "Insecure Authentication/Authorization",
+      "title_ko": "취약한 인증·인가"
+    },
+    {
+      "id": "M4",
+      "title": "Insufficient Input/Output Validation",
+      "title_ko": "입출력 검증 부족"
+    },
+    {
+      "id": "M5",
+      "title": "Insecure Communication",
+      "title_ko": "안전하지 않은 통신"
+    },
+    {
+      "id": "M6",
+      "title": "Inadequate Privacy Controls",
+      "title_ko": "개인정보 보호 통제 미흡"
+    },
+    {
+      "id": "M7",
+      "title": "Insufficient Binary Protections",
+      "title_ko": "바이너리 보호 부족"
+    },
+    {
+      "id": "M8",
+      "title": "Security Misconfiguration",
+      "title_ko": "보안 설정 오류"
+    },
+    {
+      "id": "M9",
+      "title": "Insecure Data Storage",
+      "title_ko": "안전하지 않은 데이터 저장"
+    },
+    {
+      "id": "M10",
+      "title": "Insufficient Cryptography",
+      "title_ko": "암호화 부족"
+    }
+  ]
+}

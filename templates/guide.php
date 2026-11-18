@@ -87,6 +87,6 @@ $chips = [['owasp2025', 'A05'], ['asvs5', 'V1.2'], ['cwe', 'CWE-89']];
 <div><dt>CWE 칩</dt><dd>번호 자체에 기준 이름 포함(CWE-89) · 앞부분 없이 한 덩어리</dd></div>
 <div><dt>작은 화살표</dt><dd>공식 정의 페이지 링크 · CWE 번호는 MITRE 정의로 연결</dd></div>
 </dl>
-<p>기준 8종 전체의 항목별 대응은 <a href="<?= Site::e($site->url('coverage')) ?>">점검 기준 대응표</a>.</p>
+<p>기준 전체의 항목별 대응은 <a href="<?= Site::e($site->url('coverage')) ?>">점검 기준 대응표</a>.</p>
 </section>
 </div>

@@ -84,12 +84,12 @@ test('Coverage: 프레임워크 파일 읽기 — 필수 필드 검사', functio
     assert_contains('bad.json', implode("\n", $errs));
 });
 
-test('실제 data/frameworks: 8개 파일, url·year·항목 필수, 항목 id 유일', function () {
+test('실제 data/frameworks: 9개 파일, url·year·항목 필수, 항목 id 유일', function () {
     $errs = [];
     $fws = Coverage::loadFrameworks(__DIR__ . '/..', $errs);
     assert_same([], $errs);
     assert_same(Issue::MAP_KEYS, array_column($fws, 'id'));
-    $counts = ['owasp2025' => 10, 'api2023' => 10, 'llm2026' => 10, 'agentic2026' => 10, 'asvs5' => 17, 'cwe' => 25, 'kr_guide' => 49, 'kr_ciip' => 21];
+    $counts = ['owasp2025' => 10, 'api2023' => 10, 'llm2026' => 10, 'agentic2026' => 10, 'owasp_mobile2024' => 10, 'asvs5' => 17, 'cwe' => 25, 'kr_guide' => 49, 'kr_ciip' => 21];
     foreach ($fws as $fw) {
         assert_same($counts[$fw['id']], count($fw['items']), $fw['id']);
         assert_true(preg_match('#^https://#', $fw['url']) === 1, $fw['id'] . ' url');
