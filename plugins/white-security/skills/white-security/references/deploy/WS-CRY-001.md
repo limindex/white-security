@@ -24,7 +24,6 @@
 
 비밀번호 저장은 WS-PWD-001, 키를 코드에 적는 문제는 WS-SEC-001에서 다루므로 여기서는 알고리즘·모드·난수·TLS만 봐야 한다. 국내 공공 사업은 검증필 암호모듈(KCMVP)을 요구받는 경우가 있으므로 해당하면 사용자에게 확인을 권해야 한다. 무작위 96비트 nonce를 쓰는 AES-GCM은 키 하나로 약 2^32개 메시지까지만 암호화하고 그 전에 키를 바꿔야 한다(NIST SP 800-38D).
 
-Code examples (read only the file for the stack you are writing): `WS-CRY-001.code.python.md` (Python) · `WS-CRY-001.code.nextjs.md` (Next.js) · `WS-CRY-001.code.laravel.md` (Laravel)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-CRY-001.code.python.md` (Python) · `WS-CRY-001.code.nextjs.md` (Next.js) · `WS-CRY-001.code.laravel.md` (Laravel)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A04(암호화 실패) · ASVS 5.0 V11.2.3 · ASVS 5.0 V11.3.1 · ASVS 5.0 V11.3.2 · ASVS 5.0 V11.3.3 · ASVS 5.0 V11.4.1 · ASVS 5.0 V11.5.1 · ASVS 5.0 V12.2.1 · ASVS 5.0 V12.3.2 · CWE-327 · CWE-326 · CWE-330 · CWE-338 · CWE-295 · CWE-319 · CWE-329 · 국내 보안약점 49 보안기능-4(취약한 암호화 알고리즘 사용) · 국내 보안약점 49 보안기능-5(암호화되지 않은 중요정보) · 국내 보안약점 49 보안기능-7(충분하지 않은 키 길이 사용) · 국내 보안약점 49 보안기능-8(적절하지 않은 난수 값 사용) · 국내 보안약점 49 보안기능-11(부적절한 인증서 유효성 검증) · 기반시설 웹 21 SN(데이터 평문 전송)
+기본 심각도: 위험 · CWE-327 · CWE-326 · CWE-330 · CWE-338 · CWE-295 · CWE-319 · CWE-329

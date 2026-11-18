@@ -24,7 +24,6 @@
 
 웹에서 열리는 백업 파일 자체는 WS-CFG-005, 공개 버킷은 WS-CFG-004, AI 도구에 붙여 넣는 운영 데이터는 WS-LLM-003에서 다룬다. 엑셀의 시트 보호·숨기기는 암호화가 아니므로 파일 암호화로 보지 않아야 한다. 이름만 바꾼 덤프는 「개인정보 보호법」 제2조 제1호의2의 가명처리(추가 정보 없이는 특정 개인을 알아볼 수 없도록 처리)라 보기 어렵다고 안내해야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-PRV-006.code.laravel.md` (Laravel) · `WS-PRV-006.code.django.md` (Django) · `WS-PRV-006.code.shell.md` (Shell)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-PRV-006.code.laravel.md` (Laravel) · `WS-PRV-006.code.django.md` (Django) · `WS-PRV-006.code.shell.md` (Shell)
 
-기본 심각도: 주의
-기준: OWASP Top 10:2025 A02(보안 설정 오류) · OWASP Top 10:2025 A04(암호화 실패) · ASVS 5.0 V14.1.2 · ASVS 5.0 V14.2.7 · CWE-200(권한 없는 자에게 민감 정보 노출) · CWE-312 · CWE-530 · CWE-1236 · 기반시설 웹 21 IL(정보 누출)
+기본 심각도: 주의 · CWE-200 · CWE-312 · CWE-530 · CWE-1236

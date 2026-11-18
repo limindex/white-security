@@ -20,7 +20,6 @@
 - 요청 본문·업로드 파일·압축을 푼 뒤의 크기에 각각 상한을 둬야 하고, 파서 오류 원문은 응답에 넣지 않아야 한다(읽어 온 파일 내용이 오류 문장에 섞여 나올 수 있음).
 - SVG, 오피스 파일, RSS, SAML 응답처럼 XML인 줄 모르고 다루는 형식도 같은 파서 설정을 거쳐야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-XML-001.code.python.md` (Python) · `WS-XML-001.code.js.md` (JavaScript) · `WS-XML-001.code.php.md` (PHP)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-XML-001.code.python.md` (Python) · `WS-XML-001.code.js.md` (JavaScript) · `WS-XML-001.code.php.md` (PHP)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A02(보안 설정 오류) · ASVS 5.0 V1.5 · CWE-611 · CWE-776 · 국내 보안약점 49 입력데이터 검증 및 표현-8(부적절한 XML 외부 개체 참조)
+기본 심각도: 위험 · CWE-611 · CWE-776

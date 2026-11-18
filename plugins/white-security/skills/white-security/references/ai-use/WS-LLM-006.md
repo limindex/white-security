@@ -17,7 +17,6 @@
 - 사람이 승인하는 화면에는 AI의 설명이 아니라 실제로 바뀔 값(대상·금액)을 보여야 한다.
 - AI가 쓴 코드·패키지 이름·법령 조문은 공식 문서로 확인해야 한다(패키지는 WS-SUP-001).
 
-Code examples (read only the file for the stack you are writing): `WS-LLM-006.code.python.md` (Python)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-LLM-006.code.python.md` (Python)
 
-기본 심각도: 주의
-기준: OWASP LLM 2026 LLM07(잘못된 정보) · OWASP 에이전트 2026 ASI09(사람-에이전트 신뢰 악용) · CWE-1426
+기본 심각도: 주의 · CWE-1426

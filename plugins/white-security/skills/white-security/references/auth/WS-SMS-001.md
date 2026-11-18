@@ -20,7 +20,6 @@
 - 비밀번호 찾기 문자는 요청 값이 아니라 DB에 등록된 번호로만 보내야 한다.
 - 인증번호는 응답·로그에 넣지 않고, 성공 결과는 번호·목적·세션에 묶어 서버가 관리해야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-SMS-001.code.laravel.md` (Laravel) · `WS-SMS-001.code.nextjs.md` (Next.js) · `WS-SMS-001.code.fastapi.md` (FastAPI)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-SMS-001.code.laravel.md` (Laravel) · `WS-SMS-001.code.nextjs.md` (Next.js) · `WS-SMS-001.code.fastapi.md` (FastAPI)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A07(인증 실패) · OWASP API 2023 API2(인증 실패) · OWASP API 2023 API4(자원 소비 무제한) · ASVS 5.0 V6.5.1 · ASVS 5.0 V6.5.3 · ASVS 5.0 V6.5.5 · ASVS 5.0 V6.6.2 · ASVS 5.0 V6.6.3 · ASVS 5.0 V11.5.1 · CWE-307 · CWE-330 · CWE-640 · CWE-799 · 국내 보안약점 49 보안기능-16(반복된 인증시도 제한 기능 부재) · 국내 보안약점 49 보안기능-8(적절하지 않은 난수 값 사용) · 기반시설 웹 21 AU(자동화 공격) · 기반시설 웹 21 PR(비밀번호 복구 취약)
+기본 심각도: 위험 · CWE-307 · CWE-330 · CWE-640 · CWE-799

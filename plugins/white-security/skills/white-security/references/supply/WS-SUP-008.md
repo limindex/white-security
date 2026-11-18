@@ -24,7 +24,6 @@
 
 `weights_only=True`는 PyTorch 2.6 미만에서 우회되고(CVE-2025-32434) 2.6 이상에서도 서비스 거부까지 막지는 못하므로(PyTorch 문서), Hub의 pickle 검사도 완전하지 않다고 Hugging Face가 밝히므로 "Hub에서 받았으니 안전"이라고 판단하지 않아야 한다. 일반 역직렬화(pickle·yaml·unserialize)는 WS-DES-001, RAG 문서 오염은 WS-LLM-005, 새 파이썬 패키지는 WS-SUP-001에서 다룬다.
 
-Code examples (read only the file for the stack you are writing): `WS-SUP-008.code.python.md` (Python) · `WS-SUP-008.code.dockerfile.md` (Dockerfile)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-SUP-008.code.python.md` (Python) · `WS-SUP-008.code.dockerfile.md` (Dockerfile)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A03(소프트웨어 공급망 실패) · OWASP Top 10:2025 A08(소프트웨어·데이터 무결성 실패) · OWASP LLM 2026 LLM04(공급망) · OWASP LLM 2026 LLM05(데이터·모델 오염) · OWASP 에이전트 2026 ASI04(에이전트 공급망 취약점) · ASVS 5.0 V1.5.2 · ASVS 5.0 V15.2.4 · CWE-502(신뢰할 수 없는 데이터의 역직렬화) · CWE-494 · CWE-829 · 국내 보안약점 49 코드오류-5(신뢰할 수 없는 데이터의 역직렬화) · 국내 보안약점 49 보안기능-15(무결성 검사 없는 코드 다운로드)
+기본 심각도: 위험 · CWE-502 · CWE-494 · CWE-829

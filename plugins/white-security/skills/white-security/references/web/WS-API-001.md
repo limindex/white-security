@@ -20,7 +20,6 @@
 - PHP 비교는 `===`로 하고, 해시 문자열을 `==`로 비교하지 않아야 한다.
 - 언어 문서가 폐기·위험으로 표시한 함수(`mysql_*`, `new Buffer()`)는 쓰지 않아야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-API-001.code.express.md` (Express) · `WS-API-001.code.python.md` (Python) · `WS-API-001.code.php.md` (PHP)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-API-001.code.express.md` (Express) · `WS-API-001.code.python.md` (Python) · `WS-API-001.code.php.md` (PHP)
 
-기본 심각도: 주의
-기준: OWASP Top 10:2025 A06(안전하지 않은 설계) · ASVS 5.0 V15.3.5 · CWE-350 · CWE-676 · CWE-242 · CWE-377 · CWE-697 · 국내 보안약점 49 API 오용-1(DNS lookup에 의존한 보안결정) · 국내 보안약점 49 API 오용-2(취약한 API 사용)
+기본 심각도: 주의 · CWE-350 · CWE-676 · CWE-242 · CWE-377 · CWE-697

@@ -20,7 +20,6 @@
 - 모든 예외를 받는 마지막 처리기를 둬야 한다.
 - `preg_match`·`json_decode`처럼 실패를 `false`·`null`로 알리는 함수는 반환값을 확인해야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-ERR-001.code.laravel.md` (Laravel) · `WS-ERR-001.code.express.md` (Express) · `WS-ERR-001.code.fastapi.md` (FastAPI)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-ERR-001.code.laravel.md` (Laravel) · `WS-ERR-001.code.express.md` (Express) · `WS-ERR-001.code.fastapi.md` (FastAPI)
 
-기본 심각도: 주의
-기준: OWASP Top 10:2025 A10(예외 상황 처리 미흡) · OWASP API 2023 API8(보안 설정 오류) · ASVS 5.0 V16.5.1 · ASVS 5.0 V16.5.2 · ASVS 5.0 V16.5.3 · ASVS 5.0 V16.5.4 · CWE-209 · CWE-390 · CWE-754 · CWE-755 · CWE-636 · 국내 보안약점 49 에러처리-1(오류 메시지 정보노출) · 국내 보안약점 49 에러처리-2(오류상황 대응 부재) · 국내 보안약점 49 에러처리-3(부적절한 예외 처리) · 기반시설 웹 21 EP(에러 페이지 미흡)
+기본 심각도: 주의 · CWE-209 · CWE-390 · CWE-754 · CWE-755 · CWE-636

@@ -22,7 +22,6 @@
 
 비밀값을 코드에 적는 일반 문제는 WS-SEC-001에서 다루므로 여기서는 기본 계정·기본 비밀번호·시드 계정만 봐야 한다. 이미 운영에 기본 비밀번호가 쓰였다면 코드 수정과 함께 그 계정의 비밀번호를 지금 바꾸라고 알려야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-CFG-006.code.yaml.md` (YAML) · `WS-CFG-006.code.laravel.md` (Laravel) · `WS-CFG-006.code.django.md` (Django)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-CFG-006.code.yaml.md` (YAML) · `WS-CFG-006.code.laravel.md` (Laravel) · `WS-CFG-006.code.django.md` (Django)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A07(인증 실패) · OWASP Top 10:2025 A02(보안 설정 오류) · OWASP API 2023 API8(보안 설정 오류) · ASVS 5.0 V6.3.2 · ASVS 5.0 V13.2.3 · CWE-1392 · CWE-1393 · CWE-798 · CWE-521 · 국내 보안약점 49 보안기능-6(하드코드된 중요정보) · 국내 보안약점 49 보안기능-9(취약한 비밀번호 허용) · 기반시설 웹 21 BF(약한 비밀번호 정책)
+기본 심각도: 위험 · CWE-1392 · CWE-1393 · CWE-798 · CWE-521

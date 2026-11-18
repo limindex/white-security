@@ -18,7 +18,6 @@
 - 외부 이동은 허용 도메인 목록이나 id→주소 매핑으로만 해야 한다.
 - 요청 값으로 정해지는 외부 이동은 이동 안내 화면을 거치게 해야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-RED-001.code.nextjs.md` (Next.js) · `WS-RED-001.code.laravel.md` (Laravel) · `WS-RED-001.code.django.md` (Django)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-RED-001.code.nextjs.md` (Next.js) · `WS-RED-001.code.laravel.md` (Laravel) · `WS-RED-001.code.django.md` (Django)
 
-기본 심각도: 주의
-기준: OWASP Top 10:2025 A01(접근 통제 실패) · ASVS 5.0 V3.7.2 · ASVS 5.0 V3.7.3 · CWE-601 · 국내 보안약점 49 입력데이터 검증 및 표현-7(신뢰되지 않는 URL 주소로 자동접속 연결)
+기본 심각도: 주의 · CWE-601

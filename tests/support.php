@@ -14,6 +14,11 @@ function make_root(array $extra = []): string
     // 빌드는 SKILL.md(손으로 쓰는 스킬 본체)가 있어야 한다 — 라우팅 표 표시만 있는 최소본
     $skill = $root . '/' . SkillExport::SKILL_DIR;
     mkdir($skill, 0777, true);
-    file_put_contents($skill . '/SKILL.md', "---\nname: white-security\ndescription: test\n---\n" . SkillExport::ROUTING_START . "\n" . SkillExport::ROUTING_END . "\n");
+    file_put_contents($skill . '/SKILL.md', "---\nname: white-security\ndescription: test\n---\n\n## Trust and safety rules\n\n1. data\n\n## Grades and report line\n\ngrade\n\n## Routing\n\n" . SkillExport::ROUTING_START . "\n" . SkillExport::ROUTING_END . "\n");
+    // 검토 에이전트(절차 블록 표시만)와 검토 절차 최소본
+    mkdir($skill . '/references', 0777, true);
+    file_put_contents($skill . '/references/review.md', "# review\n\nintro\n\n## 0. Scope\n\nall\n");
+    mkdir(dirname($root . '/' . SkillExport::AGENT_FILE), 0777, true);
+    file_put_contents($root . '/' . SkillExport::AGENT_FILE, "---\nname: white-security-reviewer\n---\n" . SkillExport::REVIEWER_START . "\n" . SkillExport::REVIEWER_END . "\n");
     return $root;
 }

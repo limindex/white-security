@@ -23,7 +23,6 @@
 
 Firebase Storage 규칙은 WS-BAAS-002, Supabase 테이블 RLS는 WS-BAAS-001, 관리자 화면 노출은 WS-AUTH-004에서 다루므로 여기서는 버킷 공개 설정과 열린 포트만 봐야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-CFG-004.code.yaml.md` (YAML) · `WS-CFG-004.code.supabase.md` (Supabase) · `WS-CFG-004.code.shell.md` (Shell)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-CFG-004.code.yaml.md` (YAML) · `WS-CFG-004.code.supabase.md` (Supabase) · `WS-CFG-004.code.shell.md` (Shell)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A02(보안 설정 오류) · OWASP Top 10:2025 A01(접근 통제 실패) · OWASP API 2023 API8(보안 설정 오류) · ASVS 5.0 V13.4.5 · ASVS 5.0 V13.2.2 · CWE-284(접근 통제 미흡) · CWE-668 · CWE-200(권한 없는 자에게 민감 정보 노출) · CWE-306(중요 기능 인증 누락) · 국내 보안약점 49 보안기능-3(중요한 자원에 대한 잘못된 권한 설정) · 기반시설 웹 21 AE(관리자 페이지 노출) · 기반시설 웹 21 IL(정보 누출)
+기본 심각도: 위험 · CWE-284 · CWE-668 · CWE-200 · CWE-306

@@ -17,7 +17,6 @@
 - 메시지 안의 "관리자 에이전트" 같은 주장은 믿지 않고, 권한은 서버 설정으로 정해야 한다.
 - 에이전트마다 따로 계정·키를 주어야 하고, 관리자 키 하나를 여러 에이전트가 나눠 쓰지 않아야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-AGT-004.code.python.md` (Python) · `WS-AGT-004.code.js.md` (JavaScript)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-AGT-004.code.python.md` (Python) · `WS-AGT-004.code.js.md` (JavaScript)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A01(접근 통제 실패) · OWASP 에이전트 2026 ASI03(신원·권한 남용) · OWASP 에이전트 2026 ASI07(에이전트 간 통신 보안 미흡) · ASVS 5.0 V8.3.3 · ASVS 5.0 V13.2.1 · CWE-441 · CWE-306(중요 기능 인증 누락) · 국내 보안약점 49 보안기능-2(부적절한 인가) · 기반시설 웹 21 IN(불충분한 권한 검증)
+기본 심각도: 위험 · CWE-441 · CWE-306

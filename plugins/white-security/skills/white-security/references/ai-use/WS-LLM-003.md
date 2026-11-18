@@ -17,7 +17,6 @@
 - 쓰는 AI API의 학습 사용 여부와 보관 기간을 공식 문서로 확인해야 한다(예: OpenAI API는 2023-03-01부터 기본으로 학습에 쓰지 않지만, 남용 감시 로그는 기본 최대 30일 보관).
 - 외부 AI 회사에 개인정보를 넘기는 일은 개인정보 처리 위탁이나 국외 이전에 해당할 수 있으므로, 개인정보 처리방침(회사가 개인정보를 어떻게 다루는지 공개하는 문서)에 적혀 있는지 확인해야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-LLM-003.code.python.md` (Python)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-LLM-003.code.python.md` (Python)
 
-기본 심각도: 주의
-기준: OWASP LLM 2026 LLM02(민감 정보 노출) · ASVS 5.0 V14.2.3 · ASVS 5.0 V16.2.5 · CWE-359 · CWE-201 · CWE-532
+기본 심각도: 주의 · CWE-359 · CWE-201 · CWE-532

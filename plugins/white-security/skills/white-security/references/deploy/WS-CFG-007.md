@@ -23,7 +23,6 @@
 
 이미 배포·공유된 이미지에 비밀값이 들어갔다면 이미지를 지우는 것으로 끝나지 않으므로 WS-SEC-001 기준으로 키 교체를 먼저 알려야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-CFG-007.code.dockerfile.md` (Dockerfile) · `WS-CFG-007.code.yaml.md` (YAML)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-CFG-007.code.dockerfile.md` (Dockerfile) · `WS-CFG-007.code.yaml.md` (YAML)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A02(보안 설정 오류) · OWASP API 2023 API8(보안 설정 오류) · ASVS 5.0 V13.3.1 · ASVS 5.0 V13.2.2 · CWE-250 · CWE-269 · CWE-538 · CWE-798 · 국내 보안약점 49 보안기능-3(중요한 자원에 대한 잘못된 권한 설정) · 국내 보안약점 49 보안기능-6(하드코드된 중요정보)
+기본 심각도: 위험 · CWE-250 · CWE-269 · CWE-538 · CWE-798

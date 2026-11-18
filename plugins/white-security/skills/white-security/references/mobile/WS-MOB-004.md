@@ -24,7 +24,6 @@
 
 Android WebView는 JavaScript가 기본 꺼져 있지만 `react-native-webview`는 기본 켜져 있고 `originWhitelist` 기본값이 http·https 전체다(라이브러리 문서). `setAllowFileAccess`는 targetSdk 29 이하에서 기본 true, 30 이상에서 기본 false다(Android 문서). Flutter `JavaScriptMessage`에는 보낸 쪽 출처가 없고 `currentUrl()`은 메인 프레임 주소라 iframe이 보낸 메시지와 구별하지 못하므로, 이동 제한과 함께 브리지 페이지에 외부 iframe을 넣지 않고 CSP `frame-src`로 막아야 한다. `react-native-webview`도 Android에서 `WEB_MESSAGE_LISTENER`를 지원하지 않는 오래된 WebView에서는 `addJavascriptInterface`로 대체하고 `nativeEvent.url`이 최상위 페이지 주소가 된다(라이브러리 소스). 페이지 자체의 XSS는 WS-XSS-001, 인증서 오류 무시(`onReceivedSslError`)는 WS-MOB-006에서 다룬다.
 
-Code examples (read only the file for the stack you are writing): `WS-MOB-004.code.react-native.md` (React Native) · `WS-MOB-004.code.flutter.md` (Flutter) · `WS-MOB-004.code.kotlin.md` (Kotlin)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-MOB-004.code.react-native.md` (React Native) · `WS-MOB-004.code.flutter.md` (Flutter) · `WS-MOB-004.code.kotlin.md` (Kotlin)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A05(삽입) · OWASP Top 10:2025 A02(보안 설정 오류) · OWASP Mobile 2024 M4(입출력 검증 부족) · OWASP Mobile 2024 M8(보안 설정 오류) · ASVS 5.0 V3.5.5 · ASVS 5.0 V14.2.1 · CWE-749 · CWE-940 · CWE-79(크로스사이트 스크립팅) · CWE-200(권한 없는 자에게 민감 정보 노출) · 국내 보안약점 49 입력데이터 검증 및 표현-4(크로스사이트 스크립트) · 국내 보안약점 49 입력데이터 검증 및 표현-7(신뢰되지 않는 URL 주소로 자동접속 연결) · 기반시설 웹 21 XS(크로스사이트 스크립트)
+기본 심각도: 위험 · CWE-749 · CWE-940 · CWE-79 · CWE-200

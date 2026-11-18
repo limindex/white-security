@@ -18,7 +18,6 @@
 - 결제·지급 요청은 멱등 키로 두 번째 처리를 막아야 한다.
 - 잠금은 메모리 변수가 아니라 DB·Redis처럼 여러 서버가 함께 보는 곳에 둬야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-RACE-001.code.laravel.md` (Laravel) · `WS-RACE-001.code.django.md` (Django) · `WS-RACE-001.code.nextjs.md` (Next.js)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-RACE-001.code.laravel.md` (Laravel) · `WS-RACE-001.code.django.md` (Django) · `WS-RACE-001.code.nextjs.md` (Next.js)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A06(안전하지 않은 설계) · ASVS 5.0 V15.4.2 · ASVS 5.0 V2.3.3 · ASVS 5.0 V2.3.4 · CWE-362 · CWE-367 · 국내 보안약점 49 시간 및 상태-1(경쟁조건: 검사 시점과 사용 시점)
+기본 심각도: 위험 · CWE-362 · CWE-367

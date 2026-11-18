@@ -23,7 +23,6 @@
 
 Next.js 미들웨어는 2025년 3월 우회 취약점(CVE-2025-29927, 15.2.3·14.2.25·13.5.9·12.3.5에서 수정)이 있었으므로 버전을 확인하고, 업데이트가 어려우면 앞단(프록시·CDN)에서 외부 요청의 `x-middleware-subrequest` 헤더를 지워야 한다. 버전과 별개로 핸들러 안 확인이 있는지도 봐야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-AUTH-002.code.laravel.md` (Laravel) · `WS-AUTH-002.code.nextjs.md` (Next.js) · `WS-AUTH-002.code.fastapi.md` (FastAPI)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-AUTH-002.code.laravel.md` (Laravel) · `WS-AUTH-002.code.nextjs.md` (Next.js) · `WS-AUTH-002.code.fastapi.md` (FastAPI)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A07(인증 실패) · OWASP Top 10:2025 A01(접근 통제 실패) · OWASP API 2023 API2(인증 실패) · OWASP API 2023 API5(기능 수준 권한 검증 실패) · ASVS 5.0 V6.3.4 · ASVS 5.0 V7.2.1 · ASVS 5.0 V8.3.1 · CWE-306(중요 기능 인증 누락) · CWE-288 · CWE-862(권한 검사 누락) · 국내 보안약점 49 보안기능-1(적절한 인증 없는 중요 기능 허용) · 기반시설 웹 21 IA(불충분한 인증)
+기본 심각도: 위험 · CWE-306 · CWE-288 · CWE-862

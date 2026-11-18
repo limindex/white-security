@@ -19,7 +19,6 @@
 - `<script>` 안의 데이터는 `@json`·`json_script`처럼 이스케이프해 주는 기능으로 넣어야 한다.
 - CSP로 인라인 스크립트를 막아 두 번째 방어선을 둬야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-XSS-001.code.laravel.md` (Laravel) · `WS-XSS-001.code.nextjs.md` (Next.js) · `WS-XSS-001.code.django.md` (Django)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-XSS-001.code.laravel.md` (Laravel) · `WS-XSS-001.code.nextjs.md` (Next.js) · `WS-XSS-001.code.django.md` (Django)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A05(삽입) · ASVS 5.0 V1.2.1 · ASVS 5.0 V1.2.2 · ASVS 5.0 V1.3.1 · ASVS 5.0 V3.2.2 · CWE-79(크로스사이트 스크립팅) · 국내 보안약점 49 입력데이터 검증 및 표현-4(크로스사이트 스크립트) · 기반시설 웹 21 XS(크로스사이트 스크립트)
+기본 심각도: 위험 · CWE-79

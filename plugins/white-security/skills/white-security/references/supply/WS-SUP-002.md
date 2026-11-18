@@ -24,7 +24,6 @@
 
 모델이 기억하는 취약점 목록으로 단정하지 말고 검사 도구·OSV 조회 결과로만 판단해야 하며, 스캐너는 의존성이 바뀐 경우에만 돌려야 한다. 새 패키지의 실재 확인은 WS-SUP-001, 잠금 파일 무결성은 WS-SUP-004, 복사해 넣은 라이브러리 파일은 WS-SUP-006에서 다룬다. 개인정보처리자에 해당하면 고시 제9조 ②(제작업체의 보안 업데이트 공지가 있으면 정당한 사유가 없는 한 즉시 업데이트)도 근거로 안내할 수 있다.
 
-Code examples (read only the file for the stack you are writing): `WS-SUP-002.code.yaml.md` (YAML) · `WS-SUP-002.code.shell.md` (Shell)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-SUP-002.code.yaml.md` (YAML) · `WS-SUP-002.code.shell.md` (Shell)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A03(소프트웨어 공급망 실패) · OWASP Mobile 2024 M2(공급망 보안 미흡) · ASVS 5.0 V15.1.1 · ASVS 5.0 V15.1.2 · ASVS 5.0 V15.2.1 · CWE-1395 · CWE-1104
+기본 심각도: 위험 · CWE-1395 · CWE-1104

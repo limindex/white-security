@@ -20,7 +20,6 @@
 - Realtime Database는 상위 경로에 `.read: true`를 주지 않아야 한다(하위 규칙으로 못 막음).
 - 서비스 계정 키는 서버에만 둬야 한다. `firebaseConfig`의 `apiKey`는 공개 값이라 괜찮음.
 
-Code examples (read only the file for the stack you are writing): `WS-BAAS-002.code.firebase.md` (Firebase) · `WS-BAAS-002.code.nextjs.md` (Next.js)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-BAAS-002.code.firebase.md` (Firebase) · `WS-BAAS-002.code.nextjs.md` (Next.js)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A01(접근 통제 실패) · OWASP Top 10:2025 A02(보안 설정 오류) · OWASP API 2023 API1(객체 수준 권한 검증 실패) · OWASP API 2023 API8(보안 설정 오류) · ASVS 5.0 V8.2.2 · ASVS 5.0 V8.3.1 · ASVS 5.0 V13.3.2 · CWE-284(접근 통제 미흡) · CWE-732 · CWE-862(권한 검사 누락) · CWE-798 · 국내 보안약점 49 보안기능-3(중요한 자원에 대한 잘못된 권한 설정) · 국내 보안약점 49 보안기능-2(부적절한 인가) · 국내 보안약점 49 보안기능-6(하드코드된 중요정보) · 기반시설 웹 21 IN(불충분한 권한 검증)
+기본 심각도: 위험 · CWE-284 · CWE-732 · CWE-862 · CWE-798

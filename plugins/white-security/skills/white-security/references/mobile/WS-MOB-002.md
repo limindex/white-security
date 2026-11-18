@@ -24,7 +24,6 @@
 
 `expo-secure-store`는 iOS에서 Keychain, Android에서 Keystore로 암호화한 SharedPreferences에 저장하고(Expo 문서), 기본 접근 시점은 기기 잠금 해제 상태다. 큰 값을 넣을 때 플랫폼 오류가 날 수 있으므로 토큰 같은 작은 값만 넣는다. Jetpack Security(`EncryptedSharedPreferences`)는 1.1.0에서 모든 API가 지원 중단돼 새 코드에는 Keystore를 직접 쓴다. Keychain·Keystore도 루팅·탈옥 기기에서 앱이 실행 중일 때는 읽힐 수 있으므로 토큰 수명을 짧게 하고 서버에서 폐기할 수 있어야 한다(WS-SESS-001).
 
-Code examples (read only the file for the stack you are writing): `WS-MOB-002.code.expo.md` (Expo) · `WS-MOB-002.code.flutter.md` (Flutter) · `WS-MOB-002.code.kotlin.md` (Kotlin)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-MOB-002.code.expo.md` (Expo) · `WS-MOB-002.code.flutter.md` (Flutter) · `WS-MOB-002.code.kotlin.md` (Kotlin)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A04(암호화 실패) · OWASP Mobile 2024 M9(안전하지 않은 데이터 저장) · OWASP Mobile 2024 M6(개인정보 보호 통제 미흡) · OWASP Mobile 2024 M10(암호화 부족) · ASVS 5.0 V14.2.4 · ASVS 5.0 V14.3.1 · ASVS 5.0 V14.3.3 · ASVS 5.0 V11.1.1 · CWE-312 · CWE-922 · CWE-532 · CWE-321 · 국내 보안약점 49 보안기능-5(암호화되지 않은 중요정보) · 국내 보안약점 49 보안기능-6(하드코드된 중요정보)
+기본 심각도: 위험 · CWE-312 · CWE-922 · CWE-532 · CWE-321

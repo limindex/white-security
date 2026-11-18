@@ -61,6 +61,11 @@ try {
     $skillFiles = SkillExport::render($repo);
     if (!is_file($skillMdPath)) throw new SkillExportError(SkillExport::SKILL_DIR . '/SKILL.md 가 없습니다(스킬 본체는 손으로 쓰는 파일이고, 빌드는 그 안의 라우팅 표만 갱신합니다)');
     $skillMd = SkillExport::injectRouting((string)file_get_contents($skillMdPath), SkillExport::routing($repo));
+    // 검토 에이전트: 신뢰·등급 규칙·라우팅 표·검토 절차를 본문에 넣는다(작업 폴더 밖 SKILL.md·review.md 를 읽지 않아도 되게)
+    $agentPath = $root . '/' . SkillExport::AGENT_FILE;
+    $reviewPath = $skillDir . '/references/review.md';
+    foreach ([$agentPath, $reviewPath] as $need) if (!is_file($need)) throw new SkillExportError(substr($need, strlen($root) + 1) . ' 가 없습니다');
+    $agentMd = SkillExport::injectReviewer((string)file_get_contents($agentPath), SkillExport::reviewerBlock($skillMd, (string)file_get_contents($reviewPath), $repo));
 } catch (SkillExportError $e) {
     bail($e->getMessage());
 }
@@ -122,8 +127,10 @@ foreach ($list as $f) put($out . '/assets/' . substr($f, strlen($assets) + 1), (
 
 $refs = SkillExport::write($repo, $skillDir . '/references', $skillFiles);
 file_put_contents($skillMdPath, $skillMd);
+file_put_contents($agentPath, $agentMd);
 echo count($files) . "개 쪽과 API, assets " . count($list) . "개를 {$opt['out']} 에 만들었습니다.\n";
 if ($origin === '') echo "origin 이 비어 sitemap.xml 은 만들지 않았습니다 (--origin=https://도메인 또는 data/site.json).\n";
 echo "스킬 참고 파일 " . count($refs) . "개를 " . SkillExport::SKILL_DIR . "/references 에 만들었습니다.\n";
 $desc = SkillExport::description($skillMd);
+echo '검토 에이전트 절차 블록을 갱신했습니다(추정 약 ' . SkillExport::estimateTokens($agentMd) . "토큰).\n";
 echo 'SKILL.md 라우팅 표를 갱신했습니다(추정 약 ' . SkillExport::estimateTokens($skillMd) . '토큰, description ' . mb_strlen($desc) . '자 약 ' . SkillExport::estimateTokens($desc) . "토큰).\n";

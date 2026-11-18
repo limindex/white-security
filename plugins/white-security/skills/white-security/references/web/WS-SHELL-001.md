@@ -20,7 +20,6 @@
 - 웹 루트는 앱 실행 계정이 쓸 수 없게 하고, 배포 밖의 파일 변경은 알림을 받아야 한다.
 - 의심 파일을 찾으면 지우기 전에 사본·로그를 보존하고 키·비밀번호를 바꿔야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-SHELL-001.code.php.md` (PHP) · `WS-SHELL-001.code.laravel.md` (Laravel) · `WS-SHELL-001.code.nginx.md` (Nginx)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-SHELL-001.code.php.md` (PHP) · `WS-SHELL-001.code.laravel.md` (Laravel) · `WS-SHELL-001.code.nginx.md` (Nginx)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A06(안전하지 않은 설계) · OWASP Top 10:2025 A09(로깅·경보 실패) · ASVS 5.0 V5.3.1 · ASVS 5.0 V5.3.2 · ASVS 5.0 V4.1.4 · ASVS 5.0 V13.4.7 · CWE-434(위험한 형식 파일 업로드) · CWE-553 · CWE-732 · 국내 보안약점 49 입력데이터 검증 및 표현-6(위험한 형식 파일 업로드) · 국내 보안약점 49 보안기능-3(중요한 자원에 대한 잘못된 권한 설정) · 기반시설 웹 21 FU(악성 파일 업로드) · 기반시설 웹 21 WM(불필요한 Method 악용)
+기본 심각도: 위험 · CWE-434 · CWE-553 · CWE-732

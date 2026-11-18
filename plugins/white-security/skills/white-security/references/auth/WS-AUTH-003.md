@@ -24,7 +24,6 @@
 
 `$request->ip()`·`REMOTE_ADDR`는 프록시 뒤에서 프록시 주소가 되므로 TrustProxies·AXES_IPWARE_PROXY_COUNT 같은 설정을 함께 봐야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-AUTH-003.code.laravel.md` (Laravel) · `WS-AUTH-003.code.nextjs.md` (Next.js) · `WS-AUTH-003.code.django.md` (Django)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-AUTH-003.code.laravel.md` (Laravel) · `WS-AUTH-003.code.nextjs.md` (Next.js) · `WS-AUTH-003.code.django.md` (Django)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A07(인증 실패) · OWASP API 2023 API2(인증 실패) · ASVS 5.0 V6.1.1 · ASVS 5.0 V6.3.1 · ASVS 5.0 V6.3.8 · CWE-307 · CWE-204 · 국내 보안약점 49 보안기능-16(반복된 인증시도 제한 기능 부재) · 기반시설 웹 21 AU(자동화 공격)
+기본 심각도: 위험 · CWE-307 · CWE-204

@@ -19,7 +19,6 @@
 - HTML·SVG는 받지 않거나 다른 도메인에서 내려받기로만 제공해야 한다.
 - 이미지는 다시 인코딩해 숨은 데이터와 메타데이터를 지워야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-UPL-001.code.laravel.md` (Laravel) · `WS-UPL-001.code.express.md` (Express) · `WS-UPL-001.code.fastapi.md` (FastAPI)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-UPL-001.code.laravel.md` (Laravel) · `WS-UPL-001.code.express.md` (Express) · `WS-UPL-001.code.fastapi.md` (FastAPI)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A06(안전하지 않은 설계) · ASVS 5.0 V5.2.1 · ASVS 5.0 V5.2.2 · ASVS 5.0 V5.2.4 · ASVS 5.0 V5.3.2 · CWE-434(위험한 형식 파일 업로드) · CWE-770(한도 없는 자원 할당) · 국내 보안약점 49 입력데이터 검증 및 표현-6(위험한 형식 파일 업로드) · 기반시설 웹 21 FU(악성 파일 업로드)
+기본 심각도: 위험 · CWE-434 · CWE-770

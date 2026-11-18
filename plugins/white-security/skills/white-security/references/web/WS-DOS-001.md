@@ -18,7 +18,6 @@
 - 재귀는 깊이 상한을, 반복문은 횟수·전체 개수 상한을 가져야 한다.
 - 사용자가 정규식을 직접 입력하는 기능은 RE2 같은 선형 엔진을 써야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-DOS-001.code.express.md` (Express) · `WS-DOS-001.code.fastapi.md` (FastAPI) · `WS-DOS-001.code.laravel.md` (Laravel)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-DOS-001.code.express.md` (Express) · `WS-DOS-001.code.fastapi.md` (FastAPI) · `WS-DOS-001.code.laravel.md` (Laravel)
 
-기본 심각도: 주의
-기준: OWASP API 2023 API4(자원 소비 무제한) · ASVS 5.0 V1.3.12 · ASVS 5.0 V15.2.2 · CWE-1333 · CWE-400 · CWE-770(한도 없는 자원 할당) · CWE-674 · CWE-835 · 국내 보안약점 49 시간 및 상태-2(종료되지 않는 반복문 또는 재귀 함수)
+기본 심각도: 주의 · CWE-1333 · CWE-400 · CWE-770 · CWE-674 · CWE-835

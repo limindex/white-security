@@ -23,7 +23,6 @@
 
 실제로 열리는지 확인하려고 운영 사이트에 요청을 보내지 않고 설정만 읽어야 하며, 사용자가 직접 확인할 주소만 알려 줘야 한다. 이미 열려 있었다면 `.env`·커밋 기록 속 비밀값은 WS-SEC-001 기준으로 교체해야 한다고 알려야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-CFG-005.code.nginx.md` (Nginx) · `WS-CFG-005.code.nextjs.md` (Next.js)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-CFG-005.code.nginx.md` (Nginx) · `WS-CFG-005.code.nextjs.md` (Next.js)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A02(보안 설정 오류) · OWASP API 2023 API8(보안 설정 오류) · ASVS 5.0 V13.4.1 · ASVS 5.0 V13.4.3 · ASVS 5.0 V13.4.7 · CWE-538 · CWE-527 · CWE-530 · CWE-548 · CWE-540 · 기반시설 웹 21 DI(디렉터리 인덱싱) · 기반시설 웹 21 IL(정보 누출)
+기본 심각도: 위험 · CWE-538 · CWE-527 · CWE-530 · CWE-548 · CWE-540

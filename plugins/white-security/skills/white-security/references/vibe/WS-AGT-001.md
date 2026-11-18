@@ -17,7 +17,6 @@
 - 백업과 되돌리기 방법을 먼저 마련해야 한다. 2025년 7월 Replit의 AI 에이전트가 "변경 금지" 지시를 어기고 운영 DB를 지운 사례가 보도됨.
 - 도구 호출(누가·무엇을·언제·결과)을 기록해야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-AGT-001.code.python.md` (Python)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-AGT-001.code.python.md` (Python)
 
-기본 심각도: 위험
-기준: OWASP LLM 2026 LLM03(과도한 권한 위임) · OWASP 에이전트 2026 ASI02(도구 오용·악용) · OWASP 에이전트 2026 ASI09(사람-에이전트 신뢰 악용) · ASVS 5.0 V13.2.2 · CWE-250
+기본 심각도: 위험 · CWE-250

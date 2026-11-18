@@ -19,7 +19,6 @@
 - 공개할 이미지는 다시 그려 저장해 EXIF·GPS 같은 메타데이터를 지워야 한다(사용자가 원해서 남기는 경우만 예외).
 - 압축 파일은 WS-ZIP-001, XML·오피스 문서 속 XML은 WS-XML-001, 뽑은 글을 AI에 넣는 경우는 WS-PI-001도 함께 확인해야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-FILE-001.code.python.md` (Python) · `WS-FILE-001.code.php.md` (PHP)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-FILE-001.code.python.md` (Python) · `WS-FILE-001.code.php.md` (PHP)
 
-기본 심각도: 주의
-기준: ASVS 5.0 V5.2.1 · ASVS 5.0 V5.2.6 · ASVS 5.0 V14.2.8 · CWE-400 · CWE-770(한도 없는 자원 할당) · CWE-212
+기본 심각도: 주의 · CWE-400 · CWE-770 · CWE-212

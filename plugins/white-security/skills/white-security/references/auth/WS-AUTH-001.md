@@ -19,7 +19,6 @@
 - 결제 금액·단가·할인·포인트는 서버의 주문·상품 데이터로 다시 계산해야 하고, 결제 뒤에는 결제대행사 조회 결과의 금액과 주문 금액을 맞춰 봐야 한다.
 - 수정 API는 요청 본문을 통째로 모델에 넣지 않고 바꿔도 되는 필드만 골라 넣어야 한다(`role`, `owner_id`, `is_admin` 같은 필드 보호).
 
-Code examples (read only the file for the stack you are writing): `WS-AUTH-001.code.python.md` (Python) · `WS-AUTH-001.code.js.md` (JavaScript) · `WS-AUTH-001.code.php.md` (PHP)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-AUTH-001.code.python.md` (Python) · `WS-AUTH-001.code.js.md` (JavaScript) · `WS-AUTH-001.code.php.md` (PHP)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A01(접근 통제 실패) · OWASP API 2023 API1(객체 수준 권한 검증 실패) · OWASP API 2023 API3(객체 속성 수준 권한 검증 실패) · OWASP API 2023 API5(기능 수준 권한 검증 실패) · ASVS 5.0 V8.2 · ASVS 5.0 V8.3 · CWE-862(권한 검사 누락) · CWE-639(사용자 제어 키를 통한 권한 우회) · CWE-863(잘못된 권한 부여) · CWE-306(중요 기능 인증 누락) · 국내 보안약점 49 보안기능-2(부적절한 인가) · 국내 보안약점 49 보안기능-1(적절한 인증 없는 중요 기능 허용) · 국내 보안약점 49 입력데이터 검증 및 표현-15(보안기능 결정에 사용되는 부적절한 입력값) · 기반시설 웹 21 IN(불충분한 권한 검증) · 기반시설 웹 21 IA(불충분한 인증) · 기반시설 웹 21 CC(쿠키 변조) · 기반시설 웹 21 PV(프로세스 검증 누락)
+기본 심각도: 위험 · CWE-862 · CWE-639 · CWE-863 · CWE-306

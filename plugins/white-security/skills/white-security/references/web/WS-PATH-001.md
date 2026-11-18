@@ -19,7 +19,6 @@
 - 검사는 URL 디코딩·유니코드 정규화를 모두 끝낸 값에 해야 한다.
 - ANSI(CP949) 변환을 거치면 `₩`가 `\`로 바뀌므로 차단 목록이 아닌 허용 문자로 검사해야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-PATH-001.code.express.md` (Express) · `WS-PATH-001.code.fastapi.md` (FastAPI) · `WS-PATH-001.code.laravel.md` (Laravel)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-PATH-001.code.express.md` (Express) · `WS-PATH-001.code.fastapi.md` (FastAPI) · `WS-PATH-001.code.laravel.md` (Laravel)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A01(접근 통제 실패) · ASVS 5.0 V5.3.2 · ASVS 5.0 V5.4.1 · ASVS 5.0 V1.1.1 · CWE-22(경로 조작) · CWE-23 · CWE-73 · CWE-99 · 국내 보안약점 49 입력데이터 검증 및 표현-3(경로 조작 및 자원 삽입) · 기반시설 웹 21 FD(파일 다운로드)
+기본 심각도: 위험 · CWE-22 · CWE-23 · CWE-73 · CWE-99

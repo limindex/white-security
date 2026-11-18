@@ -24,7 +24,6 @@
 
 비밀값 자체는 옮겨 적지 않고 앞 4자만 남겨 `…[가림]`으로 표기해야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-SEC-001.code.python.md` (Python) · `WS-SEC-001.code.js.md` (JavaScript) · `WS-SEC-001.code.php.md` (PHP)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-SEC-001.code.python.md` (Python) · `WS-SEC-001.code.js.md` (JavaScript) · `WS-SEC-001.code.php.md` (PHP)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A02(보안 설정 오류) · OWASP Top 10:2025 A07(인증 실패) · ASVS 5.0 V13.3 · CWE-798 · CWE-540 · CWE-312 · 국내 보안약점 49 보안기능-6(하드코드된 중요정보) · 국내 보안약점 49 보안기능-5(암호화되지 않은 중요정보) · 기반시설 웹 21 IL(정보 누출)
+기본 심각도: 위험 · CWE-798 · CWE-540 · CWE-312

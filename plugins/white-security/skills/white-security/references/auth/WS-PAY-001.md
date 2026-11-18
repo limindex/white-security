@@ -24,7 +24,6 @@
 
 결제대행사마다 서명 방식과 권장 확인 절차(서명 헤더, 조회 API 재확인)가 다르므로 그 PG의 공식 문서와 대조해야 하고, 문서를 찾지 못하면 "확인 필요"로 표시해야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-PAY-001.code.laravel.md` (Laravel) · `WS-PAY-001.code.nextjs.md` (Next.js) · `WS-PAY-001.code.fastapi.md` (FastAPI)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-PAY-001.code.laravel.md` (Laravel) · `WS-PAY-001.code.nextjs.md` (Next.js) · `WS-PAY-001.code.fastapi.md` (FastAPI)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A06(안전하지 않은 설계) · OWASP Top 10:2025 A08(소프트웨어·데이터 무결성 실패) · ASVS 5.0 V2.2.1 · ASVS 5.0 V2.2.2 · ASVS 5.0 V2.3.1 · ASVS 5.0 V2.3.3 · CWE-602 · CWE-472 · CWE-345 · CWE-347 · 국내 보안약점 49 입력데이터 검증 및 표현-15(보안기능 결정에 사용되는 부적절한 입력값) · 국내 보안약점 49 보안기능-10(부적절한 전자서명 확인) · 기반시설 웹 21 PV(프로세스 검증 누락)
+기본 심각도: 위험 · CWE-602 · CWE-472 · CWE-345 · CWE-347

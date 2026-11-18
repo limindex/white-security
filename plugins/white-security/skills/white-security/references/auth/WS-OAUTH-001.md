@@ -24,7 +24,6 @@
 
 제공자가 이메일 소유를 확인했는지(email_verified)는 제공자·계정마다 다르므로, 이메일 일치를 계정 연결의 근거로 삼은 코드는 안전하다고 보지 않아야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-OAUTH-001.code.laravel.md` (Laravel) · `WS-OAUTH-001.code.nextjs.md` (Next.js) · `WS-OAUTH-001.code.fastapi.md` (FastAPI)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-OAUTH-001.code.laravel.md` (Laravel) · `WS-OAUTH-001.code.nextjs.md` (Next.js) · `WS-OAUTH-001.code.fastapi.md` (FastAPI)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A07(인증 실패) · OWASP Top 10:2025 A01(접근 통제 실패) · OWASP API 2023 API2(인증 실패) · ASVS 5.0 V10.1.2 · ASVS 5.0 V10.2.1 · ASVS 5.0 V10.5.1 · ASVS 5.0 V10.5.2 · ASVS 5.0 V10.5.4 · ASVS 5.0 V6.8.1 · CWE-352(크로스사이트 요청 위조) · CWE-601 · CWE-287 · CWE-345 · 국내 보안약점 49 입력데이터 검증 및 표현-11(크로스사이트 요청 위조) · 국내 보안약점 49 입력데이터 검증 및 표현-7(신뢰되지 않는 URL 주소로 자동접속 연결) · 국내 보안약점 49 보안기능-10(부적절한 전자서명 확인) · 기반시설 웹 21 IA(불충분한 인증) · 기반시설 웹 21 CF(크로스사이트 요청 위조)
+기본 심각도: 위험 · CWE-352 · CWE-601 · CWE-287 · CWE-345

@@ -22,7 +22,6 @@
 
 코드가 오류 내용을 직접 응답에 넣는 문제는 WS-ERR-001, 남은 디버그 라우트·`dd()`·`phpinfo()`는 WS-ENC-001에서 다루므로 여기서는 설정과 실행 방식만 봐야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-CFG-001.code.laravel.md` (Laravel) · `WS-CFG-001.code.django.md` (Django) · `WS-CFG-001.code.flask.md` (Flask)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-CFG-001.code.laravel.md` (Laravel) · `WS-CFG-001.code.django.md` (Django) · `WS-CFG-001.code.flask.md` (Flask)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A02(보안 설정 오류) · OWASP API 2023 API8(보안 설정 오류) · ASVS 5.0 V13.4.2 · ASVS 5.0 V16.5.1 · CWE-489 · CWE-215 · CWE-209 · 국내 보안약점 49 캡슐화-2(제거되지 않고 남은 디버그 코드) · 국내 보안약점 49 에러처리-1(오류 메시지 정보노출) · 기반시설 웹 21 EP(에러 페이지 미흡) · 기반시설 웹 21 IL(정보 누출)
+기본 심각도: 위험 · CWE-489 · CWE-215 · CWE-209

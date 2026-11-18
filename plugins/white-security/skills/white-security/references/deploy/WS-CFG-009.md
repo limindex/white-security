@@ -23,7 +23,6 @@
 
 경로별 권한 검사 자체의 결함은 WS-AUTH-001·WS-AUTH-002에서 다루므로 여기서는 버전·목록·문서 노출만 봐야 한다. 경로를 지우는 일은 앱·외부 연동이 아직 쓰는지 사용자에게 확인한 뒤 해야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-CFG-009.code.fastapi.md` (FastAPI) · `WS-CFG-009.code.laravel.md` (Laravel)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-CFG-009.code.fastapi.md` (FastAPI) · `WS-CFG-009.code.laravel.md` (Laravel)
 
-기본 심각도: 주의
-기준: OWASP Top 10:2025 A02(보안 설정 오류) · OWASP API 2023 API9(자산 목록 관리 미흡) · ASVS 5.0 V13.4.5 · ASVS 5.0 V4.3.2 · ASVS 5.0 V4.1.4 · ASVS 5.0 V15.2.3 · CWE-912 · CWE-284(접근 통제 미흡) · 기반시설 웹 21 WM(불필요한 Method 악용)
+기본 심각도: 주의 · CWE-912 · CWE-284

@@ -24,7 +24,6 @@
 
 고시 제8조의 접속기록은 개인정보처리시스템에 접속한 취급자(관리자·운영자)가 대상이고 정보주체(일반 회원)는 빠지므로, 일반 회원 로그인 기록까지 2년 두라고 단정하지 않아야 한다. 제8조 ②는 접속기록과 개인정보 다운로드 상황을 점검하는 주기·방법을 내부 관리계획으로 정해 이행하도록 하므로, 코드로 확인할 수 없는 부분은 사용자에게 점검 절차가 있는지 물어야 한다. 오류 응답 내용은 WS-ERR-001에서 다룬다.
 
-Code examples (read only the file for the stack you are writing): `WS-LOG-001.code.laravel.md` (Laravel) · `WS-LOG-001.code.django.md` (Django)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-LOG-001.code.laravel.md` (Laravel) · `WS-LOG-001.code.django.md` (Django)
 
-기본 심각도: 주의
-기준: OWASP Top 10:2025 A09(로깅·경보 실패) · ASVS 5.0 V16.2.1 · ASVS 5.0 V16.2.5 · ASVS 5.0 V16.3.1 · ASVS 5.0 V16.3.2 · ASVS 5.0 V16.4.1 · ASVS 5.0 V16.4.2 · ASVS 5.0 V16.4.3 · CWE-778 · CWE-223 · CWE-532 · CWE-117
+기본 심각도: 주의 · CWE-778 · CWE-223 · CWE-532 · CWE-117

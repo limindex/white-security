@@ -24,7 +24,6 @@
 
 국내 점검(주요정보통신기반시설 상세가이드의 약한 비밀번호 정책)은 아직 문자 조합을 보는 경우가 있으므로, 이미 있는 조합 규칙은 지적하지 않고 참고로만 적어야 한다. bcrypt는 72바이트를 넘는 부분을 버리므로 긴 비밀번호를 받으면 Argon2id가 낫다.
 
-Code examples (read only the file for the stack you are writing): `WS-PWD-001.code.laravel.md` (Laravel) · `WS-PWD-001.code.nextjs.md` (Next.js) · `WS-PWD-001.code.django.md` (Django)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-PWD-001.code.laravel.md` (Laravel) · `WS-PWD-001.code.nextjs.md` (Next.js) · `WS-PWD-001.code.django.md` (Django)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A07(인증 실패) · OWASP Top 10:2025 A04(암호화 실패) · OWASP API 2023 API2(인증 실패) · ASVS 5.0 V6.2.1 · ASVS 5.0 V6.2.5 · ASVS 5.0 V6.2.10 · ASVS 5.0 V6.2.12 · ASVS 5.0 V6.4.3 · ASVS 5.0 V11.4.2 · CWE-916 · CWE-759 · CWE-521 · CWE-328 · CWE-256 · CWE-640 · 국내 보안약점 49 보안기능-9(취약한 비밀번호 허용) · 국내 보안약점 49 보안기능-14(솔트 없이 일방향 해쉬 함수 사용) · 국내 보안약점 49 보안기능-4(취약한 암호화 알고리즘 사용) · 기반시설 웹 21 BF(약한 비밀번호 정책) · 기반시설 웹 21 PR(비밀번호 복구 취약)
+기본 심각도: 위험 · CWE-916 · CWE-759 · CWE-521 · CWE-328 · CWE-256 · CWE-640

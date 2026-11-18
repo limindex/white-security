@@ -24,7 +24,6 @@
 
 이스케이프 코드를 지적할 때 이유로 "EUC-KR 멀티바이트 우회"를 들지 않아야 하고, 연결 문자셋이 GBK·Big5·Shift_JIS·CP932일 때만 그 우회를 근거로 함께 적어야 한다(EUC-KR이어도 이어 붙이는 쿼리 자체는 지적 대상).
 
-Code examples (read only the file for the stack you are writing): `WS-INJ-001.code.python.md` (Python) · `WS-INJ-001.code.js.md` (JavaScript) · `WS-INJ-001.code.php.md` (PHP)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-INJ-001.code.python.md` (Python) · `WS-INJ-001.code.js.md` (JavaScript) · `WS-INJ-001.code.php.md` (PHP)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A05(삽입) · ASVS 5.0 V1.2 · CWE-89(SQL 삽입) · 국내 보안약점 49 입력데이터 검증 및 표현-1(SQL 삽입) · 기반시설 웹 21 SI(SQL 인젝션)
+기본 심각도: 위험 · CWE-89

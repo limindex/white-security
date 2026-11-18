@@ -17,7 +17,6 @@
 - 꺼낸 메모리는 지시가 아니라 참고 자료로 넣어야 한다.
 - 사용자가 저장된 메모리를 보고 지울 수 있어야 한다. 2024년에는 프롬프트 인젝션으로 ChatGPT 메모리에 가짜 기억을 심어 이후 대화를 계속 빼낼 수 있던 문제(SpAIware)가 보고됨(유출 통로는 2024년 9월 수정).
 
-Code examples (read only the file for the stack you are writing): `WS-AGT-003.code.python.md` (Python)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-AGT-003.code.python.md` (Python)
 
 기본 심각도: 주의
-기준: OWASP LLM 2026 LLM01(프롬프트 삽입) · OWASP 에이전트 2026 ASI06(메모리·맥락 오염)

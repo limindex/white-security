@@ -23,7 +23,6 @@
 
 HSTS의 `includeSubDomains`·`preload`는 HTTP만 쓰는 하위 도메인을 막고 되돌리기 어려우므로, 모든 하위 도메인이 HTTPS인지 사용자에게 확인을 받고 권해야 한다. `X-Frame-Options`는 낡은 방식이라 `frame-ancestors`를 함께 쓰라고 안내해야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-CFG-003.code.nextjs.md` (Next.js) · `WS-CFG-003.code.django.md` (Django) · `WS-CFG-003.code.nginx.md` (Nginx)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-CFG-003.code.nextjs.md` (Next.js) · `WS-CFG-003.code.django.md` (Django) · `WS-CFG-003.code.nginx.md` (Nginx)
 
-기본 심각도: 주의
-기준: OWASP Top 10:2025 A02(보안 설정 오류) · OWASP API 2023 API8(보안 설정 오류) · ASVS 5.0 V3.4.1 · ASVS 5.0 V3.4.3 · ASVS 5.0 V3.4.4 · ASVS 5.0 V3.4.5 · ASVS 5.0 V3.4.6 · ASVS 5.0 V12.2.1 · CWE-1021 · CWE-693 · CWE-319 · 기반시설 웹 21 SN(데이터 평문 전송)
+기본 심각도: 주의 · CWE-1021 · CWE-693 · CWE-319

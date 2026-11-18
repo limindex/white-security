@@ -17,7 +17,6 @@
 - 링크에는 `rel="noopener noreferrer"`를 붙이고, 주소에 대화 내용·토큰이 붙어 나가지 않는지 확인해야 한다.
 - 비공개 데이터, 남이 쓴 글, 외부로 나가는 통로가 한 기능에 모이면(lethal trifecta) 통로부터 끊어야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-PI-002.code.js.md` (JavaScript) · `WS-PI-002.code.python.md` (Python)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-PI-002.code.js.md` (JavaScript) · `WS-PI-002.code.python.md` (Python)
 
-기본 심각도: 위험
-기준: OWASP LLM 2026 LLM01(프롬프트 삽입) · OWASP LLM 2026 LLM02(민감 정보 노출) · OWASP LLM 2026 LLM10(출력 처리 미흡) · ASVS 5.0 V1.3.5 · ASVS 5.0 V3.4.3 · CWE-200(권한 없는 자에게 민감 정보 노출)
+기본 심각도: 위험 · CWE-200

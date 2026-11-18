@@ -17,7 +17,6 @@
 - 원본 문서를 지우거나 권한을 바꾸면 벡터 DB에서도 지우거나 고쳐야 한다.
 - 검색된 문서는 지시가 아니라 자료로 넣고(WS-PI-001), 답에는 근거 문서를 함께 보여야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-LLM-005.code.python.md` (Python)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-LLM-005.code.python.md` (Python)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A01(접근 통제 실패) · OWASP LLM 2026 LLM09(벡터·임베딩 취약점) · OWASP LLM 2026 LLM05(데이터·모델 오염) · ASVS 5.0 V8.2.2 · CWE-862(권한 검사 누락) · 국내 보안약점 49 보안기능-2(부적절한 인가) · 기반시설 웹 21 IN(불충분한 권한 검증)
+기본 심각도: 위험 · CWE-862

@@ -22,7 +22,6 @@
 
 `EXPO_PUBLIC_`·`NEXT_PUBLIC_`·`VITE_` 값과 `String.fromEnvironment` 상수는 빌드 때 앱에 글자 그대로 들어가므로 "환경 변수라 안전"이라고 판단하지 않아야 한다. 공개를 전제로 한 키(Supabase anon·Firebase 설정)는 키보다 RLS·보안 규칙(WS-BAAS-001·002)이 핵심이다. 서버 쪽 비밀값 관리는 WS-SEC-001, AI 호출 비용 한도는 WS-LLM-004에서 다룬다.
 
-Code examples (read only the file for the stack you are writing): `WS-MOB-001.code.expo.md` (Expo) · `WS-MOB-001.code.flutter.md` (Flutter) · `WS-MOB-001.code.nextjs.md` (Next.js)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-MOB-001.code.expo.md` (Expo) · `WS-MOB-001.code.flutter.md` (Flutter) · `WS-MOB-001.code.nextjs.md` (Next.js)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A02(보안 설정 오류) · OWASP Top 10:2025 A07(인증 실패) · OWASP API 2023 API8(보안 설정 오류) · OWASP Mobile 2024 M1(자격 증명 부적절 사용) · OWASP Mobile 2024 M7(바이너리 보호 부족) · ASVS 5.0 V13.3.1 · ASVS 5.0 V13.3.2 · CWE-798 · CWE-321 · CWE-200(권한 없는 자에게 민감 정보 노출) · 국내 보안약점 49 보안기능-6(하드코드된 중요정보) · 기반시설 웹 21 IL(정보 누출)
+기본 심각도: 위험 · CWE-798 · CWE-321 · CWE-200

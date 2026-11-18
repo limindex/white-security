@@ -23,7 +23,6 @@
 
 로그인 시도 제한은 WS-AUTH-003, AI 호출 비용은 WS-LLM-004, 크롤러 대량 수집은 WS-BOT-001에서 자세히 다룬다. 프록시·CDN 뒤에서 IP로 셀 때는 신뢰하는 프록시가 넣은 주소만 쓰게 설정돼 있는지(Laravel TrustProxies, uvicorn `--forwarded-allow-ips`, nginx real_ip) 함께 봐야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-CFG-008.code.laravel.md` (Laravel) · `WS-CFG-008.code.fastapi.md` (FastAPI) · `WS-CFG-008.code.nginx.md` (Nginx)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-CFG-008.code.laravel.md` (Laravel) · `WS-CFG-008.code.fastapi.md` (FastAPI) · `WS-CFG-008.code.nginx.md` (Nginx)
 
-기본 심각도: 주의
-기준: OWASP API 2023 API4(자원 소비 무제한) · ASVS 5.0 V2.4.1 · ASVS 5.0 V15.2.2 · CWE-770(한도 없는 자원 할당) · CWE-400 · CWE-799 · 기반시설 웹 21 AU(자동화 공격)
+기본 심각도: 주의 · CWE-770 · CWE-400 · CWE-799

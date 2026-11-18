@@ -20,7 +20,6 @@
 - LDAP 필터 값은 `escape_filter_chars`로, DN 값은 DN용 이스케이프로 처리해야 한다.
 - XPath 식에 입력을 이어 붙이지 말고 변수 바인딩이나 허용 목록 검사를 거쳐야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-INJ-004.code.express.md` (Express) · `WS-INJ-004.code.fastapi.md` (FastAPI) · `WS-INJ-004.code.python.md` (Python)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-INJ-004.code.express.md` (Express) · `WS-INJ-004.code.fastapi.md` (FastAPI) · `WS-INJ-004.code.python.md` (Python)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A05(삽입) · ASVS 5.0 V1.2.4 · ASVS 5.0 V1.2.6 · ASVS 5.0 V1.2.7 · ASVS 5.0 V15.3.5 · CWE-943 · CWE-90 · CWE-643 · CWE-20(입력값 검증 미흡) · 국내 보안약점 49 입력데이터 검증 및 표현-9(XML 삽입) · 국내 보안약점 49 입력데이터 검증 및 표현-10(LDAP 삽입) · 기반시설 웹 21 CI(코드 인젝션)
+기본 심각도: 위험 · CWE-943 · CWE-90 · CWE-643 · CWE-20

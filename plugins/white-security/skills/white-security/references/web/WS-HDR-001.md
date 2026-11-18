@@ -18,7 +18,6 @@
 - 내려받기 파일 이름은 `filename*=UTF-8''` 형식으로 인코딩해야 한다(한글 이름 포함).
 - 응답 헤더 값은 직접 이어 붙이지 말고 프레임워크 함수로 넣어야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-HDR-001.code.php.md` (PHP) · `WS-HDR-001.code.python.md` (Python) · `WS-HDR-001.code.express.md` (Express)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-HDR-001.code.php.md` (PHP) · `WS-HDR-001.code.python.md` (Python) · `WS-HDR-001.code.express.md` (Express)
 
-기본 심각도: 주의
-기준: OWASP Top 10:2025 A05(삽입) · ASVS 5.0 V1.2.1 · ASVS 5.0 V1.3.11 · ASVS 5.0 V5.4.2 · CWE-113 · CWE-93 · 국내 보안약점 49 입력데이터 검증 및 표현-13(HTTP 응답분할)
+기본 심각도: 주의 · CWE-113 · CWE-93

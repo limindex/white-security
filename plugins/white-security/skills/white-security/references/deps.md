@@ -4,9 +4,9 @@ Known-vulnerable package versions are found with each ecosystem's official scann
 
 ## Consent first
 
-Every scanner below looks up an online advisory database, which sends your dependency list (package names and versions) to that service. Ask once per session before the first run:
+Every scanner below looks up an online advisory database, which sends your dependency list (package names and versions) to that service. Some scanners can also install packages if run the wrong way, and installing a package runs its code — so use only the read-only forms in the table. Ask once per session before the first run:
 
-> 의존성 목록(패키지 이름·버전)을 <서비스>에 보내 알려진 취약점을 조회합니다. 실행할까요?
+> 의존성 목록(패키지 이름·버전)을 <서비스>에 보내 알려진 취약점을 조회합니다. 패키지를 설치하면 그 코드가 실행될 수 있어, 설치 없이 잠금 파일·고정 버전만 읽는 방식으로 실행합니다. 실행할까요?
 
 If the user declines, compare versions with `advisories.md` only and say the scan was not run.
 
@@ -22,11 +22,12 @@ If the user declines, compare versions with `advisories.md` only and say the sca
 | npm | `package-lock.json` | `npm audit --json` (`--omit=dev` for production only) |
 | pnpm | `pnpm-lock.yaml` | `pnpm audit --json` |
 | Yarn | `yarn.lock` | Yarn 1: `yarn audit --json` · Yarn 2+: `yarn npm audit --json` |
-| Python | `requirements.txt` or the active env | `pip-audit -r requirements.txt -f json` (or `pip-audit` for the current env) |
+| Python | every line pinned `==` (or hashed) | `pip-audit -r requirements.txt --no-deps --disable-pip -f json` (add `--require-hashes` if the file has hashes) |
 | PHP | `composer.lock` | `composer audit --format=json` (Composer 2.4+) |
 | Any (incl. Dart/Flutter `pubspec.lock`, Go, Rust, Maven) | lockfiles | `osv-scanner scan source -r .` (v2) or `osv-scanner -r .` (v1) |
 | Container image | built image | `docker scout cves <image>` or `trivy image <image>` (optional) |
 
+- Never run plain `pip-audit -r <file>` on a project you are checking: without `--no-deps --disable-pip` it resolves the file with pip in a temporary environment, which is the same as `pip install` (package build code runs). Unpinned `requirements.txt` (`>=`, no version) → don't run pip-audit; use `osv-scanner` (reads files statically) and report the missing pins (`WS-SUP-004`).
 - No lockfile: say so — versions are not pinned, so results are approximate (`WS-SUP-004`).
 - Dependabot: if `.github/dependabot.yml` exists, alerts live on GitHub. Reading them (`gh api repos/<owner>/<repo>/dependabot/alerts`) needs network and auth — ask first. Treat open alerts like scanner results.
 - Runtimes: read versions (`node --version`, `python3 --version`, `php -v`, `java -version`, Docker `FROM` tags) and compare with `advisories.md`.

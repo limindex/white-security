@@ -24,7 +24,6 @@
 
 제8조 접속기록의 대상은 개인정보처리시스템에 접속한 취급자이고 정보주체(일반 회원)는 빠지므로, 회원 로그인 기록까지 2년 두라고 단정하지 않아야 한다(보안 로그 일반은 WS-LOG-001). 2년 조건(5만 명 이상, 고유식별정보·민감정보 처리, 기간통신사업자)과 점검 주기는 저장소만으로 판단하기 어려워 사용자에게 확인해야 한다. 처리한 정보주체 칸에는 회원 id 같은 식별값을 쓰고 주민등록번호 같은 원문은 넣지 않아야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-PRV-003.code.laravel.md` (Laravel) · `WS-PRV-003.code.sql.md` (SQL)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-PRV-003.code.laravel.md` (Laravel) · `WS-PRV-003.code.sql.md` (SQL)
 
-기본 심각도: 주의
-기준: OWASP Top 10:2025 A09(로깅·경보 실패) · ASVS 5.0 V16.2.1 · ASVS 5.0 V16.2.2 · ASVS 5.0 V16.3.2 · ASVS 5.0 V16.4.2 · ASVS 5.0 V16.4.3 · CWE-778 · CWE-223
+기본 심각도: 주의 · CWE-778 · CWE-223

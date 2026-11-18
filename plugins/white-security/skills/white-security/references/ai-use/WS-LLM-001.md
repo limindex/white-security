@@ -17,7 +17,6 @@
 - 화면에는 `textContent`나 자동 이스케이프로 그려야 하고, HTML이 필요하면 새니타이저를 거쳐야 한다(이미지 유출 통로는 WS-PI-002).
 - AI가 고른 파일 경로·URL도 허용 목록으로 검사해야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-LLM-001.code.python.md` (Python) · `WS-LLM-001.code.js.md` (JavaScript) · `WS-LLM-001.code.php.md` (PHP)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-LLM-001.code.python.md` (Python) · `WS-LLM-001.code.js.md` (JavaScript) · `WS-LLM-001.code.php.md` (PHP)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A05(삽입) · OWASP LLM 2026 LLM10(출력 처리 미흡) · OWASP 에이전트 2026 ASI05(예상치 못한 코드 실행) · ASVS 5.0 V1.3.2 · ASVS 5.0 V1.2.4 · ASVS 5.0 V1.2.5 · ASVS 5.0 V3.2.2 · CWE-1426 · CWE-94(코드 삽입) · CWE-79(크로스사이트 스크립팅) · CWE-89(SQL 삽입) · CWE-78(운영체제 명령어 삽입) · 국내 보안약점 49 입력데이터 검증 및 표현-1(SQL 삽입) · 국내 보안약점 49 입력데이터 검증 및 표현-2(코드 삽입) · 국내 보안약점 49 입력데이터 검증 및 표현-4(크로스사이트 스크립트) · 국내 보안약점 49 입력데이터 검증 및 표현-5(운영체제 명령어 삽입) · 기반시설 웹 21 CI(코드 인젝션) · 기반시설 웹 21 SI(SQL 인젝션) · 기반시설 웹 21 XS(크로스사이트 스크립트)
+기본 심각도: 위험 · CWE-1426 · CWE-94 · CWE-79 · CWE-89 · CWE-78

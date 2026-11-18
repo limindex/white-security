@@ -24,7 +24,6 @@
 
 사용자가 준 URL로 서버가 요청하는 문제는 WS-SSRF-001, 웹훅 서명 확인은 WS-PAY-001, AI 모델 출력은 WS-LLM-001, 인증서 검증 끔 자체는 WS-CRY-001에서 다룬다. 이 이슈는 내가 골라 연동한 외부 서비스의 응답을 믿는 문제만 본다.
 
-Code examples (read only the file for the stack you are writing): `WS-SUP-007.code.fastapi.md` (FastAPI) · `WS-SUP-007.code.nextjs.md` (Next.js)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-SUP-007.code.fastapi.md` (FastAPI) · `WS-SUP-007.code.nextjs.md` (Next.js)
 
-기본 심각도: 주의
-기준: OWASP Top 10:2025 A08(소프트웨어·데이터 무결성 실패) · OWASP API 2023 API10(외부 API 안전하지 않은 사용) · ASVS 5.0 V2.2.1 · ASVS 5.0 V15.3.2 · ASVS 5.0 V12.3.2 · ASVS 5.0 V16.5.2 · CWE-20(입력값 검증 미흡) · CWE-345 · CWE-400
+기본 심각도: 주의 · CWE-20 · CWE-345 · CWE-400

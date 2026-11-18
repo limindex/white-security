@@ -18,7 +18,6 @@
 - JSON으로 읽은 뒤에도 타입·필드를 검사하고, 쓸 값만 꺼내야 한다.
 - AI 모델 파일(`.pkl`, `.pt` 등)도 pickle일 수 있음. 모델 공급망은 WS-SUP-008 범위.
 
-Code examples (read only the file for the stack you are writing): `WS-DES-001.code.python.md` (Python) · `WS-DES-001.code.js.md` (JavaScript) · `WS-DES-001.code.php.md` (PHP)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-DES-001.code.python.md` (Python) · `WS-DES-001.code.js.md` (JavaScript) · `WS-DES-001.code.php.md` (PHP)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A08(소프트웨어·데이터 무결성 실패) · ASVS 5.0 V1.5.2 · CWE-502(신뢰할 수 없는 데이터의 역직렬화) · 국내 보안약점 49 코드오류-5(신뢰할 수 없는 데이터의 역직렬화)
+기본 심각도: 위험 · CWE-502

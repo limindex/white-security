@@ -18,7 +18,6 @@
 - 가져올 도메인이 정해져 있으면 허용 목록을 써야 한다. 클라우드에서는 IMDSv2(토큰이 있어야 답하는 메타데이터 방식)를 켜고, 서버의 바깥 요청은 전용 프록시·방화벽으로 좁혀야 한다.
 - AI 에이전트의 웹 가져오기 도구도 이 함수를 거쳐야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-SSRF-001.code.python.md` (Python) · `WS-SSRF-001.code.js.md` (JavaScript) · `WS-SSRF-001.code.php.md` (PHP)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-SSRF-001.code.python.md` (Python) · `WS-SSRF-001.code.js.md` (JavaScript) · `WS-SSRF-001.code.php.md` (PHP)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A01(접근 통제 실패) · OWASP API 2023 API7(서버사이드 요청 위조) · ASVS 5.0 V1.3.6 · ASVS 5.0 V15.3.2 · ASVS 5.0 V13.2.4 · CWE-918(서버사이드 요청 위조) · 국내 보안약점 49 입력데이터 검증 및 표현-12(서버사이드 요청 위조) · 기반시설 웹 21 SF(서버사이드 요청 위조)
+기본 심각도: 위험 · CWE-918

@@ -20,7 +20,6 @@
 - 에이전트의 설치 명령(`npm install`, `pip install`, `composer require`)은 자동 승인 목록에 넣지 않아야 한다.
 - 사내 전용 패키지 이름이 공개 레지스트리에서 비어 있어 남이 먼저 등록할 수 있는지(Dependency Confusion, 의존성 혼동) 확인하고, 레지스트리 범위를 고정해야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-SUP-001.code.python.md` (Python) · `WS-SUP-001.code.js.md` (JavaScript) · `WS-SUP-001.code.php.md` (PHP)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-SUP-001.code.python.md` (Python) · `WS-SUP-001.code.js.md` (JavaScript) · `WS-SUP-001.code.php.md` (PHP)
 
 기본 심각도: 위험
-기준: OWASP Top 10:2025 A03(소프트웨어 공급망 실패) · OWASP LLM 2026 LLM07(잘못된 정보) · OWASP 에이전트 2026 ASI05(예상치 못한 코드 실행) · ASVS 5.0 V15.2 · 국내 보안약점 49 보안기능-15(무결성 검사 없는 코드 다운로드)

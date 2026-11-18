@@ -24,7 +24,6 @@
 
 SHA로 고정한 액션은 Dependabot 보안 알림이 오지 않으므로(GitHub 문서) Dependabot 버전 업데이트(`github-actions`)를 켜서 고정값을 갱신하라고 안내해야 한다. 의존성 잠금 파일은 WS-SUP-004, 설치 스크립트는 WS-SUP-003, 워크플로 파일 속 비밀값은 WS-SEC-001에서 다룬다.
 
-Code examples (read only the file for the stack you are writing): `WS-SUP-005.code.yaml.md` (YAML) · `WS-SUP-005.code.dockerfile.md` (Dockerfile)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-SUP-005.code.yaml.md` (YAML) · `WS-SUP-005.code.dockerfile.md` (Dockerfile)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A08(소프트웨어·데이터 무결성 실패) · OWASP Top 10:2025 A03(소프트웨어 공급망 실패) · ASVS 5.0 V3.6.1 · ASVS 5.0 V15.2.4 · ASVS 5.0 V13.3.2 · CWE-494 · CWE-829 · CWE-77(명령어 삽입) · CWE-345 · 국내 보안약점 49 보안기능-15(무결성 검사 없는 코드 다운로드) · 국내 보안약점 49 보안기능-10(부적절한 전자서명 확인)
+기본 심각도: 위험 · CWE-494 · CWE-829 · CWE-77 · CWE-345

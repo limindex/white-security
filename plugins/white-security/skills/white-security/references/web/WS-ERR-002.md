@@ -20,7 +20,6 @@
 - 금액은 부동소수점 대신 정수(원 단위)나 `Decimal`로 계산해야 한다.
 - 권한 같은 상태 변수는 처음에 거부 값으로 초기화해야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-ERR-002.code.express.md` (Express) · `WS-ERR-002.code.laravel.md` (Laravel) · `WS-ERR-002.code.fastapi.md` (FastAPI)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-ERR-002.code.express.md` (Express) · `WS-ERR-002.code.laravel.md` (Laravel) · `WS-ERR-002.code.fastapi.md` (FastAPI)
 
-기본 심각도: 주의
-기준: OWASP Top 10:2025 A10(예외 상황 처리 미흡) · ASVS 5.0 V1.4.2 · ASVS 5.0 V1.4.3 · ASVS 5.0 V15.3.5 · CWE-476(널 포인터 역참조) · CWE-404 · CWE-672 · CWE-457 · CWE-190 · CWE-20(입력값 검증 미흡) · 국내 보안약점 49 코드오류-1(Null Pointer 역참조) · 국내 보안약점 49 코드오류-2(부적절한 자원 해제) · 국내 보안약점 49 코드오류-3(해제된 자원 사용) · 국내 보안약점 49 코드오류-4(초기화되지 않은 변수 사용) · 국내 보안약점 49 입력데이터 검증 및 표현-14(정수형 오버플로우)
+기본 심각도: 주의 · CWE-476 · CWE-404 · CWE-672 · CWE-457 · CWE-190 · CWE-20

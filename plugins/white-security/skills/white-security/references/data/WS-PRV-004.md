@@ -24,7 +24,6 @@
 
 제24조의2 ①은 "제24조제1항에도 불구하고"로 시작해 별도 동의만으로는 주민등록번호 처리 근거가 되지 않으므로 "동의받았으니 괜찮다"는 설명을 그대로 받아들이지 않아야 하고, 근거 여부의 최종 판단은 사용자(필요하면 법률 전문가)에게 맡겨야 한다. 정보통신서비스 제공자는 정보통신망법 제23조의2에 따라 본인확인기관 등 예외가 아니면 이용자 주민등록번호를 수집·이용할 수 없다. 본인확인 결과로 받는 연계정보(CI)도 사람을 평생 식별하는 값이라 같은 수준의 보호(로그·URL 제외, 접근 제한)를 권하되 법적 암호화 의무로 단정하지 않아야 한다. 저장 암호화 방식은 WS-PRV-001, 본인확인 결과 위변조는 WS-AUTH-005.
 
-Code examples (read only the file for the stack you are writing): `WS-PRV-004.code.laravel.md` (Laravel) · `WS-PRV-004.code.nextjs.md` (Next.js)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-PRV-004.code.laravel.md` (Laravel) · `WS-PRV-004.code.nextjs.md` (Next.js)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A06(안전하지 않은 설계) · OWASP Top 10:2025 A04(암호화 실패) · ASVS 5.0 V14.1.1 · ASVS 5.0 V14.2.1 · ASVS 5.0 V14.2.6 · CWE-359 · CWE-312 · CWE-532 · 국내 보안약점 49 보안기능-5(암호화되지 않은 중요정보)
+기본 심각도: 위험 · CWE-359 · CWE-312 · CWE-532

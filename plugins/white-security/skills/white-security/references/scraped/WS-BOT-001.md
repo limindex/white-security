@@ -17,7 +17,6 @@
 - 프록시·CDN 뒤라면 신뢰하는 프록시가 넣은 IP만 써야 한다(`X-Forwarded-For`는 누구나 바꿔 보낼 수 있음). User-Agent만 보고 막거나 허용하지 않아야 한다.
 - 트래픽·대역폭 비용 경보를 걸어야 한다. Read the Docs는 2024년 5월 한 크롤러가 73TB를 내려받아 대역폭 비용이 5천 달러를 넘었다고 밝힘. Wikimedia는 2025년 가장 비싼 트래픽의 65% 이상이 봇이라고 밝힘.
 
-Code examples (read only the file for the stack you are writing): `WS-BOT-001.code.python.md` (Python) · `WS-BOT-001.code.nginx.md` (Nginx)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-BOT-001.code.python.md` (Python) · `WS-BOT-001.code.nginx.md` (Nginx)
 
-기본 심각도: 주의
-기준: OWASP API 2023 API4(자원 소비 무제한) · ASVS 5.0 V2.4.1 · ASVS 5.0 V15.3.4 · CWE-799 · CWE-770(한도 없는 자원 할당) · 기반시설 웹 21 AU(자동화 공격)
+기본 심각도: 주의 · CWE-799 · CWE-770

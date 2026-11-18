@@ -24,7 +24,6 @@
 
 Android는 같은 링크를 여러 앱이 등록할 수 있고, 12 이상에서는 확인되지 않은 웹 링크를 앱으로 바로 열지 않는다(Android 문서). Apple도 같은 스킴을 다른 앱이 등록하면 어느 앱이 열릴지 정해져 있지 않다고 밝힌다. OAuth 앱 로그인은 PKCE가 기본이며 서버 쪽 redirect_uri 검증은 WS-OAUTH-001에서 다룬다. 서버의 권한 확인 자체는 WS-AUTH-001·WS-MOB-005에서 다룬다.
 
-Code examples (read only the file for the stack you are writing): `WS-MOB-003.code.expo.md` (Expo) · `WS-MOB-003.code.flutter.md` (Flutter) · `WS-MOB-003.code.express.md` (Express)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-MOB-003.code.expo.md` (Expo) · `WS-MOB-003.code.flutter.md` (Flutter) · `WS-MOB-003.code.express.md` (Express)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A01(접근 통제 실패) · OWASP Top 10:2025 A07(인증 실패) · OWASP API 2023 API2(인증 실패) · OWASP Mobile 2024 M4(입출력 검증 부족) · OWASP Mobile 2024 M8(보안 설정 오류) · OWASP Mobile 2024 M3(취약한 인증·인가) · ASVS 5.0 V14.2.1 · ASVS 5.0 V6.5.1 · ASVS 5.0 V6.5.5 · ASVS 5.0 V10.4.6 · ASVS 5.0 V2.2.1 · CWE-939 · CWE-20(입력값 검증 미흡) · CWE-601 · CWE-598 · 국내 보안약점 49 입력데이터 검증 및 표현-7(신뢰되지 않는 URL 주소로 자동접속 연결) · 국내 보안약점 49 입력데이터 검증 및 표현-15(보안기능 결정에 사용되는 부적절한 입력값) · 기반시설 웹 21 IA(불충분한 인증) · 기반시설 웹 21 PV(프로세스 검증 누락)
+기본 심각도: 위험 · CWE-939 · CWE-20 · CWE-601 · CWE-598

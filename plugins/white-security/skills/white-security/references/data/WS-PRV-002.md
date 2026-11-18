@@ -23,7 +23,6 @@
 
 어떤 보안 사건을 남길지는 WS-LOG-001, 접속기록 법정 항목은 WS-PRV-003, AI API로 보내는 개인정보는 WS-LLM-003에서 다룬다. 개인정보를 외부(특히 국외) 오류 추적 서비스로 보내면 처리 위탁·국외 이전에 해당할 수 있으므로, 가림이 어려운 값을 보내야 한다면 처리방침 기재 여부를 사용자에게 확인하도록 안내해야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-PRV-002.code.fastapi.md` (FastAPI) · `WS-PRV-002.code.nextjs.md` (Next.js)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-PRV-002.code.fastapi.md` (FastAPI) · `WS-PRV-002.code.nextjs.md` (Next.js)
 
-기본 심각도: 주의
-기준: OWASP Top 10:2025 A09(로깅·경보 실패) · OWASP Top 10:2025 A02(보안 설정 오류) · ASVS 5.0 V16.2.5 · ASVS 5.0 V14.2.1 · ASVS 5.0 V14.2.3 · ASVS 5.0 V16.4.2 · CWE-532 · CWE-359 · CWE-200(권한 없는 자에게 민감 정보 노출) · 기반시설 웹 21 IL(정보 누출)
+기본 심각도: 주의 · CWE-532 · CWE-359 · CWE-200

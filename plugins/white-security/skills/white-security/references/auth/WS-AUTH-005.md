@@ -23,7 +23,6 @@
 
 본인확인기관마다 결과 복호화·검증 방법이 다르므로 기관이 준 서버 모듈과 문서대로 쓰는지 봐야 하고, 모듈 호출이 보이지 않으면 "확인 필요"로 표시해야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-AUTH-005.code.laravel.md` (Laravel) · `WS-AUTH-005.code.nextjs.md` (Next.js) · `WS-AUTH-005.code.fastapi.md` (FastAPI)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-AUTH-005.code.laravel.md` (Laravel) · `WS-AUTH-005.code.nextjs.md` (Next.js) · `WS-AUTH-005.code.fastapi.md` (FastAPI)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A07(인증 실패) · OWASP Top 10:2025 A06(안전하지 않은 설계) · OWASP API 2023 API2(인증 실패) · ASVS 5.0 V2.2.2 · ASVS 5.0 V8.3.1 · ASVS 5.0 V6.6.2 · CWE-602 · CWE-603 · CWE-807 · CWE-294 · 국내 보안약점 49 입력데이터 검증 및 표현-15(보안기능 결정에 사용되는 부적절한 입력값) · 국내 보안약점 49 보안기능-1(적절한 인증 없는 중요 기능 허용) · 기반시설 웹 21 IA(불충분한 인증) · 기반시설 웹 21 CC(쿠키 변조) · 기반시설 웹 21 PV(프로세스 검증 누락)
+기본 심각도: 위험 · CWE-602 · CWE-603 · CWE-807 · CWE-294

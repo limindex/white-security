@@ -24,7 +24,6 @@
 
 Android 9(API 28) 이상을 대상으로 하면 cleartext가 기본 꺼짐, 27 이하는 기본 허용이다. `usesCleartextTraffic`은 지원 중단 예정이라 API 24 이상은 network security config로 정하고, 이 설정은 플랫폼 HTTP 스택에 적용될 뿐 소켓 API는 따르지 않는다(Android 문서). ATS는 iOS 9 SDK 이상에서 기본으로 켜지고 URLSession 같은 Apple 네트워크 API에 적용되며, `NSAllowsArbitraryLoads`를 켜면 App Store 심사에서 사유를 내야 한다(Apple 문서). Flutter `dart:io`·`package:http` 요청은 자체 소켓을 써서 ATS·cleartext 설정은 물론 network_security_config의 `pin-set`·`debug-overrides`도 적용된다고 기대할 수 없으므로(Flutter 2.0에서 넣은 http 차단 정책은 문서에 2.2에서 되돌림(제안)으로 적혀 있어 지금 동작을 기대할 근거가 없음) 플랫폼 설정만 보고 안전하다고 판단하지 않아야 한다. 인증서 고정은 키 교체 때 앱이 끊기는 부담이 있어 기본 권장이 아니고, `pin-set`의 `expiration`은 업데이트 안 된 앱의 연결을 살리지만 그 날짜 뒤에는 고정이 풀린다(Android 문서). 서버 쪽 TLS 설정·`verify=False`는 WS-CRY-001에서 다룬다.
 
-Code examples (read only the file for the stack you are writing): `WS-MOB-006.code.expo.md` (Expo) · `WS-MOB-006.code.flutter.md` (Flutter) · `WS-MOB-006.code.kotlin.md` (Kotlin)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-MOB-006.code.expo.md` (Expo) · `WS-MOB-006.code.flutter.md` (Flutter) · `WS-MOB-006.code.kotlin.md` (Kotlin)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A04(암호화 실패) · OWASP Top 10:2025 A02(보안 설정 오류) · OWASP Mobile 2024 M5(안전하지 않은 통신) · OWASP Mobile 2024 M8(보안 설정 오류) · ASVS 5.0 V12.2.1 · ASVS 5.0 V12.3.2 · ASVS 5.0 V12.1.1 · CWE-319 · CWE-295 · CWE-297 · 국내 보안약점 49 보안기능-11(부적절한 인증서 유효성 검증) · 국내 보안약점 49 보안기능-5(암호화되지 않은 중요정보) · 기반시설 웹 21 SN(데이터 평문 전송)
+기본 심각도: 위험 · CWE-319 · CWE-295 · CWE-297

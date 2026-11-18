@@ -18,7 +18,6 @@
 - 에이전트가 다른 에이전트를 부르거나 새 작업을 만드는 횟수와 깊이를 제한해야 한다.
 - 다른 에이전트·도구가 준 결과는 다음 단계에 넣기 전에 형식을 검사해야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-AGT-005.code.python.md` (Python)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-AGT-005.code.python.md` (Python)
 
-기본 심각도: 주의
-기준: OWASP LLM 2026 LLM06(자원 소비 무제한) · OWASP 에이전트 2026 ASI08(연쇄 장애) · OWASP 에이전트 2026 ASI10(통제 이탈 에이전트) · ASVS 5.0 V15.2.2 · CWE-834 · CWE-770(한도 없는 자원 할당) · 국내 보안약점 49 시간 및 상태-2(종료되지 않는 반복문 또는 재귀 함수)
+기본 심각도: 주의 · CWE-834 · CWE-770

@@ -20,7 +20,6 @@
 - 세션 쿠키는 `HttpOnly`·`Secure`·`SameSite`를 켜고, 로그인 토큰은 가능하면 `localStorage`를 피해야 한다.
 - 세션에는 비활동·최대 유지 시간을 두고, 비밀번호 변경 때 다른 세션을 끊을 수 있어야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-SESS-001.code.laravel.md` (Laravel) · `WS-SESS-001.code.nextjs.md` (Next.js) · `WS-SESS-001.code.fastapi.md` (FastAPI)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-SESS-001.code.laravel.md` (Laravel) · `WS-SESS-001.code.nextjs.md` (Next.js) · `WS-SESS-001.code.fastapi.md` (FastAPI)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A07(인증 실패) · OWASP API 2023 API2(인증 실패) · ASVS 5.0 V7.2.4 · ASVS 5.0 V7.4.1 · ASVS 5.0 V9.1.1 · ASVS 5.0 V9.1.2 · ASVS 5.0 V9.2.1 · ASVS 5.0 V9.2.3 · ASVS 5.0 V3.3.1 · ASVS 5.0 V3.3.4 · CWE-384 · CWE-347 · CWE-613 · CWE-1004 · CWE-614 · 국내 보안약점 49 보안기능-10(부적절한 전자서명 확인) · 국내 보안약점 49 보안기능-12(사용자 하드디스크에 저장되는 쿠키를 통한 정보 노출) · 기반시설 웹 21 IS(불충분한 세션 관리) · 기반시설 웹 21 CC(쿠키 변조)
+기본 심각도: 위험 · CWE-384 · CWE-347 · CWE-613 · CWE-1004 · CWE-614

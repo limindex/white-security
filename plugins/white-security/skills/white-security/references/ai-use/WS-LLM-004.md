@@ -17,7 +17,6 @@
 - AI API 키는 서버에만 두어야 한다. 2024년 Sysdig 분석은 훔친 클라우드 키로 남의 AI를 쓰는 LLMjacking 피해가 하루 4만 6천 달러를 넘을 수 있다고 계산함.
 - 시간 초과와 재시도 횟수를 정해야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-LLM-004.code.python.md` (Python) · `WS-LLM-004.code.js.md` (JavaScript)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-LLM-004.code.python.md` (Python) · `WS-LLM-004.code.js.md` (JavaScript)
 
-기본 심각도: 위험
-기준: OWASP API 2023 API4(자원 소비 무제한) · OWASP LLM 2026 LLM06(자원 소비 무제한) · ASVS 5.0 V2.4.1 · ASVS 5.0 V15.2.2 · CWE-770(한도 없는 자원 할당) · CWE-400 · 기반시설 웹 21 AU(자동화 공격)
+기본 심각도: 위험 · CWE-770 · CWE-400

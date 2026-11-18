@@ -19,7 +19,6 @@
 - `escapeshellarg`·`shlex.quote` 같은 이스케이프를 주된 방어로 쓰지 않아야 한다.
 - 명령을 실행하는 계정은 최소 권한으로 둬야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-INJ-002.code.fastapi.md` (FastAPI) · `WS-INJ-002.code.express.md` (Express) · `WS-INJ-002.code.laravel.md` (Laravel)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-INJ-002.code.fastapi.md` (FastAPI) · `WS-INJ-002.code.express.md` (Express) · `WS-INJ-002.code.laravel.md` (Laravel)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A05(삽입) · ASVS 5.0 V1.2.5 · CWE-78(운영체제 명령어 삽입) · CWE-77(명령어 삽입) · CWE-88 · 국내 보안약점 49 입력데이터 검증 및 표현-5(운영체제 명령어 삽입) · 기반시설 웹 21 CI(코드 인젝션)
+기본 심각도: 위험 · CWE-78 · CWE-77 · CWE-88

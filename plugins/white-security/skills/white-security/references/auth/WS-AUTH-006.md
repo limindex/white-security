@@ -18,7 +18,6 @@
 - 관리자용 수정 API와 일반 사용자용 수정 API는 허용 필드를 따로 둬야 한다.
 - 응답은 필요한 필드만 골라 보내야 한다(비밀번호 해시·내부 메모 제외).
 
-Code examples (read only the file for the stack you are writing): `WS-AUTH-006.code.laravel.md` (Laravel) · `WS-AUTH-006.code.nextjs.md` (Next.js) · `WS-AUTH-006.code.django.md` (Django)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-AUTH-006.code.laravel.md` (Laravel) · `WS-AUTH-006.code.nextjs.md` (Next.js) · `WS-AUTH-006.code.django.md` (Django)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A01(접근 통제 실패) · OWASP API 2023 API3(객체 속성 수준 권한 검증 실패) · ASVS 5.0 V8.2.3 · ASVS 5.0 V15.3.3 · CWE-915 · CWE-863(잘못된 권한 부여) · 국내 보안약점 49 입력데이터 검증 및 표현-15(보안기능 결정에 사용되는 부적절한 입력값) · 기반시설 웹 21 IN(불충분한 권한 검증)
+기본 심각도: 위험 · CWE-915 · CWE-863

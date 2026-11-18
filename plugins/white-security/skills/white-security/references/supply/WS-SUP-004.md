@@ -23,7 +23,6 @@
 
 새 패키지 이름의 실재 확인은 WS-SUP-001, 취약한 버전은 WS-SUP-002, 설치 스크립트는 WS-SUP-003, CI 액션·외부 스크립트 다운로드는 WS-SUP-005에서 다룬다. `npm ci`는 잠금 파일과 `package.json`이 맞지 않으면 설치하지 않고 실패하며, `composer install`은 잠금 파일이 오래돼도 경고만 하므로 `composer validate`(잠금 파일이 최신이 아니면 오류)를 함께 돌리라고 안내해야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-SUP-004.code.yaml.md` (YAML) · `WS-SUP-004.code.dockerfile.md` (Dockerfile)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-SUP-004.code.yaml.md` (YAML) · `WS-SUP-004.code.dockerfile.md` (Dockerfile)
 
-기본 심각도: 주의
-기준: OWASP Top 10:2025 A03(소프트웨어 공급망 실패) · OWASP Top 10:2025 A08(소프트웨어·데이터 무결성 실패) · ASVS 5.0 V15.1.2 · ASVS 5.0 V15.2.4 · CWE-494 · CWE-353 · CWE-829 · 국내 보안약점 49 보안기능-15(무결성 검사 없는 코드 다운로드)
+기본 심각도: 주의 · CWE-494 · CWE-353 · CWE-829

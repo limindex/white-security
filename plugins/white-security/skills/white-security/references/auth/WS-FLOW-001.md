@@ -23,7 +23,6 @@
 
 같은 요청이 동시에 들어와 두 번 처리되는 문제는 WS-RACE-001, 로그인 시도 제한은 WS-AUTH-003에서 다루므로 여기서는 반복·자동화와 순서만 봐야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-FLOW-001.code.laravel.md` (Laravel) · `WS-FLOW-001.code.nextjs.md` (Next.js) · `WS-FLOW-001.code.django.md` (Django)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-FLOW-001.code.laravel.md` (Laravel) · `WS-FLOW-001.code.nextjs.md` (Next.js) · `WS-FLOW-001.code.django.md` (Django)
 
-기본 심각도: 주의
-기준: OWASP Top 10:2025 A06(안전하지 않은 설계) · OWASP API 2023 API6(민감한 업무 흐름 접근 무제한) · ASVS 5.0 V2.3.1 · ASVS 5.0 V2.3.2 · ASVS 5.0 V2.4.1 · ASVS 5.0 V2.4.2 · CWE-799 · CWE-837 · CWE-841 · 기반시설 웹 21 AU(자동화 공격) · 기반시설 웹 21 PV(프로세스 검증 누락)
+기본 심각도: 주의 · CWE-799 · CWE-837 · CWE-841

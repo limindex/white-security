@@ -20,7 +20,6 @@
 - 출력은 정해진 형식(JSON 스키마, 길이 상한)으로 받아 검증하고 틀리면 버려야 하며, 셸 명령·SQL·`eval`·파일 경로로 넘기지 않아야 한다.
 - 출력은 화면에 텍스트로 이스케이프해 그려야 하고, 마크다운 이미지·링크는 허용한 도메인만 남겨야 한다. 외부 이미지 자동 로딩은 데이터가 URL에 실려 나가는 통로.
 
-Code examples (read only the file for the stack you are writing): `WS-PI-001.code.python.md` (Python) · `WS-PI-001.code.js.md` (JavaScript) · `WS-PI-001.code.php.md` (PHP)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-PI-001.code.python.md` (Python) · `WS-PI-001.code.js.md` (JavaScript) · `WS-PI-001.code.php.md` (PHP)
 
-기본 심각도: 위험
-기준: OWASP LLM 2026 LLM01(프롬프트 삽입) · OWASP LLM 2026 LLM03(과도한 권한 위임) · OWASP LLM 2026 LLM10(출력 처리 미흡) · OWASP 에이전트 2026 ASI01(에이전트 목표 탈취) · OWASP 에이전트 2026 ASI02(도구 오용·악용) · CWE-1427
+기본 심각도: 위험 · CWE-1427

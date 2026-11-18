@@ -17,7 +17,6 @@
 - 시스템 프롬프트나 함께 넣는 숨은 맥락(검색 문서·도구 설명)에 다른 사용자의 개인정보를 넣지 않아야 한다.
 - "이 지시는 절대 공개하지 마" 같은 문구는 방어로 치지 않아야 한다. 과기정통부 매뉴얼의 교육 분야 시나리오도 유출된 프롬프트 속 내부 API 정보가 권한 없는 API 호출로 이어지는 흐름을 다룸.
 
-Code examples (read only the file for the stack you are writing): `WS-LLM-002.code.python.md` (Python) · `WS-LLM-002.code.js.md` (JavaScript)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-LLM-002.code.python.md` (Python) · `WS-LLM-002.code.js.md` (JavaScript)
 
-기본 심각도: 주의
-기준: OWASP LLM 2026 LLM08(숨은 맥락 노출) · OWASP LLM 2026 LLM02(민감 정보 노출) · ASVS 5.0 V13.3.1 · ASVS 5.0 V8.3.1 · CWE-200(권한 없는 자에게 민감 정보 노출) · CWE-798 · 국내 보안약점 49 보안기능-6(하드코드된 중요정보) · 기반시설 웹 21 IL(정보 누출)
+기본 심각도: 주의 · CWE-200 · CWE-798

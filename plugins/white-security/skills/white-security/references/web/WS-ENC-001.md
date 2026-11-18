@@ -19,7 +19,6 @@
 - 응답은 허용 필드만 골라 보내야 한다(비밀번호 해시·토큰·내부 메모 제외).
 - 전역 설정·캐시 객체는 그대로 돌려주거나 고치지 말고 복사본을 써야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-ENC-001.code.express.md` (Express) · `WS-ENC-001.code.fastapi.md` (FastAPI) · `WS-ENC-001.code.laravel.md` (Laravel)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-ENC-001.code.express.md` (Express) · `WS-ENC-001.code.fastapi.md` (FastAPI) · `WS-ENC-001.code.laravel.md` (Laravel)
 
-기본 심각도: 주의
-기준: OWASP Top 10:2025 A02(보안 설정 오류) · OWASP Top 10:2025 A01(접근 통제 실패) · OWASP API 2023 API3(객체 속성 수준 권한 검증 실패) · ASVS 5.0 V13.4.2 · ASVS 5.0 V15.2.3 · ASVS 5.0 V15.3.1 · CWE-489 · CWE-488 · CWE-495 · CWE-496 · CWE-615 · CWE-200(권한 없는 자에게 민감 정보 노출) · 국내 보안약점 49 캡슐화-1(잘못된 세션에 의한 데이터 정보 노출) · 국내 보안약점 49 캡슐화-2(제거되지 않고 남은 디버그 코드) · 국내 보안약점 49 캡슐화-3(Public 메소드로부터 반환된 Private 배열) · 국내 보안약점 49 캡슐화-4(Private 배열에 Public 데이터 할당) · 국내 보안약점 49 보안기능-13(주석문 안에 포함된 시스템 주요정보) · 기반시설 웹 21 IL(정보 누출)
+기본 심각도: 주의 · CWE-489 · CWE-488 · CWE-495 · CWE-496 · CWE-615 · CWE-200

@@ -19,7 +19,6 @@
 - 직접 만든 쿠키 로그인 API는 `Origin`·`Sec-Fetch-Site`로 같은 출처만 받아야 한다.
 - 세션 쿠키는 `SameSite=Lax` 이상으로 두되 이것만 믿지 않아야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-CSRF-001.code.laravel.md` (Laravel) · `WS-CSRF-001.code.django.md` (Django) · `WS-CSRF-001.code.nextjs.md` (Next.js)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-CSRF-001.code.laravel.md` (Laravel) · `WS-CSRF-001.code.django.md` (Django) · `WS-CSRF-001.code.nextjs.md` (Next.js)
 
-기본 심각도: 주의
-기준: OWASP Top 10:2025 A01(접근 통제 실패) · ASVS 5.0 V3.5.1 · ASVS 5.0 V3.5.3 · ASVS 5.0 V3.3.2 · CWE-352(크로스사이트 요청 위조) · 국내 보안약점 49 입력데이터 검증 및 표현-11(크로스사이트 요청 위조) · 기반시설 웹 21 CF(크로스사이트 요청 위조)
+기본 심각도: 주의 · CWE-352

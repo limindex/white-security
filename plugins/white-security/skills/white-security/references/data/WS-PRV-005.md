@@ -24,7 +24,6 @@
 
 비밀번호 해시·토큰·디버그 정보가 응답에 나가는 경우는 WS-ENC-001, 요청으로 필드를 덮어쓰는 쓰기 쪽 문제는 WS-AUTH-006, 남의 객체 자체에 접근하는 문제는 WS-AUTH-001, Supabase 행 정책은 WS-BAAS-001에서 다룬다. 같은 줄을 여러 이슈로 중복 보고하지 않아야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-PRV-005.code.nextjs.md` (Next.js) · `WS-PRV-005.code.laravel.md` (Laravel) · `WS-PRV-005.code.sql.md` (SQL)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-PRV-005.code.nextjs.md` (Next.js) · `WS-PRV-005.code.laravel.md` (Laravel) · `WS-PRV-005.code.sql.md` (SQL)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A01(접근 통제 실패) · OWASP API 2023 API3(객체 속성 수준 권한 검증 실패) · ASVS 5.0 V15.3.1 · ASVS 5.0 V14.2.6 · CWE-213 · CWE-359 · CWE-200(권한 없는 자에게 민감 정보 노출) · 기반시설 웹 21 IL(정보 누출)
+기본 심각도: 위험 · CWE-213 · CWE-359 · CWE-200

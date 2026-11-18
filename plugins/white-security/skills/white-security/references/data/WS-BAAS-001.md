@@ -20,7 +20,6 @@
 - 뷰는 `security_invoker = true`로 만들어 RLS를 건너뛰지 않게 해야 한다.
 - service_role·`sb_secret_` 키는 서버에만 두고, 브라우저엔 publishable 키만 써야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-BAAS-001.code.supabase.md` (Supabase) · `WS-BAAS-001.code.sql.md` (SQL) · `WS-BAAS-001.code.nextjs.md` (Next.js)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-BAAS-001.code.supabase.md` (Supabase) · `WS-BAAS-001.code.sql.md` (SQL) · `WS-BAAS-001.code.nextjs.md` (Next.js)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A01(접근 통제 실패) · OWASP Top 10:2025 A02(보안 설정 오류) · OWASP API 2023 API1(객체 수준 권한 검증 실패) · OWASP API 2023 API8(보안 설정 오류) · ASVS 5.0 V8.2.2 · ASVS 5.0 V8.3.1 · ASVS 5.0 V13.3.2 · CWE-284(접근 통제 미흡) · CWE-862(권한 검사 누락) · CWE-639(사용자 제어 키를 통한 권한 우회) · CWE-798 · 국내 보안약점 49 보안기능-2(부적절한 인가) · 국내 보안약점 49 보안기능-6(하드코드된 중요정보) · 기반시설 웹 21 IN(불충분한 권한 검증)
+기본 심각도: 위험 · CWE-284 · CWE-862 · CWE-639 · CWE-798

@@ -23,7 +23,6 @@
 
 Composer `vendor/`·`node_modules`는 패키지 관리자 결과라 이 이슈 대상이 아니다. 패키지 의존성의 취약 버전은 WS-SUP-002, CDN에서 불러오는 스크립트의 무결성(SRI)은 WS-SUP-005에서 다룬다. 권한 확인 자체가 빠진 경로는 WS-AUTH-001로 보고한다.
 
-Code examples (read only the file for the stack you are writing): `WS-SUP-006.code.laravel.md` (Laravel) · `WS-SUP-006.code.nextjs.md` (Next.js) · `WS-SUP-006.code.json.md` (JSON)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-SUP-006.code.laravel.md` (Laravel) · `WS-SUP-006.code.nextjs.md` (Next.js) · `WS-SUP-006.code.json.md` (JSON)
 
-기본 심각도: 주의
-기준: OWASP Top 10:2025 A03(소프트웨어 공급망 실패) · ASVS 5.0 V15.1.2 · ASVS 5.0 V15.2.1 · CWE-1104 · CWE-1395 · CWE-1041
+기본 심각도: 주의 · CWE-1104 · CWE-1395 · CWE-1041

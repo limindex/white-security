@@ -24,7 +24,6 @@
 
 Google은 구매 토큰을 백엔드로 보내 Play Developer API로 확인하고, 이전 토큰과 겹치지 않는지 본 뒤 권한을 주라고 안내한다(Play Billing 문서). 다만 구독 갱신·복원은 같은 purchaseToken(iOS는 같은 originalTransactionId)으로 다시 오므로, 같은 계정이면 다시 확인해 만료 시각을 갱신하고 다른 계정일 때만 거절해야 한다. App Store 심사는 샌드박스에서 구매하므로 운영 조회가 `TransactionIdNotFound`면 샌드박스로 다시 조회한다. 루팅·탈옥 검사는 기기를 가진 사람이 우회할 수 있다. 웹 쪽의 클라이언트 판단 신뢰는 WS-AUTH-005, 결제 금액 변조·웹훅은 WS-PAY-001, 역할 필드 덮어쓰기는 WS-AUTH-006에서 다룬다.
 
-Code examples (read only the file for the stack you are writing): `WS-MOB-005.code.react-native.md` (React Native) · `WS-MOB-005.code.flutter.md` (Flutter) · `WS-MOB-005.code.express.md` (Express)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-MOB-005.code.react-native.md` (React Native) · `WS-MOB-005.code.flutter.md` (Flutter) · `WS-MOB-005.code.express.md` (Express)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A01(접근 통제 실패) · OWASP Top 10:2025 A06(안전하지 않은 설계) · OWASP API 2023 API5(기능 수준 권한 검증 실패) · OWASP API 2023 API6(민감한 업무 흐름 접근 무제한) · OWASP Mobile 2024 M3(취약한 인증·인가) · OWASP Mobile 2024 M8(보안 설정 오류) · OWASP Mobile 2024 M7(바이너리 보호 부족) · ASVS 5.0 V8.3.1 · ASVS 5.0 V2.2.2 · ASVS 5.0 V2.3.1 · CWE-602 · CWE-862(권한 검사 누락) · CWE-807 · CWE-345 · 국내 보안약점 49 입력데이터 검증 및 표현-15(보안기능 결정에 사용되는 부적절한 입력값) · 국내 보안약점 49 보안기능-2(부적절한 인가) · 기반시설 웹 21 IN(불충분한 권한 검증) · 기반시설 웹 21 PV(프로세스 검증 누락)
+기본 심각도: 위험 · CWE-602 · CWE-862 · CWE-807 · CWE-345

@@ -17,7 +17,6 @@
 - 파이썬 `tarfile`은 패치된 파이썬(3.9.23·3.10.18·3.11.13·3.12.11·3.13.4 이상)에서 `extractall(..., filter="data")`로 풀어야 한다(3.14부터 기본값). 거름이 없어 생긴 문제가 CVE-2007-4559이고, 2025년에는 이 거름을 피해 가는 CVE-2025-4517 등이 나와 위 버전에서 수정됨.
 - 웹에서 바로 열리는 폴더에는 풀지 않아야 한다. 이미지·문서 파일 자체의 폭탄은 WS-FILE-001 범위.
 
-Code examples (read only the file for the stack you are writing): `WS-ZIP-001.code.python.md` (Python) · `WS-ZIP-001.code.php.md` (PHP)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-ZIP-001.code.python.md` (Python) · `WS-ZIP-001.code.php.md` (PHP)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A01(접근 통제 실패) · ASVS 5.0 V5.2.3 · ASVS 5.0 V5.3.3 · ASVS 5.0 V5.2.5 · CWE-22(경로 조작) · CWE-409 · 국내 보안약점 49 입력데이터 검증 및 표현-3(경로 조작 및 자원 삽입)
+기본 심각도: 위험 · CWE-22 · CWE-409

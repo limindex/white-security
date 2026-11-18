@@ -16,7 +16,6 @@
 - 권한 확인을 건너뛰는 모드(`--dangerously-skip-permissions`, `bypassPermissions`)는 키·운영 접속 정보가 없는 격리 환경(컨테이너·VM)에서만 써야 한다. Claude Code는 `disableBypassPermissionsMode`로 이 모드를 막을 수 있음.
 - AI가 자기 설정 파일(`.vscode/settings.json`, `.cursor/mcp.json`, `.claude/settings.json`)을 고치거나 새로 만들 때는 사람이 확인해야 한다. 2025년 GitHub Copilot(CVE-2025-53773)과 Cursor(CVE-2025-54135)에서 프롬프트 인젝션으로 이런 설정 파일을 써서 확인 없이 명령을 실행하게 만드는 취약점이 수정됨.
 
-Code examples (read only the file for the stack you are writing): `WS-AGT-006.code.json.md` (JSON)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-AGT-006.code.json.md` (JSON)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A02(보안 설정 오류) · OWASP LLM 2026 LLM03(과도한 권한 위임) · OWASP 에이전트 2026 ASI02(도구 오용·악용) · OWASP 에이전트 2026 ASI05(예상치 못한 코드 실행) · CWE-183 · CWE-250 · 국내 보안약점 49 보안기능-3(중요한 자원에 대한 잘못된 권한 설정)
+기본 심각도: 위험 · CWE-183 · CWE-250

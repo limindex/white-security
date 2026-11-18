@@ -23,7 +23,6 @@
 
 FastAPI(Starlette)의 `allow_origin_regex`는 전체 일치로 비교하므로 앞뒤 고정이 없다고 지적하지 않아야 한다. 화면과 API가 같은 출처(같은 도메인·포트)이면 CORS 헤더 자체가 필요 없으므로 지우라고 안내해야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-CFG-002.code.laravel.md` (Laravel) · `WS-CFG-002.code.nextjs.md` (Next.js) · `WS-CFG-002.code.fastapi.md` (FastAPI)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-CFG-002.code.laravel.md` (Laravel) · `WS-CFG-002.code.nextjs.md` (Next.js) · `WS-CFG-002.code.fastapi.md` (FastAPI)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A02(보안 설정 오류) · OWASP Top 10:2025 A01(접근 통제 실패) · OWASP API 2023 API8(보안 설정 오류) · ASVS 5.0 V3.4.2 · CWE-942 · CWE-346
+기본 심각도: 위험 · CWE-942 · CWE-346

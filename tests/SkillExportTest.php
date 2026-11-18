@@ -16,24 +16,19 @@ test('SkillExport: 스킬 폴더는 plugins/white-security/skills/white-security
     assert_same('plugins/white-security/skills/white-security', SkillExport::SKILL_DIR);
 });
 
-test('SkillExport: 이슈 파일 — 중립 머리 주석·기준 이름은 frameworks 의 short/name·보고 형식 줄 없음·영문 병기 표지', function () {
+test('SkillExport: 이슈 파일 — 중립 머리 주석·기준은 CWE 번호만(맨 끝 기본 심각도 줄)·보고 형식 줄 없음·영문 병기 표지', function () {
     [$ref] = se_write();
     $f = file_get_contents("$ref/web/WS-INJ-001.md");
     assert_true(str_starts_with($f, "<!-- generated from white-security issues; do not edit -->\n"), '머리 주석');
     assert_true(!str_contains($f, '고치세요') && !str_contains($f, 'issues/ 원본'), '지시처럼 읽히는 머리 없음');
     assert_contains("# WS-INJ-001 SQL 삽입\n", $f);
-    assert_contains("\n기본 심각도: 위험\n", $f);
-    // 순서: 제목 → 탐지 규칙 → 점검 항목 → 검토 주의 → 코드 목록 → 기본 심각도 → 기준(맨 끝 한 줄)
-    $pos = array_map(fn($k) => strpos($f, $k), ['## 탐지 규칙', '## 점검 항목', 'Code examples', '기본 심각도:', '기준: ']);
+    // 순서: 제목 → 탐지 규칙 → 점검 항목 → 검토 주의 → 코드 목록 → 기본 심각도·CWE(맨 끝 한 줄)
+    $pos = array_map(fn($k) => strpos($f, $k), ['## 탐지 규칙', '## 점검 항목', 'Code examples', '기본 심각도:']);
     foreach ($pos as $n => $p) assert_true(is_int($p) && ($n === 0 || $p > $pos[$n - 1]), '절 순서 ' . json_encode($pos));
     $lines = explode("\n", rtrim($f, "\n"));
-    assert_true(str_starts_with(end($lines), '기준: '), '기준 줄이 맨 끝');
-    // 판본 연도가 붙은 이름(owasp2025 은 short 가 없어 name), 접두어 중복 없음, 번호 뒤 항목 이름
-    assert_contains('OWASP Top 10:2025 A05(삽입)', $f);
-    assert_contains('ASVS 5.0 V1.2', $f);
-    assert_contains('· CWE-89(SQL 삽입)', $f);
-    assert_true(!str_contains($f, 'CWE Top 25 CWE-89'), 'CWE 접두어 중복 없음');
-    assert_contains('국내 보안약점 49 입력데이터 검증 및 표현-1(SQL 삽입)', $f);
+    assert_same('기본 심각도: 위험 · CWE-89', end($lines), '맨 끝 한 줄 = 기본 심각도 · CWE 번호');
+    // 다른 기준 번호(OWASP·ASVS·국내 가이드)는 사이트에만 — 상시 발동 예산
+    foreach (['기준:', 'OWASP', 'ASVS', '국내 보안약점'] as $s) assert_true(!str_contains($f, $s), "$s 없음");
     foreach (['## 점검 항목', '## 탐지 규칙'] as $s) assert_contains($s, $f);
     foreach (['## 발생 상황', '## 요약', '## 위험 배경', '## 대응 방법', '## 코드 예시', '보고 형식', '[위험|주의|참고] <id>'] as $s) assert_true(!str_contains($f, $s), $s);
     assert_contains('- **보고 예**: `[위험] WS-INJ-001', $f);
@@ -85,8 +80,8 @@ test('SkillExport: 라우팅 표 — 묶음당 한 줄(route → INDEX 경로), 
     $block = SkillExport::routing($repo);
     assert_true(str_starts_with($block, SkillExport::ROUTING_START . "\n"), '시작 표시');
     assert_true(str_ends_with($block, SkillExport::ROUTING_END), '끝 표시');
-    assert_contains('| `references/web/INDEX.md` |', $block);
-    assert_true(!str_contains($block, 'references/people/') && !str_contains($block, 'references/auth/'), '이슈 있는 묶음만');
+    assert_contains("\n| web | ", $block);
+    assert_true(!preg_match('/^\| (people|auth) \|/m', $block), '이슈 있는 묶음만');
     $md = "---\nname: x\n---\n# 위\n\n" . SkillExport::ROUTING_START . "\n옛 표\n" . SkillExport::ROUTING_END . "\n\n# 아래\n";
     $out = SkillExport::injectRouting($md, $block);
     assert_same("---\nname: x\n---\n# 위\n\n" . $block . "\n\n# 아래\n", $out);
@@ -100,10 +95,18 @@ test('SkillExport: 라우팅 표 — 묶음당 한 줄(route → INDEX 경로), 
 test('build: SKILL.md 가 있으면 라우팅 표를 끼워 넣고, 표시가 없거나 SKILL.md 가 없으면 빌드 실패', function () {
     $root = make_root();
     $dir = $root . '/' . SkillExport::SKILL_DIR;
-    file_put_contents("$dir/SKILL.md", "# s\n" . SkillExport::ROUTING_START . "\n" . SkillExport::ROUTING_END . "\n");
+    file_put_contents("$dir/SKILL.md", "# s\n\n## Trust and safety rules\n\nt\n\n## Grades and report line\n\ng\n\n" . SkillExport::ROUTING_START . "\n" . SkillExport::ROUTING_END . "\n");
     exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg(SE_ROOT . '/build.php') . ' --root=' . escapeshellarg($root) . ' --out=dist --today=2026-11-18 2>&1', $l, $c);
     assert_same(0, $c, implode("\n", $l));
-    assert_contains('references/web/INDEX.md', file_get_contents("$dir/SKILL.md"));
+    assert_contains("\n| web | ", file_get_contents("$dir/SKILL.md"));
+    $agent = file_get_contents($root . '/' . SkillExport::AGENT_FILE);
+    foreach (['## Trust and safety rules', '## Routing table', '| web | ', '## 0. Scope'] as $x) assert_contains($x, $agent);
+    // 에이전트 표시가 없으면 실패
+    file_put_contents($root . '/' . SkillExport::AGENT_FILE, "---\nname: r\n---\n표시 없음\n");
+    exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg(SE_ROOT . '/build.php') . ' --root=' . escapeshellarg($root) . ' --out=dist --today=2026-11-18 2>&1', $la, $ca);
+    assert_same(1, $ca, '에이전트 표시 없으면 실패');
+    assert_contains('검토 에이전트', implode("\n", $la));
+    file_put_contents($root . '/' . SkillExport::AGENT_FILE, SkillExport::REVIEWER_START . "\n" . SkillExport::REVIEWER_END . "\n");
     file_put_contents("$dir/SKILL.md", "# 표시 없음\n");
     exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg(SE_ROOT . '/build.php') . ' --root=' . escapeshellarg($root) . ' --out=dist --today=2026-11-18 2>&1', $l2, $c2);
     assert_same(1, $c2);

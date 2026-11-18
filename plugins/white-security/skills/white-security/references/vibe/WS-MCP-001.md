@@ -18,7 +18,6 @@
 - 남의 글을 읽는 서버와 메일 발송·파일 쓰기 서버를 한 세션에 함께 켜 두지 않아야 한다. 한 서버의 설명이 다른 서버 도구의 동작을 바꿀 수 있음.
 - 등록한 MCP 서버 목록과 도구 호출 기록을 남겨야 한다(KISA AI 보안 안내서의 MCP 보안 점검 항목).
 
-Code examples (read only the file for the stack you are writing): `WS-MCP-001.code.json.md` (JSON) · `WS-MCP-001.code.python.md` (Python)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-MCP-001.code.json.md` (JSON) · `WS-MCP-001.code.python.md` (Python)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A03(소프트웨어 공급망 실패) · OWASP LLM 2026 LLM01(프롬프트 삽입) · OWASP LLM 2026 LLM04(공급망) · OWASP 에이전트 2026 ASI04(에이전트 공급망 취약점) · OWASP 에이전트 2026 ASI02(도구 오용·악용) · CWE-494 · CWE-1427 · 국내 보안약점 49 보안기능-15(무결성 검사 없는 코드 다운로드)
+기본 심각도: 위험 · CWE-494 · CWE-1427

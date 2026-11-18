@@ -19,7 +19,6 @@
 - 관리자 세션은 짧은 비활동 시간이 지나면 끊어야 한다.
 - 관리자 로그인 실패와 관리 작업은 접속기록(누가·언제·무엇을 했는지 남기는 기록)으로 남겨야 한다.
 
-Code examples (read only the file for the stack you are writing): `WS-AUTH-004.code.laravel.md` (Laravel) · `WS-AUTH-004.code.nextjs.md` (Next.js) · `WS-AUTH-004.code.django.md` (Django)
+Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-AUTH-004.code.laravel.md` (Laravel) · `WS-AUTH-004.code.nextjs.md` (Next.js) · `WS-AUTH-004.code.django.md` (Django)
 
-기본 심각도: 위험
-기준: OWASP Top 10:2025 A01(접근 통제 실패) · OWASP Top 10:2025 A02(보안 설정 오류) · OWASP API 2023 API5(기능 수준 권한 검증 실패) · ASVS 5.0 V8.2.1 · ASVS 5.0 V8.3.1 · ASVS 5.0 V8.4.2 · ASVS 5.0 V7.3.1 · CWE-306(중요 기능 인증 누락) · CWE-862(권한 검사 누락) · CWE-284(접근 통제 미흡) · 국내 보안약점 49 보안기능-1(적절한 인증 없는 중요 기능 허용) · 국내 보안약점 49 보안기능-2(부적절한 인가) · 기반시설 웹 21 AE(관리자 페이지 노출)
+기본 심각도: 위험 · CWE-306 · CWE-862 · CWE-284

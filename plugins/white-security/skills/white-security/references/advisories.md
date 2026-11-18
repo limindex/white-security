@@ -2,11 +2,12 @@
 
 Quick comparison when scanners can't run. This is not a full database: the real check is `deps.md`. At most 10 entries; each is removed or re-checked after its expiry date. If today is past an entry's expiry, still use it but say "감시 목록 만료, 스캐너로 확인 필요".
 
-Grade a match as 위험 (`WS-SUP-002`), unless the condition column says the vulnerable feature isn't used.
+Grade a match as 위험 (`WS-SUP-002`), unless the entry's "Affects" line names a condition (feature, CPU, usage) that the project clearly doesn't meet — then don't report it. If you can't tell whether the condition is met, grade `주의 — 확인 필요`.
 
 ## Java4Shell — CVE-2026-114938 (Java HotSpot JVM)
 - Published: 2026-11-17 · CVSS 3.1 8.1 (Red Hat preliminary 9.8) · CISA alert 2026-11-17
-- Affects: HotSpot JVM on x86-64 (Base64 decoding path; Red Hat: OpenJDK 17.0.6 and later on CPUs with AVX-512 VBMI). Oracle lists Java SE 8, 17, 21, 25, 27 and GraalVM for JDK 17/21 builds.
+- Affects: HotSpot JVM on x86-64 (Base64 decoding path; Red Hat: OpenJDK 17.0.6 and later on CPUs with AVX-512 VBMI). Oracle lists Java SE 8u511b33-perf, 17.0.21.0.3, 21.0.13.0.3, 25.0.5.0.3, 27.0.1.0.3, GraalVM for JDK 17.0.21.0.3 / 21.0.13.0.3 and GraalVM Enterprise Edition 21.3.20.0.3.
+- CPU: per Red Hat, ARM64 and x86-64 CPUs without AVX-512 VBMI have no known impact (known to run only there → no finding). Server CPU unknown (usual for a repo review) → `주의 — 확인 필요`.
 - Check: `java -version`, Docker `FROM` images with a JDK/JRE (`eclipse-temurin`, `openjdk`, `amazoncorretto`), and JVMs bundled in other apps.
 - Fixed: Oracle Critical Security Patch Update November 2026; Amazon Corretto 27.0.1.1.4. Other vendors: follow their advisory. Until patched (CISA): validate Base64 input size at the boundary, limit unauthenticated access.
 - Expires: 2027-05-31
