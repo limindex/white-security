@@ -2,8 +2,8 @@
 /**
  * 스킬 설치: 탭(Claude Code · 직접 복사) → 번호 단계(명령 한 상자 하나 + 짧은 설명 + 예시 출력) → Troubleshooting.
  * 명령 값은 data/site.json(marketplace · plugin_id · github)에서만. 비면 명령을 그리지 않는다.
- * 탭은 설치와 발동을 손으로 확인한 도구만(설계 11절). Codex·Cursor·직접 복사는 실제 확인 뒤에 다시 연다
- * (직접 복사는 스킬 분리 11-18 뒤 검토 에이전트·규칙 폴더 허용이 따라가지 않아 숨김. 패널은 $tabs 에 'copy' 를 더하면 다시 나옴).
+ * 탭은 설치와 발동을 손으로 확인한 도구만(설계 11절). 다른 에이전트(Codex·Copilot·Cursor·OpenCode·Antigravity)와 직접 복사는
+ * 실제 시험을 통과한 뒤에 연다(패널은 $tabs 에 'copy' 를 더하면 다시 나옴. 스킬 이름 white-security 라 다른 도구 내장 /review 와 겹치지 않음).
  * 설명 문장은 한국어(터미널·저장소·명령), 화면 라벨·고유명사(Marketplace·Plugin·command·Claude Code…)는 원문 그대로.
  * @var Site $site @var string $title @var string $lead
  */
@@ -34,8 +34,8 @@ $use = fn(string $sub): string => $prompt('보안 점검해 줘')
     . '<div class="ws-step-sub"><p class="ws-step-sub-h">확실하게 실행하려면</p>' . $sub . '</div>';
 $tabs = ['claude' => 'Claude Code'];
 $report = $site->render('_report', []);
-/** 첫 실행 허용 안내(Plugin 설치만): 스킬은 allowed-tools 로 자기 설치 폴더만 읽음(훅·설정 변경 없음) */
-$allow = '<p class="ws-step-note">' . Site::t('보안 점검을 처음 요청할 때 Claude Code가 검토 스킬 실행 허용을 한 번 확인. 허용 범위는 이 Plugin의 규칙 폴더 읽기뿐이며 훅 설치나 설정 변경 없음.') . '</p>';
+/** 허용 안내(11-19 가벼운 안내 스킬): 검토는 프로젝트 파일만 읽어 규칙 폴더 허용이 필요 없음. 고칠 때 그 항목의 규칙 파일을 읽으면 한 번 확인할 수 있음 */
+$allow = '<p class="ws-step-note">' . Site::t('검토 중에는 프로젝트 파일만 읽어 별도 허용 설정 불필요. 고칠 항목을 고른 뒤 그 항목의 규칙 문서를 열 때 Claude Code가 읽기 허용을 한 번 확인할 수 있음. 훅 설치나 설정 변경 없음.') . '</p>';
 ?>
 <div class="ws-page">
 <?= $site->render('_pagehead', ['title' => $title, 'lead' => $lead]) ?>
@@ -76,7 +76,7 @@ $allow = '<p class="ws-step-note">' . Site::t('보안 점검을 처음 요청할
 <?= $step(1, '저장소 내려받기', '', '터미널에서 실행. 현재 폴더 아래에 ' . Site::e(basename($repo)) . ' 폴더 생성.',
     $cmd('git clone https://github.com/' . $repo . '.git') . $out("Cloning into '" . basename($repo) . "'...")) ?>
 <?= $step(2, '스킬 폴더 복사', '① 완료 후 실행', 'Claude Code 개인 skills 폴더로 스킬만 복사하는 명령.',
-    $cmd('cp -r ' . basename($repo) . '/plugins/' . $pluginName . '/skills/review ~/.claude/skills/')) ?>
+    $cmd('cp -r ' . basename($repo) . '/plugins/' . $pluginName . '/skills/' . $pluginName . ' ~/.claude/skills/')) ?>
 <?= $step(3, '동작 확인', '', 'Claude Code를 다시 연 뒤 대화창에 한마디 입력. 위험·주의·참고 등급별 표와 고칠 방법 보고.',
     $use($prompt($pluginName . ' 스킬로 보안 점검해 줘')) . $report) ?>
 </ol>
@@ -99,9 +99,11 @@ $allow = '<p class="ws-step-note">' . Site::t('보안 점검을 처음 요청할
 <section class="ws-sec">
 <h2>설치 후 동작</h2>
 <ul>
-<li>필요할 때, 특히 배포 전에 대화창에 “보안 점검해 줘” 한마디로 프로젝트 전체 읽기 전용 검토. 위험·주의·참고 등급별 보고. 등급 뜻은 <a href="<?= Site::e($site->url('severity')) ?>">심각도 기준</a>.</li>
+<li>필요할 때, 특히 배포 전에 대화창에 “보안 점검해 줘” 한마디로 프로젝트 전체 읽기 전용 검토. 작업 브랜치의 변경분만이 아닌 프로젝트 전체 대상. 위험·주의·참고 등급별 보고. 등급 뜻은 <a href="<?= Site::e($site->url('severity')) ?>">심각도 기준</a>.</li>
 <li>확실하게 실행하려면 <code>/<?= Site::e($pluginName ?: 'white-security') ?>:review</code>.</li>
 <li>요청할 때만 실행. “배포할게”처럼 배포 이야기가 나오면 점검 여부를 대화당 한 번 먼저 질문, 답이 예일 때만 실행.</li>
+<li>판단은 AI 코딩 도구의 모델이 직접 수행. 스킬은 검토 범위·놓치기 쉬운 항목·안전 규칙·보고 형식만 안내. 작은 프로젝트는 대화 안에서, 소스 파일 40개가 넘는 큰 프로젝트는 읽기 전용 검토 에이전트가 따로 검토.</li>
+<li>고칠 항목을 고른 뒤에만 그 항목의 규칙 문서를 열어 수정. 설치·명령 실행은 따로 확인.</li>
 <li>흔한 실수를 줄이는 용도이며 보안 감사·침투 테스트의 대체 수단 아님.</li>
 </ul>
 </section>

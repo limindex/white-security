@@ -41,7 +41,7 @@ $first = array_slice($site->repo->start(), 0, 3);
 <a class="ws-path" href="<?= Site::e($site->url('install')) ?>">
 <span class="ws-path-k">검토하기</span>
 <h3>스킬 설치</h3>
-<p>필요할 때, 특히 배포 전에 “보안 점검해 줘” 한마디. 프로젝트 전체 읽기 전용 검토.</p>
+<p>필요할 때, 특히 배포 전에 “보안 점검해 줘” 한마디. 변경분만이 아닌 프로젝트 전체 읽기 전용 검토.</p>
 <span class="ws-path-go">설치 안내 4단계</span>
 </a>
 </section>
