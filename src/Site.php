@@ -46,7 +46,7 @@ final class Site
         return $i->checked->modify('+' . self::STALE_DAYS . ' days');
     }
 
-    /** 문서 메타(게시·확인·다음 검토·적용 대상·심각도 근거·개정 이력): 목록·상세 JSON 공용 @return array<string,mixed> */
+    /** 문서 메타(게시·확인·다음 검토·적용 대상·심각도 근거·개정 이력): 이슈 상세 JSON 용 @return array<string,mixed> */
     private function docMeta(Issue $i): array
     {
         return [
