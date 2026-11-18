@@ -7,8 +7,8 @@
 This policy covers:
 
 - The documentation site generator in this repository (`build.php`, `index.php`, `src/`, `templates/`, `assets/`) and the static site it builds.
-- The Claude Code plugin in `plugins/white-security/`: the `review` skill (`/white-security:review`), the read-only security reviewer agent, and the rule files it reads.
-- Content errors in the issue documents (`issues/`) or the rule files that could lead to insecure advice, for example a "safe" code example that is still exploitable, or a detection rule that makes the reviewer skip a real risk.
+- The plugin in `plugins/white-security/`: the `white-security` skill (`/white-security:review` in Claude Code), the read-only security reviewer agent for big projects, and the rule files used for fixes.
+- Content errors in the issue documents (`issues/`) or the rule files that could lead to insecure advice, for example a "safe" code example that is still exploitable, or skill guidance that makes the review skip a real risk.
 - Marketplaces or plugins that impersonate this project.
 
 ## Reporting a vulnerability
@@ -29,7 +29,7 @@ Reports in Korean or English are both fine.
 ## Out of scope
 
 - Vulnerabilities in projects you reviewed with the plugin. Report those to the project's owners.
-- Findings the review missed or reported wrongly in your own code, when no rule gives insecure advice. The review is signal-based and doesn't replace a security audit. Open a regular issue instead.
+- Findings the review missed or reported wrongly in your own code, when no rule gives insecure advice. The review is a guided model review and doesn't replace a security audit. Open a regular issue instead.
 - Content errors with no security impact (typos, broken links). Open a regular issue.
 - Vulnerabilities in Claude Code, GitHub, GitHub Pages or other platforms. Report them to those vendors.
 - Headers that a static host can't set (such as `frame-ancestors` on GitHub Pages), missing rate limits on the static site, and scanner output without a demonstrated impact.
@@ -67,8 +67,8 @@ Only the latest plugin version receives fixes. Update with `/plugin marketplace 
 ### 범위
 
 - 이 저장소의 문서 사이트 생성기(`build.php`·`index.php`·`src/`·`templates/`·`assets/`)와 생성된 정적 사이트.
-- `plugins/white-security/` 의 Claude Code plugin: `review` 스킬(`/white-security:review`), 읽기 전용 보안 검토 에이전트, 에이전트가 읽는 규칙 파일.
-- 이슈 문서(`issues/`)·규칙 파일의 내용 오류 중 안전하지 않은 조언으로 이어질 수 있는 것. 예: 여전히 공격 가능한 안전 코드 예시, 실제 위험을 건너뛰게 만드는 탐지 규칙.
+- `plugins/white-security/` 의 plugin: `white-security` 스킬(Claude Code 에서는 `/white-security:review`), 큰 프로젝트용 읽기 전용 보안 검토 에이전트, 고칠 때 쓰는 규칙 파일.
+- 이슈 문서(`issues/`)·규칙 파일의 내용 오류 중 안전하지 않은 조언으로 이어질 수 있는 것. 예: 여전히 공격 가능한 안전 코드 예시, 실제 위험을 건너뛰게 만드는 스킬 안내.
 - 이 프로젝트를 사칭하는 marketplace·plugin.
 
 ### 제보 방법
@@ -89,7 +89,7 @@ GitHub Security Advisories 비공개 제보만 사용. 저장소 **Security** �
 ### 제보 대상이 아닌 것
 
 - 플러그인으로 검토한 다른 프로젝트의 취약점. 그 프로젝트 관리자에게 제보.
-- 내 코드에서 검토가 놓치거나 잘못 지적한 결과 중 안전하지 않은 조언을 하는 규칙이 원인이 아닌 것. 검토는 신호 기반이며 보안 감사를 대신하지 않음. 일반 Issue 로 제보.
+- 내 코드에서 검토가 놓치거나 잘못 지적한 결과 중 안전하지 않은 조언을 하는 규칙이 원인이 아닌 것. 검토는 안내에 따른 모델 검토이며 보안 감사를 대신하지 않음. 일반 Issue 로 제보.
 - 보안 영향이 없는 내용 오류(오타·깨진 링크). 일반 Issue 로 제보.
 - Claude Code·GitHub·GitHub Pages 등 플랫폼 자체의 취약점. 각 제공사에 제보.
 - 정적 호스팅에서 설정할 수 없는 헤더(GitHub Pages 의 `frame-ancestors` 등), 정적 사이트의 요청 횟수 제한 부재, 실제 영향이 확인되지 않은 스캐너 결과.
