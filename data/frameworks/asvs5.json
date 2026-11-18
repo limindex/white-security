@@ -1,0 +1,95 @@
+{
+  "id": "asvs5",
+  "name": "OWASP ASVS 5.0",
+  "short": "ASVS 5.0",
+  "year": 2025,
+  "url": "https://github.com/OWASP/ASVS/tree/master/5.0/en",
+  "rollup": ".",
+  "items": [
+    {
+      "id": "V1",
+      "title": "Encoding and Sanitization",
+      "title_ko": "인코딩·정제"
+    },
+    {
+      "id": "V2",
+      "title": "Validation and Business Logic",
+      "title_ko": "입력 검증·업무 로직"
+    },
+    {
+      "id": "V3",
+      "title": "Web Frontend Security",
+      "title_ko": "웹 프런트엔드 보안"
+    },
+    {
+      "id": "V4",
+      "title": "API and Web Service",
+      "title_ko": "API·웹 서비스"
+    },
+    {
+      "id": "V5",
+      "title": "File Handling",
+      "title_ko": "파일 처리"
+    },
+    {
+      "id": "V6",
+      "title": "Authentication",
+      "title_ko": "인증"
+    },
+    {
+      "id": "V7",
+      "title": "Session Management",
+      "title_ko": "세션 관리"
+    },
+    {
+      "id": "V8",
+      "title": "Authorization",
+      "title_ko": "권한 부여"
+    },
+    {
+      "id": "V9",
+      "title": "Self-contained Tokens",
+      "title_ko": "자체 포함 토큰"
+    },
+    {
+      "id": "V10",
+      "title": "OAuth and OIDC",
+      "title_ko": "OAuth·OIDC"
+    },
+    {
+      "id": "V11",
+      "title": "Cryptography",
+      "title_ko": "암호"
+    },
+    {
+      "id": "V12",
+      "title": "Secure Communication",
+      "title_ko": "보안 통신"
+    },
+    {
+      "id": "V13",
+      "title": "Configuration",
+      "title_ko": "설정"
+    },
+    {
+      "id": "V14",
+      "title": "Data Protection",
+      "title_ko": "데이터 보호"
+    },
+    {
+      "id": "V15",
+      "title": "Secure Coding and Architecture",
+      "title_ko": "안전한 코딩·구조"
+    },
+    {
+      "id": "V16",
+      "title": "Security Logging and Error Handling",
+      "title_ko": "보안 로깅·오류 처리"
+    },
+    {
+      "id": "V17",
+      "title": "WebRTC",
+      "title_ko": "WebRTC"
+    }
+  ]
+}

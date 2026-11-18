@@ -1,0 +1,134 @@
+{
+  "id": "cwe",
+  "name": "CWE Top 25 Most Dangerous Software Weaknesses 2025",
+  "short": "CWE Top 25",
+  "year": 2025,
+  "url": "https://cwe.mitre.org/top25/archive/2025/2025_cwe_top25.html",
+  "items": [
+    {
+      "id": "CWE-79",
+      "title": "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
+      "title_ko": "크로스사이트 스크립팅"
+    },
+    {
+      "id": "CWE-89",
+      "title": "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')",
+      "title_ko": "SQL 삽입"
+    },
+    {
+      "id": "CWE-352",
+      "title": "Cross-Site Request Forgery (CSRF)",
+      "title_ko": "크로스사이트 요청 위조"
+    },
+    {
+      "id": "CWE-862",
+      "title": "Missing Authorization",
+      "title_ko": "권한 검사 누락"
+    },
+    {
+      "id": "CWE-787",
+      "title": "Out-of-bounds Write",
+      "title_ko": "범위 밖 쓰기"
+    },
+    {
+      "id": "CWE-22",
+      "title": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
+      "title_ko": "경로 조작"
+    },
+    {
+      "id": "CWE-416",
+      "title": "Use After Free",
+      "title_ko": "해제 후 사용"
+    },
+    {
+      "id": "CWE-125",
+      "title": "Out-of-bounds Read",
+      "title_ko": "범위 밖 읽기"
+    },
+    {
+      "id": "CWE-78",
+      "title": "Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')",
+      "title_ko": "운영체제 명령어 삽입"
+    },
+    {
+      "id": "CWE-94",
+      "title": "Improper Control of Generation of Code ('Code Injection')",
+      "title_ko": "코드 삽입"
+    },
+    {
+      "id": "CWE-120",
+      "title": "Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')",
+      "title_ko": "입력 크기 검사 없는 버퍼 복사"
+    },
+    {
+      "id": "CWE-434",
+      "title": "Unrestricted Upload of File with Dangerous Type",
+      "title_ko": "위험한 형식 파일 업로드"
+    },
+    {
+      "id": "CWE-476",
+      "title": "NULL Pointer Dereference",
+      "title_ko": "널 포인터 역참조"
+    },
+    {
+      "id": "CWE-121",
+      "title": "Stack-based Buffer Overflow",
+      "title_ko": "스택 버퍼 오버플로우"
+    },
+    {
+      "id": "CWE-502",
+      "title": "Deserialization of Untrusted Data",
+      "title_ko": "신뢰할 수 없는 데이터의 역직렬화"
+    },
+    {
+      "id": "CWE-122",
+      "title": "Heap-based Buffer Overflow",
+      "title_ko": "힙 버퍼 오버플로우"
+    },
+    {
+      "id": "CWE-863",
+      "title": "Incorrect Authorization",
+      "title_ko": "잘못된 권한 부여"
+    },
+    {
+      "id": "CWE-20",
+      "title": "Improper Input Validation",
+      "title_ko": "입력값 검증 미흡"
+    },
+    {
+      "id": "CWE-284",
+      "title": "Improper Access Control",
+      "title_ko": "접근 통제 미흡"
+    },
+    {
+      "id": "CWE-200",
+      "title": "Exposure of Sensitive Information to an Unauthorized Actor",
+      "title_ko": "권한 없는 자에게 민감 정보 노출"
+    },
+    {
+      "id": "CWE-306",
+      "title": "Missing Authentication for Critical Function",
+      "title_ko": "중요 기능 인증 누락"
+    },
+    {
+      "id": "CWE-918",
+      "title": "Server-Side Request Forgery (SSRF)",
+      "title_ko": "서버사이드 요청 위조"
+    },
+    {
+      "id": "CWE-77",
+      "title": "Improper Neutralization of Special Elements used in a Command ('Command Injection')",
+      "title_ko": "명령어 삽입"
+    },
+    {
+      "id": "CWE-639",
+      "title": "Authorization Bypass Through User-Controlled Key",
+      "title_ko": "사용자 제어 키를 통한 권한 우회"
+    },
+    {
+      "id": "CWE-770",
+      "title": "Allocation of Resources Without Limits or Throttling",
+      "title_ko": "한도 없는 자원 할당"
+    }
+  ]
+}

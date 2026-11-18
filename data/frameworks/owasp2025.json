@@ -1,0 +1,58 @@
+{
+  "id": "owasp2025",
+  "name": "OWASP Top 10:2025",
+  "year": 2025,
+  "url": "https://top10.owasp.org/2025",
+  "items": [
+    {
+      "id": "A01",
+      "title": "Broken Access Control",
+      "title_ko": "접근 통제 실패"
+    },
+    {
+      "id": "A02",
+      "title": "Security Misconfiguration",
+      "title_ko": "보안 설정 오류"
+    },
+    {
+      "id": "A03",
+      "title": "Software Supply Chain Failures",
+      "title_ko": "소프트웨어 공급망 실패"
+    },
+    {
+      "id": "A04",
+      "title": "Cryptographic Failures",
+      "title_ko": "암호화 실패"
+    },
+    {
+      "id": "A05",
+      "title": "Injection",
+      "title_ko": "삽입"
+    },
+    {
+      "id": "A06",
+      "title": "Insecure Design",
+      "title_ko": "안전하지 않은 설계"
+    },
+    {
+      "id": "A07",
+      "title": "Authentication Failures",
+      "title_ko": "인증 실패"
+    },
+    {
+      "id": "A08",
+      "title": "Software or Data Integrity Failures",
+      "title_ko": "소프트웨어·데이터 무결성 실패"
+    },
+    {
+      "id": "A09",
+      "title": "Security Logging and Alerting Failures",
+      "title_ko": "로깅·경보 실패"
+    },
+    {
+      "id": "A10",
+      "title": "Mishandling of Exceptional Conditions",
+      "title_ko": "예외 상황 처리 미흡"
+    }
+  ]
+}

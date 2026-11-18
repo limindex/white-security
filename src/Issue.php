@@ -6,7 +6,7 @@ final class Issue
 {
     public const SEVERITIES = ['high', 'medium', 'low'];
     public const DEPTHS = ['full', 'brief'];
-    public const MAP_KEYS = ['owasp2025', 'api2023', 'llm2026', 'agentic2026', 'asvs5', 'cwe', 'kr_guide'];
+    public const MAP_KEYS = ['owasp2025', 'api2023', 'llm2026', 'agentic2026', 'asvs5', 'cwe', 'kr_guide', 'kr_ciip'];
     public const FULL_SECTIONS = ['한 줄 요약', '이런 장면에서', '왜 요즘 더 위험한가', '나는 뭘 하면 되나', '체크 항목', '스킬이 잡는 방식', '코드'];
     public const BRIEF_SECTIONS = ['한 줄 요약', '체크 항목', '코드'];
 

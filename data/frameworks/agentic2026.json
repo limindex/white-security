@@ -1,0 +1,69 @@
+{
+  "id": "agentic2026",
+  "name": "OWASP Top 10 for Agentic Applications 2026",
+  "short": "OWASP 에이전트 2026",
+  "year": 2026,
+  "url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/",
+  "items": [
+    {
+      "id": "ASI01",
+      "title": "Agent Goal Hijack",
+      "title_ko": "에이전트 목표 탈취",
+      "verified": false
+    },
+    {
+      "id": "ASI02",
+      "title": "Tool Misuse and Exploitation",
+      "title_ko": "도구 오용·악용",
+      "verified": false
+    },
+    {
+      "id": "ASI03",
+      "title": "Identity and Privilege Abuse",
+      "title_ko": "신원·권한 남용",
+      "verified": false
+    },
+    {
+      "id": "ASI04",
+      "title": "Agentic Supply Chain Vulnerabilities",
+      "title_ko": "에이전트 공급망 취약점",
+      "verified": false
+    },
+    {
+      "id": "ASI05",
+      "title": "Unexpected Code Execution",
+      "title_ko": "예상치 못한 코드 실행",
+      "verified": false
+    },
+    {
+      "id": "ASI06",
+      "title": "Memory and Context Poisoning",
+      "title_ko": "메모리·맥락 오염",
+      "verified": false
+    },
+    {
+      "id": "ASI07",
+      "title": "Insecure Inter-Agent Communication",
+      "title_ko": "에이전트 간 통신 보안 미흡",
+      "verified": false
+    },
+    {
+      "id": "ASI08",
+      "title": "Cascading Failures",
+      "title_ko": "연쇄 장애",
+      "verified": false
+    },
+    {
+      "id": "ASI09",
+      "title": "Human-Agent Trust Exploitation",
+      "title_ko": "사람-에이전트 신뢰 악용",
+      "verified": false
+    },
+    {
+      "id": "ASI10",
+      "title": "Rogue Agents",
+      "title_ko": "통제 이탈 에이전트",
+      "verified": false
+    }
+  ]
+}

@@ -7,6 +7,8 @@ function make_root(array $extra = []): string
     mkdir($root . '/data', 0777, true);
     mkdir($root . '/issues/web', 0777, true);
     copy(__DIR__ . '/../data/groups.json', $root . '/data/groups.json');
+    mkdir($root . '/data/frameworks', 0777, true);
+    foreach (glob(__DIR__ . '/../data/frameworks/*.json') as $f) copy($f, $root . '/data/frameworks/' . basename($f));
     foreach (glob(__DIR__ . '/fixtures/issues/web/*.md') as $f) copy($f, $root . '/issues/web/' . basename($f));
     foreach ($extra as $name => $content) file_put_contents($root . '/issues/web/' . $name, $content);
     return $root;

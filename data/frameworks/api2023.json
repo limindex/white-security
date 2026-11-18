@@ -1,0 +1,59 @@
+{
+  "id": "api2023",
+  "name": "OWASP API Security Top 10:2023",
+  "short": "OWASP API 2023",
+  "year": 2023,
+  "url": "https://api-security.owasp.org/editions/2023/en/0x11-t10",
+  "items": [
+    {
+      "id": "API1",
+      "title": "Broken Object Level Authorization",
+      "title_ko": "객체 수준 권한 검증 실패"
+    },
+    {
+      "id": "API2",
+      "title": "Broken Authentication",
+      "title_ko": "인증 실패"
+    },
+    {
+      "id": "API3",
+      "title": "Broken Object Property Level Authorization",
+      "title_ko": "객체 속성 수준 권한 검증 실패"
+    },
+    {
+      "id": "API4",
+      "title": "Unrestricted Resource Consumption",
+      "title_ko": "자원 소비 무제한"
+    },
+    {
+      "id": "API5",
+      "title": "Broken Function Level Authorization",
+      "title_ko": "기능 수준 권한 검증 실패"
+    },
+    {
+      "id": "API6",
+      "title": "Unrestricted Access to Sensitive Business Flows",
+      "title_ko": "민감한 업무 흐름 접근 무제한"
+    },
+    {
+      "id": "API7",
+      "title": "Server Side Request Forgery",
+      "title_ko": "서버사이드 요청 위조"
+    },
+    {
+      "id": "API8",
+      "title": "Security Misconfiguration",
+      "title_ko": "보안 설정 오류"
+    },
+    {
+      "id": "API9",
+      "title": "Improper Inventory Management",
+      "title_ko": "자산 목록 관리 미흡"
+    },
+    {
+      "id": "API10",
+      "title": "Unsafe Consumption of APIs",
+      "title_ko": "외부 API 안전하지 않은 사용"
+    }
+  ]
+}

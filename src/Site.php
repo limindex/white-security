@@ -8,12 +8,6 @@ final class Site
     /** 마지막 확인일이 이 일수를 넘으면 "확인 필요" */
     public const STALE_DAYS = 180;
     public const SEVERITY_LABELS = ['high' => '위험', 'medium' => '주의', 'low' => '참고'];
-    /** 머리말 maps 키 → 화면 이름 (모르는 키는 키 그대로) */
-    public const MAP_LABELS = [
-        'owasp2025' => 'OWASP Top 10 2025', 'api2023' => 'OWASP API Security 2023', 'llm2026' => 'OWASP LLM',
-        'agentic2026' => 'OWASP Agentic', 'asvs5' => 'OWASP ASVS 5', 'cwe' => 'CWE', 'kr_guide' => '국내 진단가이드',
-        'kr_ciip' => '주요정보통신기반시설 가이드',
-    ];
     public const LANG_LABELS = ['python' => 'Python', 'php' => 'PHP', 'js' => 'JavaScript', 'ts' => 'TypeScript', 'go' => 'Go', 'java' => 'Java', 'ruby' => 'Ruby', 'shell' => 'Shell', 'yaml' => 'YAML'];
 
     public readonly DateTimeImmutable $today;
@@ -54,7 +48,8 @@ final class Site
 
     public static function langLabel(string $lang): string { return self::LANG_LABELS[$lang] ?? $lang; }
 
-    public static function mapLabel(string $key): string { return self::MAP_LABELS[$key] ?? $key; }
+    /** 머리말 maps 키 → 화면 이름 (data/frameworks 가 출처, 모르는 키는 키 그대로) */
+    public static function mapLabel(string $key): string { return Coverage::names()[$key] ?? $key; }
 
     /** 심각도 배지 HTML (위험 빨강 · 주의 주황 · 참고 회색) */
     public static function severityBadge(string $severity, string $suffix = ''): string
@@ -116,16 +111,21 @@ final class Site
                 'url' => $this->url('issues/' . $r['id']), 'text' => $r['text'],
             ], $this->repo->searchIndex()));
         }
-        if ($path === 'api/coverage.json') return $this->json((object)$this->coverage());
+        if ($path === 'api/coverage.json') return $this->json(['frameworks' => $this->coverage(), 'gaps' => Coverage::gaps($this->repo->coverage())]);
         return $this->html(404, 'error', ['title' => '찾을 수 없음', 'message' => '주소가 바뀌었거나 없는 페이지입니다.']);
     }
 
-    /** 표준 항목 → 이슈 id 목록. (상세 계산은 이후 Coverage 가 대체) @return array<string,array<string,list<string>>> */
+    /** 표준별 대응표: 화면과 JSON 이 같이 쓴다. @return list<array<string,mixed>> */
     private function coverage(): array
     {
+        $built = $this->repo->coverage();
         $out = [];
-        foreach ($this->repo->all() as $i) {
-            foreach ($i->maps as $key => $codes) foreach ($codes as $c) $out[$key][$c][] = $i->id;
+        foreach ($this->repo->frameworks() as $fw) {
+            $items = [];
+            foreach ($built[$fw['id']] ?? [] as $row) {
+                $items[] = ['id' => $row['item'], 'title' => $row['title'], 'title_ko' => $row['title_ko'], 'issues' => $row['issues'], 'site_only' => $row['site_only']];
+            }
+            $out[] = ['id' => $fw['id'], 'name' => $fw['name'], 'year' => $fw['year'], 'url' => $fw['url'], 'items' => $items];
         }
         return $out;
     }

@@ -3,7 +3,8 @@
 final class Repository
 {
     /** @param list<Issue> $issues @param list<string> $errors @param array<int,array<string,mixed>> $groups */
-    private function __construct(private array $issues, private array $errors, private array $groups) {}
+    /** @param list<array<string,mixed>> $frameworks @param array<string,list<array<string,mixed>>> $coverage */
+    private function __construct(private array $issues, private array $errors, private array $groups, private array $frameworks = [], private array $coverage = []) {}
 
     public static function load(string $root): Repository
     {
@@ -33,7 +34,21 @@ final class Repository
             }
         }
         usort($issues, fn(Issue $a, Issue $b) => [$order[$a->group] ?? 999, $a->id] <=> [$order[$b->group] ?? 999, $b->id]);
-        return new Repository($issues, $errors, $groups);
+        $repo = new Repository($issues, $errors, $groups);
+        $repo->attachCoverage($root);
+        return $repo;
+    }
+
+    /** 표준 항목 파일을 읽고 대응표를 만든다. 없는 항목은 오류 띠 목록에 넣고, 표는 있는 항목만으로 그린다. */
+    private function attachCoverage(string $root): void
+    {
+        $this->frameworks = Coverage::loadFrameworks($root, $this->errors);
+        try {
+            $this->coverage = Coverage::build($this, $this->frameworks);
+        } catch (CoverageError $e) {
+            foreach ($e->problems as $p) $this->errors[] = $p;
+            $this->coverage = Coverage::build($this, $this->frameworks, false);
+        }
     }
 
     /**
@@ -66,6 +81,12 @@ final class Repository
 
     /** @return list<Issue> */
     public function all(): array { return $this->issues; }
+
+    /** @return list<array<string,mixed>> */
+    public function frameworks(): array { return $this->frameworks; }
+
+    /** @return array<string,list<array<string,mixed>>> */
+    public function coverage(): array { return $this->coverage; }
 
     /** @return list<string> */
     public function errors(): array { return $this->errors; }
