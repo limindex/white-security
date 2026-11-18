@@ -9,6 +9,8 @@ final class Issue
     public const MAP_KEYS = ['owasp2025', 'api2023', 'llm2026', 'agentic2026', 'asvs5', 'cwe', 'kr_guide', 'kr_ciip'];
     public const FULL_SECTIONS = ['한 줄 요약', '이런 장면에서', '왜 요즘 더 위험한가', '나는 뭘 하면 되나', '체크 항목', '스킬이 잡는 방식', '코드'];
     public const BRIEF_SECTIONS = ['한 줄 요약', '체크 항목', '코드'];
+    /** maps.cwe 는 Top 25 밖 번호도 받는다. 커버리지 표는 data/frameworks/cwe.json(Top 25)만 센다. */
+    public const CWE_ID = '/^CWE-\d+$/';
 
     /**
      * @param array<string,string> $sections
@@ -82,6 +84,7 @@ final class Issue
             if ($v === null) $v = [];
             if (!is_array($v) || !array_is_list($v)) throw $fail("maps.$k 는 목록이어야 합니다");
             foreach ($v as $item) if (!is_string($item) || $item === '') throw $fail("maps.$k 항목은 문자열이어야 합니다");
+            if ($k === 'cwe') foreach ($v as $item) if (!preg_match(self::CWE_ID, $item)) throw $fail("maps.cwe 항목 `$item` 은(는) CWE-숫자 형식이어야 합니다");
             $maps[$k] = $v;
         }
 

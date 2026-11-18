@@ -51,6 +51,12 @@ final class Site
     /** 머리말 maps 키 → 화면 이름 (data/frameworks 가 출처, 모르는 키는 키 그대로) */
     public static function mapLabel(string $key): string { return Coverage::names()[$key] ?? $key; }
 
+    /** CWE 번호면 MITRE 정의 쪽 주소, 아니면 null */
+    public static function cweUrl(string $key, string $code): ?string
+    {
+        return $key === 'cwe' && preg_match('/^CWE-(\d+)$/', $code, $m) ? 'https://cwe.mitre.org/data/definitions/' . $m[1] . '.html' : null;
+    }
+
     /** 심각도 배지 HTML (위험 빨강 · 주의 주황 · 참고 회색) */
     public static function severityBadge(string $severity, string $suffix = ''): string
     {

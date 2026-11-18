@@ -76,6 +76,7 @@ final class Coverage
                     $item = $code;
                     $sep = $byId[$key]['rollup'] ?? null;
                     if (!isset($rows[$key][$item]) && is_string($sep) && $sep !== '' && ($p = strpos($code, $sep)) !== false) $item = substr($code, 0, $p);
+                    if (!isset($rows[$key][$item]) && $key === 'cwe' && preg_match(Issue::CWE_ID, $code)) continue; // Top 25 밖 CWE: 유효, 표에는 없음
                     if (!isset($rows[$key][$item])) { $problems[] = "$file: maps.$key — `$code` 항목이 없습니다"; continue; }
                     if (!in_array($issue->id, $rows[$key][$item]['issues'], true)) {
                         $rows[$key][$item]['issues'][] = $issue->id;

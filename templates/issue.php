@@ -19,7 +19,7 @@ $n = 0;
 <?php if ($maps): ?>
 <ul class="ws-maps" aria-label="기준 번호">
 <?php foreach ($maps as $key => $codes): foreach ($codes as $c): ?>
-<li class="ws-chip"><?php if (!str_starts_with($c, strtoupper($key) . '-')): ?><span class="ws-chip-k"><?= Site::e(Site::mapLabel($key)) ?></span><?php endif ?><span class="ws-chip-v"><?= Site::e($c) ?></span></li>
+<li class="ws-chip"><?php if (!str_starts_with($c, strtoupper($key) . '-')): ?><span class="ws-chip-k"><?= Site::e(Site::mapLabel($key)) ?></span><?php endif ?><?php if ($u = Site::cweUrl($key, $c)): ?><a class="ws-chip-v" href="<?= Site::e($u) ?>" rel="noopener noreferrer"><?= Site::e($c) ?></a><?php else: ?><span class="ws-chip-v"><?= Site::e($c) ?></span><?php endif ?></li>
 <?php endforeach; endforeach ?>
 </ul>
 <?php endif ?>

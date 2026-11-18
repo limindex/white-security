@@ -132,3 +132,50 @@ test('mapLabel: 프레임워크 파일의 이름을 쓴다', function () {
     assert_same('OWASP Top 10:2025', Site::mapLabel('owasp2025'));
     assert_same('modelx', Site::mapLabel('modelx'));
 });
+
+/** fixture 를 복제해 maps.cwe 만 바꾼다 */
+function cov_cwe_issue(string $id, string $slug, string $cwe): string
+{
+    $raw = cov_issue($id, $slug, 'A05');
+    return str_replace("  cwe: [CWE-89]\n", "  cwe: [$cwe]\n", $raw);
+}
+
+test('CWE: Top 25 밖 번호(CWE-611)는 유효, JSON maps·칩 링크에 나오고 표·빈칸에는 없다', function () {
+    $root = make_root(['WS-XML-009-xxe.md' => cov_cwe_issue('WS-XML-009', 'xxe', 'CWE-89, CWE-611')]);
+    $repo = Repository::load($root);
+    assert_same([], $repo->errors());
+    assert_same(['CWE-89', 'CWE-611'], $repo->find('WS-XML-009')->maps['cwe']);
+    $built = Coverage::build($repo, cov_fw());
+    $items = array_column($built['cwe'], 'item');
+    assert_true(!in_array('CWE-611', $items, true), 'CWE-611 은 표 행이 아님');
+    assert_same(25, count($items));
+    $rows = array_column($built['cwe'], null, 'item');
+    assert_same(['WS-INJ-001', 'WS-XML-009'], $rows['CWE-89']['issues']);
+    foreach (Coverage::gaps($built) as $g) assert_true($g['item'] !== 'CWE-611', '빈칸 목록에 CWE-611 없음');
+    $site = new Site($repo, '/white-security/', 'live');
+    $api = json_decode($site->route('api/issues/WS-XML-009.json')['body'], true);
+    assert_same(['CWE-89', 'CWE-611'], $api['maps']['cwe']);
+    $page = $site->route('issues/WS-XML-009')['body'];
+    assert_contains('href="https://cwe.mitre.org/data/definitions/611.html"', $page);
+    assert_contains('href="https://cwe.mitre.org/data/definitions/89.html"', $page);
+});
+
+test('CWE: 형식이 틀린 번호(CWE-abc)는 원본 오류', function () {
+    $repo = Repository::load(make_root(['WS-XML-009-xxe.md' => cov_cwe_issue('WS-XML-009', 'xxe', 'CWE-abc')]));
+    $errs = implode("\n", $repo->errors());
+    assert_contains('WS-XML-009-xxe.md', $errs);
+    assert_contains('CWE-abc', $errs);
+    assert_same(null, $repo->find('WS-XML-009'));
+});
+
+test('CWE: cwe 가 아닌 키의 없는 항목은 여전히 오류', function () {
+    $repo = cov_repo(['WS-INJ-002-second.md' => cov_issue('WS-INJ-002', 'second', 'A99')], []);
+    try { Coverage::build($repo, cov_fw()); throw new Exception('오류가 나야 합니다'); }
+    catch (CoverageError $e) { assert_contains('A99', $e->getMessage()); }
+});
+
+test('Site::cweUrl: CWE 번호만 링크', function () {
+    assert_same('https://cwe.mitre.org/data/definitions/1427.html', Site::cweUrl('cwe', 'CWE-1427'));
+    assert_same(null, Site::cweUrl('cwe', 'CWE-x'));
+    assert_same(null, Site::cweUrl('owasp2025', 'A01'));
+});
