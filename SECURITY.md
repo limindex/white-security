@@ -7,7 +7,7 @@
 This policy covers:
 
 - The documentation site generator in this repository (`build.php`, `index.php`, `src/`, `templates/`, `assets/`) and the static site it builds.
-- The plugin in `plugins/white-security/`: the `white-security` skill (`/white-security:review` in Claude Code), the read-only security reviewer agent for big projects, and the rule files used for fixes.
+- The plugin in `plugins/white-security/`: the `white-security` skill (`/white-security:review` in Claude Code), the read-only security reviewer agent that runs reviews in Claude Code, and the rule files used for fixes.
 - Content errors in the issue documents (`issues/`) or the rule files that could lead to insecure advice, for example a "safe" code example that is still exploitable, or skill guidance that makes the review skip a real risk.
 - Marketplaces or plugins that impersonate this project.
 
@@ -67,7 +67,7 @@ Only the latest plugin version receives fixes. Update with `/plugin marketplace 
 ### 범위
 
 - 이 저장소의 문서 사이트 생성기(`build.php`·`index.php`·`src/`·`templates/`·`assets/`)와 생성된 정적 사이트.
-- `plugins/white-security/` 의 plugin: `white-security` 스킬(Claude Code 에서는 `/white-security:review`), 큰 프로젝트용 읽기 전용 보안 검토 에이전트, 고칠 때 쓰는 규칙 파일.
+- `plugins/white-security/` 의 plugin: `white-security` 스킬(Claude Code 에서는 `/white-security:review`), Claude Code 에서 검토를 맡는 읽기 전용 보안 검토 에이전트, 고칠 때 쓰는 규칙 파일.
 - 이슈 문서(`issues/`)·규칙 파일의 내용 오류 중 안전하지 않은 조언으로 이어질 수 있는 것. 예: 여전히 공격 가능한 안전 코드 예시, 실제 위험을 건너뛰게 만드는 스킬 안내.
 - 이 프로젝트를 사칭하는 marketplace·plugin.
 
