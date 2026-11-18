@@ -6,9 +6,9 @@ Signals are candidates, not findings: open the matching `<ID>.md` here (max 2 pe
 Stacks: Python · JavaScript · Shell · JSON
 
 - `tools=` `@tool` `function_declarations` `tool_calls` `function_call` → WS-AGT-001 Excessive Agency
-- `CLAUDE.md` `AGENTS.md` `GEMINI.md` `.cursorrules` `.cursor/rules/**` `.windsurfrules` `.github/copilot-instructions.md` `.claude/**/*.md` → WS-AGT-002 Rules File Backdoor
+- `CLAUDE.md` `AGENTS.md` `.claude/skills/` `.claude/agents/` `.claude/**/*.md` `.cursorrules` `.cursor/rules/**` `.mcp.json` → WS-AGT-002 Rules File Backdoor
 - `memory.add(` `save_memory` `remember(` `store.put(` → WS-AGT-003 Memory Poisoning
 - `@tool` `tools=` `as_user` `/agent` `/a2a` → WS-AGT-004 Confused Deputy
 - `while True` `while not done` `max_iterations` `max_turns` `recursion_limit` → WS-AGT-005 Cascading Failures · Rogue Agent
-- `.claude/settings.json` `.claude/settings.local.json` `.vscode/settings.json` `.cursor/**` `.mcp.json` `.github/workflows/*.yml` → WS-AGT-006 YOLO Mode
+- `.claude/settings.json` `extraKnownMarketplaces` `enabledPlugins` `.claude/settings.local.json` `.vscode/settings.json` `.cursor/**` `.mcp.json` `.github/workflows/*.yml` → WS-AGT-006 YOLO Mode
 - `.mcp.json` `.cursor/mcp.json` `.vscode/mcp.json` `claude_desktop_config.json` `~/.claude.json` `mcpServers` `list_tools` `listTools` → WS-MCP-001 Tool Poisoning · Rug Pull

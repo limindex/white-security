@@ -3,7 +3,7 @@
 
 ## 탐지 규칙
 
-- **찾는 곳**: 이번에 쓰거나 고친 파일 전체, 특히 설정 파일(`.env*`, `config.*`, `settings.py`, `application.yml`, `docker-compose.yml`, CI 워크플로, `.mcp.json`), 브라우저 코드의 `import.meta.env.VITE_*`·`process.env.NEXT_PUBLIC_*`, 로그 출력부.
+- **찾는 곳**: 키 모양 문자열(`sk-`, `AKIA`, `ghp_`, `xoxb-`, `-----BEGIN`), 커밋된 `.env*`, 브라우저 코드의 `NEXT_PUBLIC_`·`VITE_` 변수, 그 밖에 이번에 쓰거나 고친 파일 전체, 특히 설정 파일(`config.*`, `settings.py`, `application.yml`, `docker-compose.yml`, CI 워크플로, `.mcp.json`), 로그 출력부.
 - **검사 1 — 리터럴 비밀값**: 지적할 때: 이름에 `key`, `secret`, `token`, `password`, `passwd`, `credential`, `private`가 든 변수에 16자 이상의 무작위로 보이는 문자열이 있는 경우. 알려진 키 형식(`AKIA`로 시작하는 20자, `ghp_`, `sk_live_`, `xoxb-`, `-----BEGIN ... PRIVATE KEY-----`)이나 비밀번호가 든 접속 문자열이 있는 경우. / 지적하지 않을 때: 빈 값, 자리표시자(`changeme`, `your-key-here`, `xxx`, `<...>`, `example`), `.env.example`·문서의 예시, 실제 서비스에 닿지 않는 테스트 폴더 속 가짜 값, 서비스 문서가 공개해도 된다고 한 공개용 키(publishable key 등).
 - **검사 2 — 브라우저로 나가는 비밀키**: 지적할 때: 브라우저 번들 접두어 변수의 이름이나 쓰임새가 서버 전용 비밀키인 경우(이름에 `SECRET`이 있음, `Authorization: Bearer`에 그대로 씀). / 지적하지 않을 때: 공개용 키이고 권한 규칙이 서버 쪽에 따로 있는 경우.
 - **검사 3 — 설정·출력으로 새는 값**: 지적할 때: 환경 변수가 없으면 고정값으로 도는 코드(`os.getenv("SECRET_KEY", "dev-secret")`, `process.env.JWT_SECRET || "secret"`), git에 추적되거나 `.gitignore`에 없는 `.env`·키 파일, 로그·오류 응답에 그대로 넣는 비밀값·접속 문자열·인증 헤더. / 지적하지 않을 때: 기본값이 개발 전용 분기에만 있고 운영 설정에서는 값이 없으면 멈추는 경우.

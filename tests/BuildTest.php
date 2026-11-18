@@ -62,7 +62,7 @@ test('build: dist 안 링크가 전부 dist 안 파일로 풀린다', function (
 test('build: 스킬 references — 플러그인 폴더에 묶음별 INDEX·이슈 파일, site_only 제외, 전체 INDEX 없음', function () {
     [$code, $out, $root] = bt_build();
     assert_same(0, $code, $out);
-    $ref = "$root/" . SkillExport::SKILL_DIR . '/references';
+    $ref = "$root/" . SkillExport::REF_DIR;
     assert_true(!is_dir("$root/skills"), '옛 위치에 만들지 않음');
     $f = file_get_contents("$ref/web/WS-INJ-001.md");
     assert_true(str_starts_with($f, SkillExport::HEADER), '머리 주석');
@@ -71,7 +71,7 @@ test('build: 스킬 references — 플러그인 폴더에 묶음별 INDEX·이�
     assert_contains('cur.execute("SELECT * FROM u WHERE id=%s", (uid,))', file_get_contents("$ref/web/WS-INJ-001.code.python.md"));
     assert_true(!is_file("$ref/people/WS-PPL-001.md") && !is_dir("$ref/people"), 'site_only 제외');
     assert_true(is_file("$ref/web/INDEX.md") && !is_file("$ref/INDEX.md"), '묶음 INDEX 만');
-    assert_contains('plugins/white-security/skills/white-security/references', $out);
+    assert_contains('plugins/white-security/skills/review/references', $out);
     assert_contains('SKILL.md 라우팅 표를 갱신했습니다', $out);
     assert_contains('description', $out); // 항상 로드되는 설명의 길이·토큰 추정을 알린다
 });
@@ -172,7 +172,7 @@ test('SkillExport: 사라진 이슈의 생성 파일만 지우고 직접 둔 파
 test('SkillExport: groups.json 에 when 이 없으면 INDEX 는 기본 문장을 쓴다', function () {
     $root = make_root();
     file_put_contents($root . '/data/groups.json', '[{"id":"web","name":"웹 기본","order":5,"route":"sql"},{"id":"auth","name":"로그인·권한","order":6,"when":"  "}]');
-    $ref = "$root/" . SkillExport::SKILL_DIR . '/references';
+    $ref = "$root/" . SkillExport::REF_DIR;
     SkillExport::write(Repository::load($root), $ref);
     $idx = file_get_contents("$ref/web/INDEX.md");
     assert_contains("When: 「웹 기본」 상황에서 코드를 쓰거나 고칠 때\n", $idx);

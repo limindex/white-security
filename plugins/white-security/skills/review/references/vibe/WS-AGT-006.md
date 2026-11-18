@@ -3,10 +3,11 @@
 
 ## 탐지 규칙
 
-- **찾는 곳**: `.claude/settings.json`, `.claude/settings.local.json`, `.vscode/settings.json`, `.cursor/**`, `.mcp.json`, CI 워크플로(`.github/workflows/*.yml`)의 AI 도구 실행 줄, 자동 승인 스크립트.
+- **찾는 곳**: `.claude/settings.json`, `extraKnownMarketplaces`, `enabledPlugins`, `.claude/settings.local.json`, `.vscode/settings.json`, `.cursor/**`, `.mcp.json`, CI 워크플로(`.github/workflows/*.yml`)의 AI 도구 실행 줄, 자동 승인 스크립트.
 - **검사 1 — 전체 허용·확인 건너뛰기**: 지적할 때: `Bash(*)`, `Bash`, `Bash(sudo *)`, `Bash(curl *)` 같은 넓은 allow, `bypassPermissions` 기본 모드, `chat.tools.global.autoApprove: true`(옛 이름 `chat.tools.autoApprove`), `chat.tools.terminal.autoApprove`의 `/.*/`처럼 모든 명령에 맞는 규칙, 스크립트·CI의 `--dangerously-skip-permissions`·`--yolo`가 있는 경우. / 지적하지 않을 때: 확인 건너뛰기가 네트워크·비밀값 없는 컨테이너 안에서만 돌고 그 사실이 설정이나 문서에 있는 경우.
 - **검사 2 — 위험한 명령의 자동 허용**: 지적할 때: `rm`, `git push`, 패키지 설치, 배포, DB 마이그레이션 명령이 allow(또는 VS Code 터미널 자동 승인)에 있는 경우. `.env`·키 파일 읽기를 막는 deny가 없는 경우. / 지적하지 않을 때: 그런 명령이 ask나 deny에 있는 경우.
-- **등급**: 위험: 저장소에 커밋된 설정에 전체 허용이나 확인 건너뛰기가 있는 경우. 외부 입력(PR·이슈 글)을 읽는 CI에서 확인 없이 AI 도구가 도는 경우. / 주의: 설치·push·삭제 명령이 자동 허용인 경우. `.env` deny가 없는 경우. / 참고: 개인 설정(`settings.local.json`)에만 넓은 허용이 있는 경우.
+- **검사 3 — 저장소가 권하는 마켓·플러그인**: 지적할 때: 커밋된 `.claude/settings.json`의 `extraKnownMarketplaces`가 팀이 관리하지 않는 저장소나 이미 알려진 마켓과 비슷한 이름을 가리키는 경우, `enabledPlugins`로 그런 마켓의 플러그인을 켜는 경우(폴더를 신뢰하면 설치 제안이 뜨고, 설치된 플러그인은 훅·MCP로 명령을 실행할 수 있음). / 지적하지 않을 때: 팀 소유 저장소의 마켓을 커밋으로 고정해 쓰고 그 사실이 문서에 있는 경우.
+- **등급**: 위험: 저장소에 커밋된 설정에 전체 허용이나 확인 건너뛰기가 있는 경우. 외부 입력(PR·이슈 글)을 읽는 CI에서 확인 없이 AI 도구가 도는 경우. 알려진 마켓과 비슷한 이름의 `extraKnownMarketplaces`. / 주의: 설치·push·삭제 명령이 자동 허용인 경우. 출처를 확인할 수 없는 `extraKnownMarketplaces`·`enabledPlugins`. `.env` deny가 없는 경우. / 참고: 개인 설정(`settings.local.json`)에만 넓은 허용이 있는 경우.
 - **보고 예**: `[위험] WS-AGT-006 .claude/settings.json:4 — allow 에 "Bash(*)" 와 bypassPermissions 기본 모드 → 정확한 명령만 allow, push·설치·삭제는 ask, .env 는 deny, disableBypassPermissionsMode 설정`
 
 ## 점검 항목

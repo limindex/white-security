@@ -32,7 +32,7 @@ import { Linking } from "react-native";
 import { WebView } from "react-native-webview";
 
 const ORIGIN = "https://help.example.com";
-const isOurs = (u: string) => u === ORIGIN || u.startsWith(ORIGIN + "/"); // .example.com.evil 같은 주소는 불일치
+const isOurs = (u: string) => u === ORIGIN || u.startsWith(ORIGIN + "/"); // .example.com.evil.example 같은 주소는 불일치
 
 export function HelpScreen({ onClose }: { onClose: () => void }) {
   return (

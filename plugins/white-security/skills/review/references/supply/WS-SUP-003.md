@@ -3,11 +3,11 @@
 
 ## 탐지 규칙
 
-- **찾는 곳**: `postinstall`, `preinstall`, `ignore-scripts`, `allowBuilds`, `dangerouslyAllowAllBuilds`, `onlyBuiltDependencies`, `allow-plugins`, `--only-binary`, 그 밖에 .npmrc·pnpm-workspace.yaml, CI 설치 단계와 그 단계의 환경 변수, 새로 추가한 빌드 도구 플러그인(vite.config·webpack.config·babel 설정).
-- **검사 1 — 설치 중 실행 허용**: 지적할 때: CI·배포에서 `npm install`·`npm ci`를 스크립트 허용 상태로 돌리면서 허용 목록이 없는 경우, pnpm `dangerouslyAllowAllBuilds: true`, Composer `"allow-plugins": true`, 의존성이 새로 추가되면서 그 패키지에 설치 스크립트가 있는 경우. / 지적하지 않을 때: `--ignore-scripts`로 설치하고 필요한 패키지만 `npm rebuild <이름>`으로 빌드하는 경우, pnpm `allowBuilds`·Composer `allow-plugins`에 패키지별 허용이 있는 경우(허용 목록에 든 esbuild·sharp·prisma처럼 널리 쓰이는 빌드 패키지는 참고로만).
+- **찾는 곳**: `postinstall`, `preinstall`, `yarnPath`, `ignore-scripts`, `allowBuilds`, `dangerouslyAllowAllBuilds`, `onlyBuiltDependencies`, `allow-plugins`, `--only-binary`, `yarn-path`, 그 밖에 .npmrc·.yarnrc.yml·pnpm-workspace.yaml, CI 설치 단계와 그 단계의 환경 변수, 새로 추가한 빌드 도구 플러그인(vite.config·webpack.config·babel 설정).
+- **검사 1 — 설치 중 실행 허용**: 지적할 때: CI·배포에서 `npm install`·`npm ci`를 스크립트 허용 상태로 돌리면서 허용 목록이 없는 경우, pnpm `dangerouslyAllowAllBuilds: true`, Composer `"allow-plugins": true`, 의존성이 새로 추가되면서 그 패키지에 설치 스크립트가 있는 경우, `.yarnrc.yml`의 `yarnPath`(Yarn 1은 `.yarnrc`의 `yarn-path`)가 `.yarn/releases/` 밖 파일을 가리키거나 `plugins:`가 출처를 모르는 파일을 불러오는 경우(모든 yarn 명령이 그 파일을 실행함). / 지적하지 않을 때: `yarn set version`이 만든 `.yarn/releases/yarn-<버전>.cjs`를 가리키는 경우(참고로만), `--ignore-scripts`로 설치하고 필요한 패키지만 `npm rebuild <이름>`으로 빌드하는 경우, pnpm `allowBuilds`·Composer `allow-plugins`에 패키지별 허용이 있는 경우(허용 목록에 든 esbuild·sharp·prisma처럼 널리 쓰이는 빌드 패키지는 참고로만).
 - **검사 2 — 설치 단계의 비밀값**: 지적할 때: 설치 단계(job·step)에 배포 토큰·클라우드 키·`NPM_TOKEN`(쓰기 권한)이 환경 변수로 들어가는 경우. / 지적하지 않을 때: 비밀값을 배포 단계에만 주는 경우, 읽기 전용 토큰.
 - **검사 3 — 새 빌드 플러그인·새 버전**: 지적할 때: 내려받은 수가 적거나 처음 보는 빌드 도구 플러그인을 추가하는 경우, 최소 공개 기간 설정 없이 범위 버전(`^`)으로 새 버전을 바로 받는 CI. / 지적하지 않을 때: 공식 문서가 안내하는 플러그인, 잠금 파일로 고정한 버전.
-- **등급**: 위험: 처음 보는 패키지의 설치 스크립트가 비밀값이 있는 환경에서 실행됨, Composer 플러그인 전체 허용. / 주의: CI 설치가 스크립트 허용·허용 목록 없음, 최소 공개 기간 없음. / 참고: 허용 목록에 든 널리 쓰이는 빌드 패키지(esbuild·sharp·prisma), 소스 빌드가 필요한 파이썬 패키지, 빌드 플러그인 출처 확인 필요.
+- **등급**: 위험: 처음 보는 패키지의 설치 스크립트가 비밀값이 있는 환경에서 실행됨, Composer 플러그인 전체 허용, `yarnPath`가 `.yarn/releases/` 밖 파일을 가리킴. / 주의: CI 설치가 스크립트 허용·허용 목록 없음, 최소 공개 기간 없음. / 참고: 허용 목록에 든 널리 쓰이는 빌드 패키지(esbuild·sharp·prisma), 소스 빌드가 필요한 파이썬 패키지, 빌드 플러그인 출처 확인 필요.
 - **보고 예**: `[위험] WS-SUP-003 .github/workflows/release.yml:21 — NPM_TOKEN·AWS 키가 있는 단계에서 npm install 로 설치 스크립트 실행 → npm ci --ignore-scripts 로 바꾸고 비밀값은 배포 단계에만`
 - **고칠 방법**: 설치는 스크립트 없이 하고 빌드가 필요한 패키지만 허용 목록으로 다시 빌드하며, 설치 단계에서 비밀값을 빼야 한다.
 

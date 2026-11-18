@@ -9,7 +9,7 @@ return [
     'paths' => ['api/*', 'sanctum/csrf-cookie'],
     'allowed_methods' => ['*'],
     'allowed_origins' => ['*'],                       // credentials 와 함께면 요청 Origin 을 그대로 돌려줌
-    'allowed_origins_patterns' => ['#example.com#'],  // evil-example.com.attacker.io 도 통과
+    'allowed_origins_patterns' => ['#example.com#'],  // evil-example.com.attacker.example 도 통과
     'allowed_headers' => ['*'],
     'supports_credentials' => true,
 ];

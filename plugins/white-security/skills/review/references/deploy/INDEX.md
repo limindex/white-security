@@ -16,4 +16,4 @@ Stacks: Python · FastAPI · Django · Flask · JavaScript · Next.js · PHP · 
 - `openapi_url` `docs_url` `introspection` `/api/v1` `route:list` → WS-CFG-009 Shadow · Zombie API
 - `verify=False` `rejectUnauthorized: false` `NODE_TLS_REJECT_UNAUTHORIZED` `withoutVerifying(` `MODE_ECB` → WS-CRY-001 Weak Cryptography
 - `user_login_failed` `Events\Failed` `Log::channel(` `LOGGING = {` → WS-LOG-001 Security Logging & Alerting Failures
-- `.env*` `config.*` `settings.py` `application.yml` `docker-compose.yml` `.mcp.json` `import.meta.env.VITE_*` `process.env.NEXT_PUBLIC_*` → WS-SEC-001 Hardcoded Secrets
+- `sk-` `AKIA` `ghp_` `xoxb-` `-----BEGIN` `.env*` `NEXT_PUBLIC_` `VITE_` → WS-SEC-001 Hardcoded Secrets
