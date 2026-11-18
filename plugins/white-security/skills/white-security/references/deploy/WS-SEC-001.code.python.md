@@ -4,7 +4,7 @@
 ✗ 취약 코드 (vulnerable example — do not use)
 
 ```python
-# settings.py (repository에 커밋됨)
+# settings.py (저장소에 커밋됨)
 import os
 
 DATABASE_URL = "postgresql://app:Winter2026!@db.internal:5432/shop"
@@ -28,6 +28,6 @@ DATABASE_URL = required("DATABASE_URL")
 PAYMENT_SECRET_KEY = required("PAYMENT_SECRET_KEY")
 JWT_SECRET = required("JWT_SECRET")
 
-# .gitignore 에 .env 를 넣고, repository에는 값을 비운 .env.example 만 둔다.
+# .gitignore 에 .env 를 넣고, 저장소에는 값을 비운 .env.example 만 둔다.
 # 이미 커밋된 값은 지금 서비스 관리 화면에서 새로 발급하고 옛 값은 폐기한다.
 ```

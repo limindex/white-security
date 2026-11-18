@@ -21,8 +21,8 @@ checked: 2026-11-18
 revisions:
   - date: 2026-11-18
     note: 최초 작성
-applies_to: [Python, Node.js, PHP, 모든 애플리케이션·repository·배포 환경]
-severity_reason: "영향: 남이 내 키로 과금·데이터 접근 · 악용: 공개 repository·화면 소스에서 자동 수집 도구로 빠르게 수집"
+applies_to: [Python, Node.js, PHP, 모든 애플리케이션·저장소·배포 환경]
+severity_reason: "영향: 남이 내 키로 과금·데이터 접근 · 악용: 공개 저장소·화면 소스에서 자동 수집 도구로 빠르게 수집"
 sources:
   - title: OWASP Secrets Management Cheat Sheet
     url: https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html
@@ -49,11 +49,11 @@ sources:
 
 ## 요약
 
-Hardcoded Secrets(하드코딩된 비밀값)는 API 키(서비스를 쓸 수 있는 비밀 열쇠)나 DB 비밀번호를 코드·설정 파일에 그대로 적어, repository·웹 화면·로그를 통해 남에게 보이게 되는 문제에 대한 이슈(진단가이드 이름: 하드코드된 중요정보). 남이 그 열쇠로 내 돈과 데이터를 쓰는 위험.
+Hardcoded Secrets(하드코딩된 비밀값)는 API 키(서비스를 쓸 수 있는 비밀 열쇠)나 DB 비밀번호를 코드·설정 파일에 그대로 적어, 저장소·웹 화면·로그를 통해 남에게 보이게 되는 문제에 대한 이슈(진단가이드 이름: 하드코드된 중요정보). 남이 그 열쇠로 내 돈과 데이터를 쓰는 위험.
 
 ## 발생 상황
 
-- AI 코딩 도구에 붙여 넣은 키가 코드에 그대로 적혀 GitHub 공개 repository에 올라가는 경우.
+- AI 코딩 도구에 붙여 넣은 키가 코드에 그대로 적혀 GitHub 공개 저장소에 올라가는 경우.
 - `VITE_`, `NEXT_PUBLIC_` 접두어 설정값처럼 브라우저 코드에 넣은 키가 방문자에게 그대로 내려가, 누구나 개발자 도구(F12)로 보는 경우.
 - `.env`(비밀값을 모아 두는 설정 파일)를 지우고 다시 올려도 git(코드 변경 기록을 전부 남기는 도구)의 예전 기록에 남는 값. 오류 화면·로그에 찍히는 비밀번호.
 
@@ -77,7 +77,7 @@ Hardcoded Secrets(하드코딩된 비밀값)는 API 키(서비스를 쓸 수 있
 ## 점검 항목
 
 - 소스·설정 파일·테스트 데이터·주석에 비밀값 리터럴(키 접두어가 붙은 문자열, `password=`, `secret`, `token`, 비밀번호가 든 접속 문자열, `-----BEGIN ... PRIVATE KEY-----`)이 없어야 한다. 비밀값은 실행 환경(환경 변수, 시크릿 매니저, KMS)에서 읽고, 값이 없으면 기본값으로 대신하지 않고 시작을 멈춰야 한다.
-- `.env`, `*.pem`, `*.key`, 서비스 계정 JSON은 `.gitignore`에 넣고 repository에는 값을 비운 `.env.example`만 둬야 하며, 비밀값 검사(pre-commit 훅, 푸시 보호, CI 스캔)를 둬야 한다.
+- `.env`, `*.pem`, `*.key`, 서비스 계정 JSON은 `.gitignore`에 넣고 저장소에는 값을 비운 `.env.example`만 둬야 하며, 비밀값 검사(pre-commit 훅, 푸시 보호, CI 스캔)를 둬야 한다.
 - 브라우저로 나가는 코드에는 공개용 키만 둬야 한다. `VITE_`, `NEXT_PUBLIC_`, `REACT_APP_`, `EXPO_PUBLIC_` 접두어 변수에 비밀키를 넣지 않고, 비밀키가 필요한 호출은 서버가 대신해야 한다.
 - 로그, 오류 응답, 디버그 출력에 비밀값과 `Authorization` 헤더를 찍지 않아야 한다.
 - 이미 커밋되거나 밖에 보인 비밀값은 교체가 먼저이고 기록 지우기는 그다음이어야 한다. 키는 필요한 권한만 주고 만료·교체 주기를 정해야 한다.
@@ -89,7 +89,7 @@ Hardcoded Secrets(하드코딩된 비밀값)는 API 키(서비스를 쓸 수 있
 - **검사 1 — 리터럴 비밀값**: 지적할 때: 이름에 `key`, `secret`, `token`, `password`, `passwd`, `credential`, `private`가 든 변수에 16자 이상의 무작위로 보이는 문자열이 있는 경우. 알려진 키 형식(`AKIA`로 시작하는 20자, `ghp_`, `sk_live_`, `xoxb-`, `-----BEGIN ... PRIVATE KEY-----`)이나 비밀번호가 든 접속 문자열이 있는 경우. / 지적하지 않을 때: 빈 값, 자리표시자(`changeme`, `your-key-here`, `xxx`, `<...>`, `example`), `.env.example`·문서의 예시, 실제 서비스에 닿지 않는 테스트 폴더 속 가짜 값, 서비스 문서가 공개해도 된다고 한 공개용 키(publishable key 등).
 - **검사 2 — 브라우저로 나가는 비밀키**: 지적할 때: 브라우저 번들 접두어 변수의 이름이나 쓰임새가 서버 전용 비밀키인 경우(이름에 `SECRET`이 있음, `Authorization: Bearer`에 그대로 씀). / 지적하지 않을 때: 공개용 키이고 권한 규칙이 서버 쪽에 따로 있는 경우.
 - **검사 3 — 설정·출력으로 새는 값**: 지적할 때: 환경 변수가 없으면 고정값으로 도는 코드(`os.getenv("SECRET_KEY", "dev-secret")`, `process.env.JWT_SECRET || "secret"`), git에 추적되거나 `.gitignore`에 없는 `.env`·키 파일, 로그·오류 응답에 그대로 넣는 비밀값·접속 문자열·인증 헤더. / 지적하지 않을 때: 기본값이 개발 전용 분기에만 있고 운영 설정에서는 값이 없으면 멈추는 경우.
-- **등급**: 위험: 실제 값으로 보이는 비밀값이 repository나 브라우저 번들에 있는 경우. / 주의: 없으면 고정값으로 도는 코드, `.gitignore` 누락, 로그 출력. / 참고: 비밀값 검사 도구 없음, 키 교체 주기 미정.
+- **등급**: 위험: 실제 값으로 보이는 비밀값이 저장소나 브라우저 번들에 있는 경우. / 주의: 없으면 고정값으로 도는 코드, `.gitignore` 누락, 로그 출력. / 참고: 비밀값 검사 도구 없음, 키 교체 주기 미정.
 - **보고 형식**: `[위험|주의|참고] <id> <파일:줄> — <이유> → <고칠 방법>`
 - **보고 예**: `[위험] WS-SEC-001 src/config.php:12 — DB 비밀번호가 코드에 평문으로 있음(값 가림) → 환경 변수로 옮기고, 이미 커밋됐다면 비밀번호부터 바꿈`
 - **검토 주의**: 비밀값 자체는 옮겨 적지 않고 앞 4자만 남겨 `…[가림]`으로 표기해야 한다.
@@ -102,7 +102,7 @@ Hardcoded Secrets(하드코딩된 비밀값)는 API 키(서비스를 쓸 수 있
 ✗ 취약 코드
 
 ```python
-# settings.py (repository에 커밋됨)
+# settings.py (저장소에 커밋됨)
 import os
 
 DATABASE_URL = "postgresql://app:Winter2026!@db.internal:5432/shop"
@@ -126,7 +126,7 @@ DATABASE_URL = required("DATABASE_URL")
 PAYMENT_SECRET_KEY = required("PAYMENT_SECRET_KEY")
 JWT_SECRET = required("JWT_SECRET")
 
-# .gitignore 에 .env 를 넣고, repository에는 값을 비운 .env.example 만 둔다.
+# .gitignore 에 .env 를 넣고, 저장소에는 값을 비운 .env.example 만 둔다.
 # 이미 커밋된 값은 지금 서비스 관리 화면에서 새로 발급하고 옛 값은 폐기한다.
 ```
 
@@ -175,7 +175,7 @@ app.post("/api/chat", requireLogin, async (req, res) => { // requireLogin: 앱�
 
 ```php
 <?php
-// config.php (repository에 커밋됨)
+// config.php (저장소에 커밋됨)
 $pdo = new PDO('mysql:host=db;dbname=shop;charset=utf8mb4', 'shop', 'Winter2026!');
 define('SMS_API_SECRET', 'b1946ac92492d2347c6235b4d2611184');
 ```

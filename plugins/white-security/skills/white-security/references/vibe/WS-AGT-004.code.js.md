@@ -17,7 +17,7 @@ app.post("/agent/inbox", express.json(), async (req, res) => {
 import crypto from "node:crypto";
 
 const PEERS = { "billing-agent": { key: process.env.BILLING_AGENT_KEY, allowed: new Set(["create_invoice"]) } };
-const seen = new Set(); // 실제로는 만료 시간이 있는 repository(Redis 등)
+const seen = new Set(); // 실제로는 만료 시간이 있는 저장소(Redis 등)
 
 app.post("/agent/inbox", express.raw({ type: "application/json" }), async (req, res) => {
   const peer = PEERS[req.get("X-Agent-Id")];

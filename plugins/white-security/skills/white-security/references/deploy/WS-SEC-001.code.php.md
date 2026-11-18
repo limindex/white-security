@@ -5,7 +5,7 @@
 
 ```php
 <?php
-// config.php (repository에 커밋됨)
+// config.php (저장소에 커밋됨)
 $pdo = new PDO('mysql:host=db;dbname=shop;charset=utf8mb4', 'shop', 'Winter2026!');
 define('SMS_API_SECRET', 'b1946ac92492d2347c6235b4d2611184');
 ```

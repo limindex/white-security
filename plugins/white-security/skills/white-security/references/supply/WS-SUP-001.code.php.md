@@ -30,6 +30,6 @@ function check_packagist(string $name, int $minAgeDays = 90): array
     return [true, '있음'];
 }
 
-// 사람이 승인한 뒤: composer require --no-plugins vendor/name:<정확한 버전> (config.allow-plugins 에는 허용한 plugin만)
+// 사람이 승인한 뒤: composer require --no-plugins vendor/name:<정확한 버전> (config.allow-plugins 에는 허용한 플러그인만)
 // composer.lock 을 함께 커밋하고, 배포는 composer install 로 잠금 파일대로만 설치한다.
 ```
