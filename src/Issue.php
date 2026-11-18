@@ -11,6 +11,12 @@ final class Issue
     public const BRIEF_SECTIONS = ['요약', '점검 항목', '코드 예시'];
     /** maps.cwe 는 Top 25 밖 번호도 받는다. 커버리지 표는 data/frameworks/cwe.json(Top 25)만 센다. */
     public const CWE_ID = '/^CWE-\d+$/';
+    /**
+     * `## 탐지 규칙` 칸 이름(이 순서). 한 칸 = 한 줄 `- **이름**: 내용`. 찾는 곳·등급은 꼭 1개, 검사는 1개 이상(`검사 N — 이름`),
+     * 나머지는 0~1개. 보고 형식 줄은 사이트에만 보이고 스킬 참고 파일에는 옮기지 않는다(SkillExport).
+     */
+    public const DETECTION_FIELDS = ['찾는 곳', '검사', '등급', '보고 형식', '보고 예', '검토 주의', '고칠 방법'];
+    public const GRADE_LEVELS = ['위험', '주의', '참고'];
 
     /**
      * @param array<string,string> $sections
@@ -38,6 +44,8 @@ final class Issue
         public readonly array $revisions,
         public readonly array $appliesTo,
         public readonly ?string $severityReason,
+        /** @var array{where:string,signals:list<string>,checks:list<array{name:string,flag:string,skip:string}>,grade:array<string,string>,fields:array<string,string>}|null site_only 이슈는 null */
+        public readonly ?array $detection = null,
     ) {}
 
     /** @param array<int,array{id:string}> $groups data/groups.json 내용 */
@@ -157,11 +165,81 @@ final class Issue
         } catch (IssueError $e) {
             throw $fail($e->getMessage());
         }
+        $detection = null;
+        if (!$siteOnly) {
+            if (!isset($sections['탐지 규칙'])) throw $fail('필수 제목 `## 탐지 규칙` 가 없습니다 (site_only 가 아니면 depth 와 관계없이 필요)');
+            try {
+                $detection = self::parseDetection($sections['탐지 규칙']);
+            } catch (IssueError $e) {
+                throw $fail('탐지 규칙 - ' . $e->getMessage());
+            }
+        }
         $found = array_keys($code);
         $a = $languages; $b = $found; sort($a); sort($b);
         if ($a !== $b) throw $fail('languages [' . implode(', ', $languages) . '] 와 `## 코드 예시` 의 ### 소제목 [' . implode(', ', $found) . '] 이(가) 다릅니다');
 
-        return new Issue($id, $title, $slug, $group, $severity, $siteOnly, $depth, $languages, $maps, $checked, $sources, $body, $sections, $code, $path, $published, $revisions, array_values($appliesTo), $severityReason);
+        return new Issue($id, $title, $slug, $group, $severity, $siteOnly, $depth, $languages, $maps, $checked, $sources, $body, $sections, $code, $path, $published, $revisions, array_values($appliesTo), $severityReason, $detection);
+    }
+
+    /**
+     * `## 탐지 규칙` 본문을 칸별로 읽는다. 형식이 하나라도 어긋나면 IssueError(무엇이 왜 틀렸는지).
+     * @return array{where:string,signals:list<string>,checks:list<array{name:string,flag:string,skip:string}>,grade:array<string,string>,fields:array<string,string>}
+     */
+    public static function parseDetection(string $section): array
+    {
+        $rank = array_flip(self::DETECTION_FIELDS);
+        $where = null; $checks = []; $grade = null; $fields = []; $last = -1;
+        $form = '`- **칸 이름**: 내용` 한 줄 형식이 아닙니다(칸: ' . implode('·', self::DETECTION_FIELDS) . ')';
+        foreach (explode("\n", $section) as $n => $line) {
+            if (trim($line) === '') continue;
+            $no = $n + 1;
+            if (!preg_match('/^- \*\*(.+?)\*\*: (\S.*)$/u', $line, $m)) throw new IssueError("{$no}번째 줄이 $form");
+            [$label, $text] = [$m[1], trim($m[2])];
+            $field = preg_match('/^검사 (\d+) — (\S.*)$/u', $label, $c) ? '검사' : $label;
+            if (!isset($rank[$field])) throw new IssueError("{$no}번째 줄의 `$label` 은(는) 모르는 칸입니다(칸: " . implode('·', self::DETECTION_FIELDS) . ', 검사는 `검사 N — 이름`)');
+            if ($rank[$field] < $last) throw new IssueError("{$no}번째 줄 `$label` 의 순서가 틀립니다(" . implode(' → ', self::DETECTION_FIELDS) . ')');
+            if ($field !== '검사' && $rank[$field] === $last) throw new IssueError("`$label` 칸이 두 번 나옵니다");
+            $last = $rank[$field];
+            if ($field === '찾는 곳') {
+                $where = $text;
+            } elseif ($field === '검사') {
+                if ((int)$c[1] !== count($checks) + 1) throw new IssueError("`$label` 의 번호가 " . (count($checks) + 1) . ' 이어야 합니다');
+                $parts = explode(' / 지적하지 않을 때: ', $text);
+                if (count($parts) !== 2 || !str_starts_with($parts[0], '지적할 때: ') || trim($parts[1]) === '' || trim(substr($parts[0], strlen('지적할 때: '))) === '') {
+                    throw new IssueError("`$label` 은(는) `지적할 때: … / 지적하지 않을 때: …` 형식이어야 합니다");
+                }
+                $checks[] = ['name' => trim($c[2]), 'flag' => trim(substr($parts[0], strlen('지적할 때: '))), 'skip' => trim($parts[1])];
+            } elseif ($field === '등급') {
+                $grade = [];
+                $prev = -1;
+                foreach (preg_split('/ \/ (?=(?:' . implode('|', self::GRADE_LEVELS) . '): )/u', $text) as $part) {
+                    $lv = preg_match('/^(' . implode('|', self::GRADE_LEVELS) . '): (\S.*)$/u', $part, $g) ? array_search($g[1], self::GRADE_LEVELS, true) : false;
+                    if ($lv === false || $lv <= $prev) throw new IssueError('`등급` 은(는) `위험: … / 주의: … / 참고: …` 형식(위험·주의·참고 순서, 각 0~1번)이어야 합니다');
+                    $grade[$g[1]] = trim($g[2]);
+                    $prev = $lv;
+                }
+            } else {
+                $fields[$field] = $text;
+            }
+        }
+        if ($where === null) throw new IssueError('`찾는 곳` 칸이 없습니다');
+        if (!$checks) throw new IssueError('`검사 1 — 이름` 칸이 1개 이상 있어야 합니다');
+        if ($grade === null) throw new IssueError('`등급` 칸이 없습니다');
+        $signals = self::codeSpans($where);
+        if (!$signals) throw new IssueError('`찾는 곳` 에 백틱으로 감싼 코드 신호(함수·패키지·파일 패턴)가 없습니다');
+        return ['where' => $where, 'signals' => $signals, 'checks' => $checks, 'grade' => $grade, 'fields' => $fields];
+    }
+
+    /** 마크다운 인라인 코드(`a`, `` a`b ``)의 내용. 중복은 처음 것만. @return list<string> */
+    public static function codeSpans(string $text): array
+    {
+        preg_match_all('/(?<!`)(`+)(?!`)(.+?)(?<!`)\1(?!`)/u', $text, $m);
+        $out = [];
+        foreach ($m[2] as $s) {
+            if (strlen($s) > 2 && $s[0] === ' ' && $s[-1] === ' ') $s = substr($s, 1, -1);
+            if (trim($s) !== '' && !in_array($s, $out, true)) $out[] = $s;
+        }
+        return $out;
     }
 
     /** 코드 펜스 안은 건너뛰고 `## ` 제목별로 본문을 자른다. @return array<string,string> */

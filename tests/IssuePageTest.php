@@ -71,8 +71,9 @@ test('인쇄용 머리·꼬리: 문서 번호·최종 확인일·주소', functi
     assert_true((bool)preg_match('#<p class="ws-print-meta">.*?WS-INJ-002.*?최종 확인 2026-11-18.*?/white-security/issues/WS-INJ-002#s', $b), '인쇄 머리');
 });
 
-test('brief 이슈(탐지 규칙 없음)도 깨지지 않고 목차는 있는 절만', function () {
-    $raw = "---\nid: WS-SSRF-009\ntitle: SSRF 짧은 문서\nslug: ssrf-short\ngroup: web\nseverity: medium\nsite_only: false\ndepth: brief\nlanguages: [python]\nmaps:\n  owasp2025: [A01]\nchecked: 2026-11-18\nsources:\n  - title: t\n    url: https://example.org/x\n    year: 2025\n---\n\n## 요약\n\n요약.\n\n## 점검 항목\n\n- 항목 하나\n\n## 코드 예시\n\n### python\n\n✗ 취약 코드\n\n```python\nbad()\n```\n\n✓ 안전 코드\n\n```python\ngood()\n```\n";
+test('탐지 규칙 없는 brief 이슈(site_only)도 깨지지 않고 목차는 있는 절만', function () {
+    // site_only 가 아니면 탐지 규칙이 필수(IssueTest)라, 절이 빠진 화면은 site_only 이슈로 확인한다
+    $raw = "---\nid: WS-SSRF-009\ntitle: SSRF 짧은 문서\nslug: ssrf-short\ngroup: web\nseverity: medium\nsite_only: true\ndepth: brief\nlanguages: [python]\nmaps:\n  owasp2025: [A01]\nchecked: 2026-11-18\nsources:\n  - title: t\n    url: https://example.org/x\n    year: 2025\n---\n\n## 요약\n\n요약.\n\n## 점검 항목\n\n- 항목 하나\n\n## 코드 예시\n\n### python\n\n✗ 취약 코드\n\n```python\nbad()\n```\n\n✓ 안전 코드\n\n```python\ngood()\n```\n";
     $s = new Site(Repository::load(make_root(['WS-SSRF-009-x.md' => $raw])), '/white-security/', 'live', new DateTimeImmutable('2026-11-18'));
     $r = $s->route('issues/WS-SSRF-009');
     assert_same(200, $r['status']);

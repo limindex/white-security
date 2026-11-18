@@ -145,3 +145,65 @@ test('문서 메타: 형식 오류', function () {
     assert_contains('severity_reason', ws_issue_error(ws_mut('severity_reason: 데이터베이스', 'severity_reason: "줄\\n바꿈" #')));
     assert_contains('severity_reason', ws_issue_error(ws_mut('severity_reason: 데이터베이스 전체 유출·변조로 이어지는 영향, 입력 한 줄로 악용 가능', 'severity_reason: 3')));
 });
+
+// ── 탐지 규칙 칸 구조 (모든 이슈 같은 형식, 스킬 INDEX 의 코드 신호 원천) ──
+test('탐지 규칙: 정상 형식을 칸별로 읽고 찾는 곳의 백틱 코드를 신호로 뽑는다', function () {
+    $i = Issue::fromFile(__DIR__ . '/fixtures/issues/web/WS-INJ-001-sql-injection.md', ws_groups());
+    $d = $i->detection;
+    assert_same(['execute(', 'query(', '->query('], $d['signals']);
+    assert_contains('쿼리 조립 지점', $d['where']);
+    assert_same(2, count($d['checks']));
+    assert_same('값 이어 붙이기', $d['checks'][0]['name']);
+    assert_same('요청 값을 쿼리 문자열에 이어 붙이는 경우.', $d['checks'][0]['flag']);
+    assert_same('매개변수 바인딩을 쓰는 경우.', $d['checks'][0]['skip']);
+    assert_same(['위험', '주의', '참고'], array_keys($d['grade']));
+    assert_same('DB 오류 원문 노출.', $d['grade']['참고']);
+    assert_contains('WS-INJ-001 app/search.py:18', $d['fields']['보고 예']);
+    assert_same('값만 자리표시자로 바꿔야 한다.', $d['fields']['고칠 방법']);
+});
+
+test('탐지 규칙: 백틱 두 개짜리 코드와 중복 신호', function () {
+    $raw = ws_mut('- **찾는 곳**: 쿼리 조립 지점(`execute(`, `query(`, `->query(`)', '- **찾는 곳**: `` exec(`npm i ${n}`) `` 와 `execute(`, 다시 `execute(`');
+    $f = sys_get_temp_dir() . '/ws-det-' . bin2hex(random_bytes(4)) . '.md';
+    file_put_contents($f, $raw);
+    $i = Issue::fromFile($f, ws_groups());
+    unlink($f);
+    assert_same(['exec(`npm i ${n}`)', 'execute('], $i->detection['signals']);
+});
+
+test('탐지 규칙: 형식 위반은 파일명과 이유로 거절', function () {
+    $where = "- **찾는 곳**: 쿼리 조립 지점(`execute(`, `query(`, `->query(`)\n";
+    $c1 = "- **검사 1 — 값 이어 붙이기**: 지적할 때: 요청 값을 쿼리 문자열에 이어 붙이는 경우. / 지적하지 않을 때: 매개변수 바인딩을 쓰는 경우.\n";
+    $grade = "- **등급**: 위험: 외부 값이 쿼리에 그대로 들어가는 경우. / 주의: 값의 출처를 끝까지 따라가지 못한 경우. / 참고: DB 오류 원문 노출.\n";
+    $cases = [
+        '찾는 곳' => ws_mut($where, ''),                                                      // 찾는 곳 없음
+        '코드 신호' => ws_mut($where, "- **찾는 곳**: 쿼리 조립 지점\n"),                        // 백틱 신호 없음
+        '검사' => preg_replace('/^- \*\*검사 \d.*\n/m', '', ws_fixture()),                    // 검사 0개
+        '등급' => ws_mut($grade, ''),                                                         // 등급 없음
+        '지적하지 않을 때' => ws_mut(' / 지적하지 않을 때: 매개변수 바인딩을 쓰는 경우.', ''),       // 짝 누락
+        '번호' => ws_mut('**검사 2 — 식별자 자리**', '**검사 3 — 식별자 자리**'),                // 번호 건너뜀
+        '순서' => ws_mut($c1 . '- **검사 2', $c1 . $grade . '- **검사 2'),                      // 등급이 검사보다 앞(그리고 두 번)
+        '형식' => ws_mut("- **고칠 방법**: 값만 자리표시자로 바꿔야 한다.\n", "- **고칠 방법**: 값만 바꿔야 한다.\n- 소속 없는 불릿\n"),
+        '모르는 칸' => ws_mut('- **고칠 방법**:', '- **고치는 법**:'),
+        '두 번' => ws_mut("- **고칠 방법**: 값만 자리표시자로 바꿔야 한다.\n", "- **고칠 방법**: a\n- **고칠 방법**: b\n"),
+        '위험·주의·참고' => ws_mut('위험: 외부 값이 쿼리에 그대로 들어가는 경우. / 주의:', '주의: 외부 값. / 위험:'),
+    ];
+    foreach ($cases as $why => $raw) {
+        $m = ws_issue_error($raw);
+        assert_contains('-bad.md', $m);
+        assert_contains('탐지 규칙', $m);
+        assert_contains($why, $m);
+    }
+});
+
+test('탐지 규칙: site_only 가 아니면 brief 라도 필수, site_only 는 형식 검사 안 함', function () {
+    $brief = "---\nid: WS-INJ-009\ntitle: t\nslug: t\ngroup: web\nseverity: low\nsite_only: false\ndepth: brief\nlanguages: [python]\nchecked: 2026-11-18\nsources:\n  - title: s\n    url: https://example.org/a\n    year: 2025\n---\n\n## 요약\n\n요약\n\n## 점검 항목\n\n- 확인\n\n## 코드 예시\n\n### python\n\n✗ 취약 코드\n\n```python\nbad()\n```\n\n✓ 안전 코드\n\n```python\ngood()\n```\n";
+    assert_contains('탐지 규칙', ws_issue_error($brief));
+    // site_only full: 자유 형식 탐지 규칙 그대로 통과 (위 site_only 테스트가 "d" 한 줄로 확인), detection 은 null
+    $raw = "---\nid: WS-PPL-004\ntitle: t\nslug: t\ngroup: people\nseverity: low\nsite_only: true\ndepth: full\nlanguages: []\nchecked: 2026-11-18\nsources:\n  - title: s\n    url: https://example.org/a\n    year: 2025\n---\n\n## 요약\n\n요약\n\n## 발생 상황\n\na\n\n## 위험 배경\n\nb\n\n## 대응 방법\n\nc\n\n## 탐지 규칙\n\n자유 형식\n\n## 점검 항목\n\n- 확인\n";
+    $f = sys_get_temp_dir() . '/ws-so-' . bin2hex(random_bytes(4)) . '.md';
+    file_put_contents($f, $raw);
+    $i = Issue::fromFile($f, ws_groups());
+    unlink($f);
+    assert_same(null, $i->detection);
+});
