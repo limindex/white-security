@@ -199,7 +199,7 @@ test('처음이라면: start.json 의 없는 id·빈 이유·겹침은 오류', 
 test('실제 data/start.json: 이슈 10건, 모두 존재, 이유는 한 줄', function () {
     $repo = Repository::load(__DIR__ . '/..');
     $ids = array_map(fn($r) => $r['issue']->id, $repo->start());
-    assert_same(['WS-SEC-001', 'WS-AUTH-001', 'WS-INJ-001', 'WS-SUP-001', 'WS-AGT-006', 'WS-AGT-001', 'WS-PI-001', 'WS-LLM-001', 'WS-SSRF-001', 'WS-LLM-004'], $ids);
+    assert_same(['WS-SEC-001', 'WS-AUTH-001', 'WS-INJ-001', 'WS-XSS-001', 'WS-UPL-001', 'WS-SUP-001', 'WS-AGT-006', 'WS-AGT-001', 'WS-PI-001', 'WS-LLM-004'], $ids);
     assert_same([], array_filter($repo->errors(), fn($e) => str_contains($e, 'start.json')));
     foreach ($repo->start() as $r) assert_true(mb_strlen($r['reason']) <= 60 && !str_contains($r['reason'], "\n"), $r['issue']->id);
 });
