@@ -5,6 +5,7 @@
 
 ```dockerfile
 FROM python:3.13-slim
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY . /app
 # 컨테이너가 뜰 때마다 기본 브랜치의 최신 파일(.bin 포함)을 받아 옴
@@ -15,7 +16,8 @@ CMD ["python", "/app/serve.py", "--model", "example-user/fast-ko-model"]
 
 ```dockerfile
 FROM python:3.13-slim
-RUN pip install --no-cache-dir --require-hashes -r requirements.txt
+COPY requirements.txt .
+RUN pip install --no-cache-dir --require-hashes -r requirements.txt   # torch>=2.6 해시 고정, huggingface_hub(hf 명령) 포함
 # 빌드 때 검토한 커밋의 safetensors·설정 파일만 받아 둠
 RUN hf download google-bert/bert-base-uncased \
       --revision 86b5e0934494bd15c9632b12f734a8a67f723594 \

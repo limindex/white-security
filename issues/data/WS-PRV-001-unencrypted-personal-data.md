@@ -71,7 +71,7 @@ DB 스키마·모델에서 여권번호·운전면허번호·외국인등록번�
 - **검사 1 — 평문 저장**: 지적할 때: 위 정보 컬럼이 문자열·`VARCHAR`·`CharField`에 원문 그대로 들어가는 경우, 번호 일부만 암호화하고 나머지를 평문으로 두는 경우, Base64 같은 인코딩을 암호화로 쓰는 경우. / 지적하지 않을 때: 암호화 캐스트(`'encrypted'`)나 인증 암호로 저장하는 경우, 화면 표시용으로 끝 몇 자리만 따로 두는 경우.
 - **검사 2 — 약한 방식·키 위치**: 지적할 때: ECB·고정 IV·MD5·SHA-1을 쓰는 경우, 키 없는 해시(SHA-256 단독)로 저장해 가능한 번호를 모두 대입하면 되돌릴 수 있는 경우, 키가 소스·DB·같은 테이블에 있는 경우. / 지적하지 않을 때: 키를 환경 변수·KMS에서 읽고 AES-GCM·Laravel `Crypt`처럼 검증된 방식을 쓰는 경우.
 - **검사 3 — 평문 사본**: 지적할 때: 암호화한 값을 찾으려고 원문 컬럼을 따로 두거나, 캐시·검색 색인·분석용 테이블에 원문을 복사하는 경우. / 지적하지 않을 때: 별도 키 HMAC 값 컬럼으로 찾는 경우.
-- **등급**: 위험: 고유식별정보·카드번호·계좌번호를 평문이나 키 없는 해시로 저장, 암호화 키가 소스에 있음. / 주의: ECB·고정 IV, 캐시·색인의 평문 사본, 생체인식정보 평문 저장. / 참고: 키 교체 절차가 보이지 않음.
+- **등급**: 위험: 고유식별정보·카드번호·계좌번호·생체인식정보를 평문이나 키 없는 해시로 저장(고시 제7조 ② 목록), 암호화 키가 소스에 있음. / 주의: ECB·고정 IV, 캐시·색인의 평문 사본. / 참고: 키 교체 절차가 보이지 않음.
 - **보고 형식**: `[위험|주의|참고] <id> <파일:줄> — <이유> → <고칠 방법>`
 - **보고 예**: `[위험] WS-PRV-001 database/migrations/2026_11_01_create_payouts_table.php:14 — account_number 를 string 평문으로 저장 → encrypted 캐스트로 바꾸고 검색은 HMAC 컬럼으로`
 - **검토 주의**: 고시 제7조 ②는 정보통신서비스 이용자의 개인정보 기준이고, 직원·거래처처럼 이용자가 아닌 정보주체의 고유식별정보는 제7조 ③(인터넷·DMZ 저장은 암호화, 내부망은 주민등록번호 외엔 위험도 분석 결과에 따라 정할 수 있음)을 따르므로 해당하는 경우를 나눠 말하고 법적 판단은 사용자에게 확인을 권해야 한다. 비밀번호는 WS-PWD-001, 알고리즘 세부는 WS-CRY-001, 주민등록번호는 WS-PRV-004에서 다룬다.
@@ -110,7 +110,8 @@ class Payout extends Model
 
     public static function blindIndex(string $plain): string
     {
-        return hash_hmac('sha256', $plain, config('app.index_key'));
+        $normalized = preg_replace('/[\s-]/', '', $plain);   // 하이픈·공백을 빼야 같은 번호가 같은 값이 됨
+        return hash_hmac('sha256', $normalized, config('app.index_key'));
     }
 }
 
@@ -156,7 +157,8 @@ def decrypt(token: str, aad: bytes) -> str:
     return AESGCM(_KEY).decrypt(raw[:12], raw[12:], aad).decode()   # 변조되면 InvalidTag
 
 def blind_index(plain: str) -> str:
-    return hmac.new(_INDEX_KEY, plain.encode(), hashlib.sha256).hexdigest()
+    normalized = "".join(plain.split()).replace("-", "")     # 하이픈·공백을 빼야 같은 번호가 같은 값이 됨
+    return hmac.new(_INDEX_KEY, normalized.encode(), hashlib.sha256).hexdigest()
 
 # models.py
 class Customer(models.Model):

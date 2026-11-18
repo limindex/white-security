@@ -36,6 +36,13 @@ def scrub(event, hint):
             frame.pop("vars", None)                            # 지역 변수 값 제거
     for crumb in (event.get("breadcrumbs") or {}).get("values", []):
         crumb["message"] = PII.sub("[가림]", crumb.get("message") or "")
+        crumb.pop("data", None)                                # 로그 인자·extra 값
+    log = event.get("logentry") or {}
+    for key in ("message", "formatted"):
+        if isinstance(log.get(key), str):
+            log[key] = PII.sub("[가림]", log[key])             # 로그 메시지 가림
+    log.pop("params", None)                                    # 포맷 인자(원문 값)는 빼기
+    event.pop("extra", None)                                   # logging extra 등 임의 값
     return event
 
 # send_default_pii 는 켜지 않는다(기본 꺼짐)

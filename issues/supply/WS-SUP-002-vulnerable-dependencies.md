@@ -118,7 +118,7 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm audit --audit-level=high
 ---
-# .github/dependabot.yml — 의존성·액션 업데이트 PR 을 매주 받음
+# .github/dependabot.yml — 의존성·액션·기본 이미지 업데이트 PR 을 매주 받음
 version: 2
 updates:
   - package-ecosystem: "npm"
@@ -126,6 +126,10 @@ updates:
     schedule:
       interval: "weekly"
   - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "docker"          # Dockerfile FROM 의 태그·digest 갱신
     directory: "/"
     schedule:
       interval: "weekly"

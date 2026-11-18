@@ -30,7 +30,8 @@ class Payout extends Model
 
     public static function blindIndex(string $plain): string
     {
-        return hash_hmac('sha256', $plain, config('app.index_key'));
+        $normalized = preg_replace('/[\s-]/', '', $plain);   // 하이픈·공백을 빼야 같은 번호가 같은 값이 됨
+        return hash_hmac('sha256', $normalized, config('app.index_key'));
     }
 }
 

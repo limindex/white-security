@@ -37,7 +37,20 @@ public function export(ExportRequest $request)          // 사유(reason) 필수
     $zip->setEncryptionName('members.csv', ZipArchive::EM_AES_256, $password);  // AES-256 암호 압축
     $zip->close();
 
-    // 접속기록(WS-PRV-003): 운영자·IP·대상·"다운로드"·사유. 비밀번호는 파일과 다른 경로(화면 1회 표시 등)로 전달
-    return response()->download($path)->deleteFileAfterSend();
+    $token = Str::random(40);
+    Cache::put("export:{$token}", ['path' => $path, 'admin' => $request->user()->id], now()->addMinutes(10));
+    // 접속기록(WS-PRV-003): 운영자·IP·대상·"다운로드"·사유
+    // 비밀번호는 이 화면에서 한 번만 보여 주고 저장하지 않음. 파일은 별도 링크로 받음
+    return response()->view('admin.export-ready', [
+        'password' => $password,
+        'url' => route('admin.export.download', $token),
+    ])->header('Cache-Control', 'no-store');
+}
+
+public function download(Request $request, string $token)
+{
+    $job = Cache::pull("export:{$token}");                     // 한 번만, 10분 안에, 만든 사람만
+    abort_unless($job && $job['admin'] === $request->user()->id, 404);
+    return response()->download($job['path'])->deleteFileAfterSend();
 }
 ```

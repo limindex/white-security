@@ -67,7 +67,7 @@ API·Server Action·서버 컴포넌트가 내려보내는 값 중 화면에 쓰
 
 ## 탐지 규칙
 
-- **찾는 곳**: `.select('*')`, `select("*")`, `findMany(`, `include: {`, `->toArray()`, `JsonResource`, `"__all__"`, `"use client"`, 그 밖에 phone·email·address·birth 필드가 있는 사용자 모델을 담아 돌려주는 목록 API, GraphQL 사용자 타입, 프런트엔드의 가림 함수.
+- **찾는 곳**: `.select('*')`, `select("*")`, `include: { author: true }`, `include: { user: true }`, `->with('user')`, `return User::`, `->toArray()`, `"__all__"`, 그 밖에 phone·email·address·birth 필드가 있는 사용자 모델·관계를 통째로 돌려주는 목록 API, 서버 컴포넌트가 클라이언트 컴포넌트에 넘기는 사용자 객체, GraphQL 사용자 타입, 프런트엔드의 가림 함수.
 - **검사 1 — 화면보다 많은 필드**: 지적할 때: 목록·상세 응답이 DB 행·모델 전체나 관계 전체(`include: { author: true }`·`with('buyer')`)를 돌려주는데 화면은 일부만 쓰는 경우, 특히 다른 회원의 전화번호·이메일·주소·생년월일이 응답에 있는 경우, 서버 컴포넌트가 사용자 객체 전체를 클라이언트 컴포넌트 props로 넘기는 경우. / 지적하지 않을 때: `select`·응답 형식(Resource·DTO·response_model)으로 필드를 고른 경우, 본인 정보 화면이 본인 정보를 돌려주는 경우.
 - **검사 2 — 프런트에서만 가림**: 지적할 때: API는 원문을 주고 화면 코드에서 가림 함수·CSS로 가리는 경우, 숨긴 입력 필드에 다른 회원 개인정보를 두는 경우. / 지적하지 않을 때: 서버에서 가린 값만 보내는 경우.
 - **검사 3 — 클라이언트가 고르는 열**: 지적할 때: Supabase·GraphQL에서 클라이언트가 아무 열이나 고를 수 있고 개인정보 열을 막는 열 권한·필드 권한이 없는 경우. / 지적하지 않을 때: 열 단위 권한(`grant select (…)`)·뷰·개인정보 열 분리 테이블·필드 수준 권한 검사가 있는 경우.

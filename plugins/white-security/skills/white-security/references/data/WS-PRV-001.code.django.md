@@ -36,7 +36,8 @@ def decrypt(token: str, aad: bytes) -> str:
     return AESGCM(_KEY).decrypt(raw[:12], raw[12:], aad).decode()   # 변조되면 InvalidTag
 
 def blind_index(plain: str) -> str:
-    return hmac.new(_INDEX_KEY, plain.encode(), hashlib.sha256).hexdigest()
+    normalized = "".join(plain.split()).replace("-", "")     # 하이픈·공백을 빼야 같은 번호가 같은 값이 됨
+    return hmac.new(_INDEX_KEY, normalized.encode(), hashlib.sha256).hexdigest()
 
 # models.py
 class Customer(models.Model):

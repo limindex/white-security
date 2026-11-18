@@ -25,7 +25,15 @@ export async function getRate(cur: string) {
     redirect: "error",                   // 리다이렉트는 따라가지 않음
     cache: "no-store",
   });
-  if (!res.ok) throw new Error("rate unavailable");   // 실패하면 결제를 멈춤
-  return Rate.parse(await res.json());                // 형식이 다르면 예외
+  if (!res.ok || !res.body) throw new Error("rate unavailable");   // 실패하면 결제를 멈춤
+  const reader = res.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let size = 0;
+  for (let r = await reader.read(); !r.done; r = await reader.read()) {
+    size += r.value.length;
+    if (size > 10_000) { await reader.cancel(); throw new Error("response too large"); } // 응답 크기 상한
+    chunks.push(r.value);
+  }
+  return Rate.parse(JSON.parse(Buffer.concat(chunks).toString("utf8")));   // 형식이 다르면 예외
 }
 ```

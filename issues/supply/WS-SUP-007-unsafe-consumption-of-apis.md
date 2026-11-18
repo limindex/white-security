@@ -95,21 +95,30 @@ def store(store_id: int, db: Session = Depends(get_db)):
 
 ```python
 import httpx
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, Field
 
 class PartnerStore(BaseModel):          # 쓰는 필드만, 모르는 필드는 버림
     name: str = Field(max_length=100)
     open: bool
 
 client = httpx.Client(base_url="https://partner.example.com", timeout=5.0, follow_redirects=False)
+MAX_BYTES = 100_000
+
+def get_json_capped(path: str) -> bytes:
+    with client.stream("GET", path) as r:
+        r.raise_for_status()                                 # 3xx·4xx·5xx 는 예외
+        body = b""
+        for chunk in r.iter_bytes():
+            body += chunk
+            if len(body) > MAX_BYTES:                        # 응답 크기 상한
+                raise ValueError("response too large")
+        return body
 
 @app.get("/stores/{store_id}")
 def store(store_id: int, db: Session = Depends(get_db)):
     try:
-        r = client.get(f"/stores/{store_id}")
-        r.raise_for_status()                                 # 3xx·4xx·5xx 는 예외
-        s = PartnerStore.model_validate_json(r.content)      # 형식·길이가 다르면 예외
-    except (httpx.HTTPError, ValidationError):
+        s = PartnerStore.model_validate_json(get_json_capped(f"/stores/{store_id}"))  # 형식·길이가 다르면 예외
+    except (httpx.HTTPError, ValueError):                    # ValidationError 도 ValueError
         raise HTTPException(status_code=502, detail="partner unavailable")   # 실패하면 거절
     db.execute(text("UPDATE stores SET name = :n WHERE id = :id"), {"n": s.name, "id": store_id})
     return {"name": s.name, "open": s.open}
@@ -141,7 +150,15 @@ export async function getRate(cur: string) {
     redirect: "error",                   // 리다이렉트는 따라가지 않음
     cache: "no-store",
   });
-  if (!res.ok) throw new Error("rate unavailable");   // 실패하면 결제를 멈춤
-  return Rate.parse(await res.json());                // 형식이 다르면 예외
+  if (!res.ok || !res.body) throw new Error("rate unavailable");   // 실패하면 결제를 멈춤
+  const reader = res.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let size = 0;
+  for (let r = await reader.read(); !r.done; r = await reader.read()) {
+    size += r.value.length;
+    if (size > 10_000) { await reader.cancel(); throw new Error("response too large"); } // 응답 크기 상한
+    chunks.push(r.value);
+  }
+  return Rate.parse(JSON.parse(Buffer.concat(chunks).toString("utf8")));   // 형식이 다르면 예외
 }
 ```

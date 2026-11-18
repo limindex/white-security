@@ -20,7 +20,7 @@ import { z } from "zod";
 
 const Signup = z.object({
   name: z.string().min(1).max(50),
-  email: z.string().email(),
+  email: z.email(),
   birthDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
 }).strict();                                 // 정의하지 않은 필드(jumin 등)가 오면 거절
 

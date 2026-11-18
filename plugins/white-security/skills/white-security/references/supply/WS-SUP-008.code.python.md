@@ -32,5 +32,6 @@ def load_user_checkpoint(path: str):
         raise ValueError("safetensors 파일만 받습니다")
     return load_file(path)      # 텐서만 읽고 코드는 실행하지 않음
 
-# 오래된 .pt 를 꼭 열어야 하면 torch.load(path, weights_only=True) — 그래도 출처를 아는 파일만
+# 오래된 .pt 를 꼭 열어야 하면 PyTorch 2.6 이상에서 torch.load(path, weights_only=True) — 출처를 아는 파일만
+# (2.6 미만은 weights_only=True 도 우회됨, CVE-2025-32434)
 ```
