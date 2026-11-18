@@ -4,6 +4,7 @@ title: NoSQL · LDAP · XPath Injection (NoSQL·LDAP·XPath 인젝션)
 slug: nosql-ldap-xpath-injection
 group: web
 severity: high
+grade_hint: "로그인 조회에 객체 값, $where"
 site_only: false
 depth: brief
 languages: [express, fastapi, python]

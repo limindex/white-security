@@ -5,6 +5,7 @@ title_en: Insecure Firebase Security Rules · Admin SDK Key Exposure
 slug: firebase-rules
 group: data
 severity: high
+grade_hint: "쓰기를 여는 if true·기한부 규칙, 서비스 계정 키 노출"
 site_only: false
 depth: brief
 languages: [firebase, nextjs]

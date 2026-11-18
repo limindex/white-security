@@ -4,6 +4,7 @@ title: Security Logging & Alerting Failures (보안 로그·경보 없음)
 slug: security-logging-alerting
 group: deploy
 severity: medium
+grade_hint: "로그에 비밀번호·토큰·주민번호"
 site_only: false
 depth: brief
 languages: [laravel, django]

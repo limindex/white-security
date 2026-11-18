@@ -4,6 +4,7 @@ title: Shadow · Zombie API (잊힌 API·옛 버전 엔드포인트)
 slug: shadow-zombie-api
 group: deploy
 severity: medium
+grade_hint: "검사 없는 옛 경로, 운영에 열린 쓰기 테스트 경로"
 site_only: false
 depth: brief
 languages: [fastapi, laravel]

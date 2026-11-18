@@ -4,6 +4,7 @@ title: Excessive Data Exposure (API 응답 과다 노출)
 slug: excessive-data-exposure
 group: data
 severity: high
+grade_hint: "다른 회원 연락처·주소가 응답에 원문으로"
 site_only: false
 depth: brief
 languages: [nextjs, laravel, sql]

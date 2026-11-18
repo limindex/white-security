@@ -4,6 +4,7 @@ title: OAuth Login Flaws (간편 로그인 state·redirect_uri 검증 누락)
 slug: oauth-login-flaws
 group: auth
 severity: high
+grade_hint: "state·PKCE 둘 다 없음, 요청 값 redirect_uri"
 site_only: false
 depth: brief
 languages: [laravel, nextjs, fastapi]

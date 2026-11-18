@@ -169,13 +169,14 @@ test('SkillExport: 사라진 이슈의 생성 파일만 지우고 직접 둔 파
     assert_true(!is_file("$ref/web/INDEX.md"), '이슈가 없어진 묶음의 INDEX');
 });
 
-test('SkillExport: groups.json 에 when 이 없으면 INDEX 는 기본 문장을 쓴다', function () {
+test('SkillExport: INDEX 에는 when 을 싣지 않는다(묶음 목적은 라우팅 표), 빈 when 은 null', function () {
     $root = make_root();
     file_put_contents($root . '/data/groups.json', '[{"id":"web","name":"웹 기본","order":5,"route":"sql"},{"id":"auth","name":"로그인·권한","order":6,"when":"  "}]');
     $ref = "$root/" . SkillExport::REF_DIR;
     SkillExport::write(Repository::load($root), $ref);
     $idx = file_get_contents("$ref/web/INDEX.md");
-    assert_contains("When: 「웹 기본」 상황에서 코드를 쓰거나 고칠 때\n", $idx);
+    assert_true(!str_contains($idx, 'When:') && !str_contains($idx, '상황에서'), 'when 줄 없음');
+    assert_contains("# web · 웹 기본\n", $idx);
     assert_same(null, Repository::load($root)->groups()[1]['when']);
 });
 

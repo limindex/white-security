@@ -4,6 +4,7 @@ title: Default Credentials (기본 계정·기본 비밀번호)
 slug: default-credentials
 group: deploy
 severity: high
+grade_hint: "외부에 닿는 서비스의 기본·고정 비밀번호"
 site_only: false
 depth: brief
 languages: [yaml, laravel, django]

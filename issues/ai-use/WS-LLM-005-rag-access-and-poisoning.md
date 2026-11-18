@@ -4,6 +4,7 @@ title: RAG Poisoning · 검색 권한 누락 (벡터 DB 문서 오염·남의 �
 slug: rag-access-and-poisoning
 group: ai-use
 severity: high
+grade_hint: "남의 문서가 검색 결과에 섞임"
 site_only: false
 depth: brief
 languages: [python]

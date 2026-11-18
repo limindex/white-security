@@ -4,6 +4,7 @@ title: Leftover Debug Code · Data Exposure (남은 디버그 코드·잘못된 
 slug: debug-code-data-exposure
 group: web
 severity: medium
+grade_hint: "응답에 해시·토큰, 사용자 간 공유 상태"
 site_only: false
 depth: brief
 languages: [express, fastapi, laravel]

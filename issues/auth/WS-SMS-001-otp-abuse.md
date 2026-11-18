@@ -5,6 +5,7 @@ title_en: OTP Abuse (SMS Code Brute Force · SMS Pumping)
 slug: otp-abuse
 group: auth
 severity: high
+grade_hint: "시도 제한 없음, 예측 가능한 번호, 응답에 번호"
 site_only: false
 depth: brief
 languages: [laravel, nextjs, fastapi]

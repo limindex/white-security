@@ -5,6 +5,7 @@ title_en: CSRF (Cross-Site Request Forgery)
 slug: csrf
 group: web
 severity: medium
+grade_hint: "계정·결제 변경에 CSRF 보호 없음"
 site_only: false
 depth: brief
 languages: [laravel, django, nextjs]

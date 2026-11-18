@@ -4,6 +4,7 @@ title: Insecure WebView · JavaScript Bridge (WebView 설정·JS 브리지)
 slug: webview-javascript-bridge
 group: mobile
 severity: high
+grade_hint: "임의 주소 WebView에 토큰·결제 브리지"
 site_only: false
 depth: brief
 languages: [react-native, flutter, kotlin]

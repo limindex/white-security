@@ -4,6 +4,7 @@ title: Decompression Bomb · 파서 취약점 (남이 준 이미지·PDF·오피
 slug: untrusted-file-parsing
 group: fetch
 severity: medium
+grade_hint: "남의 파일을 정책 없는 ImageMagick·Ghostscript로 처리"
 site_only: false
 depth: brief
 languages: [python, php]

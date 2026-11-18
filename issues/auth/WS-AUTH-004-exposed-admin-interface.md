@@ -4,6 +4,7 @@ title: Exposed Admin Interface (관리자 페이지 노출)
 slug: exposed-admin-interface
 group: auth
 severity: high
+grade_hint: "관리 기능·DB 도구가 로그인·역할 확인 없이 열림"
 site_only: false
 depth: brief
 languages: [laravel, nextjs, django]

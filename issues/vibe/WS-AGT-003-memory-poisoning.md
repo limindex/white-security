@@ -4,6 +4,7 @@ title: Memory Poisoning (에이전트 메모리 오염)
 slug: agent-memory-poisoning
 group: vibe
 severity: medium
+grade_hint: "공유 메모리에 외부 글 자동 저장"
 site_only: false
 depth: brief
 languages: [python]

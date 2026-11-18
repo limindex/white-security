@@ -4,6 +4,7 @@ title: Web Shell (웹셸)
 slug: web-shell
 group: web
 severity: high
+grade_hint: "웹 루트에 요청 확장자로 저장"
 site_only: false
 depth: brief
 languages: [php, laravel, nginx]

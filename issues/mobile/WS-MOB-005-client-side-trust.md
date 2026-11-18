@@ -4,6 +4,7 @@ title: Client-side Trust in Mobile Apps (앱에서만 하는 결제·권한·탈
 slug: client-side-trust
 group: mobile
 severity: high
+grade_hint: "서버 확인 없이 유료·관리 기능 제공"
 site_only: false
 depth: brief
 languages: [react-native, flutter, express]

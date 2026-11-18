@@ -4,6 +4,7 @@ title: Install Scripts (postinstall) · Build Plugins (설치 스크립트·빌�
 slug: install-scripts-build-plugins
 group: supply
 severity: high
+grade_hint: "비밀값 있는 환경에서 낯선 설치 스크립트 실행"
 site_only: false
 depth: brief
 languages: [shell, yaml, json]

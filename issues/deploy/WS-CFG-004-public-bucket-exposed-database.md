@@ -4,6 +4,7 @@ title: Public Bucket · Exposed Database (공개된 저장소 버킷·DB·관리
 slug: public-bucket-exposed-database
 group: deploy
 severity: high
+grade_hint: "개인정보 버킷 공개, 인증 없는 DB·Redis 노출"
 site_only: false
 depth: brief
 languages: [yaml, supabase, shell]

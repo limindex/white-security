@@ -4,6 +4,7 @@ title: Code Errors (Null 역참조·자원 누수·정수 오버플로)
 slug: code-errors
 group: web
 severity: medium
+grade_hint: "금액 음수·범위 검사 없음"
 site_only: false
 depth: brief
 languages: [express, laravel, fastapi]

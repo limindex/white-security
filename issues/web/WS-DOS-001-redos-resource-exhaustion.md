@@ -4,6 +4,7 @@ title: ReDoS · Resource Exhaustion (정규식 서비스 거부·자원 고갈)
 slug: redos-resource-exhaustion
 group: web
 severity: medium
+grade_hint: "공개 경로 ReDoS, 입력으로 만든 정규식"
 site_only: false
 depth: brief
 languages: [express, fastapi, laravel]

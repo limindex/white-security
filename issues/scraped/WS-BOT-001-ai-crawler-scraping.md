@@ -4,6 +4,7 @@ title: Scraping · AI Crawler (AI 크롤러 대량 수집)
 slug: ai-crawler-scraping
 group: scraped
 severity: medium
+grade_hint: "로그인 없는 전체 내보내기·무거운 검색에 제한 없음"
 site_only: false
 depth: brief
 languages: [python, nginx]

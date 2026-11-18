@@ -4,6 +4,7 @@ title: IDOR · 접근 제어 실패 (Broken Access Control)
 slug: missing-authorization
 group: auth
 severity: high
+grade_hint: "남의 데이터 조회·변경, 권한 없는 관리 기능"
 site_only: false
 depth: full
 languages: [python, js, php]

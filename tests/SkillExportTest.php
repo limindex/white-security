@@ -52,16 +52,16 @@ test('SkillExport: 이슈 파일 — 중립 머리 주석·기준은 CWE 번호�
     assert_true(!str_contains($py, '✗ 코드 속 줄 (vulnerable'), '코드 블록 안 표지 불변');
 });
 
-test('SkillExport: 전체 INDEX 없음, 묶음별 INDEX = 이름·when·코드 신호 → 이슈 id (요약 문장 없음)', function () {
+test('SkillExport: 전체 INDEX 없음, 묶음별 INDEX = 이름 + "코드 신호 → 이슈 id: 위험 조건" (요약 문장·제목·when 없음)', function () {
     [$ref] = se_write();
     assert_true(!is_file("$ref/INDEX.md"), '전체 INDEX 없음');
     $idx = file_get_contents("$ref/web/INDEX.md");
     assert_true(str_starts_with($idx, "<!-- generated from white-security issues; do not edit -->\n"), '머리');
     assert_contains("# web · 웹 애플리케이션\n", $idx);
-    assert_contains("When: 입력을 받아 DB·화면·파일·명령으로 넘기는 웹 기능\n", $idx);
-    assert_contains('- `cursor.execute(` `db.query(` `->query(` → WS-INJ-001 SQL 삽입', $idx);
-    assert_contains('Signals are candidates, not findings', $idx); // 신호는 후보일 뿐, 이슈 파일의 검사로 판정
-    assert_contains('max 2 per task', $idx);
+    assert_true(!str_contains($idx, 'When:'), 'when 줄 없음(라우팅 표에 목적이 있음)');
+    // grade_hint 가 없으면 등급 첫 단계(위험) 문장의 첫 문장, 위험이면 단계 이름은 붙이지 않는다
+    assert_true((bool)preg_match('/^- `cursor\.execute\(` `db\.query\(` `->query\(` → WS-INJ-001: \S[^\n]*$/mu', $idx), $idx);
+    assert_true(!str_contains($idx, 'SQL 삽입'), '제목 없음(등급 조건이 대신 말함)');
     assert_true(!str_contains($idx, '사용자 입력이 SQL 문장에'), '요약 문장 없음');
     // 이슈 파일은 같은 폴더에 있다
     preg_match_all('/→ (WS-[A-Z]+-\d{3})/', $idx, $m);
@@ -188,34 +188,51 @@ test('SkillExport: 코드 예시는 언어별 파일로 분리, 이슈 파일에
     assert_contains('$st = $db->prepare', file_get_contents("$ref/web/WS-INJ-001.code.php.md"));
 });
 
-test('SkillExport: INDEX 는 이슈당 신호를 찾는 곳 순서대로 앞 8개만(작성자가 핵심 신호를 앞에), 600토큰 넘으면 실패', function () {
+test('SkillExport: INDEX 는 이슈당 신호를 찾는 곳 순서대로 앞 INDEX_MAX_SIGNALS 개만(작성자가 핵심 신호를 앞에), 600토큰 넘으면 실패', function () {
+    $n = SkillExport::INDEX_MAX_SIGNALS;
+    assert_same(4, SkillExport::INDEX_MIN_SIGNALS, '줄여도 신호 4개 이상');
+    assert_same(600, SkillExport::INDEX_MAX_TOKENS, '묶음 INDEX 상한 600토큰 유지');
     $sigs = ['abcd', 'x.y', 'longer_name_1', 'aaaa', 'bbbbbbbb', 'c.c(', 'dddd', 'eeee', 'ffff', 'g-g', 'hhhhhhhhhhhh'];
     $where = '- **찾는 곳**: ' . implode(', ', array_map(fn($s) => "`$s`", $sigs));
     [$ref] = se_write(['WS-INJ-005-x.md' => str_replace(['WS-INJ-001', '- **찾는 곳**: 쿼리 조립 지점(`cursor.execute(`, `db.query(`, `->query(`)'], ['WS-INJ-005', $where], file_get_contents(__DIR__ . '/fixtures/issues/web/WS-INJ-001-sql-injection.md'))]);
     $idx = file_get_contents("$ref/web/INDEX.md");
     preg_match('/^- (.*) → WS-INJ-005/m', $idx, $m);
     preg_match_all('/`([^`]+)`/', $m[1], $got);
-    assert_same(array_slice($sigs, 0, 8), $got[1], '원래 순서 앞 8개');
-    assert_same(array_slice($sigs, 0, 8), SkillExport::topSignals($sigs));
+    assert_same(array_slice($sigs, 0, $n), $got[1], "원래 순서 앞 {$n}개");
+    assert_same(array_slice($sigs, 0, $n), SkillExport::topSignals($sigs));
     assert_same(['a.b', 'c.d'], SkillExport::topSignals(['a.b', 'c.d']));
     // 앞서 실은 신호를 품은 신호는 같은 곳에 걸리므로 건너뛰고 뒤 신호가 자리를 얻는다
     assert_same(['yaml.load(', 'x.y'], SkillExport::topSignals(['yaml.load(', 'yaml.load(s)', 'x.y']));
     $many = ['aaaa', 'aaaa.1', 'aaaa.2', 'b.b', 'c.c', 'd.d', 'e.e', 'f.f', 'g.g', 'h.h', 'i.i'];
-    assert_same(['aaaa', 'b.b', 'c.c', 'd.d', 'e.e', 'f.f', 'g.g', 'h.h'], SkillExport::topSignals($many));
-    // 상한 초과
+    assert_same(array_slice(['aaaa', 'b.b', 'c.c', 'd.d', 'e.e', 'f.f', 'g.g', 'h.h'], 0, $n), SkillExport::topSignals($many));
+    // 이슈가 많아 600토큰을 넘는 묶음은 신호 수를 줄여(최소 INDEX_MIN_SIGNALS) 상한 안에 넣는다
+    $extra = [];
+    foreach (range(10, 18) as $k) {
+        $w = '- **찾는 곳**: ' . implode(', ', array_map(fn($j) => "`signal_name_{$k}_{$j}(`", range(1, 8)));
+        $extra["WS-INJ-1{$k}-x.md"] = str_replace(['WS-INJ-001', '- **찾는 곳**: 쿼리 조립 지점(`cursor.execute(`, `db.query(`, `->query(`)'], ["WS-INJ-1{$k}", $w], file_get_contents(__DIR__ . '/fixtures/issues/web/WS-INJ-001-sql-injection.md'));
+    }
+    $big = SkillExport::render(Repository::load(make_root($extra)))['web/INDEX.md'];
+    assert_true(SkillExport::estimateTokens($big) <= SkillExport::INDEX_MAX_TOKENS, '상한 안');
+    preg_match('/^- (.*) → WS-INJ-110:/m', $big, $bm);
+    $cnt = preg_match_all('/`[^`]+`/', $bm[1]);
+    assert_true($cnt < 8 && $cnt >= SkillExport::INDEX_MIN_SIGNALS, "줄인 신호 수 $cnt");
+    // 상한 초과(최소 신호 수로도 넘음)
     $root = make_root();
-    file_put_contents($root . '/data/groups.json', json_encode([['id' => 'web', 'name' => '웹', 'order' => 5, 'route' => 'sql', 'when' => str_repeat('아주 긴 설명 ', 300)]], JSON_UNESCAPED_UNICODE));
+    file_put_contents($root . '/data/groups.json', json_encode([['id' => 'web', 'name' => str_repeat('아주 긴 이름 ', 300), 'order' => 5, 'route' => 'sql']], JSON_UNESCAPED_UNICODE));
     try { SkillExport::render(Repository::load($root)); throw new Exception('실패해야 함'); }
     catch (SkillExportError $e) { assert_contains('web/INDEX.md', $e->getMessage()); assert_contains('600', $e->getMessage()); }
 });
 
-test('SkillExport: INDEX 제목 — 한국어 풀이만 떼고, 약어만 남으면 title_en 필수', function () {
+test('SkillExport: INDEX 등급 조건 — grade_hint 우선, 없으면 등급 첫 단계 첫 문장(괄호 뺌), 첫 단계가 위험이 아니면 단계 이름', function () {
     $fx = file_get_contents(__DIR__ . '/fixtures/issues/web/WS-INJ-001-sql-injection.md');
-    $acr = str_replace(['WS-INJ-001', 'title: SQL 삽입'], ['WS-INJ-006', 'title: SQLi (SQL 삽입)'], $fx);
-    try { SkillExport::render(Repository::load(make_root(['WS-INJ-006-x.md' => $acr]))); throw new Exception('실패해야 함'); }
-    catch (SkillExportError $e) { assert_contains('title_en', $e->getMessage()); assert_contains('WS-INJ-006', $e->getMessage()); }
-    [$ref] = se_write(['WS-INJ-006-x.md' => str_replace('title: SQLi (SQL 삽입)', "title: SQLi (SQL 삽입)\ntitle_en: SQLi (SQL Injection)", $acr)]);
-    assert_contains('→ WS-INJ-006 SQLi (SQL Injection)', file_get_contents("$ref/web/INDEX.md"));
+    $hint = str_replace(['WS-INJ-001', "severity: high\n"], ['WS-INJ-006', "severity: high\ngrade_hint: \"검색어가 SQL 문자열에\"\n"], $fx);
+    $idx = SkillExport::render(Repository::load(make_root(['WS-INJ-006-x.md' => $hint])))['web/INDEX.md'];
+    assert_true((bool)preg_match('/→ WS-INJ-006: 검색어가 SQL 문자열에$/mu', $idx), $idx);
+    // 위험 단계가 없으면 `주의: ` 를 붙이고, 자동 문장은 괄호 풀이·끝 마침표를 뺀다
+    $warn = (string)preg_replace('/^- \*\*등급\*\*: .*$/mu', '- **등급**: 주의: 쿼리에 값을 붙임(예: f-string). 둘째 문장. / 참고: 기타.', str_replace('WS-INJ-001', 'WS-INJ-007', $fx));
+    $repo = Repository::load(make_root(['WS-INJ-007-x.md' => $warn]));
+    $i = array_values(array_filter($repo->byGroup()['web'], fn($x) => $x->id === 'WS-INJ-007'))[0];
+    assert_same('주의: 쿼리에 값을 붙임', SkillExport::gradeHint($i));
 });
 
 test('SkillExport: 상시 규칙 요약 — high 이슈만 한 줄씩(신호 2개 → 점검 항목 첫 문장, 코드 칸 밖 괄호 뺌) (id)', function () {

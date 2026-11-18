@@ -5,6 +5,7 @@ title_en: Data Exfiltration via Markdown Image
 slug: markdown-image-exfiltration
 group: ai-use
 severity: high
+grade_hint: "남의 글이 섞인 AI 출력에서 외부 이미지 자동 표시"
 site_only: false
 depth: brief
 languages: [js, python]

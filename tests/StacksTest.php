@@ -124,7 +124,7 @@ test('이슈 화면: 코드 탭 이름은 label(Laravel·Next.js), 탭 7개도 �
     assert_contains('class="lang-php"', $b);
 });
 
-test('SkillExport: 코드 파일 <ID>.code.<key>.md(하이픈 키 포함), 코드 목록 줄에 label, INDEX 머리에 스택 목록', function () {
+test('SkillExport: 코드 파일 <ID>.code.<key>.md(하이픈 키 포함), 코드 목록 줄에 label(INDEX 에는 스택 줄 없음 — 코드 목록은 이슈 파일에)', function () {
     $keys = ['python', 'react-native', 'laravel'];
     $root = make_root(['WS-INJ-009-stack-fixture.md' => st_issue($keys)]);
     $files = SkillExport::render(Repository::load($root));
@@ -133,9 +133,7 @@ test('SkillExport: 코드 파일 <ID>.code.<key>.md(하이픈 키 포함), 코�
     assert_contains('`WS-INJ-009.code.laravel.md` (Laravel)', $main);
     assert_contains('`WS-INJ-009.code.react-native.md` (React Native)', $main);
     $idx = $files['web/INDEX.md'];
-    assert_true((bool)preg_match('/^Stacks: .*Laravel.*$/m', $idx), 'INDEX 스택 줄');
-    assert_contains('React Native', $idx);
-    assert_same(1, preg_match_all('/^Stacks: /m', $idx), '한 줄');
+    assert_true(!str_contains($idx, 'Stacks:'), 'INDEX 스택 줄 없음');
     assert_true(SkillExport::estimateTokens($idx) <= SkillExport::INDEX_MAX_TOKENS);
     assert_contains('# WS-INJ-009 코드 예시 — Laravel', $files['web/WS-INJ-009.code.laravel.md']);
 });

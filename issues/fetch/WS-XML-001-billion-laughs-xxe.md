@@ -5,6 +5,7 @@ title_en: XXE (XML External Entity) · Billion Laughs
 slug: billion-laughs-xxe
 group: fetch
 severity: high
+grade_hint: "외부 XML에 외부 개체 해석 켜짐"
 site_only: false
 depth: full
 languages: [python, js, php]

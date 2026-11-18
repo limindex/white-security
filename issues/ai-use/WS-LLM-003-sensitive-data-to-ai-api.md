@@ -4,6 +4,7 @@ title: Sensitive Information Disclosure (AI API로 보내는 개인정보·키)
 slug: sensitive-data-to-ai-api
 group: ai-use
 severity: medium
+grade_hint: "주민번호·카드번호·키가 외부 AI API·로그로 감"
 site_only: false
 depth: brief
 languages: [python]

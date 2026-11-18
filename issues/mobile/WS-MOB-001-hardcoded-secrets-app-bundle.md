@@ -4,6 +4,7 @@ title: Hardcoded Secrets in App Bundle (앱 번들 속 비밀키)
 slug: hardcoded-secrets-app-bundle
 group: mobile
 severity: high
+grade_hint: "유료·관리용 비밀키가 앱 안에"
 site_only: false
 depth: brief
 languages: [expo, flutter, nextjs]

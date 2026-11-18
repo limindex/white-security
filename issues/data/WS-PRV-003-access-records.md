@@ -4,6 +4,7 @@ title: Missing Access Records (개인정보 접속기록 보관·위변조 방�
 slug: access-records
 group: data
 severity: medium
+grade_hint: "개인정보 대량 조회에 접속기록 없음"
 site_only: false
 depth: brief
 languages: [laravel, sql]

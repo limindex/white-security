@@ -4,6 +4,7 @@ title: Improper Output Handling (AI 출력을 그대로 실행·표시)
 slug: improper-output-handling
 group: ai-use
 severity: high
+grade_hint: "AI 출력이 eval·셸·SQL·HTML로 바로 들어감"
 site_only: false
 depth: brief
 languages: [python, js, php]

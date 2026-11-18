@@ -4,6 +4,7 @@ title: Excessive Agency (과도한 권한 위임)
 slug: excessive-agency
 group: vibe
 severity: high
+grade_hint: "운영 셸·SQL·삭제·배포 도구를 확인 없이 실행"
 site_only: false
 depth: brief
 languages: [python]

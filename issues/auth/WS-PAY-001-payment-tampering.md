@@ -4,6 +4,7 @@ title: Payment Tampering (결제 금액 변조·웹훅 위조)
 slug: payment-tampering
 group: auth
 severity: high
+grade_hint: "요청 값 금액, 확인 없이 믿는 결제 결과·웹훅"
 site_only: false
 depth: brief
 languages: [laravel, nextjs, fastapi]

@@ -4,6 +4,7 @@ title: Zip Slip · Zip Bomb (경로 탈출·압축 폭탄)
 slug: zip-slip-zip-bomb
 group: fetch
 severity: high
+grade_hint: "남이 올린 압축을 경로 검사 없이 풂"
 site_only: false
 depth: brief
 languages: [python, php]

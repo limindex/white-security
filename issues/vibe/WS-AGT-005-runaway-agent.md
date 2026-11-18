@@ -4,6 +4,7 @@ title: Cascading Failures · Rogue Agent (멈추지 않는 에이전트)
 slug: runaway-agent
 group: vibe
 severity: medium
+grade_hint: "쓰기·결제·발송 에이전트에 멈춤 조건 없음"
 site_only: false
 depth: brief
 languages: [python]

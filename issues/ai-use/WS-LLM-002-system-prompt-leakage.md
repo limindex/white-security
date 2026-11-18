@@ -4,6 +4,7 @@ title: System Prompt Leakage (시스템 프롬프트 유출)
 slug: system-prompt-leakage
 group: ai-use
 severity: medium
+grade_hint: "프롬프트에 실제 키, 프롬프트만으로 환불·관리 실행"
 site_only: false
 depth: brief
 languages: [python, js]

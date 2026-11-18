@@ -4,6 +4,7 @@ title: Production Data in Dumps · Exports · Test Data (백업·내보내기·�
 slug: production-data-in-dumps-exports
 group: data
 severity: medium
+grade_hint: "공개된 곳의 실데이터 덤프, 운영 데이터 부은 개발 DB"
 site_only: false
 depth: brief
 languages: [laravel, django, shell]

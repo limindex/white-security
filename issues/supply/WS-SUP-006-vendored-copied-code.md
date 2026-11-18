@@ -4,6 +4,7 @@ title: Vendored · Copied Code (복사해 온 코드·공통 코드 패치 누�
 slug: vendored-copied-code
 group: supply
 severity: medium
+grade_hint: "알려진 XSS·RCE 버전 복사본을 운영에서 사용"
 site_only: false
 depth: brief
 languages: [laravel, nextjs, json]

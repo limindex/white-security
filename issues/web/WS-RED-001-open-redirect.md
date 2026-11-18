@@ -4,6 +4,7 @@ title: Open Redirect (외부 주소로 자동 이동)
 slug: open-redirect
 group: web
 severity: medium
+grade_hint: "로그인·OAuth 뒤 검사 없는 이동"
 site_only: false
 depth: brief
 languages: [nextjs, laravel, django]

@@ -4,6 +4,7 @@ title: OS Command Injection (운영체제 명령어 인젝션)
 slug: os-command-injection
 group: web
 severity: high
+grade_hint: "외부 값이 셸 문자열에"
 site_only: false
 depth: brief
 languages: [fastapi, express, laravel]
