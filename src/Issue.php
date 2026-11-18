@@ -71,6 +71,7 @@ final class Issue
         $languages = $fm['languages'] ?? [];
         if (!is_array($languages) || array_filter($languages, fn($l) => !is_string($l) || $l === '')) throw $fail('languages 는 문자열 목록이어야 합니다');
         if (count(array_unique($languages)) !== count($languages)) throw $fail('languages 에 중복이 있습니다');
+        if (!$siteOnly && !$languages) throw $fail('languages 는 site_only: true 가 아니면 1개 이상이어야 합니다');
 
         $mapsIn = $fm['maps'] ?? [];
         if ($mapsIn === null) $mapsIn = [];
@@ -92,6 +93,7 @@ final class Issue
         $sourcesIn = $fm['sources'] ?? [];
         if ($sourcesIn === null) $sourcesIn = [];
         if (!is_array($sourcesIn) || !array_is_list($sourcesIn)) throw $fail('sources 는 목록이어야 합니다');
+        if (!$sourcesIn) throw $fail('sources 는 1개 이상이어야 합니다');
         $sources = [];
         foreach ($sourcesIn as $n => $s) {
             $n1 = $n + 1;
@@ -105,10 +107,11 @@ final class Issue
         $sections = self::sections($body);
         $required = $depth === 'full' ? self::FULL_SECTIONS : self::BRIEF_SECTIONS;
         foreach ($required as $h) {
+            if ($siteOnly && $h === '코드') continue; // 사람 영역 이슈는 코드 절이 없어도 된다
             if (!isset($sections[$h])) throw $fail("필수 제목 `## $h` 가 없습니다 (depth: $depth)");
         }
         try {
-            $code = self::extractCode($sections['코드']);
+            $code = self::extractCode($sections['코드'] ?? '');
         } catch (IssueError $e) {
             throw $fail($e->getMessage());
         }

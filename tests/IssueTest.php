@@ -70,7 +70,7 @@ test('✗/✓ 코드 블록 짝이 없으면 오류', function () {
     assert_contains('php', ws_issue_error(ws_mut("✓ 막는 코드\n\n```php", "막는 코드\n\n```php")));
 });
 test('brief 는 세 제목만 필수', function () {
-    $raw = "---\nid: WS-PPL-001\ntitle: 메신저 사칭\nslug: impersonation\ngroup: people\nseverity: low\nsite_only: true\ndepth: brief\nlanguages: []\nchecked: 2026-11-18\nsources: []\n---\n\n## 한 줄 요약\n\n확인한다.\n\n## 체크 항목\n\n- 확인\n\n## 코드\n\n해당 없음\n";
+    $raw = "---\nid: WS-PPL-001\ntitle: 메신저 사칭\nslug: impersonation\ngroup: people\nseverity: low\nsite_only: true\ndepth: brief\nlanguages: []\nchecked: 2026-11-18\nsources:\n  - title: 참고\n    url: https://example.org/a\n    year: 2025\n---\n\n## 한 줄 요약\n\n확인한다.\n\n## 체크 항목\n\n- 확인\n\n## 코드\n\n해당 없음\n";
     $f = sys_get_temp_dir() . '/ws-brief-' . bin2hex(random_bytes(4)) . '.md';
     file_put_contents($f, $raw);
     $i = Issue::fromFile($f, ws_groups());
@@ -79,4 +79,25 @@ test('brief 는 세 제목만 필수', function () {
     assert_same([], $i->code);
     assert_same('brief', $i->depth);
     assert_same(['owasp2025' => [], 'api2023' => [], 'llm2026' => [], 'agentic2026' => [], 'asvs5' => [], 'cwe' => [], 'kr_guide' => []], $i->maps);
+});
+
+test('sources 가 비어 있으면 오류', function () {
+    assert_contains('sources', ws_issue_error(preg_replace('/^sources:\n(?:  .*\n)+/m', "sources: []\n", ws_fixture())));
+    assert_contains('-bad.md', ws_issue_error(preg_replace('/^sources:\n(?:  .*\n)+/m', "sources: []\n", ws_fixture())));
+});
+test('site_only 아닌데 languages 가 비면 오류', function () {
+    $m = ws_issue_error("---\nid: WS-PPL-002\ntitle: t\nslug: t\ngroup: web\nseverity: low\nsite_only: false\ndepth: brief\nlanguages: []\nchecked: 2026-11-18\nsources:\n  - title: s\n    url: https://example.org/a\n    year: 2025\n---\n\n## 한 줄 요약\n\n요약\n\n## 체크 항목\n\n- 확인\n\n## 코드\n\n없음\n");
+    assert_contains('languages', $m);
+});
+test('site_only 는 ## 코드 없이도 통과 (full·brief 모두)', function () {
+    foreach (['brief', 'full'] as $depth) {
+        $extra = $depth === 'full' ? "## 이런 장면에서\n\na\n\n## 왜 요즘 더 위험한가\n\nb\n\n## 나는 뭘 하면 되나\n\nc\n\n## 스킬이 잡는 방식\n\nd\n\n" : '';
+        $raw = "---\nid: WS-PPL-003\ntitle: t\nslug: t\ngroup: people\nseverity: low\nsite_only: true\ndepth: $depth\nlanguages: []\nchecked: 2026-11-18\nsources:\n  - title: s\n    url: https://example.org/a\n    year: 2025\n---\n\n## 한 줄 요약\n\n요약\n\n$extra## 체크 항목\n\n- 확인\n";
+        $f = sys_get_temp_dir() . '/ws-so-' . bin2hex(random_bytes(4)) . '.md';
+        file_put_contents($f, $raw);
+        $i = Issue::fromFile($f, ws_groups());
+        unlink($f);
+        assert_same([], $i->code);
+        assert_same([], $i->languages);
+    }
 });
