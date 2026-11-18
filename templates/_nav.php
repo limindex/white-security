@@ -1,29 +1,43 @@
 <?php
-/** 왼쪽 목록: 검색 + 묶음별 이슈. 이슈가 없는 묶음은 뺀다. @var Site $site @var ?string $current */
+/**
+ * 왼쪽 메뉴: 시작하기 · 보안 이슈(묶음별 접힘) · 참고.
+ * 좁은 화면에서는 바깥 details 가 "메뉴" 접기 막대가 된다(JS 없으면 펼친 채).
+ * @var Site $site @var ?string $current @var ?string $page @var ?string $group
+ */
 $byGroup = $site->repo->byGroup();
 $total = count($site->repo->all());
+$section = function (string $name) use ($site, $page): string {
+    $out = '<h2 class="ws-nav-h">' . Site::e($name) . '</h2><ul class="ws-nav-pages">';
+    foreach (Site::PAGES as $slug => $m) {
+        if ($m['section'] !== $name) continue;
+        $out .= '<li><a href="' . Site::e($site->url($slug)) . '"' . ($page === $slug ? ' aria-current="page"' : '') . '>' . Site::e($m['title']) . '</a></li>';
+    }
+    return $out . '</ul>';
+};
+$where = $page !== null ? Site::PAGES[$page]['title'] ?? '' : ($group !== null ? $site->groupName($group) : '');
 ?>
-<nav class="ws-nav" aria-label="이슈 목록">
-<div class="ws-search">
-<svg class="ws-search-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5L13.5 13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-<input type="search" id="ws-q" class="ws-search-input" placeholder="이슈·점검 항목 검색" aria-label="이슈 검색" autocomplete="off" spellcheck="false" data-search="<?= Site::e($site->url('api/search.json')) ?>">
-</div>
-<p class="ws-search-status" id="ws-q-status" aria-live="polite"></p>
-<details class="ws-nav-fold" open>
-<summary><span>이슈 목록</span><span class="ws-nav-total"><?= $total ?></span></summary>
-<?php if (!$total): ?>
-<p class="ws-nav-empty-all">등록된 이슈 없음</p>
-<?php endif ?>
-<?php foreach ($site->repo->groups() as $g): $list = $byGroup[$g['id']] ?? []; if (!$list) continue; ?>
-<section class="ws-nav-group" data-group="<?= Site::e($g['id']) ?>">
-<h2 class="ws-nav-title"><?= Site::e($g['name']) ?></h2>
+<details class="ws-side" id="ws-menu" open>
+<summary class="ws-menu-bar"><span class="ws-tx">메뉴</span><?php if ($where !== ''): ?><span class="ws-menu-where"><?= Site::e($where) ?></span><?php endif ?></summary>
+<nav class="ws-nav" aria-label="문서 메뉴">
+<?= $section(Site::NAV_SECTIONS[0]) ?>
+<h2 class="ws-nav-h ws-nav-h--count"><span>보안 이슈</span> <span class="ws-nav-count"><?= $total ?></span></h2>
+<?php foreach ($site->repo->groups() as $g): $list = $byGroup[$g['id']] ?? []; ?>
+<details class="ws-nav-grp" data-group="<?= Site::e($g['id']) ?>"<?= $group === $g['id'] ? ' open' : '' ?>>
+<summary>
+<span class="ws-nav-grp-name"><?= Site::e($g['name']) ?></span>
+<span class="ws-nav-count"><?= count($list) ?></span>
+</summary>
+<?php if ($list): ?>
 <ul>
 <?php foreach ($list as $i): ?>
-<li data-id="<?= Site::e($i->id) ?>"><a href="<?= Site::e($site->url('issues/' . $i->id)) ?>"<?= $current === $i->id ? ' aria-current="page"' : '' ?>><span class="ws-nav-name"><?= Site::e($i->title) ?></span><span class="ws-nav-sub"><span class="ws-nav-id"><?= Site::e($i->id) ?></span><?= $site->staleBadge($i) ?></span></a></li>
+<li><a href="<?= Site::e($site->url('issues/' . $i->id)) ?>"<?= $current === $i->id ? ' aria-current="page"' : '' ?>><span class="ws-nav-name"><?= Site::e($i->title) ?></span><?= $site->staleBadge($i) ?></a></li>
 <?php endforeach ?>
 </ul>
-</section>
-<?php endforeach ?>
-<p class="ws-nav-none" hidden>검색 결과 없음 · 다른 낱말로 검색</p>
+<?php else: ?>
+<p class="ws-nav-empty">준비 중</p>
+<?php endif ?>
 </details>
+<?php endforeach ?>
+<?= $section(Site::NAV_SECTIONS[1]) ?>
 </nav>
+</details>

@@ -10,7 +10,7 @@ function tpl_site(?string $today = '2026-11-18', array $extra = []): Site
 /** @return list<string> 모든 화면 경로 */
 function tpl_paths(): array
 {
-    return ['', 'issues/WS-INJ-001', 'coverage', 'install', 'changelog', 'about', 'nope'];
+    return ['', 'issues/WS-INJ-001', ...array_keys(Site::PAGES), 'nope'];
 }
 
 test('이슈 화면: 심각도 배지·id·기준 번호·언어 탭', function () {
@@ -53,29 +53,29 @@ test('이슈 화면: 본문 절·출처·마지막 확인일, 현재 이슈 강�
     assert_true((bool)preg_match('#<a[^>]*href="/white-security/issues/WS-INJ-001"[^>]*aria-current="page"#', $b), '현재 이슈 aria-current');
 });
 
-test('홈: 약속 문구·설치 버튼·묶음 카드·최근 업데이트', function () {
+test('홈: 약속 문구·시작점(스킬 설치)·묶음 색인·최근 개정', function () {
     $b = tpl_site()->route('')['body'];
     assert_contains('흔한 실수를 크게 줄', $b);
     assert_contains('보안 감사를 대신하지 않', $b);
     assert_true(!preg_match('/완벽|보장/u', $b), '과장 문구');
-    assert_true((bool)preg_match('#<a[^>]*href="/white-security/install"[^>]*>[^<]*(<span[^>]*>)?스킬 설치#u', $b), '스킬 설치 버튼');
-    assert_contains('class="ws-group-card', $b);
-    assert_contains('웹 애플리케이션', $b);
-    assert_contains('최근 업데이트', $b);
-    assert_true((bool)preg_match('#class="ws-recent".*WS-INJ-001#s', $b), '최근 업데이트에 fixture');
+    assert_true((bool)preg_match('#<a[^>]*href="/white-security/install"[^>]*>.*?스킬 설치#su', $b), '스킬 설치 시작점');
+    assert_true((bool)preg_match('#<li id="grp-web">.*?웹 애플리케이션#su', $b), '묶음 색인 앵커');
+    assert_contains('최근 개정', $b);
+    assert_true((bool)preg_match('#class="ws-recent".*WS-INJ-001.*본문 고정 제목 변경#s', $b), '최근 개정에 fixture 와 변경 요지');
 });
 
-test('홈: 최근 업데이트는 최대 5건, 확인일 최신순', function () {
+test('홈: 최근 개정은 이슈마다 최신 개정 1건, 최대 5건, 날짜 최신순', function () {
     $extra = [];
     foreach (range(2, 8) as $n) {
         $raw = file_get_contents(__DIR__ . '/fixtures/issues/web/WS-INJ-001-sql-injection.md');
-        $raw = str_replace(['WS-INJ-001', 'checked: 2026-11-18'], [sprintf('WS-INJ-%03d', $n), sprintf('checked: 2026-10-%02d', $n)], $raw);
+        $raw = str_replace(['WS-INJ-001', '- date: 2026-11-18'], [sprintf('WS-INJ-%03d', $n), sprintf('- date: 2026-10-%02d', $n)], $raw);
         $extra[sprintf('WS-INJ-%03d-x.md', $n)] = $raw;
     }
     $b = tpl_site('2026-11-18', $extra)->route('')['body'];
     assert_true((bool)preg_match('#<ol class="ws-recent">(.*?)</ol>#s', $b, $m), 'ws-recent 목록');
     preg_match_all('#WS-INJ-\d{3}#', $m[1], $ids);
     assert_same(['WS-INJ-001', 'WS-INJ-008', 'WS-INJ-007', 'WS-INJ-006', 'WS-INJ-005'], array_values(array_unique($ids[0])));
+    assert_same(5, substr_count($m[1], '<li>'), '5건');
 });
 
 test('확인 필요 배지: 180일 넘으면 이슈 화면·목록에 표시', function () {

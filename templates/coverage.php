@@ -1,5 +1,5 @@
 <?php
-/** @var Site $site @var list<array<string,mixed>> $coverage */
+/** @var Site $site @var string $title @var string $lead @var list<array<string,mixed>> $coverage */
 $status = function (array $it): array {
     if (!$it['issues']) return ['gap', '빈칸'];
     return $it['site_only'] ? ['site', '사이트 전용'] : ['covered', '덮음'];
@@ -12,8 +12,7 @@ foreach ($coverage as $fw) {
 }
 ?>
 <div class="ws-page ws-page--wide">
-<h1>적용 범위</h1>
-<p class="ws-page-lead">전통 보안부터 AI 시대 위험까지, 인정받는 기준의 항목마다 어느 이슈가 다루는지 보여 줍니다. 빈칸은 아직 다루지 않은 항목입니다.</p>
+<?= $site->render('_pagehead', ['title' => $title, 'lead' => $lead]) ?>
 
 <?php if (!$coverage): ?>
 <p class="ws-empty">표준 항목 파일을 읽지 못했습니다.</p>

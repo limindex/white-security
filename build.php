@@ -1,5 +1,6 @@
 <?php
-// 정적 사이트(dist/)와 스킬 참고 파일을 만든다. 사용: php build.php [--out=dist] [--base=/white-security/] [--today=YYYY-MM-DD]
+// 정적 사이트(dist/)와 스킬 참고 파일을 만든다. 사용: php build.php [--out=dist] [--base=/white-security/] [--today=YYYY-MM-DD] [--origin=https://도메인]
+// --origin 이 없으면 data/site.json 의 origin 을 쓰고, 둘 다 비어 있으면 sitemap.xml·canonical 을 만들지 않는다.
 // --root 는 테스트용(원본 폴더 지정). 같은 입력이면 같은 출력이 나온다.
 declare(strict_types=1);
 if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
@@ -8,15 +9,16 @@ require __DIR__ . '/src/bootstrap.php';
 
 function bail(string $msg): never { fwrite(STDERR, "오류: $msg\n"); exit(1); }
 
-$opt = ['out' => 'dist', 'base' => '/white-security/', 'today' => date('Y-m-d'), 'root' => __DIR__];
+$opt = ['out' => 'dist', 'base' => '/white-security/', 'today' => date('Y-m-d'), 'root' => __DIR__, 'origin' => null];
 foreach (array_slice($argv, 1) as $a) {
-    if (!preg_match('/^--(out|base|today|root)=(.*)$/s', $a, $m)) bail("알 수 없는 옵션 $a");
+    if (!preg_match('/^--(out|base|today|root|origin)=(.*)$/s', $a, $m)) bail("알 수 없는 옵션 $a");
     $opt[$m[1]] = $m[2];
 }
 $root = realpath($opt['root']) ?: bail('--root 폴더를 찾을 수 없습니다');
 $today = DateTimeImmutable::createFromFormat('!Y-m-d', $opt['today']);
 if (!$today || $today->format('Y-m-d') !== $opt['today']) bail('--today 는 YYYY-MM-DD 여야 합니다');
 if (!preg_match('#^/[A-Za-z0-9._~/-]*$#', $opt['base'])) bail('--base 는 / 로 시작하는 경로여야 합니다');
+if ($opt['origin'] !== null && !Site::validOrigin($opt['origin'])) bail('--origin 은 https://도메인 형식(끝 / 없이)이어야 합니다');
 
 // 출력 폴더: 프로젝트 안이나 시스템 임시 폴더 아래의 "하위" 폴더만 허용
 if (trim($opt['out']) === '') bail('--out 이 비어 있습니다');
@@ -52,10 +54,11 @@ if ($repo->errors()) {
     foreach ($repo->errors() as $e) fwrite(STDERR, "  - $e\n");
     exit(1);
 }
-$site = new Site($repo, $opt['base'], 'static', $today);
+$site = new Site($repo, $opt['base'], 'static', $today, $opt['origin']);
+$origin = $site->setting('origin');
 
 // 경로 목록 (정렬해 같은 순서로)
-$paths = ['', 'coverage', 'install', 'changelog', 'about', 'api/issues.json', 'api/search.json', 'api/coverage.json'];
+$paths = ['', ...array_keys(Site::PAGES), 'api/issues.json', 'api/search.json', 'api/coverage.json'];
 foreach ($repo->all() as $i) { $paths[] = 'issues/' . $i->id; $paths[] = 'api/issues/' . $i->id . '.json'; }
 sort($paths);
 
@@ -82,6 +85,19 @@ foreach ($paths as $p) {
 }
 $files['404.html'] = $site->route('__not-found__')['body'];
 
+// sitemap.xml: 공개 주소(origin)가 있을 때만. 쪽만 넣고 API·404 는 뺀다. 이슈는 최종 확인일, 나머지는 빌드 날짜.
+if ($origin !== '') {
+    $checked = [];
+    foreach ($repo->all() as $i) $checked['issues/' . $i->id] = $i->checked->format('Y-m-d');
+    $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+    foreach ($paths as $p) {
+        if (str_starts_with($p, 'api/')) continue;
+        $loc = htmlspecialchars($origin . $site->url($p), ENT_XML1 | ENT_QUOTES, 'UTF-8');
+        $xml .= "  <url><loc>$loc</loc><lastmod>" . ($checked[$p] ?? $opt['today']) . "</lastmod></url>\n";
+    }
+    $files['sitemap.xml'] = $xml . "</urlset>\n";
+}
+
 rrmdir($out);
 foreach ($files as $rel => $body) put($out . '/' . $rel, $body);
 // GitHub Pages 가 _ 로 시작하는 파일을 처리하지 않게 한다
@@ -96,4 +112,5 @@ foreach ($list as $f) put($out . '/assets/' . substr($f, strlen($assets) + 1), (
 
 $refs = SkillExport::write($repo, $root . '/skills/white-security/references');
 echo count($files) . "개 쪽과 API, assets " . count($list) . "개를 {$opt['out']} 에 만들었습니다.\n";
+if ($origin === '') echo "origin 이 비어 sitemap.xml 은 만들지 않았습니다 (--origin=https://도메인 또는 data/site.json).\n";
 echo "스킬 참고 파일 " . count($refs) . "개를 skills/white-security/references 에 만들었습니다.\n";

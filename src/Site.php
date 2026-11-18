@@ -3,7 +3,22 @@
 final class Site
 {
     private const JSON_FLAGS = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT;
-    private const PAGES = ['coverage' => '적용 범위', 'install' => '설치', 'changelog' => '변경 내역', 'about' => '소개'];
+    /** 일반 페이지: 주소 → 제목 · 메뉴 구역 · 한 줄 설명(명사형). 왼쪽 메뉴·경로 표시·설명 메타가 모두 여기서 나온다. */
+    public const PAGES = [
+        'about' => ['title' => '소개', 'section' => '시작하기', 'lead' => 'AI와 함께 코딩하는 사람을 위한 한국어 보안 문서와 점검 스킬의 목적·범위·운영 원칙'],
+        'start' => ['title' => '처음이라면', 'section' => '시작하기', 'lead' => '보안 지식 없이 시작하는 사람을 위한 읽는 순서와 첫 점검 안내'],
+        'install' => ['title' => '스킬 설치', 'section' => '시작하기', 'lead' => '코딩 도구에 점검 스킬 설치 · 이후 코드 작성·검토 때 스킬의 자동 점검'],
+        'check' => ['title' => '내 사이트 점검', 'section' => '시작하기', 'lead' => '사용 기술과 기능에 맞춘 점검표와 AI 점검 지시문'],
+        'severity' => ['title' => '심각도 기준', 'section' => '시작하기', 'lead' => '위험·주의·참고 등급의 판정 기준 · 영향과 악용 쉬움의 조합'],
+        'guide' => ['title' => '문서 읽는 법', 'section' => '시작하기', 'lead' => '문서 번호 체계·절 구성·문서 정보·기준 번호의 의미'],
+        'glossary' => ['title' => '용어 사전', 'section' => '참고', 'lead' => '보안 업계 용어와 공식 용어의 쉬운 풀이·관련 이슈'],
+        'coverage' => ['title' => '점검 기준 대응표', 'section' => '참고', 'lead' => '공인 보안 기준 8종의 항목별 대응 이슈와 빈칸'],
+        'changelog' => ['title' => '개정 이력', 'section' => '참고', 'lead' => '스킬과 문서의 버전별 변경 내역'],
+        'sources' => ['title' => '출처·라이선스', 'section' => '참고', 'lead' => '문서·코드·글꼴의 라이선스와 인용 원칙'],
+    ];
+    /** 왼쪽 메뉴 구역 순서. 보안 이슈 구역은 두 구역 사이에 들어간다. */
+    public const NAV_SECTIONS = ['시작하기', '참고'];
+    public const BRAND = '화이트 보안';
     private const ID_RE = '/^WS-[A-Z]{2,5}-\d{3}$/';
     /** 마지막 확인일이 이 일수를 넘으면 "확인 필요" */
     public const STALE_DAYS = 180;
@@ -12,7 +27,7 @@ final class Site
 
     public readonly DateTimeImmutable $today;
 
-    public function __construct(public readonly Repository $repo, private string $baseUrl, public readonly string $mode, ?DateTimeImmutable $today = null)
+    public function __construct(public readonly Repository $repo, private string $baseUrl, public readonly string $mode, ?DateTimeImmutable $today = null, private ?string $origin = null)
     {
         $this->baseUrl = rtrim($baseUrl, '/') . '/';
         $this->today = ($today ?? new DateTimeImmutable('today'))->setTime(0, 0);
@@ -73,6 +88,17 @@ final class Site
         return $key === 'cwe' && preg_match('/^CWE-(\d+)$/', $code, $m) ? 'https://cwe.mitre.org/data/definitions/' . $m[1] . '.html' : null;
     }
 
+    /** 기준 번호 칩 HTML: 기준 이름(번호에 이름이 없을 때) + 번호, CWE 는 정의 페이지 링크 */
+    public static function mapChip(string $key, string $code): string
+    {
+        $k = str_starts_with($code, strtoupper($key) . '-') ? '' : '<span class="ws-chip-k">' . self::e(self::mapLabel($key)) . '</span>';
+        $u = self::cweUrl($key, $code);
+        $v = $u !== null
+            ? '<a class="ws-chip-v" href="' . self::e($u) . '" rel="noopener noreferrer">' . self::e($code) . '</a>'
+            : '<span class="ws-chip-v">' . self::e($code) . '</span>';
+        return '<li class="ws-chip">' . $k . $v . '</li>';
+    }
+
     /** 심각도 배지 HTML (위험 빨강 · 주의 주황 · 참고 회색) */
     public static function severityBadge(string $severity, string $suffix = ''): string
     {
@@ -95,6 +121,41 @@ final class Site
         return array_slice($all, 0, $n);
     }
 
+    public const DEFAULT_DESC = 'AI 코딩 도구가 자주 만드는 보안 실수를 이슈별로 정리한 한국어 문서와 점검 스킬';
+
+    /** data/site.json 설정값 (없으면 빈 문자열) */
+    public function setting(string $key): string
+    {
+        if ($key === 'origin' && $this->origin !== null) return $this->origin;
+        return $this->repo->settings()[$key] ?? '';
+    }
+
+    /** origin 형식: https://도메인[:포트], 끝 / 없음 */
+    public static function validOrigin(string $o): bool { return (bool)preg_match('#^https://[A-Za-z0-9.-]+(:\d+)?$#', $o); }
+
+    /** 마크다운 한 덩어리 → 한 줄 평문 (설명 메타용) */
+    public static function plain(string $md, int $max): string
+    {
+        $t = preg_replace('/[`*_#>\[\]]|\((https?:[^)]*)\)/u', '', $md);
+        $t = trim(preg_replace('/\s+/u', ' ', (string)$t));
+        return mb_strlen($t) > $max ? rtrim(mb_substr($t, 0, $max - 1)) . '…' : $t;
+    }
+
+    /**
+     * 최근 개정: 이슈마다 가장 최근 개정 한 건(없으면 마지막 확인일), 날짜 최신순·같은 날은 id 순.
+     * @return list<array{issue:Issue,date:string,note:string}>
+     */
+    public function recentRevisions(int $n = 5): array
+    {
+        $rows = [];
+        foreach ($this->repo->all() as $i) {
+            $r = $i->revisions[0] ?? ['date' => $i->checked->format('Y-m-d'), 'note' => '내용 확인'];
+            $rows[] = ['issue' => $i, 'date' => $r['date'], 'note' => $r['note']];
+        }
+        usort($rows, fn($a, $b) => [$b['date'], $a['issue']->id] <=> [$a['date'], $b['issue']->id]);
+        return array_slice($rows, 0, $n);
+    }
+
     /** 출력용 이스케이프 */
     public static function e(string $s): string { return htmlspecialchars($s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
 
@@ -102,14 +163,18 @@ final class Site
     public function route(string $path): array
     {
         $path = trim($path, '/');
-        if ($path === '') return $this->html(200, 'home', ['title' => '', 'groups' => $this->repo->groups(), 'byGroup' => $this->repo->byGroup()]);
+        if ($path === '') return $this->html(200, 'home', ['title' => '', 'groups' => $this->repo->groups(), 'byGroup' => $this->repo->byGroup(), 'coverage' => $this->coverage()]);
         if (isset(self::PAGES[$path])) {
-            $vars = ['title' => self::PAGES[$path], 'page' => $path];
+            $meta = self::PAGES[$path];
+            $vars = ['title' => $meta['title'], 'lead' => $meta['lead'], 'desc' => $meta['lead'], 'page' => $path,
+                'crumbs' => [['홈', $this->url('')], [$meta['section'], null], [$meta['title'], null]]];
             if ($path === 'coverage') $vars['coverage'] = $this->coverage();
             return $this->html(200, $path, $vars);
         }
         if (preg_match('#^issues/([^/]+)$#', $path, $m) && preg_match(self::ID_RE, $m[1]) && ($i = $this->repo->find($m[1]))) {
-            return $this->html(200, 'issue', ['title' => $i->title, 'issue' => $i, 'current' => $i->id, 'wide' => true]);
+            return $this->html(200, 'issue', ['title' => $i->title, 'issue' => $i, 'current' => $i->id, 'group' => $i->group, 'wide' => true,
+                'desc' => self::plain($i->sections['요약'] ?? $i->title, 160), 'ogType' => 'article',
+                'crumbs' => [['홈', $this->url('')], ['보안 이슈', null], [$this->groupName($i->group), $this->url('') . '#grp-' . $i->group], [$i->id, null]]]);
         }
         if ($path === 'api/issues.json') {
             return $this->json(array_map(fn(Issue $i) => [
@@ -136,7 +201,7 @@ final class Site
             ], $this->repo->searchIndex()));
         }
         if ($path === 'api/coverage.json') return $this->json(['frameworks' => $this->coverage(), 'gaps' => Coverage::gaps($this->repo->coverage())]);
-        return $this->html(404, 'error', ['title' => '찾을 수 없음', 'message' => '주소가 바뀌었거나 없는 페이지입니다.']);
+        return $this->html(404, 'error', ['title' => '찾을 수 없음', 'message' => '주소 변경 또는 삭제된 페이지']);
     }
 
     /** 표준별 대응표: 화면과 JSON 이 같이 쓴다. @return list<array<string,mixed>> */
@@ -177,6 +242,9 @@ final class Site
         $body = $this->render('layout', [
             'title' => $vars['title'] ?? '', 'content' => $content, 'errors' => $errors,
             'current' => $vars['current'] ?? null, 'page' => $vars['page'] ?? null, 'wide' => $vars['wide'] ?? false,
+            'group' => $vars['group'] ?? null, 'crumbs' => $vars['crumbs'] ?? [],
+            'desc' => $vars['desc'] ?? self::DEFAULT_DESC, 'ogType' => $vars['ogType'] ?? 'website',
+            'canonical' => $status === 200 && $this->setting('origin') !== '' ? $this->setting('origin') . $this->url($template === 'home' ? '' : ($vars['page'] ?? 'issues/' . ($vars['current'] ?? ''))) : null,
         ]);
         return ['status' => $status, 'type' => 'html', 'body' => $body];
     }

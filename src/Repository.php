@@ -36,8 +36,42 @@ final class Repository
         usort($issues, fn(Issue $a, Issue $b) => [$order[$a->group] ?? 999, $a->id] <=> [$order[$b->group] ?? 999, $b->id]);
         $repo = new Repository($issues, $errors, $groups);
         $repo->attachCoverage($root);
+        $repo->settings = self::loadSettings($root . '/data/site.json', $repo->errors);
         return $repo;
     }
+
+    /** 사이트 설정 기본값. 빈 값이면 화면에 그 자리를 그리지 않는다. */
+    public const SETTINGS = ['publisher' => '', 'github' => '', 'origin' => ''];
+
+    /** @var array{publisher:string,github:string,origin:string} */
+    private array $settings = self::SETTINGS;
+
+    /**
+     * data/site.json(선택): publisher(발행 주체 표기) · github(https 주소) · origin(공개 주소 앞부분, 예: https://example.org).
+     * 파일이 없으면 기본값. 틀린 값은 오류 띠에 남기고 그 값만 기본값으로 둔다.
+     * @param list<string> $errors @return array{publisher:string,github:string,origin:string}
+     */
+    private static function loadSettings(string $file, array &$errors): array
+    {
+        $out = self::SETTINGS;
+        if (!is_file($file)) return $out;
+        $name = 'data/site.json';
+        $data = json_decode((string)@file_get_contents($file), true);
+        if (!is_array($data) || array_is_list($data)) { $errors[] = "$name: 설정(JSON 객체) 형식이 아닙니다"; return $out; }
+        foreach ($data as $k => $v) {
+            if (!array_key_exists($k, self::SETTINGS)) { $errors[] = "$name: 모르는 키 `$k`"; continue; }
+            if (!is_string($v)) { $errors[] = "$name: `$k` 는 문자열이어야 합니다"; continue; }
+            $v = trim($v);
+            if ($k === 'publisher' && preg_match('/[\r\n]/', $v)) { $errors[] = "$name: publisher 는 한 줄이어야 합니다"; continue; }
+            if ($k === 'github' && $v !== '' && !preg_match('#^https://github\.com/[A-Za-z0-9._-]+(/[A-Za-z0-9._-]+)?/?$#', $v)) { $errors[] = "$name: github 는 https://github.com/… 주소여야 합니다"; continue; }
+            if ($k === 'origin' && $v !== '' && !Site::validOrigin($v)) { $errors[] = "$name: origin 은 https://도메인 형식(끝 / 없이)이어야 합니다"; continue; }
+            $out[$k] = $v;
+        }
+        return $out;
+    }
+
+    /** @return array{publisher:string,github:string,origin:string} */
+    public function settings(): array { return $this->settings; }
 
     /** 표준 항목 파일을 읽고 대응표를 만든다. 없는 항목은 오류 띠 목록에 넣고, 표는 있는 항목만으로 그린다. */
     private function attachCoverage(string $root): void

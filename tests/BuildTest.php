@@ -180,3 +180,26 @@ test('SkillExport: groups.json 에 when 이 없으면 INDEX 는 기본 문장을
     assert_contains("언제 읽나: 「웹 기본」 상황에서 코드를 쓰거나 고칠 때\n", $idx);
     assert_same(null, Repository::load($root)->groups()[1]['when']);
 });
+
+test('build: origin 이 있으면 sitemap.xml(절대 주소, 쪽만), 없으면 만들지 않음', function () {
+    [$code, $out, $root] = bt_build();
+    assert_same(0, $code, $out);
+    assert_true(!is_file("$root/dist/sitemap.xml"), 'origin 없으면 sitemap 없음');
+    assert_contains('sitemap.xml', $out);
+    foreach (['start', 'check', 'severity', 'guide', 'glossary', 'sources'] as $p) assert_true(is_file("$root/dist/$p/index.html"), $p);
+    [$code, $out, $root] = bt_build([], '--origin=https://docs.example.org');
+    assert_same(0, $code, $out);
+    $xml = file_get_contents("$root/dist/sitemap.xml");
+    assert_true(str_starts_with($xml, '<?xml version="1.0" encoding="UTF-8"?>'), 'xml 머리');
+    assert_contains('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">', $xml);
+    assert_contains('<loc>https://docs.example.org/white-security/</loc>', $xml);
+    assert_contains('<loc>https://docs.example.org/white-security/severity</loc>', $xml);
+    assert_contains('<loc>https://docs.example.org/white-security/issues/WS-INJ-001</loc>', $xml);
+    assert_contains('<lastmod>2026-11-18</lastmod>', $xml);
+    assert_true(!str_contains($xml, 'api/'), 'API 제외');
+    assert_true(!str_contains($xml, '404'), '404 제외');
+    $html = file_get_contents("$root/dist/severity/index.html");
+    assert_contains('<link rel="canonical" href="https://docs.example.org/white-security/severity">', $html);
+    [$code, $out] = bt_build([], '--origin=http://bad');
+    assert_same(1, $code, 'http origin 거부');
+});
