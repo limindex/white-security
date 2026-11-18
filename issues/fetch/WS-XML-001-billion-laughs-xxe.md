@@ -16,7 +16,13 @@ maps:
   cwe: [CWE-611, CWE-776]
   kr_guide: ["입력데이터 검증 및 표현-8"]
   kr_ciip: []
+published: 2026-11-18
 checked: 2026-11-18
+revisions:
+  - date: 2026-11-18
+    note: 최초 작성
+applies_to: [Python, Node.js, PHP, XML을 읽는 모든 서비스]
+severity_reason: "영향: 서버 파일 유출·메모리 고갈로 인한 서비스 중단 · 악용: 조작한 XML 파일 하나로 가능"
 sources:
   - title: OWASP XML External Entity Prevention Cheat Sheet
     url: https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html

@@ -16,7 +16,13 @@ maps:
   cwe: [CWE-799, CWE-770]
   kr_guide: []
   kr_ciip: [AU]
+published: 2026-11-18
 checked: 2026-11-18
+revisions:
+  - date: 2026-11-18
+    note: 최초 작성
+applies_to: [Python, Nginx, 공개 웹사이트·API]
+severity_reason: "영향: 서버 비용 증가·속도 저하·장애 · 악용: 공격 의도 없는 대량 수집으로도 발생하나 데이터 유출·변조는 아님"
 sources:
   - title: "RFC 9309 - Robots Exclusion Protocol"
     url: https://www.rfc-editor.org/rfc/rfc9309.html

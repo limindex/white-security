@@ -16,7 +16,13 @@ maps:
   cwe: [CWE-770, CWE-400]
   kr_guide: []
   kr_ciip: [AU]
+published: 2026-11-18
 checked: 2026-11-18
+revisions:
+  - date: 2026-11-18
+    note: 최초 작성
+applies_to: [Python, Node.js, AI 호출 API를 여는 모든 서비스]
+severity_reason: "영향: 사용량 과금 폭증·서비스 중단 · 악용: 로그인·한도 없는 주소 하나로 자동화 요청만으로 가능"
 sources:
   - title: "OWASP Top 10 for LLM Applications - LLM10:2025 Unbounded Consumption"
     url: https://genai.owasp.org/llmrisk/llm102025-unbounded-consumption/

@@ -16,7 +16,13 @@ maps:
   cwe: [CWE-1426, CWE-94, CWE-79, CWE-89, CWE-78]
   kr_guide: ["입력데이터 검증 및 표현-1", "입력데이터 검증 및 표현-2", "입력데이터 검증 및 표현-4", "입력데이터 검증 및 표현-5"]
   kr_ciip: [CI, SI, XS]
+published: 2026-11-18
 checked: 2026-11-18
+revisions:
+  - date: 2026-11-18
+    note: 최초 작성
+applies_to: [Python, Node.js, PHP, LLM 연동 웹 애플리케이션]
+severity_reason: "영향: 서버 명령·코드 실행, 사용자 화면 스크립트 실행 · 악용: AI가 읽는 글 한 편으로 가능"
 sources:
   - title: "OWASP Top 10 for LLM Applications - LLM05:2025 Improper Output Handling"
     url: https://genai.owasp.org/llmrisk/llm052025-improper-output-handling/

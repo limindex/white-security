@@ -16,7 +16,13 @@ maps:
   cwe: [CWE-250]
   kr_guide: []
   kr_ciip: []
+published: 2026-11-18
 checked: 2026-11-18
+revisions:
+  - date: 2026-11-18
+    note: 최초 작성
+applies_to: [Python, 도구를 쓰는 AI 에이전트]
+severity_reason: "영향: 삭제·배포·결제 등 되돌릴 수 없는 작업 · 악용: AI의 착각이나 숨은 지시 하나로 가능"
 sources:
   - title: "OWASP Top 10 for LLM Applications - LLM06:2025 Excessive Agency"
     url: https://genai.owasp.org/llmrisk/llm062025-excessive-agency/

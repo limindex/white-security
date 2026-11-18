@@ -16,7 +16,13 @@ maps:
   cwe: [CWE-183, CWE-250]
   kr_guide: ["보안기능-3"]
   kr_ciip: []
+published: 2026-11-18
 checked: 2026-11-18
+revisions:
+  - date: 2026-11-18
+    note: 최초 작성
+applies_to: [JSON, AI 코딩 도구 설정]
+severity_reason: "영향: 개발자 컴퓨터에서 임의 명령 실행·키 유출 · 악용: AI가 읽는 글 속 숨은 지시 하나로 가능"
 sources:
   - title: "Claude Code Docs - Configure permissions"
     url: https://code.claude.com/docs/en/permissions

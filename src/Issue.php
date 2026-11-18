@@ -15,6 +15,8 @@ final class Issue
     /**
      * @param array<string,string> $sections
      * @param array<string,array{bad:string,good:string}> $code
+     * @param list<array{date:string,note:string}> $revisions 개정 이력, 최신이 위
+     * @param list<string> $appliesTo 적용 대상(언어·프레임워크·환경)
      */
     private function __construct(
         public readonly string $id,
@@ -32,6 +34,10 @@ final class Issue
         public readonly array $sections,
         public readonly array $code,
         public readonly string $path,
+        public readonly DateTimeImmutable $published,
+        public readonly array $revisions,
+        public readonly array $appliesTo,
+        public readonly ?string $severityReason,
     ) {}
 
     /** @param array<int,array{id:string}> $groups data/groups.json 내용 */
@@ -88,10 +94,43 @@ final class Issue
             $maps[$k] = $v;
         }
 
-        $checkedRaw = $fm['checked'] ?? null;
-        if (!is_string($checkedRaw) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $checkedRaw)) throw $fail('checked 는 YYYY-MM-DD 여야 합니다');
-        $checked = DateTimeImmutable::createFromFormat('!Y-m-d', $checkedRaw);
-        if (!$checked || $checked->format('Y-m-d') !== $checkedRaw) throw $fail("checked `$checkedRaw` 는 달력에 없는 날짜입니다");
+        $date = function (mixed $raw, string $what) use ($fail): DateTimeImmutable {
+            if (!is_string($raw) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $raw)) throw $fail("$what 는 YYYY-MM-DD 여야 합니다");
+            $d = DateTimeImmutable::createFromFormat('!Y-m-d', $raw);
+            if (!$d || $d->format('Y-m-d') !== $raw) throw $fail("$what `$raw` 는 달력에 없는 날짜입니다");
+            return $d;
+        };
+        $checked = $date($fm['checked'] ?? null, 'checked');
+
+        // 문서 메타(선택): 최초 게시일 · 개정 이력 · 적용 대상 · 심각도 근거
+        $published = isset($fm['published']) ? $date($fm['published'], 'published') : $checked;
+        if ($published > $checked) throw $fail('published 는 checked 보다 늦을 수 없습니다');
+
+        $revIn = $fm['revisions'] ?? [];
+        if ($revIn === null) $revIn = [];
+        if (!is_array($revIn) || !array_is_list($revIn)) throw $fail('revisions 는 date/note 목록이어야 합니다');
+        $revisions = [];
+        $prev = null;
+        foreach ($revIn as $n => $r) {
+            $n1 = $n + 1;
+            if (!is_array($r) || array_is_list($r)) throw $fail("revisions[$n1] 는 date/note 맵이어야 합니다");
+            $d = $date($r['date'] ?? null, "revisions[$n1].date");
+            $note = $r['note'] ?? null;
+            if (!is_string($note) || trim($note) === '' || preg_match('/[\r\n]/', $note)) throw $fail("revisions[$n1].note 는 한 줄 문자열이어야 합니다");
+            if ($prev !== null && $d > $prev) throw $fail("revisions 는 최신 날짜가 위에 오도록 적어야 합니다 (revisions[$n1])");
+            if ($d < $published) throw $fail("revisions[$n1].date 가 published 보다 이릅니다");
+            $prev = $d;
+            $revisions[] = ['date' => $d->format('Y-m-d'), 'note' => trim($note)];
+        }
+
+        $appliesTo = $fm['applies_to'] ?? [];
+        if ($appliesTo === null) $appliesTo = [];
+        if (!is_array($appliesTo) || !array_is_list($appliesTo) || array_filter($appliesTo, fn($a) => !is_string($a) || trim($a) === '')) throw $fail('applies_to 는 문자열 목록이어야 합니다');
+        if (count(array_unique($appliesTo)) !== count($appliesTo)) throw $fail('applies_to 에 중복이 있습니다');
+
+        $severityReason = $fm['severity_reason'] ?? null;
+        if ($severityReason !== null && (!is_string($severityReason) || trim($severityReason) === '' || preg_match('/[\r\n]/', $severityReason))) throw $fail('severity_reason 은 한 줄 문자열이어야 합니다');
+        if ($severityReason !== null) $severityReason = trim($severityReason);
 
         $sourcesIn = $fm['sources'] ?? [];
         if ($sourcesIn === null) $sourcesIn = [];
@@ -122,7 +161,7 @@ final class Issue
         $a = $languages; $b = $found; sort($a); sort($b);
         if ($a !== $b) throw $fail('languages [' . implode(', ', $languages) . '] 와 `## 코드 예시` 의 ### 소제목 [' . implode(', ', $found) . '] 이(가) 다릅니다');
 
-        return new Issue($id, $title, $slug, $group, $severity, $siteOnly, $depth, $languages, $maps, $checked, $sources, $body, $sections, $code, $path);
+        return new Issue($id, $title, $slug, $group, $severity, $siteOnly, $depth, $languages, $maps, $checked, $sources, $body, $sections, $code, $path, $published, $revisions, array_values($appliesTo), $severityReason);
     }
 
     /** 코드 펜스 안은 건너뛰고 `## ` 제목별로 본문을 자른다. @return array<string,string> */

@@ -16,7 +16,13 @@ maps:
   cwe: [CWE-1427]
   kr_guide: []
   kr_ciip: []
+published: 2026-11-18
 checked: 2026-11-18
+revisions:
+  - date: 2026-11-18
+    note: 최초 작성
+applies_to: [Python, Node.js, PHP, 외부 글을 AI에 넘기는 모든 서비스]
+severity_reason: "영향: 답변 조작·데이터 유출·연결된 도구의 무단 실행 · 악용: 웹페이지·메일·문서에 문장 하나를 숨기는 것으로 가능"
 sources:
   - title: "OWASP Top 10 for LLM Applications - LLM01:2025 Prompt Injection"
     url: https://genai.owasp.org/llmrisk/llm01-prompt-injection/

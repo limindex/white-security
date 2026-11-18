@@ -78,3 +78,15 @@ test('묶음 이름·설명: 명사형 공식 이름, 설명은 "~할 때" 없�
     assert_contains('AI API', $ai);
     assert_contains('답변', $ai);
 });
+
+test('실제 이슈: 전부 오류 없이 읽히고 문서 메타가 채워져 있다', function () {
+    $repo = Repository::load(__DIR__ . '/..');
+    assert_same([], $repo->errors());
+    assert_true(count($repo->all()) >= 25, '이슈 수');
+    foreach ($repo->all() as $i) {
+        assert_true($i->revisions !== [], "{$i->id} revisions");
+        assert_true($i->appliesTo !== [], "{$i->id} applies_to");
+        assert_true(is_string($i->severityReason) && $i->severityReason !== '', "{$i->id} severity_reason");
+        assert_true($i->published <= $i->checked, "{$i->id} published");
+    }
+});

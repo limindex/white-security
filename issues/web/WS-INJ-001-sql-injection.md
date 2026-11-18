@@ -16,7 +16,13 @@ maps:
   cwe: [CWE-89]
   kr_guide: ["입력데이터 검증 및 표현-1"]
   kr_ciip: [SI]
+published: 2026-11-18
 checked: 2026-11-18
+revisions:
+  - date: 2026-11-18
+    note: 최초 작성
+applies_to: [Python, Node.js, PHP, SQL DB를 쓰는 모든 웹 애플리케이션]
+severity_reason: "영향: DB 전체 조회·변조·삭제 · 악용: 입력 칸 하나에 넣는 글자만으로 가능, 자동화 도구 흔함"
 sources:
   - title: OWASP SQL Injection Prevention Cheat Sheet
     url: https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html

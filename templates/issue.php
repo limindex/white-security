@@ -1,6 +1,8 @@
 <?php
 /** @var Site $site @var Issue $issue */
 $checked = $issue->checked->format('Y-m-d');
+$published = $issue->published->format('Y-m-d');
+$next = $site->nextReview($issue)->format('Y-m-d');
 $maps = array_filter($issue->maps);
 $n = 0;
 ?>
@@ -13,8 +15,6 @@ $n = 0;
 <span class="ws-id"><?= Site::e($issue->id) ?></span>
 <?= Site::severityBadge($issue->severity) ?>
 <?= $site->staleBadge($issue) ?>
-<i></i>
-<span class="ws-meta-date">마지막 확인 <time datetime="<?= Site::e($checked) ?>"><?= Site::e($checked) ?></time></span>
 </p>
 <?php if ($maps): ?>
 <ul class="ws-maps" aria-label="기준 번호">
@@ -23,6 +23,17 @@ $n = 0;
 <?php endforeach; endforeach ?>
 </ul>
 <?php endif ?>
+<dl class="ws-docinfo">
+<div><dt>게시</dt><dd><time datetime="<?= Site::e($published) ?>"><?= Site::e($published) ?></time></dd></div>
+<div><dt>마지막 확인</dt><dd><time datetime="<?= Site::e($checked) ?>"><?= Site::e($checked) ?></time></dd></div>
+<div><dt>다음 검토 예정</dt><dd><time datetime="<?= Site::e($next) ?>"><?= Site::e($next) ?></time></dd></div>
+<?php if ($issue->appliesTo): ?>
+<div><dt>적용 대상</dt><dd><?= Site::e(implode(' · ', $issue->appliesTo)) ?></dd></div>
+<?php endif ?>
+<?php if ($issue->severityReason !== null): ?>
+<div><dt>심각도 근거</dt><dd><?= Site::e(Site::SEVERITY_LABELS[$issue->severity] ?? $issue->severity) ?> · <?= Site::e($issue->severityReason) ?></dd></div>
+<?php endif ?>
+</dl>
 </header>
 
 <?php if (isset($issue->sections['요약'])): ?>
@@ -35,6 +46,17 @@ $n = 0;
 <?= Markdown::render($md) ?>
 </section>
 <?php endforeach ?>
+
+<?php if ($issue->revisions): ?>
+<section class="ws-sec ws-revisions" aria-labelledby="sec-rev">
+<h2 id="sec-rev">개정 이력</h2>
+<ol>
+<?php foreach ($issue->revisions as $r): ?>
+<li><time datetime="<?= Site::e($r['date']) ?>"><?= Site::e($r['date']) ?></time> <span><?= Site::e($r['note']) ?></span></li>
+<?php endforeach ?>
+</ol>
+</section>
+<?php endif ?>
 
 <section class="ws-sec ws-sources" aria-labelledby="sec-src">
 <h2 id="sec-src">출처</h2>

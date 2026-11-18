@@ -16,7 +16,13 @@ maps:
   cwe: [CWE-451, CWE-1427]
   kr_guide: []
   kr_ciip: []
+published: 2026-11-18
 checked: 2026-11-18
+revisions:
+  - date: 2026-11-18
+    note: 최초 작성
+applies_to: [Shell, Python, AI 코딩 도구(규칙 파일을 읽는 모든 도구)]
+severity_reason: "영향: 생성 코드에 백도어·외부 전송 코드 삽입 · 악용: 공유 규칙 파일 하나를 받아 넣는 것만으로 가능, 사람 눈에는 안 보임"
 sources:
   - title: "Pillar Security - New Vulnerability in GitHub Copilot and Cursor: How Hackers Can Weaponize Code Agents (Rules File Backdoor)"
     url: https://www.pillar.security/blog/new-vulnerability-in-github-copilot-and-cursor-how-hackers-can-weaponize-code-agents

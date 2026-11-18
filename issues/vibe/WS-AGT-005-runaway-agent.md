@@ -16,7 +16,13 @@ maps:
   cwe: [CWE-834, CWE-770]
   kr_guide: ["시간 및 상태-2"]
   kr_ciip: []
+published: 2026-11-18
 checked: 2026-11-18
+revisions:
+  - date: 2026-11-18
+    note: 최초 작성
+applies_to: [Python, 반복 실행하는 AI 에이전트]
+severity_reason: "영향: 비용 폭증·같은 작업 반복·연쇄 장애 · 악용: 주로 오류로 발생하며 한도·멈춤 장치로 피해 범위 제한 가능"
 sources:
   - title: OWASP Top 10 for Agentic Applications 2026
     url: https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/

@@ -16,7 +16,13 @@ maps:
   cwe: [CWE-918]
   kr_guide: ["입력데이터 검증 및 표현-12"]
   kr_ciip: [SF]
+published: 2026-11-18
 checked: 2026-11-18
+revisions:
+  - date: 2026-11-18
+    note: 최초 작성
+applies_to: [Python, Node.js, PHP, URL을 받아 여는 모든 서비스]
+severity_reason: "영향: 내부 관리 화면 접근·클라우드 서버 키 탈취 · 악용: 주소 입력 하나로 가능"
 sources:
   - title: OWASP Server Side Request Forgery Prevention Cheat Sheet
     url: https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html

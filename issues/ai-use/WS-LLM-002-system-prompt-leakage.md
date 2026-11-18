@@ -16,7 +16,13 @@ maps:
   cwe: [CWE-200, CWE-798]
   kr_guide: ["보안기능-6"]
   kr_ciip: [IL]
+published: 2026-11-18
 checked: 2026-11-18
+revisions:
+  - date: 2026-11-18
+    note: 최초 작성
+applies_to: [Python, Node.js, LLM 연동 서비스]
+severity_reason: "영향: 프롬프트 속 비밀값·업무 규칙 노출(권한을 프롬프트에 맡긴 경우 우회) · 악용: 대화 몇 번으로 가능하나 피해는 프롬프트에 넣은 내용 범위"
 sources:
   - title: "OWASP Top 10 for LLM Applications - LLM07:2025 System Prompt Leakage"
     url: https://genai.owasp.org/llmrisk/llm072025-system-prompt-leakage/

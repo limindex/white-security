@@ -16,7 +16,13 @@ maps:
   cwe: [CWE-400, CWE-770, CWE-212]
   kr_guide: []
   kr_ciip: []
+published: 2026-11-18
 checked: 2026-11-18
+revisions:
+  - date: 2026-11-18
+    note: 최초 작성
+applies_to: [Python, PHP, 업로드 파일을 처리하는 서비스]
+severity_reason: "영향: 메모리 고갈로 인한 장애·위치 정보 노출 · 악용: 파일 하나로 가능하나 대부분 서비스 중단에 그침"
 sources:
   - title: OWASP File Upload Cheat Sheet
     url: https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html

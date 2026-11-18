@@ -360,6 +360,14 @@ h1, h2, h3 { color: var(--ink); font-family: var(--font-display); word-break: ke
 .ws-meta-date time { font-family: var(--font-display); font-weight: 600; }
 
 .ws-maps { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 18px 0 0; padding: 0; }
+/* 문서 메타(게시·확인·다음 검토·적용 대상·심각도 근거) — 8T-2 에서 다시 디자인 */
+.ws-docinfo { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; margin: 18px 0 0; font-size: .86rem; }
+.ws-docinfo > div { display: contents; }
+.ws-docinfo dt { color: var(--ink-3); }
+.ws-docinfo dd { margin: 0; }
+.ws-docinfo time, .ws-revisions time { font-family: var(--font-display); font-weight: 600; font-variant-numeric: lining-nums tabular-nums; }
+.ws-revisions ol { list-style: none; padding: 0; }
+.ws-revisions time { margin-right: 10px; color: var(--ink-3); }
 .ws-chip {
   display: inline-block;
   padding: 7px 11px;

@@ -16,7 +16,13 @@ maps:
   cwe: [CWE-862]
   kr_guide: ["보안기능-2"]
   kr_ciip: [IN]
+published: 2026-11-18
 checked: 2026-11-18
+revisions:
+  - date: 2026-11-18
+    note: 최초 작성
+applies_to: [Python, RAG·벡터 DB 기반 서비스]
+severity_reason: "영향: 권한 밖 문서 노출·답변 조작 · 악용: 일반 사용자 질문이나 문서 몇 개 등록으로 가능"
 sources:
   - title: "OWASP Top 10 for LLM Applications - LLM08:2025 Vector and Embedding Weaknesses"
     url: https://genai.owasp.org/llmrisk/llm082025-vector-and-embedding-weaknesses/

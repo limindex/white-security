@@ -40,6 +40,22 @@ final class Site
         return $i->checked < $this->today && $this->today->diff($i->checked)->days > self::STALE_DAYS;
     }
 
+    /** 다음 검토 예정일 = 마지막 확인일 + STALE_DAYS (이 날이 지나면 "확인 필요") */
+    public function nextReview(Issue $i): DateTimeImmutable
+    {
+        return $i->checked->modify('+' . self::STALE_DAYS . ' days');
+    }
+
+    /** 문서 메타(게시·확인·다음 검토·적용 대상·심각도 근거·개정 이력): 목록·상세 JSON 공용 @return array<string,mixed> */
+    private function docMeta(Issue $i): array
+    {
+        return [
+            'published' => $i->published->format('Y-m-d'), 'checked' => $i->checked->format('Y-m-d'),
+            'next_review' => $this->nextReview($i)->format('Y-m-d'), 'applies_to' => $i->appliesTo,
+            'severity_reason' => $i->severityReason, 'revisions' => $i->revisions,
+        ];
+    }
+
     public function groupName(string $id): string
     {
         foreach ($this->repo->groups() as $g) if ($g['id'] === $id) return $g['name'];
@@ -99,6 +115,8 @@ final class Site
             return $this->json(array_map(fn(Issue $i) => [
                 'id' => $i->id, 'title' => $i->title, 'slug' => $i->slug, 'group' => $i->group, 'severity' => $i->severity,
                 'site_only' => $i->siteOnly, 'depth' => $i->depth, 'languages' => $i->languages, 'maps' => $i->maps,
+                'published' => $i->published->format('Y-m-d'), 'checked' => $i->checked->format('Y-m-d'),
+                'next_review' => $this->nextReview($i)->format('Y-m-d'),
                 'url' => $this->url('issues/' . $i->id),
             ], $this->repo->all()));
         }
@@ -106,7 +124,7 @@ final class Site
             return $this->json([
                 'id' => $i->id, 'title' => $i->title, 'slug' => $i->slug, 'group' => $i->group, 'severity' => $i->severity,
                 'site_only' => $i->siteOnly, 'depth' => $i->depth, 'languages' => $i->languages, 'maps' => $i->maps,
-                'checked' => $i->checked->format('Y-m-d'), 'sources' => $i->sources,
+                ...$this->docMeta($i), 'sources' => $i->sources,
                 'sections' => (object)$i->sections, 'code' => (object)$i->code,
                 'url' => $this->url('issues/' . $i->id),
             ]);

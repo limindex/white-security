@@ -167,3 +167,13 @@ test('오류 띠: live 에서 groups.json 문제도 보인다', function () {
     assert_contains('data/groups.json', $b);
     assert_true(!str_contains($b, $root), '서버 경로 노출');
 });
+
+test('이슈 화면: 게시일·다음 검토 예정일·적용 대상·심각도 근거·개정 이력', function () {
+    $b = tpl_site()->route('issues/WS-INJ-001')['body'];
+    assert_true((bool)preg_match('#<article[^>]*class="ws-doc".*게시.*2026-09-01.*다음 검토 예정.*2027-05-17.*</article>#s', $b), '게시일·다음 검토');
+    assert_contains('적용 대상', $b);
+    assert_contains('모든 웹 애플리케이션', $b);
+    assert_contains('심각도 근거', $b);
+    assert_contains('입력 한 줄로 악용 가능', $b);
+    assert_true((bool)preg_match('#개정 이력.*2026-11-18.*본문 고정 제목 변경.*2026-09-01.*최초 작성#s', $b), '개정 이력 최신순');
+});

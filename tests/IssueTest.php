@@ -110,3 +110,38 @@ test('고정 제목: 새 이름(요약·발생 상황·…·코드 예시)만 �
     // `## 코드` 는 더 이상 코드 절이 아님 → languages 와 소제목이 어긋나거나 필수 제목 누락
     assert_contains('코드 예시', ws_issue_error(ws_mut('## 코드 예시', '## 코드')));
 });
+
+test('문서 메타: published·revisions·applies_to·severity_reason 를 읽는다', function () {
+    $i = Issue::fromFile(__DIR__ . '/fixtures/issues/web/WS-INJ-001-sql-injection.md', ws_groups());
+    assert_same('2026-09-01', $i->published->format('Y-m-d'));
+    assert_same([['date' => '2026-11-18', 'note' => '본문 고정 제목 변경'], ['date' => '2026-09-01', 'note' => '최초 작성']], $i->revisions);
+    assert_same(['Python', 'PHP', '모든 웹 애플리케이션'], $i->appliesTo);
+    assert_contains('입력 한 줄로 악용 가능', $i->severityReason);
+});
+
+test('문서 메타: 없으면 published=checked · 빈 목록 · null', function () {
+    $raw = preg_replace('/^(published|severity_reason|applies_to): .*\n/m', '', ws_fixture());
+    $raw = preg_replace('/^revisions:\n(?:  .*\n)+/m', '', $raw);
+    $f = sys_get_temp_dir() . '/ws-meta-' . bin2hex(random_bytes(4)) . '.md';
+    file_put_contents($f, $raw);
+    $i = Issue::fromFile($f, ws_groups());
+    unlink($f);
+    assert_same('2026-11-18', $i->published->format('Y-m-d'));
+    assert_same([], $i->revisions);
+    assert_same([], $i->appliesTo);
+    assert_same(null, $i->severityReason);
+});
+
+test('문서 메타: 형식 오류', function () {
+    assert_contains('published', ws_issue_error(ws_mut('published: 2026-09-01', 'published: 2026-09-31')));
+    assert_contains('published', ws_issue_error(ws_mut('published: 2026-09-01', 'published: 2026-12-01')));
+    assert_contains('revisions', ws_issue_error(ws_mut("  - date: 2026-11-18\n    note: 본문 고정 제목 변경\n", "  - date: 2026-11-18\n")));
+    assert_contains('revisions', ws_issue_error(ws_mut('  - date: 2026-09-01', '  - date: 2026-9-1')));
+    assert_contains('revisions', ws_issue_error(ws_mut('  - date: 2026-11-18', '  - date: 2026-08-01')));   // 최신이 위가 아님
+    assert_contains('revisions', ws_issue_error(ws_mut('  - date: 2026-09-01', '  - date: 2026-08-01')));   // 게시일보다 이름
+    assert_contains('revisions', ws_issue_error(ws_mut("revisions:\n", "revisions: 최초\nx_unused:\n")));
+    assert_contains('applies_to', ws_issue_error(ws_mut('applies_to: [Python, PHP, 모든 웹 애플리케이션]', 'applies_to: Python')));
+    assert_contains('applies_to', ws_issue_error(ws_mut('applies_to: [Python, PHP, 모든 웹 애플리케이션]', 'applies_to: [Python, Python]')));
+    assert_contains('severity_reason', ws_issue_error(ws_mut('severity_reason: 데이터베이스', 'severity_reason: "줄\\n바꿈" #')));
+    assert_contains('severity_reason', ws_issue_error(ws_mut('severity_reason: 데이터베이스 전체 유출·변조로 이어지는 영향, 입력 한 줄로 악용 가능', 'severity_reason: 3')));
+});

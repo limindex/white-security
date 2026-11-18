@@ -16,7 +16,13 @@ maps:
   cwe: [CWE-22, CWE-409]
   kr_guide: ["입력데이터 검증 및 표현-3"]
   kr_ciip: []
+published: 2026-11-18
 checked: 2026-11-18
+revisions:
+  - date: 2026-11-18
+    note: 최초 작성
+applies_to: [Python, PHP, 압축 파일을 푸는 모든 서비스]
+severity_reason: "영향: 정해 둔 폴더 밖 파일 덮어쓰기(코드 실행으로 이어짐)·디스크 고갈 · 악용: 조작한 압축 파일 하나로 가능"
 sources:
   - title: "Snyk - Zip Slip Vulnerability"
     url: https://security.snyk.io/research/zip-slip-vulnerability

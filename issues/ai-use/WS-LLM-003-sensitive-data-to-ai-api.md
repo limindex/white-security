@@ -16,7 +16,13 @@ maps:
   cwe: [CWE-359, CWE-201, CWE-532]
   kr_guide: []
   kr_ciip: []
+published: 2026-11-18
 checked: 2026-11-18
+revisions:
+  - date: 2026-11-18
+    note: 최초 작성
+applies_to: [Python, 외부 AI API를 호출하는 모든 서비스]
+severity_reason: "영향: 개인정보·키의 외부 보관과 처리 위탁 문제 · 악용: 공격 없이 설정·계약 조건에 따라 발생, 즉시 탈취로 이어지지는 않음"
 sources:
   - title: "OWASP Top 10 for LLM Applications - LLM02:2025 Sensitive Information Disclosure"
     url: https://genai.owasp.org/llmrisk/llm022025-sensitive-information-disclosure/

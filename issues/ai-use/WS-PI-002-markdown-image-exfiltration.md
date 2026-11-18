@@ -16,7 +16,13 @@ maps:
   cwe: [CWE-200]
   kr_guide: []
   kr_ciip: []
+published: 2026-11-18
 checked: 2026-11-18
+revisions:
+  - date: 2026-11-18
+    note: 최초 작성
+applies_to: [브라우저 JavaScript, Python, AI 답변을 마크다운으로 그리는 서비스]
+severity_reason: "영향: 대화 내용·개인정보의 외부 유출 · 악용: 숨은 지시로 이미지 주소를 쓰게 하면 화면 표시만으로 자동 전송"
 sources:
   - title: "Embrace The Red - Hacking Google Bard: From Prompt Injection to Data Exfiltration"
     url: https://embracethered.com/blog/posts/2023/google-bard-data-exfiltration/

@@ -16,7 +16,13 @@ maps:
   cwe: []
   kr_guide: []
   kr_ciip: []
+published: 2026-11-18
 checked: 2026-11-18
+revisions:
+  - date: 2026-11-18
+    note: 최초 작성
+applies_to: [Python, 장기 메모리를 쓰는 AI 에이전트]
+severity_reason: "영향: 이후 대화 전체의 판단 왜곡·정보 유출 · 악용: 메모리 저장 경로가 열려 있어야 하고 효과가 서서히 나타남"
 sources:
   - title: OWASP AI Agent Security Cheat Sheet
     url: https://cheatsheetseries.owasp.org/cheatsheets/AI_Agent_Security_Cheat_Sheet.html

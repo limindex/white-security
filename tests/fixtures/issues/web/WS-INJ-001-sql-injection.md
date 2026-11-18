@@ -15,7 +15,15 @@ maps:
   asvs5: [V1.2]
   cwe: [CWE-89]
   kr_guide: ["입력데이터 검증 및 표현-1"]
+published: 2026-09-01
 checked: 2026-11-18
+revisions:
+  - date: 2026-11-18
+    note: 본문 고정 제목 변경
+  - date: 2026-09-01
+    note: 최초 작성
+applies_to: [Python, PHP, 모든 웹 애플리케이션]
+severity_reason: 데이터베이스 전체 유출·변조로 이어지는 영향, 입력 한 줄로 악용 가능
 sources:
   - title: OWASP Top 10 2025 - Injection
     url: https://owasp.org/Top10/

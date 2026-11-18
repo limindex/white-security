@@ -16,7 +16,13 @@ maps:
   cwe: [CWE-494, CWE-1427]
   kr_guide: ["보안기능-15"]
   kr_ciip: []
+published: 2026-11-18
 checked: 2026-11-18
+revisions:
+  - date: 2026-11-18
+    note: 최초 작성
+applies_to: [JSON, Python, MCP 서버·클라이언트]
+severity_reason: "영향: 파일·메일·키의 외부 전송 · 악용: 도구 설명이나 업데이트에 숨긴 문장으로 가능, 승인 뒤에도 바뀔 수 있음"
 sources:
   - title: "Invariant Labs - MCP Security Notification: Tool Poisoning Attacks"
     url: https://invariantlabs.ai/blog/mcp-security-notification-tool-poisoning-attacks
