@@ -116,11 +116,9 @@ a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset:
 a:hover { text-decoration-thickness: 2px; }
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 h1, h2, h3 { color: var(--ink); font-family: var(--font-display); font-style: normal; word-break: keep-all; overflow-wrap: anywhere; min-width: 0; text-wrap: balance; }
-/* 줄바꿈: 긴 본문은 pretty, 6줄 이하 덩어리(목록·점검 항목·정의·메뉴·짧은 문단)는 balance 로 마지막 줄을 고르게 */
+/* 줄바꿈: 본문(문단·목록·정의·점검 항목)은 pretty, 제목·리드·짧은 이름 줄만 balance. 외톨이 줄은 site.js fixLong 이 보정 */
 p, li, dd, td, label { text-wrap: pretty; }
-.ws-page-lead, .ws-home-lead, .ws-path p, .ws-grp-when, .ws-cov-note, .ws-summary p,
-.ws-sec li, .ws-fold-body li, .ws-checklist label, .ws-deflist dd, .ws-page-note, .ws-recent-title, .ws-recent-note, .ws-nav a,
-.ws-sec p:not([class]), .ws-fold-body p, .ws-grades dd > span, .ws-examples-why dd, .ws-seclist-desc, .ws-pending li, .ws-meter-name a { text-wrap: balance; }
+.ws-page-lead, .ws-home-lead, .ws-path p, .ws-grp-when, .ws-cov-note, .ws-recent-title, .ws-recent-note, .ws-nav a, .ws-meter-name a { text-wrap: balance; }
 code { font-family: var(--font-mono); }
 [hidden] { display: none !important; }
 .ws-nw { white-space: nowrap; }
@@ -836,7 +834,7 @@ button:disabled, button[aria-disabled="true"] { opacity: .45; cursor: not-allowe
 .ws-block pre { margin: 0; padding: 8px 16px 16px; font: 500 .86rem/1.75 var(--font-mono); white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink); }
 .ws-block pre code { font: inherit; }
 .ws-block--prompt pre { font: 500 .94rem/1.75 var(--font-text); letter-spacing: -0.005em; white-space: normal; }
-.ws-pl { display: block; text-wrap: balance; }
+.ws-pl { display: block; text-wrap: pretty; }
 .ws-pl + .ws-pl { margin-top: 4px; }
 .ws-pl--gap { height: 12px; }
 .ws-block pre:focus-visible { outline-offset: -2px; border-radius: var(--r-lg); }
@@ -1036,7 +1034,7 @@ html:not(.js) .ws-itabs-list { display: none; }
 .ws-step-sub .ws-block { margin-bottom: 8px; }
 .ws-step-sub .ws-block pre { font-size: .8rem; }
 .ws-step-sub .ws-block--prompt pre { font-size: .86rem; }
-.ws-step-desc { color: var(--ink-2); font-size: .94rem; line-height: 1.65; text-wrap: balance; }
+.ws-step-desc { color: var(--ink-2); font-size: .94rem; line-height: 1.65; text-wrap: pretty; }
 .ws-step .ws-block { margin: 0; }
 .ws-block--cmd pre { font: 500 .9rem/1.6 var(--font-mono); white-space: pre; overflow-x: auto; overflow-wrap: normal; }
 .ws-out { margin: 0; border-radius: var(--r-md); background: var(--code-bg); color: var(--code-ink); }
