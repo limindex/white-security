@@ -391,6 +391,18 @@ h1, h2, h3 { color: var(--ink); font-family: var(--font-display); word-break: ke
   box-shadow: inset 0 0 0 1px var(--line);
   font: 500 .86em var(--font-mono);
 }
+/* 본문 속 코드 블록(AI에게 줄 프롬프트·짧은 예시): 본문 폭 안에서 줄을 바꾼다 */
+.ws-doc pre {
+  margin: 0 0 14px;
+  padding: 12px 14px;
+  border-radius: var(--r-list);
+  background: var(--sunken);
+  box-shadow: inset 0 0 0 1px var(--line);
+  font: 500 .86rem/1.7 var(--font-mono);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.ws-doc pre code { font: inherit; }
 
 .ws-sec--check ul { list-style: none; padding: 0; }
 .ws-sec--check li { position: relative; padding-left: 30px; }
