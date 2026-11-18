@@ -76,8 +76,9 @@ final class Site
     public static function langLabel(string $lang): string { return Stacks::label($lang); }
 
     /**
-     * 지원 스택: 이슈에 코드 예시가 하나라도 있는 스택만 묶음별로(이슈 0개는 적지 않는다). 기타(설정·파일 형식) 묶음은 뺀다.
-     * items 는 묶음 이름에 이미 들어 있는 이름(Python·JavaScript·TypeScript·PHP)을 뺀 나머지 label.
+     * 지원 스택: 코드 예시가 있는 스택을 묶음별로(예시 0개인 스택·기타 묶음은 뺀다).
+     * items 는 화면 이름: item(예: 순수 PHP)이 있으면 그것을 맨 뒤에, 없으면 label(묶음 이름에 이미 든 Python·PHP 등은 뺌).
+     * 예시가 없어도 via 스택 예시가 덮으면 "label(via 이름 예시)"로 넣는다(React ← Next.js).
      * @return list<array{name:string,items:list<string>}>
      */
     public function supportedStacks(): array
@@ -90,13 +91,19 @@ final class Site
             if ($g['id'] === 'other') continue;
             $own = preg_split('/·/u', $g['name']);
             $items = [];
+            $plain = [];
             $any = false;
             foreach ($by as $s) {
-                if ($s['stack'] !== $g['id'] || !isset($used[$s['key']])) continue;
-                $any = true;
-                if (!in_array($s['label'], $own, true)) $items[] = $s['label'];
+                if ($s['stack'] !== $g['id']) continue;
+                if (isset($used[$s['key']])) {
+                    $any = true;
+                    if (isset($s['item'])) $plain[] = $s['item'];
+                    elseif (!in_array($s['label'], $own, true)) $items[] = $s['label'];
+                } elseif (isset($s['via'], $used[$s['via']])) {
+                    $items[] = $s['label'] . '(' . Stacks::label($s['via']) . ' 예시)';
+                }
             }
-            if ($any) $out[] = ['name' => $g['name'], 'items' => $items];
+            if ($any) $out[] = ['name' => $g['name'], 'items' => [...$items, ...$plain]];
         }
         return $out;
     }

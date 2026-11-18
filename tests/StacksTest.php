@@ -152,7 +152,11 @@ test('지원 스택 블록: 이슈가 있는 스택만, 소개·설치 페이지
     }
     $stacks = $s2->supportedStacks();
     assert_same(['Python', 'PHP'], array_column($stacks, 'name'));
-    assert_same(['Laravel'], $stacks[1]['items']);
+    assert_same(['Laravel', '순수 PHP'], $stacks[1]['items'], '순수 PHP 는 item 이름으로 맨 뒤');
+    // via: React 예시가 없어도 Next.js 예시가 있으면 "React(Next.js 예시)"
+    $s3 = new Site(Repository::load(make_root(['WS-INJ-009-stack-fixture.md' => st_issue(['nextjs', 'express'])])), '/white-security/', 'live', new DateTimeImmutable('2026-11-18'));
+    $js = array_values(array_filter($s3->supportedStacks(), fn($g) => $g['name'] === 'JavaScript·TypeScript'))[0];
+    assert_same(['Next.js', 'React(Next.js 예시)', 'Express'], $js['items']);
     // 이슈가 하나도 없으면 블록 자체를 그리지 않는다
     $none = make_root();
     foreach (glob($none . '/issues/web/*.md') as $f) unlink($f);

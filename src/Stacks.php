@@ -3,6 +3,7 @@
  * 코드 예시 키(스택) 목록. data/stacks.json 이 유일한 원본.
  * 이슈의 `languages` 와 `### <key>` 제목은 이 목록의 key 만 쓸 수 있다.
  * 항목: key(파일 이름·머리말에 쓰는 소문자) · label(화면 탭 이름) · lang(코드 하이라이트·문법 검사용 언어) · stack(주력 스택 묶음).
+ * 선택: item(지원 스택 목록에 쓰는 이름, 예: 순수 PHP) · via(그 스택 예시가 없을 때 대신 덮는 키 — via 예시가 있으면 "이름(via 예시)"로 표시).
  */
 final class Stacks
 {
@@ -34,8 +35,12 @@ final class Stacks
             if (!$ok) { $errors[] = "$name: stacks[$no] 에 key·label·lang·stack 이 없거나 형식이 틀립니다(key 는 소문자·숫자·하이픈)"; continue; }
             if (isset($stacks[$s['key']])) { $errors[] = "$name: key `{$s['key']}` 가 두 번 나옵니다"; continue; }
             if (!isset($groups[$s['stack']])) { $errors[] = "$name: key `{$s['key']}` 의 stack `{$s['stack']}` 이(가) groups 에 없습니다"; continue; }
-            $stacks[$s['key']] = ['key' => $s['key'], 'label' => trim($s['label']), 'lang' => $s['lang'], 'stack' => $s['stack']];
+            if (isset($s['item']) && (!is_string($s['item']) || trim($s['item']) === '')) { $errors[] = "$name: key `{$s['key']}` 의 item 은 빈칸이 아닌 문자열이어야 합니다"; continue; }
+            if (isset($s['via']) && (!is_string($s['via']) || !preg_match('/^[a-z0-9][a-z0-9-]*$/', $s['via']) || $s['via'] === $s['key'])) { $errors[] = "$name: key `{$s['key']}` 의 via 는 다른 스택 key 여야 합니다"; continue; }
+            $stacks[$s['key']] = ['key' => $s['key'], 'label' => trim($s['label']), 'lang' => $s['lang'], 'stack' => $s['stack']]
+                + (isset($s['item']) ? ['item' => trim($s['item'])] : []) + (isset($s['via']) ? ['via' => $s['via']] : []);
         }
+        foreach ($stacks as $k => $st) if (isset($st['via']) && !isset($stacks[$st['via']])) { $errors[] = "$name: key `$k` 의 via `{$st['via']}` 이(가) 목록에 없습니다"; unset($stacks[$k]['via']); }
         return ['groups' => array_values($groups), 'stacks' => array_values($stacks)];
     }
 
