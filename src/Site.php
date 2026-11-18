@@ -23,6 +23,12 @@ final class Site
     public const BRAND_DESC = '바이브 코딩 보안 가이드';
     private const ID_RE = '/^WS-[A-Z]{2,5}-\d{3}$/';
     public const SEVERITY_LABELS = ['high' => '위험', 'medium' => '주의', 'low' => '참고'];
+    /**
+     * 콘텐츠 보안 정책(CSP). 인라인 script·style 없이 같은 출처 파일만. 서버 헤더(index.php)용.
+     * 정적판(GitHub Pages)은 헤더를 못 붙이므로 같은 정책을 <meta> 로 넣는다(CSP_META). meta 는 frame-ancestors 를 지원하지 않아 뺀다.
+     */
+    public const CSP_META = "default-src 'self'; base-uri 'none'; form-action 'self'; object-src 'none'";
+    public const CSP = self::CSP_META . "; frame-ancestors 'none'";
 
     public readonly DateTimeImmutable $today;
 

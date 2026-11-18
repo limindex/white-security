@@ -11,6 +11,7 @@ $github = $site->setting('github');
 <html lang="ko">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="<?= Site::e(Site::CSP_META) ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?= Site::e($full) ?></title>
 <meta name="description" content="<?= Site::e($desc) ?>">
