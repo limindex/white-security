@@ -19,7 +19,8 @@ function linehead_problems(string $html): array
     $seg = preg_split('#(<[^>]+>)#', $h, -1, PREG_SPLIT_DELIM_CAPTURE);
     $code = 0;
     foreach ($seg as $j => $s) {
-        if ($j % 2) { if (preg_match('#^<code\b#', $s)) $code++; elseif ($s === '</code>') $code--; continue; }
+        // 줄바꿈되는 코드 줄(ws-code-line)은 글자처럼 검사한다
+        if ($j % 2) { if (preg_match('#^<code\b(?![^>]*ws-code-line)#', $s)) $code++; elseif ($s === '</code>' && $code > 0) $code--; continue; }
         if ($code > 0) continue;
         if (str_contains($s, '·')) $out[] = '묶이지 않은 가운뎃점: ' . trim(mb_substr($s, 0, 40));
         if (preg_match('#[)\]」][가-힣]#u', $s, $p)) $out[] = '괄호 뒤 조사: ' . trim(mb_substr($s, 0, 40));

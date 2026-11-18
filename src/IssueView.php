@@ -31,11 +31,11 @@ final class IssueView
         return implode("\n", $out) . "\n";
     }
 
-    /** 탐지 규칙의 보고 형식·보고 예(한 줄 코드)는 긴 칩 대신 블록 줄로(공백에서 줄바꿈) */
+    /** 탐지 규칙의 보고 형식·보고 예(한 줄 코드)는 긴 칩 대신 블록 줄로(공백에서 줄바꿈). 안쪽도 줄머리 금칙(Site::keep) + [등급]·<칸> 토큰 묶음 */
     public static function reportLines(string $html): string
     {
         return (string)preg_replace_callback('#(<strong>보고 (?:형식|예)</strong>:) <code(?: class="ws-code-long")?>(.*?)</code>(?=</li>)#u',
-            fn(array $m): string => $m[1] . '<code class="ws-code-line">' . preg_replace('#(\[[^\]<]*\]|&lt;.*?&gt;)#u', '<span class="ws-nw">$1</span>', $m[2]) . '</code>', $html);
+            fn(array $m): string => $m[1] . '<code class="ws-code-line">' . preg_replace('#(\[[^\]<]*\]|&lt;[^\s<]*?&gt;|&lt;[^<]*?&gt;(?=\s|$))#u', '<span class="ws-nw">$1</span>', Site::keep($m[2])) . '</code>', $html);
     }
 
     /**
