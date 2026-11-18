@@ -1,0 +1,13 @@
+{
+  "name": "white-security",
+  "version": "0.1.0",
+  "description": "Security checks for AI-assisted coding: safe code while you write, read-only review on request. 바이브 코딩 보안 점검 — 코드를 쓸 때 흔한 보안 실수를 막고, 요청하면 읽기 전용으로 검토합니다.",
+  "author": {
+    "name": "LimIndex (Lim Ho Jae)",
+    "url": "https://github.com/limindex"
+  },
+  "homepage": "https://github.com/limindex/white-security",
+  "repository": "https://github.com/limindex/white-security",
+  "license": "CC-BY-SA-4.0 AND MIT",
+  "keywords": ["security", "security-review", "vibe-coding", "owasp", "appsec", "ai-security", "korean"]
+}
