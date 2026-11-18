@@ -46,7 +46,7 @@ sources:
   - title: "Apple Developer - Preventing Insecure Network Connections (ATS)"
     url: https://developer.apple.com/documentation/security/preventing-insecure-network-connections
     year: 2026
-  - title: "Flutter Docs - Breaking changes: Insecure HTTP connections are disabled by default on iOS and Android (2.0 도입, 2.2 되돌림 제안)"
+  - title: "Flutter Docs - Breaking changes: Insecure HTTP connections are disabled by default on iOS and Android (2.0 도입, 2.2 되돌림 제안, Dart가 연 소켓에는 플랫폼 정책 미적용)"
     url: https://docs.flutter.dev/release/breaking-changes/network-policy-ios-android
     year: 2026
   - title: "Expo Docs - BuildProperties (android.usesCleartextTraffic)"

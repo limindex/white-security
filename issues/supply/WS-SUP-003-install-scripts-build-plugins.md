@@ -77,7 +77,7 @@ Composer allow-plugins 는 쓰는 플러그인만 true 로 적고, 새 버전은
 - **등급**: 위험: 처음 보는 패키지의 설치 스크립트가 비밀값이 있는 환경에서 실행됨, Composer 플러그인 전체 허용. / 주의: CI 설치가 스크립트 허용·허용 목록 없음, 최소 공개 기간 없음. / 참고: 허용 목록에 든 널리 쓰이는 빌드 패키지(esbuild·sharp·prisma), 소스 빌드가 필요한 파이썬 패키지, 빌드 플러그인 출처 확인 필요.
 - **보고 형식**: `[위험|주의|참고] <id> <파일:줄> — <이유> → <고칠 방법>`
 - **보고 예**: `[위험] WS-SUP-003 .github/workflows/release.yml:21 — NPM_TOKEN·AWS 키가 있는 단계에서 npm install 로 설치 스크립트 실행 → npm ci --ignore-scripts 로 바꾸고 비밀값은 배포 단계에만`
-- **검토 주의**: `ignore-scripts`는 내 `package.json`의 스크립트도 막으므로, 설치 뒤 빌드가 깨지면 `npm rebuild <패키지>`로 필요한 것만 다시 빌드하라고 안내해야 한다(`.npmrc`에 `ignore-scripts=true`를 두면 rebuild도 스크립트를 건너뛰므로 `npm rebuild <패키지> --ignore-scripts=false`). pnpm 10은 `onlyBuiltDependencies`, pnpm 11 이상은 `allowBuilds`를 쓰고, `strictDepBuilds`는 기본값이 true라 목록 밖 패키지에 빌드 스크립트가 있으면 설치가 실패한다. 패키지 이름이 실재하는지는 WS-SUP-001, 잠금 파일은 WS-SUP-004에서 다룬다.
+- **검토 주의**: `ignore-scripts`는 내 `package.json`의 스크립트도 막으므로, 설치 뒤 빌드가 깨지면 `npm rebuild <패키지>`로 필요한 것만 다시 빌드하라고 안내해야 한다(`.npmrc`에 `ignore-scripts=true`를 두면 rebuild도 스크립트를 건너뛰므로 `npm rebuild <패키지> --ignore-scripts=false`). pnpm 10은 `onlyBuiltDependencies`, pnpm 11 이상은 `allowBuilds`를 쓰고, pnpm 11 이상에서는 `strictDepBuilds` 기본값이 true라 목록 밖 패키지에 빌드 스크립트가 있으면 설치가 실패한다. 패키지 이름이 실재하는지는 WS-SUP-001, 잠금 파일은 WS-SUP-004에서 다룬다.
 - **고칠 방법**: 설치는 스크립트 없이 하고 빌드가 필요한 패키지만 허용 목록으로 다시 빌드하며, 설치 단계에서 비밀값을 빼야 한다.
 
 ## 코드 예시
@@ -122,7 +122,7 @@ dangerouslyAllowAllBuilds: true
 allowBuilds:
   esbuild: true
   core-js: false
-strictDepBuilds: true      # 기본값도 true, 끄지 않음을 드러내려고 적음
+strictDepBuilds: true      # pnpm 11 기본값도 true, 끄지 않음을 드러내려고 적음
 minimumReleaseAge: 4320   # 공개 후 3일(단위: 분) 지난 버전만
 # pnpm 10 은 onlyBuiltDependencies: [esbuild]
 ```

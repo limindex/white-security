@@ -22,7 +22,7 @@
 
 ## 검토 주의
 
-`ignore-scripts`는 내 `package.json`의 스크립트도 막으므로, 설치 뒤 빌드가 깨지면 `npm rebuild <패키지>`로 필요한 것만 다시 빌드하라고 안내해야 한다(`.npmrc`에 `ignore-scripts=true`를 두면 rebuild도 스크립트를 건너뛰므로 `npm rebuild <패키지> --ignore-scripts=false`). pnpm 10은 `onlyBuiltDependencies`, pnpm 11 이상은 `allowBuilds`를 쓰고, `strictDepBuilds`는 기본값이 true라 목록 밖 패키지에 빌드 스크립트가 있으면 설치가 실패한다. 패키지 이름이 실재하는지는 WS-SUP-001, 잠금 파일은 WS-SUP-004에서 다룬다.
+`ignore-scripts`는 내 `package.json`의 스크립트도 막으므로, 설치 뒤 빌드가 깨지면 `npm rebuild <패키지>`로 필요한 것만 다시 빌드하라고 안내해야 한다(`.npmrc`에 `ignore-scripts=true`를 두면 rebuild도 스크립트를 건너뛰므로 `npm rebuild <패키지> --ignore-scripts=false`). pnpm 10은 `onlyBuiltDependencies`, pnpm 11 이상은 `allowBuilds`를 쓰고, pnpm 11 이상에서는 `strictDepBuilds` 기본값이 true라 목록 밖 패키지에 빌드 스크립트가 있으면 설치가 실패한다. 패키지 이름이 실재하는지는 WS-SUP-001, 잠금 파일은 WS-SUP-004에서 다룬다.
 
 Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-SUP-003.code.shell.md` (Shell) · `WS-SUP-003.code.yaml.md` (YAML) · `WS-SUP-003.code.json.md` (JSON)
 

@@ -22,7 +22,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 const storage = FlutterSecureStorage(
   iOptions: IOSOptions(accessibility: KeychainAccessibility.unlocked_this_device), // Keychain
-  // Android 기본값: Keystore 로 감싼 키 + AES-GCM (11.x)
+  // Android 기본값: Keystore 의 RSA 키로 감싼 AES 키 + AES-GCM (11.x)
 );
 
 Future<void> onLogin(String accessToken, String refreshToken) async {

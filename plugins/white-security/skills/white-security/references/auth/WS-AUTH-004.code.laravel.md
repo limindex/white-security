@@ -17,8 +17,9 @@ Route::middleware('auth')->prefix('admin')->group(base_path('routes/admin.php'))
 ✓ 안전 코드 (safe example)
 
 ```php
-// 공식 문서의 로컬 전용 설치: ① bootstrap/providers.php 에서 App\Providers\TelescopeServiceProvider 줄 삭제
-// ② composer.json "extra": {"laravel": {"dont-discover": ["laravel/telescope"]}}  ③ 운영 .env 는 APP_ENV=production
+// 공식 문서의 로컬 전용 설치: ① composer require laravel/telescope --dev
+// ② bootstrap/providers.php 에서 App\Providers\TelescopeServiceProvider 줄 삭제  ③ 아래처럼 local 에서만 등록
+// ④ composer.json "extra": {"laravel": {"dont-discover": ["laravel/telescope"]}}  ⑤ 운영 .env 는 APP_ENV=production
 // app/Providers/AppServiceProvider.php
 public function register(): void
 {

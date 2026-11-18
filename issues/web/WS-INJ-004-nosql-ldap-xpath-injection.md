@@ -91,7 +91,7 @@ app.post("/login", async (req, res) => {
 ✓ 안전 코드
 
 ```js
-mongoose.set("sanitizeFilter", true); // 조건 속 $ 키를 값으로 취급
+mongoose.set("sanitizeFilter", true); // 값 자리의 연산자 객체를 $eq 로 감싸 값으로 비교
 
 app.post("/login", async (req, res) => {
   const { email, password } = req.body ?? {};

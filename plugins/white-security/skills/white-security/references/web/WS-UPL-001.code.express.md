@@ -18,6 +18,7 @@ app.post("/upload", upload.single("photo"), (req, res) => res.json({ url: `/uplo
 ```js
 import crypto from "node:crypto";
 import fs from "node:fs/promises";
+import multer from "multer";
 import { fileTypeFromFile } from "file-type";
 
 const ALLOWED = new Map([["image/jpeg", "jpg"], ["image/png", "png"], ["image/webp", "webp"]]);

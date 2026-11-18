@@ -36,7 +36,7 @@ sources:
   - title: "GitHub Advisory - jQuery XSS in htmlPrefilter (CVE-2020-11022)"
     url: https://github.com/advisories/GHSA-gxr4-xjj5-5px2
     year: 2020
-  - title: "GitHub Advisory Database - lodash (CVE-2026-4800, 4.18.0에서 수정)"
+  - title: "GitHub Advisory Database - lodash (CVE-2026-4800, 4.18.0에서 수정 · 4.18.1은 CVE-2026-2950까지 수정)"
     url: https://github.com/advisories/GHSA-r5fr-rjxr-66jc
     year: 2026
   - title: "npm Docs - package.json overrides"

@@ -65,7 +65,8 @@ app.post("/iap/verify", requireLogin, async (req, res) => {
   const v = await verifyStore(platform, productId, token, req.user);
   if (!v || v.expiresAt <= Date.now()) return res.sendStatus(402);
   const owner = await db.purchases.ownerOf(v.key);                                    // key 열은 UNIQUE
-  if (owner && owner !== req.user.id) return res.sendStatus(409);                    // 다른 계정이 쓰던 구매
+  // 다른 계정의 구매는 보통 위 계정 연결 값 확인에서 402. 여기는 연결 값이 같은데 DB 소유자가 다른 드문 경우(데이터 이전·계정 병합 등)
+  if (owner && owner !== req.user.id) return res.sendStatus(409);
   // 같은 계정의 갱신·복원은 같은 key 로 다시 와도 스토어 확인 뒤 만료 시각만 갱신
   await db.purchases.upsert({ key: v.key, userId: req.user.id, productId, expiresAt: v.expiresAt });
   res.json({ pro: true, expiresAt: v.expiresAt });

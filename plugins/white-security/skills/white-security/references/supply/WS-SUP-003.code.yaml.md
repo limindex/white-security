@@ -15,7 +15,7 @@ dangerouslyAllowAllBuilds: true
 allowBuilds:
   esbuild: true
   core-js: false
-strictDepBuilds: true      # 기본값도 true, 끄지 않음을 드러내려고 적음
+strictDepBuilds: true      # pnpm 11 기본값도 true, 끄지 않음을 드러내려고 적음
 minimumReleaseAge: 4320   # 공개 후 3일(단위: 분) 지난 버전만
 # pnpm 10 은 onlyBuiltDependencies: [esbuild]
 ```
