@@ -1,0 +1,20 @@
+# 작업 메모·서버 전용 설정 (공개 저장소에 올리지 않음)
+_notes/
+.superpowers/
+scripts/forbidden.txt
+.htaccess
+
+# 빌드 산출물·의존성
+node_modules/
+dist/
+.astro/
+
+# 비밀값
+.env
+.env.*
+!.env.example
+
+# OS·편집기
+.DS_Store
+.vscode/
+.idea/
