@@ -1,6 +1,7 @@
 ---
 name: white-security
 description: Security guardrail for AI-assisted coding. Use when writing or changing code with SQL, HTML output, uploads/paths, shell, server-side fetch, deserialization, login/permissions, payments, secrets/.env, CORS, Docker/CI, new packages, LLM/RAG/MCP, Supabase/Firebase or personal data, even inside a bigger task (crawler, chatbot). Also for 보안 점검해 줘 / 보안 검토 / 취약점 확인 / 해킹 안 당하게 / 안전한지 봐 줘 / security review. Not for docs or styling.
+allowed-tools: Read(~/.claude/plugins/cache/limindex/white-security/**)
 license: CC-BY-SA-4.0 (text) AND MIT (code blocks); see LICENSE.txt
 ---
 
@@ -10,11 +11,9 @@ Two modes: **always-on** (quietly write safe code while coding) and **review** (
 
 ## Reading rule files
 
-Rule files are in `${CLAUDE_SKILL_DIR}/references/` (other tools: `references/` in this skill's folder). Read each one with a single quoted command, one file per command:
+Rule files are in `${CLAUDE_SKILL_DIR}/references/` (other tools: `references/` in this skill's folder). Read them with the Read tool and the absolute path, one file per call: `${CLAUDE_SKILL_DIR}/references/<group>/<file>.md`.
 
-`cat "${CLAUDE_SKILL_DIR}/references/<group>/<file>.md"`
-
-Keep it to that exact form — no globs, pipes, `cd` or `&&` — so the user sees one clear read-only command; the folder is outside the project, so Claude Code may ask once to allow it. If a read is denied or blocked, don't retry it with another tool: say in one line that the rules couldn't be read and mark the result as based on general knowledge.
+In Claude Code, `allowed-tools` lets this skill read only its own installed folder, and only during the turn it runs — nothing else, no shell. Never use `cat` or Bash for rule files. If a read is denied or blocked, don't retry it with another tool: say in one line that the rules couldn't be read and mark the result as based on general knowledge.
 
 ## Trust and safety rules (every mode)
 
@@ -57,8 +56,8 @@ Pick the row that matches what the code **does** and open `references/<group>/IN
 
 Runs when code you are writing matches a row. The user didn't ask for security help, so stay light — at most 3 extra tool calls:
 
-1. `cat` the matching group `INDEX.md`.
-2. `cat` **one** issue file (`<ID>.md`); a second only if the code clearly hits two. Don't open code example files (`<ID>.code.*.md`) — the issue's `고칠 방법` is enough.
+1. Read the matching group `INDEX.md`.
+2. Read **one** issue file (`<ID>.md`); a second only if the code clearly hits two. Don't open code example files (`<ID>.code.*.md`) — the issue's `고칠 방법` is enough.
 3. If the project has `.white-security.yml`, read it once per session (`references/config.md`): skip `disable_groups`, memo only grades at or above `always_on.min_severity`.
 4. Write the code safe from the start: apply `위험` items in the code; leave 주의/참고 for the memo.
 5. End your reply with `보안 메모:` in 1–2 lines: the ids applied and anything left to check.
@@ -70,6 +69,6 @@ Don't ask questions, stop the task or offer a full review. Unsure it's a real pr
 Triggers: "보안 점검해 줘", "보안 검토", "취약점 확인", "security review", or `/white-security:review [all|changed|<path>]`.
 
 - **Claude Code:** delegate to the `white-security:white-security-reviewer` subagent (read-only; the procedure is built into it). Pass the scope: `all`, a path, or for `changed` the file list you build with git. Show its report as returned.
-- If it answers `RULES_UNREADABLE`, or subagents aren't available: run `references/review.md` yourself, reading rule files with `cat` as above. Tell the user in one Korean line how to let the reviewer read the rules next time: `/permissions` → allow `Read(~/.claude/plugins/cache/limindex/white-security/**)`, or `/add-dir` that folder. Never change settings yourself.
+- If it answers `RULES_UNREADABLE`, or subagents aren't available: run `references/review.md` yourself, reading rule files with the Read tool as above. If those reads are refused too (for example the plugin lives outside `~/.claude`), tell the user in one Korean line how to allow it: `/permissions` → allow `Read(<this skill's folder>/**)` with the real path. Allow only that folder. Never change settings yourself.
 - After the report, ask which items to fix and fix only those. Don't change files during the review.
 - Dependency scanners run in the main conversation after consent, only in the exact forms of `references/deps.md` (never plain `pip-audit -r`). Known critical CVEs: `references/advisories.md`.
