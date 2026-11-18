@@ -687,6 +687,7 @@ html:not(.js) .ws-copy, html:not(.js) .ws-tabs, html:not(.js) .ws-check-status {
 
 /* 점검 항목: 실제 체크 상자 */
 .ws-check-status { display: flex; align-items: center; gap: 6px; margin: -4px 0 10px !important; font: 600 .82rem var(--font-display); color: var(--ink-3); font-variant-numeric: lining-nums tabular-nums; }
+.ws-check-n { line-height: 1.2; text-box: trim-both cap alphabetic; }
 .ws-check-status [data-check-count] { color: var(--ink); }
 .ws-checklist { list-style: none; margin: 0 0 12px !important; padding: 0 !important; box-shadow: inset 0 1px 0 var(--line); }
 .ws-checklist li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 12px; align-items: start; margin: 0 !important; padding: 12px 0; box-shadow: inset 0 -1px 0 var(--line); }

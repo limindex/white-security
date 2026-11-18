@@ -4,76 +4,103 @@ $checked = $issue->checked->format('Y-m-d');
 $published = $issue->published->format('Y-m-d');
 $next = $site->nextReview($issue)->format('Y-m-d');
 $maps = array_filter($issue->maps);
+$addr = $site->setting('origin') . $site->url('issues/' . $issue->id);
+$fold = function (string $id, string $heading, string $body, string $count = ''): string {
+    return '<section class="ws-sec ws-fold" id="' . Site::e($id) . '">'
+        . '<details><summary><h2>' . Site::e($heading) . '</h2>'
+        . ($count !== '' ? '<span class="ws-fold-count">' . Site::e($count) . '</span>' : '')
+        . '<span class="ws-fold-hint" aria-hidden="true"><span class="ws-fold-closed">펼치기</span><span class="ws-fold-open">접기</span></span></summary>'
+        . '<div class="ws-fold-body">' . $body . '</div></details>'
+        . '<a class="ws-anchor" href="#' . Site::e($id) . '" aria-label="' . Site::e($heading) . ' 절 주소 복사"><span aria-hidden="true">#</span></a></section>';
+};
+$toc = [];
+if (isset($issue->sections['요약'])) $toc[] = ['summary', '요약'];
 $n = 0;
+$body = '';
+foreach ($issue->sections as $heading => $md) {
+    if ($heading === '코드 예시' || $heading === '요약') continue;
+    $n++;
+    $id = IssueView::sectionId($heading, $n);
+    $toc[] = [$id, $heading];
+    $html = Markdown::render($md);
+    $html = IssueView::blocks($html, $heading === '대응 방법' ? '프롬프트' : '예시');
+    if (in_array($heading, IssueView::FOLDED, true)) { $body .= $fold($id, $heading, $html); continue; }
+    $extra = '';
+    if ($heading === '점검 항목') {
+        [$html, $count] = IssueView::checklist($html, $issue->id);
+        if ($count) $extra = '<p class="ws-check-status" data-check-status="' . Site::e($issue->id) . '"><span class="ws-check-n"><span data-check-count>0</span> / ' . $count . ' 완료</span>'
+            . '<button type="button" class="ws-linkbtn" data-check-reset><span class="ws-tx">초기화</span></button></p>';
+    }
+    $body .= '<section class="ws-sec" aria-labelledby="' . $id . '"><div class="ws-sec-head"><h2 id="' . $id . '">' . Site::e($heading) . '</h2>'
+        . '<a class="ws-anchor" href="#' . $id . '" aria-label="' . Site::e($heading) . ' 절 주소 복사"><span aria-hidden="true">#</span></a></div>'
+        . $extra . $html . '</section>';
+}
+if ($issue->code) $toc[] = ['code', '코드 예시'];
+$toc[] = ['sources', '출처'];
+if ($issue->revisions) $toc[] = ['revisions', '개정 이력'];
 ?>
 <div class="ws-issue<?= $issue->code ? '' : ' ws-issue--nocode' ?>">
 <article class="ws-doc">
+<p class="ws-print-meta"><span><?= Site::e($issue->id) ?></span><span>최종 확인 <?= Site::e($checked) ?></span><span><?= Site::e($addr) ?></span></p>
 <header class="ws-doc-head">
-<p class="ws-crumb"><?= Site::e($site->groupName($issue->group)) ?></p>
+<p class="ws-docid"><span class="ws-id"><?= Site::e($issue->id) ?></span><i></i><span><?= Site::e($site->groupName($issue->group)) ?></span><i></i><span><?= $issue->depth === 'full' ? '상세 문서' : '간략 문서' ?></span></p>
 <h1><?= Site::e($issue->title) ?></h1>
-<p class="ws-meta">
-<span class="ws-id"><?= Site::e($issue->id) ?></span>
-<?= Site::severityBadge($issue->severity) ?>
-<?= $site->staleBadge($issue) ?>
-</p>
+<p class="ws-sevline"><span class="ws-sevline-badges"><?= Site::severityBadge($issue->severity) ?><?= $site->staleBadge($issue) ?></span><?php if ($issue->severityReason !== null): ?><span class="ws-sevline-why"><span class="ws-sr">심각도 근거: </span><?= Site::e($issue->severityReason) ?></span><?php endif ?></p>
+<dl class="ws-docinfo">
+<div><dt>게시</dt><dd><time datetime="<?= Site::e($published) ?>"><?= Site::e($published) ?></time></dd></div>
+<div><dt>최종 확인</dt><dd><time datetime="<?= Site::e($checked) ?>"><?= Site::e($checked) ?></time></dd></div>
+<div><dt>다음 검토 예정</dt><dd><time datetime="<?= Site::e($next) ?>"><?= Site::e($next) ?></time></dd></div>
+<?php if ($issue->appliesTo): ?>
+<div class="ws-docinfo-wide"><dt>적용 대상</dt><dd><?= Site::e(implode(' · ', $issue->appliesTo)) ?></dd></div>
+<?php endif ?>
+</dl>
 <?php if ($maps): ?>
 <ul class="ws-maps" aria-label="기준 번호">
-<?php foreach ($maps as $key => $codes): foreach ($codes as $c): ?>
-<li class="ws-chip"><?php if (!str_starts_with($c, strtoupper($key) . '-')): ?><span class="ws-chip-k"><?= Site::e(Site::mapLabel($key)) ?></span><?php endif ?><?php if ($u = Site::cweUrl($key, $c)): ?><a class="ws-chip-v" href="<?= Site::e($u) ?>" rel="noopener noreferrer"><?= Site::e($c) ?></a><?php else: ?><span class="ws-chip-v"><?= Site::e($c) ?></span><?php endif ?></li>
+<?php foreach ($maps as $key => $codes): foreach ($codes as $c): ?><?= Site::mapChip($key, $c) ?>
 <?php endforeach; endforeach ?>
 </ul>
 <?php endif ?>
-<dl class="ws-docinfo">
-<div><dt>게시</dt><dd><time datetime="<?= Site::e($published) ?>"><?= Site::e($published) ?></time></dd></div>
-<div><dt>마지막 확인</dt><dd><time datetime="<?= Site::e($checked) ?>"><?= Site::e($checked) ?></time></dd></div>
-<div><dt>다음 검토 예정</dt><dd><time datetime="<?= Site::e($next) ?>"><?= Site::e($next) ?></time></dd></div>
-<?php if ($issue->appliesTo): ?>
-<div><dt>적용 대상</dt><dd><?= Site::e(implode(' · ', $issue->appliesTo)) ?></dd></div>
+<?php if ($issue->code): ?>
+<p class="ws-jump"><a href="#code">코드 예시로 이동</a></p>
 <?php endif ?>
-<?php if ($issue->severityReason !== null): ?>
-<div><dt>심각도 근거</dt><dd><?= Site::e(Site::SEVERITY_LABELS[$issue->severity] ?? $issue->severity) ?> · <?= Site::e($issue->severityReason) ?></dd></div>
-<?php endif ?>
-</dl>
 </header>
 
 <?php if (isset($issue->sections['요약'])): ?>
-<div class="ws-summary"><?= Markdown::render($issue->sections['요약']) ?></div>
-<?php endif ?>
-
-<?php foreach ($issue->sections as $heading => $md): if ($heading === '코드 예시' || $heading === '요약') continue; $n++; ?>
-<section class="ws-sec<?= $heading === '점검 항목' ? ' ws-sec--check' : '' ?>" aria-labelledby="sec-<?= $n ?>">
-<h2 id="sec-<?= $n ?>"><?= Site::e($heading) ?></h2>
-<?= Markdown::render($md) ?>
-</section>
-<?php endforeach ?>
-
-<?php if ($issue->revisions): ?>
-<section class="ws-sec ws-revisions" aria-labelledby="sec-rev">
-<h2 id="sec-rev">개정 이력</h2>
-<ol>
-<?php foreach ($issue->revisions as $r): ?>
-<li><time datetime="<?= Site::e($r['date']) ?>"><?= Site::e($r['date']) ?></time> <span><?= Site::e($r['note']) ?></span></li>
-<?php endforeach ?>
-</ol>
+<section class="ws-summary" id="summary" aria-labelledby="summary-h">
+<h2 id="summary-h">요약</h2>
+<?= Markdown::render($issue->sections['요약']) ?>
 </section>
 <?php endif ?>
 
-<section class="ws-sec ws-sources" aria-labelledby="sec-src">
-<h2 id="sec-src">출처</h2>
-<ol>
-<?php foreach ($issue->sources as $s): ?>
-<li><a href="<?= Site::e($s['url']) ?>" rel="noopener noreferrer"><?= Site::e($s['title']) ?></a><span class="ws-year"><?= Site::e((string)$s['year']) ?></span></li>
-<?php endforeach ?>
-</ol>
-</section>
+<?= $body ?>
 
-<p class="ws-checked">마지막 확인 <time datetime="<?= Site::e($checked) ?>"><?= Site::e($checked) ?></time><?php if ($site->isStale($issue)): ?><i></i><span>확인일 뒤 <?= Site::STALE_DAYS ?>일 넘게 지남 · 출처와 최신 동향 다시 확인 필요</span><?php endif ?></p>
+<?php
+$src = '<ol class="ws-sources">';
+foreach ($issue->sources as $s) $src .= '<li><a href="' . Site::e($s['url']) . '" rel="noopener noreferrer">' . Site::e($s['title']) . '</a><span class="ws-year">' . Site::e((string)$s['year']) . '</span></li>';
+echo $fold('sources', '출처', $src . '</ol>', count($issue->sources) . '건');
+if ($issue->revisions) {
+    $rev = '<ol class="ws-revlist">';
+    foreach ($issue->revisions as $r) $rev .= '<li><time datetime="' . Site::e($r['date']) . '">' . Site::e($r['date']) . '</time><span>' . Site::e($r['note']) . '</span></li>';
+    echo $fold('revisions', '개정 이력', $rev . '</ol>', count($issue->revisions) . '건');
+}
+?>
+
+<p class="ws-checked"><span>최종 확인 <time datetime="<?= Site::e($checked) ?>"><?= Site::e($checked) ?></time></span><i></i><span>다음 검토 예정 <time datetime="<?= Site::e($next) ?>"><?= Site::e($next) ?></time></span><?php if ($site->isStale($issue)): ?><i></i><span>확인일 뒤 <?= Site::STALE_DAYS ?>일 넘게 지남 · 출처와 최신 동향 재확인 필요</span><?php endif ?></p>
 </article>
 
+<div class="ws-rail">
+<nav class="ws-toc" aria-labelledby="ws-toc-h">
+<h2 id="ws-toc-h">이 문서의 목차</h2>
+<ol>
+<?php foreach ($toc as [$id, $label]): ?>
+<li><a href="#<?= Site::e($id) ?>"><span class="ws-tx"><?= Site::e($label) ?></span></a></li>
+<?php endforeach ?>
+</ol>
+</nav>
 <?php if ($issue->code): $langs = array_keys($issue->code); ?>
-<aside class="ws-code" aria-label="코드 예시">
+<aside class="ws-code" id="code" aria-labelledby="code-h">
 <div class="ws-code-head">
-<h2>코드 예시</h2>
+<h2 id="code-h">코드 예시</h2>
 <div class="ws-tabs" role="tablist" aria-label="언어">
 <?php foreach ($langs as $k => $lang): ?>
 <button type="button" class="ws-tab" role="tab" id="tab-<?= Site::e($lang) ?>" aria-controls="code-<?= Site::e($lang) ?>" aria-selected="<?= $k === 0 ? 'true' : 'false' ?>" tabindex="<?= $k === 0 ? '0' : '-1' ?>" data-lang="<?= Site::e($lang) ?>"><span class="ws-tx"><?= Site::e(Site::langLabel($lang)) ?></span></button>
@@ -93,4 +120,5 @@ $n = 0;
 <?php endforeach ?>
 </aside>
 <?php endif ?>
+</div>
 </div>
