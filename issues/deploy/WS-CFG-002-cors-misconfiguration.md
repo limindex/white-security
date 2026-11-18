@@ -5,6 +5,7 @@ slug: cors-misconfiguration
 group: deploy
 severity: high
 grade_hint: "credentials 허용과 아무 출처 허용이 함께"
+always_on: "`CORSMiddleware` `allow_credentials=True` → credentials를 허용하는 CORS는 정확한 출처 목록만 쓰고, `*`·Origin 반사를 쓰지 않아야 한다."
 site_only: false
 depth: brief
 languages: [laravel, nextjs, fastapi]

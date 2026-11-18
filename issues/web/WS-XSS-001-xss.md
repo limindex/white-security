@@ -6,6 +6,7 @@ slug: xss
 group: web
 severity: high
 grade_hint: "남의 글이 이스케이프 없이 HTML로"
+always_on: "`dangerouslySetInnerHTML` `{!! $` `|safe` → 화면 출력은 기본 이스케이프를 쓰고, 꼭 HTML이면 새니타이저를 거쳐야 한다."
 site_only: false
 depth: brief
 languages: [laravel, nextjs, django]

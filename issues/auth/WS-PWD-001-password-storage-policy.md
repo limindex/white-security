@@ -5,6 +5,7 @@ slug: password-storage-policy
 group: auth
 severity: high
 grade_hint: "평문·복호화 가능·MD5·SHA-1·솔트 없는 저장"
+always_on: "`MD5PasswordHasher` `Crypt::encrypt(` → 비밀번호는 Argon2id·bcrypt 같은 전용 해시로 저장하고, 복호화 가능한 암호화를 쓰지 않아야 한다."
 site_only: false
 depth: brief
 languages: [laravel, nextjs, django]

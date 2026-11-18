@@ -5,6 +5,7 @@ slug: confused-deputy-agent-comms
 group: vibe
 severity: high
 grade_hint: "에이전트로 남의 데이터 접근, 인증 없는 쓰기"
+always_on: "`@tool` `tools=` → 도구는 요청한 사용자 권한으로만 데이터에 접근하고, 사용자 ID는 서버 세션에서 가져와야 한다."
 site_only: false
 depth: brief
 languages: [python, js]

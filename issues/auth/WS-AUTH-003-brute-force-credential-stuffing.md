@@ -5,6 +5,7 @@ slug: brute-force-credential-stuffing
 group: auth
 severity: high
 grade_hint: "로그인·2차 인증 시도 제한 전혀 없음"
+always_on: "`Auth::attempt(` `bcrypt.compare(` → 로그인·2차 인증·비밀번호 확인은 계정·IP별 실패 횟수를 세어 제한해야 한다."
 site_only: false
 depth: brief
 languages: [laravel, nextjs, django]

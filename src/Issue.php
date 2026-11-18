@@ -26,7 +26,7 @@ final class Issue
     /** 머리말 `grade_hint`(선택): 스킬 INDEX 줄 끝에 붙는 짧은 등급 조건(위험 조건, 없으면 주의 조건). 글자 수 상한 */
     public const GRADE_HINT_MAX = 40;
     /** 머리말 `always_on`(선택, severity high 만): 상시 스킬 규칙 한 줄 "`신호` … → 안전한 행동". 글자 수 상한 */
-    public const ALWAYS_ON_MAX = 110;
+    public const ALWAYS_ON_MAX = 120;
     /**
      * `찾는 곳` 백틱 신호로 쓰면 안 되는 흔한 낱말(스킬 INDEX 에서 아무 코드에나 걸린다). 이 목록이 유일한 원본.
      * 이 밖에도 신호는 4자 이상이거나 ( . : / = - _ 중 하나를 품어야 하고, 이 목록 낱말의 일부(`dd(` ⊂ `.add(`)이거나

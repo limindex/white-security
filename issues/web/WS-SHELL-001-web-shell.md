@@ -5,6 +5,7 @@ slug: web-shell
 group: web
 severity: high
 grade_hint: "웹 루트에 요청 확장자로 저장"
+always_on: "`move_uploaded_file(` `getClientOriginalName(` → 업로드는 웹 루트 밖이나 객체 저장소에, 서버가 정한 이름으로 저장해야 한다."
 site_only: false
 depth: brief
 languages: [php, laravel, nginx]

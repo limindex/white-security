@@ -6,6 +6,7 @@ slug: supabase-rls
 group: data
 severity: high
 grade_hint: "비밀 키가 클라이언트에, RLS 없음·using (true)"
+always_on: "`service_role` `using (true)` → 비밀 키는 서버에만 두고, 새 테이블마다 RLS를 켜 `auth.uid()` 본인 행 정책을 걸어야 한다."
 site_only: false
 depth: brief
 languages: [supabase, sql, nextjs]

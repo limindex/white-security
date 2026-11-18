@@ -240,7 +240,7 @@ test('grade_hint: 선택, 한 줄 문자열, 40자 이하, site_only 이슈엔 �
     assert_contains((string)Issue::GRADE_HINT_MAX, $long);
 });
 
-test('always_on: 선택, high 만, "`찾는 곳 신호` → 행동." 형식, 110자 이하', function () {
+test('always_on: 선택, high 만, "`찾는 곳 신호` → 행동." 형식, 120자 이하', function () {
     $ok = "always_on: \"`cursor.execute(` → 값은 자리표시자로 넘겨야 한다.\"\n";
     $i = Issue::fromFile(ws_tmp(ws_mut("severity: high\n", "severity: high\n" . $ok)), ws_groups());
     assert_same('`cursor.execute(` → 값은 자리표시자로 넘겨야 한다.', $i->alwaysOn);

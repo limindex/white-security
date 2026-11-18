@@ -6,6 +6,7 @@ slug: cicd-integrity-unverified-downloads
 group: supply
 severity: high
 grade_hint: "pull_request_target에서 PR 코드 실행, run:에 입력"
+always_on: "`pull_request_target` `${{ github.event.` → `pull_request_target`에서 PR 코드를 실행하지 않고, 이벤트 값은 `run:`에 직접 넣지 않아야 한다."
 site_only: false
 depth: brief
 languages: [yaml, dockerfile]

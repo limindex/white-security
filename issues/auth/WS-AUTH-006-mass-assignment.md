@@ -5,6 +5,7 @@ slug: mass-assignment
 group: auth
 severity: high
 grade_hint: "요청으로 역할·잔액·소유자 변경 가능"
+always_on: "`$request->all()` `**payload` → 생성·수정은 바꿔도 되는 필드만 허용 목록으로 받아야 한다."
 site_only: false
 depth: brief
 languages: [laravel, nextjs, django]

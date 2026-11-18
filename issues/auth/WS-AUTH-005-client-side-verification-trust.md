@@ -5,6 +5,7 @@ slug: client-side-verification-trust
 group: auth
 severity: high
 grade_hint: "값 하나 바꿔 본인확인·재설정 건너뜀"
+always_on: "`phoneVerified` `verifyIdToken(` → 본인확인 결과는 클라이언트 값이 아니라 서버가 기관 모듈·ID 토큰으로 직접 검증해야 한다."
 site_only: false
 depth: brief
 languages: [laravel, nextjs, fastapi]

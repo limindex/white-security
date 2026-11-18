@@ -5,6 +5,7 @@ slug: cleartext-certificate-validation
 group: mobile
 severity: high
 grade_hint: "인증서 검증 끔, 로그인·토큰이 http로"
+always_on: '`android:usesCleartextTraffic="true"` `NSAllowsArbitraryLoads` → 통신은 모두 https여야 하고, 인증서·호스트 이름 검증을 끄지 않아야 한다.'
 site_only: false
 depth: brief
 languages: [expo, flutter, kotlin]

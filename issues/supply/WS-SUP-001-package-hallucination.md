@@ -5,6 +5,7 @@ slug: package-hallucination
 group: supply
 severity: high
 grade_hint: "레지스트리에 없는 이름 설치"
+always_on: "`package.json` `requirements*.txt` → 실재가 확실하지 않은 패키지 이름은 추가·설치하지 않고 사용자에게 알려야 한다."
 site_only: false
 depth: full
 languages: [python, js, php]

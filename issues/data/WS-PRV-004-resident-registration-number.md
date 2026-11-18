@@ -6,6 +6,7 @@ slug: resident-registration-number
 group: data
 severity: high
 grade_hint: "근거 없는 주민번호 수집, 평문 저장·표시·로그"
+always_on: "`jumin` `resident_no` → 주민등록번호는 법령 근거가 있을 때만 받고, 암호화 저장·가림 표시·로그 제외를 해야 한다."
 site_only: false
 depth: brief
 languages: [laravel, nextjs]

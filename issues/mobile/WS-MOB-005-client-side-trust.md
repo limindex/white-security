@@ -5,6 +5,7 @@ slug: client-side-trust
 group: mobile
 severity: high
 grade_hint: "서버 확인 없이 유료·관리 기능 제공"
+always_on: "`PurchaseStatus.purchased` `requestPurchase(` → 유료 기능은 서버가 스토어 API로 확인한 구매 기록으로만 열어야 한다."
 site_only: false
 depth: brief
 languages: [react-native, flutter, express]

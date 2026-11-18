@@ -5,6 +5,7 @@ slug: session-token-management
 group: auth
 severity: high
 grade_hint: "서명 확인 없는 토큰, none·알고리즘 혼용, 세션 고정"
+always_on: "`jwt.decode(` `decodeJwt(` → 토큰은 서명·알고리즘·만료를 검증하는 함수로만 믿어야 하고, 로그인 때 세션 ID를 새로 만들어야 한다."
 site_only: false
 depth: brief
 languages: [laravel, nextjs, fastapi]

@@ -5,6 +5,7 @@ slug: model-supply-chain
 group: supply
 severity: high
 grade_hint: "외부 모델을 pickle·weights_only=False로 열기"
+always_on: "`torch.load(` `trust_remote_code=True` → 외부 모델은 safetensors·`weights_only=True`로 열고, 원격 코드 실행은 검토한 저장소에만 허용해야 한다."
 site_only: false
 depth: brief
 languages: [python, dockerfile]

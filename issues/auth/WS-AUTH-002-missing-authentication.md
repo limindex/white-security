@@ -5,6 +5,7 @@ slug: missing-authentication
 group: auth
 severity: high
 grade_hint: "로그인 없이 개인정보 조회·변경·결제·발송"
+always_on: "`use server` `function POST(` → 데이터를 바꾸거나 개인정보를 내주는 핸들러는 맨 앞에서 서버가 로그인을 확인해야 한다."
 site_only: false
 depth: brief
 languages: [laravel, nextjs, fastapi]

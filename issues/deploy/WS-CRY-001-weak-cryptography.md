@@ -5,6 +5,7 @@ slug: weak-cryptography
 group: deploy
 severity: high
 grade_hint: "인증서 검증 끔, 예측 가능한 토큰 난수, ECB·고정 IV"
+always_on: "`verify=False` `rejectUnauthorized: false` `MODE_ECB` → TLS 인증서 검증을 끄지 않아야 하고, 암호화는 AES-GCM 같은 인증 암호를 써야 한다."
 site_only: false
 depth: brief
 languages: [python, nextjs, laravel]

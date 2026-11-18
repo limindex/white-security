@@ -5,6 +5,7 @@ slug: install-scripts-build-plugins
 group: supply
 severity: high
 grade_hint: "비밀값 있는 환경에서 낯선 설치 스크립트 실행"
+always_on: "`postinstall` `preinstall` → CI·처음 받는 설치는 `--ignore-scripts`로 하고, 필요한 패키지의 스크립트만 허용해야 한다."
 site_only: false
 depth: brief
 languages: [shell, yaml, json]

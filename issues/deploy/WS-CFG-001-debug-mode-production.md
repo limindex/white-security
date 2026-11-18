@@ -5,6 +5,7 @@ slug: debug-mode-production
 group: deploy
 severity: high
 grade_hint: "운영에서 디버그 켜짐"
+always_on: "`DEBUG = True` `APP_DEBUG=true` → 디버그는 환경 변수로만 켜고, 값이 없으면 꺼져야 한다."
 site_only: false
 depth: brief
 languages: [laravel, django, flask]

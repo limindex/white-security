@@ -250,6 +250,37 @@ test('SkillExport: 상시 규칙 요약 — high 이슈만 한 줄씩(신호 2�
     assert_same('값은 바인딩으로 넘기고 `cur.execute(sql, (a,))` 형태로 써야 한다.', SkillExport::firstCheck($i));
 });
 
+test('SkillExport: 상시 규칙 줄 — always_on 이 있으면 그대로(신호와 행동을 작성자가 맞춤), 없으면 신호 2개 → 점검 항목 첫 문장', function () {
+    $fx = file_get_contents(__DIR__ . '/fixtures/issues/web/WS-INJ-001-sql-injection.md');
+    $on = str_replace("severity: high\n", "severity: high\nalways_on: \"`db.query(` → 값은 자리표시자로 넘겨야 한다.\"\n", $fx);
+    $block = SkillExport::rules(Repository::load(make_root(['WS-INJ-001-sql-injection.md' => $on])));
+    assert_contains("\n- `db.query(` → 값은 자리표시자로 넘겨야 한다. (WS-INJ-001)\n", $block);
+});
+
+test('저장소: 상시 규칙 줄은 신호와 같은 일을 말한다(U3: jwt.decode ↔ 세션 재발급, verify=False ↔ AES-GCM 같은 어긋남 금지)', function () {
+    $repo = Repository::load(SE_ROOT);
+    $line = [];
+    foreach ($repo->all() as $i) if ($i->severity === 'high' && !$i->siteOnly) $line[$i->id] = SkillExport::ruleLine($i);
+    // 신호 → 그 신호가 뜻하는 위험을 막는 말
+    $must = [
+        'WS-SESS-001' => ['`jwt.decode(`', '서명'], 'WS-CRY-001' => ['`verify=False`', '인증서'], 'WS-PAY-001' => ['`constructEvent(`', '서명'],
+        'WS-BAAS-001' => ['`service_role`', '비밀 키'], 'WS-SUP-005' => ['`pull_request_target`', 'PR 코드'], 'WS-CFG-007' => ['`docker.sock`', 'docker.sock'],
+        'WS-ZIP-001' => ['`zipfile`', '경로'], 'WS-SSRF-001' => ['`requests.get(`', '공인 IP'], 'WS-SMS-001' => ['`otp_code`', '시도 횟수'],
+        'WS-AGT-006' => ['`.claude/settings.json`', '전체 허용'], 'WS-CFG-002' => ['`allow_credentials=True`', '출처'], 'WS-AUTH-003' => ['`Auth::attempt(`', '실패 횟수'],
+    ];
+    foreach ($must as $id => [$sig, $word]) {
+        assert_true(isset($line[$id]), $id);
+        [$head, $act] = explode(' → ', $line[$id], 2);
+        assert_contains($sig, $head);
+        assert_contains($word, $act);
+    }
+    // 모든 줄: 화살표 앞 신호는 그 이슈의 찾는 곳 신호, 행동은 마침표로 끝남
+    foreach ($repo->all() as $i) {
+        if (!isset($line[$i->id])) continue;
+        assert_same(null, Issue::alwaysOnProblem($line[$i->id], $i->detection['signals']), $i->id . ': ' . $line[$i->id]);
+    }
+});
+
 test('SkillExport: 상시 SKILL.md 예산 — 5000토큰·150줄 넘으면 실패', function () {
     assert_same(['tokens' => 1, 'lines' => 1], SkillExport::checkAlwaysOn("abc\n"));
     foreach ([str_repeat("가", 5001), str_repeat("a\n", 151)] as $big) {

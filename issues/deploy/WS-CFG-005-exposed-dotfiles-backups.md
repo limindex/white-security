@@ -5,6 +5,7 @@ slug: exposed-dotfiles-backups
 group: deploy
 severity: high
 grade_hint: ".git·.env·DB 덤프가 웹에서 열림"
+always_on: "`autoindex on` `Options Indexes` → 디렉터리 목록은 끄고, 문서 루트는 `public/` 같은 공개 폴더만 가리켜야 한다."
 site_only: false
 depth: brief
 languages: [nginx, nextjs]

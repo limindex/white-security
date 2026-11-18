@@ -5,6 +5,7 @@ slug: sql-injection
 group: web
 severity: high
 grade_hint: "외부 값이 SQL 문자열에"
+always_on: "`cursor.execute(` `->query(` `whereRaw(` → 쿼리 값은 모두 자리표시자 바인딩으로 넘겨야 한다."
 site_only: false
 depth: full
 languages: [python, js, php]

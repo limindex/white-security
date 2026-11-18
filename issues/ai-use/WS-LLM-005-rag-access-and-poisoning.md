@@ -5,6 +5,7 @@ slug: rag-access-and-poisoning
 group: ai-use
 severity: high
 grade_hint: "남의 문서가 검색 결과에 섞임"
+always_on: "`index.query(` `.similarity_search(` → 벡터 검색에 사용자·조직 조건을 걸고, 검색 뒤 원본 문서 권한을 다시 확인해야 한다."
 site_only: false
 depth: brief
 languages: [python]

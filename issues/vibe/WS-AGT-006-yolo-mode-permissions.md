@@ -5,6 +5,7 @@ slug: yolo-mode-permissions
 group: vibe
 severity: high
 grade_hint: "커밋된 설정의 전체 허용·확인 건너뛰기"
+always_on: "`.claude/settings.json` `.vscode/settings.json` → 커밋하는 AI 도구 설정에 `Bash(*)`·`bypassPermissions`·자동 승인 같은 전체 허용이 없어야 한다."
 site_only: false
 depth: brief
 languages: [json]

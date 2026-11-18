@@ -5,6 +5,7 @@ slug: hardcoded-secrets-app-bundle
 group: mobile
 severity: high
 grade_hint: "유료·관리용 비밀키가 앱 안에"
+always_on: "`EXPO_PUBLIC_` `sk-proj-` → 유료·관리용 키는 앱 코드·`EXPO_PUBLIC_`에 넣지 않고, 로그인 확인하는 서버를 거쳐 호출해야 한다."
 site_only: false
 depth: brief
 languages: [expo, flutter, nextjs]

@@ -6,6 +6,7 @@ slug: billion-laughs-xxe
 group: fetch
 severity: high
 grade_hint: "외부 XML에 외부 개체 해석 켜짐"
+always_on: "`etree.fromstring(` `simplexml_load_string(` → 외부 XML은 DTD·외부 개체를 끈 파서로 읽어야 한다."
 site_only: false
 depth: full
 languages: [python, js, php]

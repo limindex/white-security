@@ -6,6 +6,7 @@ slug: firebase-rules
 group: data
 severity: high
 grade_hint: "쓰기를 여는 if true·기한부 규칙, 서비스 계정 키 노출"
+always_on: "`firestore.rules` `if true` → Firebase 규칙은 `if true`·기한부 허용 없이 로그인 사용자 본인 데이터만 허용해야 한다."
 site_only: false
 depth: brief
 languages: [firebase, nextjs]

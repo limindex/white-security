@@ -5,6 +5,7 @@ slug: path-traversal
 group: web
 severity: high
 grade_hint: "요청 값 경로, 범위 확인 없음"
+always_on: "`res.sendFile(` `send_file(` → 파일은 DB id로 찾아 서버가 저장한 경로로 내줘야 하고, 요청 값으로 경로를 만들지 않아야 한다."
 site_only: false
 depth: brief
 languages: [express, fastapi, laravel]
