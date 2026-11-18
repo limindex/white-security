@@ -61,7 +61,7 @@ service_role·sb_secret_ 키가 브라우저 코드나 NEXT_PUBLIC_ 변수에 �
 - update 정책에는 `with check`도 넣어 남의 user_id로 바꾸지 못하게 해야 한다.
 - 권한 판단에 사용자가 고칠 수 있는 `user_metadata`를 쓰지 않아야 한다.
 - 뷰는 `security_invoker = true`로 만들어 RLS를 건너뛰지 않게 해야 한다.
-- service_role·`sb_secret_` 키는 서버에만 두고, 브라우저에는 publishable(anon) 키만 써야 한다.
+- service_role·`sb_secret_` 키는 서버에만 두고, 브라우저엔 publishable 키만 써야 한다.
 
 ## 탐지 규칙
 
