@@ -257,12 +257,16 @@ test('플러그인: 라우팅 표는 짧다 — route 12낱말 이하, 표 약 3
 
 // 11-18 권한 결정: 자동 허용 훅 없음, 허용은 "자기 설치 폴더 Read 만"(스모크 5~9). 보안 도구가 사용자 권한을 넓히지 않게 지킨다.
 const PL_ALLOWED = 'Read(~/.claude/plugins/cache/limindex/white-security/**)';
+/** allowed-tools 키 줄(앞 공백·따옴표 변형 포함, 대소문자 무시) */
+const PL_ALLOWED_KEY = '/^[ \t]*["\']?allowed-tools["\']?[ \t]*:/mi';
 
 test('플러그인 권한: allowed-tools 는 검토 스킬(유일한 스킬)에만, 자기 설치 폴더 Read 하나뿐', function () {
     $files = ['review SKILL.md' => PL_REVIEW . '/SKILL.md'];
     foreach ($files as $name => $f) {
         $fm = pl_frontmatter(file_get_contents($f));
         assert_same(PL_ALLOWED, $fm['allowed-tools'] ?? null, "$name allowed-tools");
+        // 같은 키가 두 번(따옴표·들여쓰기 변형 포함) 있으면 YAML 해석에 따라 뒤 값이 이길 수 있다 → 정확히 한 줄
+        assert_same(1, preg_match_all(PL_ALLOWED_KEY, file_get_contents($f)), "$name allowed-tools 줄 수");
     }
     // 다른 마크다운(참고 파일·에이전트)에 allowed-tools 가 숨어 있지 않다
     $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(PL_ROOT, FilesystemIterator::SKIP_DOTS));
@@ -270,7 +274,7 @@ test('플러그인 권한: allowed-tools 는 검토 스킬(유일한 스킬)에�
         if (!str_ends_with($f->getFilename(), '.md')) continue;
         $p = $f->getPathname();
         if (in_array(realpath($p), array_map('realpath', $files), true)) continue;
-        assert_true(!preg_match('/^allowed-tools:/m', file_get_contents($p)), "$p 에 allowed-tools 없음");
+        assert_true(!preg_match(PL_ALLOWED_KEY, file_get_contents($p)), "$p 에 allowed-tools 없음");
     }
 });
 
@@ -295,4 +299,13 @@ test('플러그인 권한: 폴더 안에 심링크·하드링크·실행 파일 
         }
     }
     assert_true($n > 50, "파일 $n 개");
+});
+
+test('플러그인 권한: git 에 올라간 모드도 보통 파일(100644)뿐 — 심링크(120000)·실행 파일(100755)·하위 모듈 없음', function () {
+    $root = __DIR__ . '/..';
+    exec('git -C ' . escapeshellarg($root) . ' ls-files -s -z -- plugins/white-security 2>/dev/null', $lines, $code);
+    if ($code !== 0) return; // git 저장소 밖(압축본)에서는 위 파일 시스템 검사만
+    $entries = array_filter(explode("\0", implode("\n", $lines)), fn($e) => $e !== '');
+    assert_true(count($entries) > 50, '추적 파일 ' . count($entries) . '개');
+    foreach ($entries as $e) assert_true(str_starts_with($e, '100644 '), "모드: $e");
 });
