@@ -25,6 +25,9 @@
 | [OWASP Top 10 for LLM Applications 2025](https://genai.owasp.org/llm-top-10/) LLM02·LLM05·LLM07·LLM08·LLM09·LLM10 | CC BY-SA 4.0 | WS-LLM-001~006 체크 항목 | 각 항목의 완화 방안(출력은 믿지 않고 검증·인코딩, 시스템 프롬프트에 비밀값·권한 판단 넣지 않기, 민감정보 최소 전송, 권한 인식 벡터 검색·데이터 분리, 사람 검토·근거 표시, 입력·출력 크기와 호출 횟수 제한) | 요약 후 체크 항목 형식으로 다시 씀. 국내 고시·처리방침·고유식별정보 내용은 우리가 덧붙임 |
 | [OWASP API Security Top 10 2023 - API4](https://owasp.org/API-Security/editions/2023/en/0xa4-unrestricted-resource-consumption/) | CC BY-SA 4.0 | WS-LLM-004 체크 항목 | 사용량 한도·비용 상한·속도 제한 | 요약 |
 | [OWASP AI Agent Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/AI_Agent_Security_Cheat_Sheet.html) | CC BY-SA 4.0 | WS-AGT-001·003·004·005 체크 항목 | 도구 최소 권한, 중요한 작업 전 사람 확인, 메모리 검증·사용자별 분리·만료·크기 제한, 에이전트 간 인증·받는 쪽 권한 확인·재전송 방지, 연쇄 장애를 막는 circuit breaker | 요약 후 체크 항목 형식으로 다시 씀. 코드는 새로 짬 |
+| [OWASP Server Side Request Forgery Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html) | CC BY-SA 4.0 | WS-SSRF-001 체크 항목 | 허용 목록 우선, 스킴·포트 제한, 내부 대역 차단, DNS 재바인딩 주의, 리다이렉트 끄기, 응답을 그대로 돌려주지 않기 | 요약. 클라우드 IMDSv2·AI 웹 도구 항목은 우리가 덧붙임 |
+| [OWASP Deserialization Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Deserialization_Cheat_Sheet.html) | CC BY-SA 4.0 | WS-DES-001 체크 항목 | 믿을 수 없는 데이터는 네이티브 역직렬화 대신 JSON 같은 데이터 형식, 서명으로 무결성 확인 | 요약. 언어별 함수 목록은 우리가 정리 |
+| [OWASP File Upload Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html) | CC BY-SA 4.0 | WS-FILE-001 체크 항목 | 이미지는 다시 인코딩해 불필요한 메타데이터 제거, 샌드박스 처리 | 요약 |
 
 ## 아이디어만 참고한 자료 (문장·구조는 옮기지 않음)
 
