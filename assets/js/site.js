@@ -244,6 +244,7 @@
     var narrow = window.matchMedia('(max-width: 899.98px)');
     var main = document.getElementById('ws-main');
     var root = document.documentElement;
+    var behind = [main, document.querySelector('.ws-skip'), document.querySelector('.ws-foot'), document.querySelector('.ws-alert')].filter(Boolean);
     var isOpen = false;
 
     function focusables() {
@@ -256,7 +257,17 @@
       menu.open = on;
       root.classList.toggle('ws-menu-open', on);
       if (btn) btn.setAttribute('aria-expanded', on ? 'true' : 'false');
-      if (main) main.inert = on;
+      // 열린 동안: 메뉴는 모달 대화 상자, 뒤쪽(본문·바닥글·건너뛰기 링크·오류 띠)은 inert
+      if (on) {
+        menu.setAttribute('role', 'dialog');
+        menu.setAttribute('aria-modal', 'true');
+        menu.setAttribute('aria-label', '문서 메뉴');
+      } else {
+        menu.removeAttribute('role');
+        menu.removeAttribute('aria-modal');
+        menu.removeAttribute('aria-label');
+      }
+      behind.forEach(function (el) { el.inert = on; });
       if (on) {
         var cur = menu.querySelector('[aria-current="page"]') || focusables()[0];
         if (cur) { cur.focus({ preventScroll: true }); cur.scrollIntoView({ block: 'center' }); }
@@ -274,7 +285,24 @@
 
     btn.addEventListener('click', function () { setOpen(!isOpen, false); });
     menu.addEventListener('click', function (ev) {
-      if (isOpen && ev.target.closest('a[href]')) setOpen(false, false);
+      var a = ev.target.closest('a[href]');
+      if (!isOpen || !a) return;
+      setOpen(false, false);
+      // 같은 쪽 안 이동(#…)이면 포커스를 그 절 제목으로(없으면 메뉴 단추로) 옮겨 body 에 남지 않게
+      if (a.pathname !== window.location.pathname || !a.hash) return;
+      setTimeout(function () {
+        var id = '';
+        try { id = decodeURIComponent(a.hash.slice(1)); } catch (e) { id = ''; }
+        var t = id ? document.getElementById(id) : null;
+        var h = t && (t.matches('h1, h2, h3') ? t : t.querySelector('h1, h2, h3'));
+        var f = h || t;
+        if (f) {
+          if (!f.hasAttribute('tabindex')) f.setAttribute('tabindex', '-1');
+          f.focus({ preventScroll: true });
+        } else {
+          btn.focus();
+        }
+      }, 0);
     });
     document.addEventListener('keydown', function (ev) {
       if (!isOpen) return;
@@ -483,8 +511,9 @@
     var w = el.getBoundingClientRect().width;
     return { n: mids.length, ratio: w ? (r - l) / w : 1 };
   }
-  function fixLong() {
-    each(document.querySelectorAll('main ' + LONG_SEL.split(', ').join(', main ')), function (el) {
+  function fixLong(scope) {
+    var list = scope ? scope.querySelectorAll(LONG_SEL) : document.querySelectorAll('main ' + LONG_SEL.split(', ').join(', main '));
+    each(list, function (el) {
       el.style.textWrap = ''; el.style.maxInlineSize = '';
       if (!el.getClientRects().length || el.closest('details:not([open])')) return;
       var a = lines(el);
@@ -512,7 +541,11 @@
       w = window.innerWidth;
       clearTimeout(t); t = setTimeout(run, 150);
     });
-    document.addEventListener('toggle', function (ev) { if (ev.target.open) fixLong(); }, true);
+    // 접힘을 펴면 그 안쪽만 다시 계산
+    document.addEventListener('toggle', function (ev) {
+      var d = ev.target;
+      if (d.open && d.closest && d.closest('main')) fixLong(d);
+    }, true);
   }
 
   document.addEventListener('DOMContentLoaded', function () {
