@@ -34,9 +34,12 @@ test('이슈 화면: 3단 구조(nav.ws-nav · article.ws-doc · aside.ws-code)'
 
 test('이슈 화면: 언어마다 ✗/✓ 코드 블록과 복사 버튼, 코드는 이스케이프', function () {
     $b = tpl_site()->route('issues/WS-INJ-001')['body'];
-    assert_same(2, substr_count($b, '✗ 뚫리는 코드'), '✗ 블록 수');
-    assert_same(2, substr_count($b, '✓ 막는 코드'), '✓ 블록 수');
+    assert_same(2, substr_count($b, '✗ 취약 코드'), '✗ 블록 수');
+    assert_same(2, substr_count($b, '✓ 안전 코드'), '✓ 블록 수');
     assert_same(4, substr_count($b, 'data-copy'), '복사 버튼 수');
+    assert_true((bool)preg_match('#<aside[^>]*class="ws-code".*?<h2>코드 예시</h2>#s', $b), '코드 칸 제목');
+    assert_contains('취약 코드 복사', $b);
+    assert_contains('안전 코드 복사', $b);
     assert_contains('$db-&gt;query(&quot;SELECT * FROM u WHERE id=&quot; . $id);', $b);
     assert_contains('## 주석처럼 보이는 줄', $b);
     assert_true(!str_contains($b, '$db->query('), '이스케이프 안 된 코드');
@@ -44,7 +47,7 @@ test('이슈 화면: 언어마다 ✗/✓ 코드 블록과 복사 버튼, 코드
 
 test('이슈 화면: 본문 절·출처·마지막 확인일, 현재 이슈 강조', function () {
     $b = tpl_site()->route('issues/WS-INJ-001')['body'];
-    foreach (['이런 장면에서', '왜 요즘 더 위험한가', '나는 뭘 하면 되나', '체크 항목', '스킬이 잡는 방식', '출처', '마지막 확인'] as $h) assert_contains($h, $b);
+    foreach (['발생 상황', '위험 배경', '대응 방법', '점검 항목', '탐지 규칙', '출처', '마지막 확인'] as $h) assert_contains($h, $b);
     assert_contains('2026-11-18', $b);
     assert_contains('href="https://cwe.mitre.org/data/definitions/89.html"', $b);
     assert_true((bool)preg_match('#<a[^>]*href="/white-security/issues/WS-INJ-001"[^>]*aria-current="page"#', $b), '현재 이슈 aria-current');

@@ -38,11 +38,11 @@ sources:
     year: 2017
 ---
 
-## 한 줄 요약
+## 요약
 
 `pickle`, `yaml.load`, PHP `unserialize`처럼 글자를 프로그램 객체로 되살리는 함수에 남이 준 데이터를 넣을 때, 객체가 만들어지는 순간 공격자가 심은 코드가 실행되는 문제. Insecure Deserialization(안전하지 않은 역직렬화)이라 부름(진단가이드 이름: 신뢰할 수 없는 데이터의 역직렬화).
 
-## 나는 뭘 하면 되나
+## 대응 방법
 
 ```text
 pickle, yaml.load, unserialize, node-serialize, ObjectInputStream 으로 바깥 데이터를 읽는 곳을 모두 찾아 줘.
@@ -52,7 +52,7 @@ JSON 으로 바꾸고 읽은 뒤 형식을 검사해 줘. YAML 은 yaml.safe_loa
 
 - 쿠키 값을 한 글자 바꿔 요청했을 때, 오류 화면 없이 거절(400)되어야 한다.
 
-## 체크 항목
+## 점검 항목
 
 - 남이 준 데이터(쿠키·요청 본문·큐 메시지·업로드 파일)는 `pickle`, 안전 로더 없는 `yaml.load`, PHP `unserialize`, Java `ObjectInputStream`, `node-serialize`로 되살리지 않고 JSON을 써야 한다.
 - YAML은 `yaml.safe_load`를 써야 한다.
@@ -61,7 +61,7 @@ JSON 으로 바꾸고 읽은 뒤 형식을 검사해 줘. YAML 은 yaml.safe_loa
 - JSON으로 읽은 뒤에도 타입·필드를 검사하고, 쓸 값만 꺼내야 한다.
 - AI 모델 파일(`.pkl`, `.pt` 등)도 pickle일 수 있음. 모델 공급망은 WS-SUP-008 범위.
 
-## 스킬이 잡는 방식
+## 탐지 규칙
 
 **찾는 곳**: `pickle.load(s)`, `cPickle`, `dill`, `joblib.load`, `yaml.load(`·`yaml.unsafe_load`, `jsonpickle.decode`, `unserialize(`, `node-serialize`, `serialize-javascript`를 되살릴 때의 `eval`, `ObjectInputStream`, `XMLDecoder`, `BinaryFormatter`.
 
@@ -82,7 +82,7 @@ JSON 으로 바꾸고 읽은 뒤 형식을 검사해 줘. YAML 은 yaml.safe_loa
 
 예: `[위험] WS-DES-001 shop/cart.py:19 — cart 쿠키를 pickle.loads 로 되살림 → JSON + HMAC 서명 확인, 또는 쿠키에는 장바구니 ID만`
 
-## 코드
+## 코드 예시
 
 ### python
 

@@ -25,12 +25,12 @@ $n = 0;
 <?php endif ?>
 </header>
 
-<?php if (isset($issue->sections['한 줄 요약'])): ?>
-<div class="ws-summary"><?= Markdown::render($issue->sections['한 줄 요약']) ?></div>
+<?php if (isset($issue->sections['요약'])): ?>
+<div class="ws-summary"><?= Markdown::render($issue->sections['요약']) ?></div>
 <?php endif ?>
 
-<?php foreach ($issue->sections as $heading => $md): if ($heading === '코드' || $heading === '한 줄 요약') continue; $n++; ?>
-<section class="ws-sec<?= $heading === '체크 항목' ? ' ws-sec--check' : '' ?>" aria-labelledby="sec-<?= $n ?>">
+<?php foreach ($issue->sections as $heading => $md): if ($heading === '코드 예시' || $heading === '요약') continue; $n++; ?>
+<section class="ws-sec<?= $heading === '점검 항목' ? ' ws-sec--check' : '' ?>" aria-labelledby="sec-<?= $n ?>">
 <h2 id="sec-<?= $n ?>"><?= Site::e($heading) ?></h2>
 <?= Markdown::render($md) ?>
 </section>
@@ -51,7 +51,7 @@ $n = 0;
 <?php if ($issue->code): $langs = array_keys($issue->code); ?>
 <aside class="ws-code" aria-label="코드 예시">
 <div class="ws-code-head">
-<h2>코드</h2>
+<h2>코드 예시</h2>
 <div class="ws-tabs" role="tablist" aria-label="언어">
 <?php foreach ($langs as $k => $lang): ?>
 <button type="button" class="ws-tab" role="tab" id="tab-<?= Site::e($lang) ?>" aria-controls="code-<?= Site::e($lang) ?>" aria-selected="<?= $k === 0 ? 'true' : 'false' ?>" tabindex="<?= $k === 0 ? '0' : '-1' ?>" data-lang="<?= Site::e($lang) ?>"><span class="ws-tx"><?= Site::e(Site::langLabel($lang)) ?></span></button>
@@ -61,9 +61,9 @@ $n = 0;
 <?php foreach ($issue->code as $lang => $pair): ?>
 <div class="ws-code-panel<?= $lang === $langs[0] ? ' is-active' : '' ?>" id="code-<?= Site::e($lang) ?>" role="tabpanel" aria-labelledby="tab-<?= Site::e($lang) ?>" data-lang-panel="<?= Site::e($lang) ?>">
 <h3 class="ws-code-lang"><?= Site::e(Site::langLabel($lang)) ?></h3>
-<?php foreach (['bad' => '✗ 뚫리는 코드', 'good' => '✓ 막는 코드'] as $kind => $label): ?>
+<?php foreach (['bad' => '✗ 취약 코드', 'good' => '✓ 안전 코드'] as $kind => $label): ?>
 <figure class="ws-snippet ws-snippet--<?= $kind ?>">
-<figcaption><span class="ws-snippet-label"><?= $label ?></span><button type="button" class="ws-copy" data-copy aria-label="<?= Site::e(Site::langLabel($lang)) ?> <?= $kind === 'bad' ? '뚫리는' : '막는' ?> 코드 복사"><span class="ws-tx">복사</span></button></figcaption>
+<figcaption><span class="ws-snippet-label"><?= $label ?></span><button type="button" class="ws-copy" data-copy aria-label="<?= Site::e(Site::langLabel($lang)) ?> <?= $kind === 'bad' ? '취약' : '안전' ?> 코드 복사"><span class="ws-tx">복사</span></button></figcaption>
 <pre tabindex="0"><code class="lang-<?= Site::e($lang) ?>"><?= Site::e($pair[$kind]) ?></code></pre>
 </figure>
 <?php endforeach ?>

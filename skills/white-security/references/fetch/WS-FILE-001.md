@@ -3,7 +3,7 @@
 
 주의 · ASVS V5.2.1 · ASVS V5.2.6 · ASVS V14.2.8 · CWE-400 · CWE-770 · CWE-212
 
-## 체크 항목
+## 점검 항목
 
 - 열기 전에 파일 크기, 이미지 가로×세로 픽셀, 문서 쪽수에 상한을 두어야 한다. Pillow의 `Image.MAX_IMAGE_PIXELS`는 `None`으로 끄지 않아야 한다.
 - 확장자가 아니라 실제 형식으로 판단하고, 받기로 한 형식만 처리해야 한다.
@@ -12,7 +12,7 @@
 - 공개할 이미지는 다시 그려 저장해 EXIF·GPS 같은 메타데이터를 지워야 한다(사용자가 원해서 남기는 경우만 예외).
 - 압축 파일은 WS-ZIP-001, XML·오피스 문서 속 XML은 WS-XML-001, 뽑은 글을 AI에 넣는 경우는 WS-PI-001도 함께 확인해야 한다.
 
-## 스킬이 잡는 방식
+## 탐지 규칙
 
 **찾는 곳**: `PIL.Image.open`, `Image.MAX_IMAGE_PIXELS`, `wand`, `subprocess`로 부르는 `convert`·`magick`·`gs`·`libreoffice`·`pdftotext`, `pdf.js`·`pdf-parse`·`sharp`, PHP `Imagick`·`imagecreatefrom*`·`getimagesize`.
 
@@ -37,7 +37,7 @@
 
 예: `[주의] WS-FILE-001 media/thumbs.py:9 — Image.MAX_IMAGE_PIXELS = None 으로 픽셀 폭탄 보호를 끔 → 기본값으로 되돌리고 파일 크기 상한 추가`
 
-## 코드
+## 코드 예시
 
 ### python
 

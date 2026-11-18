@@ -3,7 +3,7 @@
 
 위험 · OWASP A02 · ASVS V1.5 · CWE-611 · CWE-776 · 진단가이드 입력데이터 검증 및 표현-8
 
-## 체크 항목
+## 점검 항목
 
 - 외부에서 온 XML에 DTD(`<!DOCTYPE`)가 있으면 거절한다. DTD가 꼭 필요하면 외부 개체·외부 DTD 로딩을 끄고 개체 확장 한도를 둔다.
 - Python: 외부 XML은 표준 `xml.*` 대신 `defusedxml`로 읽는다(`forbid_dtd=True`). lxml을 쓰면 `resolve_entities=False`, `no_network=True`, `load_dtd=False`로 둔다. 표준 모듈을 써야 하면 `pyexpat.EXPAT_VERSION`이 2.7.2 이상인지 확인한다.
@@ -14,7 +14,7 @@
 - 파서 오류 원문을 응답에 넣지 않는다. 읽어 온 파일 내용이 오류 문장에 섞여 나올 수 있다.
 - SVG, 오피스 파일, RSS, SAML 응답처럼 XML인 줄 모르고 다루는 형식도 같은 파서 설정을 거친다.
 
-## 스킬이 잡는 방식
+## 탐지 규칙
 
 **찾는 곳**: XML 파싱 호출과 그 입력의 출처. Python `xml.etree`, `xml.dom.minidom`, `xml.sax`, `lxml.etree.XMLParser(`, `etree.fromstring(`, `etree.parse(`. PHP `loadXML(`, `DOMDocument::load(`, `simplexml_load_string(`, `simplexml_load_file(`, `XMLReader`, `LIBXML_NOENT`. Node `libxmljs`, `parseXml(`, `xml2js`, `fast-xml-parser`, `@xmldom/xmldom`.
 
@@ -42,11 +42,11 @@
 - 정상 문서에 DTD가 정말 필요한지 먼저 확인한다. 대부분 필요 없으므로 DTD 거절을 기본으로 둔다.
 - 보고에는 XXE면 CWE-611, 엔티티 폭탄이면 CWE-776을 함께 적는다.
 
-## 코드
+## 코드 예시
 
 ### python
 
-✗ 뚫리는 코드
+✗ 취약 코드
 
 ```python
 from lxml import etree
@@ -57,7 +57,7 @@ def import_order(xml_bytes: bytes):
     return root.findtext("customer/name")
 ```
 
-✓ 막는 코드
+✓ 안전 코드
 
 ```python
 from defusedxml import DefusedXmlException
@@ -77,7 +77,7 @@ def import_order(xml_bytes: bytes):
 
 ### js
 
-✗ 뚫리는 코드
+✗ 취약 코드
 
 ```js
 import express from "express";
@@ -90,7 +90,7 @@ app.post("/api/import", express.text({ type: "application/xml" }), (req, res) =>
 });
 ```
 
-✓ 막는 코드
+✓ 안전 코드
 
 ```js
 import express from "express";
@@ -115,7 +115,7 @@ app.post("/api/import", express.text({ type: "application/xml", limit: "1mb" }),
 
 ### php
 
-✗ 뚫리는 코드
+✗ 취약 코드
 
 ```php
 <?php
@@ -126,7 +126,7 @@ header('Content-Type: application/json');
 echo json_encode(['name' => $doc->getElementsByTagName('name')->item(0)?->textContent]);
 ```
 
-✓ 막는 코드
+✓ 안전 코드
 
 ```php
 <?php

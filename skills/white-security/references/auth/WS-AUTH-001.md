@@ -3,7 +3,7 @@
 
 위험 · OWASP A01 · API API1 · API API3 · API API5 · ASVS V8.2 · ASVS V8.3 · CWE-862 · CWE-639 · CWE-863 · CWE-306 · 진단가이드 보안기능-2 · 진단가이드 보안기능-1 · 진단가이드 입력데이터 검증 및 표현-15 · 기반시설 IN · 기반시설 IA · 기반시설 CC · 기반시설 PV
 
-## 체크 항목
+## 점검 항목
 
 - 객체(주문·파일·게시글·회원정보)를 읽고·바꾸고·지우는 모든 요청에서, 서버가 현재 사용자와 그 객체의 소유·권한 관계를 확인한다. 조회 쿼리에 소유자 조건을 함께 넣는 방식을 기본으로 한다.
 - 현재 사용자는 요청 값(`user_id` 파라미터, 본문, 평문 쿠키)이 아니라 서버 세션이나 검증된 토큰에서 꺼낸다.
@@ -16,7 +16,7 @@
 - UUID처럼 추측하기 어려운 ID를 써도 권한 확인을 생략하지 않는다.
 - 남의 객체에는 403 대신 404로 답해 존재 여부를 덜 드러내는 것을 고려한다.
 
-## 스킬이 잡는 방식
+## 탐지 규칙
 
 **찾는 곳**: 라우트·컨트롤러에서 경로·쿼리·본문의 ID로 DB를 조회하는 곳(`get(id)`, `findUnique`, `findById`, `find($id)`, `WHERE id = ?`), 관리자 경로(`/admin`, `/manage`), 역할 판단(`role`, `is_admin`, `level`, `grade`), 결제·금액 처리(`price`, `amount`, `discount`), 모델 갱신(`update(`, `fill(`, `Object.assign(`).
 
@@ -51,11 +51,11 @@
 - 조회 조건에 소유자를 넣는 쪽을 먼저 고른다. 조회 뒤 비교는 빠뜨리기 쉽다.
 - 고친 뒤 계정 두 개로 읽기·수정·삭제·내려받기를 각각 확인하는 테스트를 같이 추가한다.
 
-## 코드
+## 코드 예시
 
 ### python
 
-✗ 뚫리는 코드
+✗ 취약 코드
 
 ```python
 # Flask + SQLAlchemy
@@ -76,7 +76,7 @@ def refund(order_id):
     return {"ok": True}
 ```
 
-✓ 막는 코드
+✓ 안전 코드
 
 ```python
 from sqlalchemy import select
@@ -105,7 +105,7 @@ def refund(order_id):
 
 ### js
 
-✗ 뚫리는 코드
+✗ 취약 코드
 
 ```js
 // Express + Prisma
@@ -124,7 +124,7 @@ app.patch("/api/me", requireLogin, async (req, res) => {
 });
 ```
 
-✓ 막는 코드
+✓ 안전 코드
 
 ```js
 app.get("/api/orders/:id", requireLogin, async (req, res) => {
@@ -150,7 +150,7 @@ app.patch("/api/me", requireLogin, async (req, res) => {
 
 ### php
 
-✗ 뚫리는 코드
+✗ 취약 코드
 
 ```php
 <?php
@@ -168,7 +168,7 @@ readfile($file['path']);
 $amount = (int)($_POST['amount'] ?? 0);
 ```
 
-✓ 막는 코드
+✓ 안전 코드
 
 ```php
 <?php

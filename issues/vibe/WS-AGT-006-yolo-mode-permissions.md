@@ -38,11 +38,11 @@ sources:
     year: 2025
 ---
 
-## 한 줄 요약
+## 요약
 
 AI 코딩 도구가 모든 명령을 묻지 않고 실행하도록(YOLO 모드, `Bash(*)` 허용, 자동 승인) 설정해 둘 때, AI가 읽은 글 속 숨은 지시 하나로 내 컴퓨터에서 남의 명령이 실행되는 문제(진단가이드 이름: 중요한 자원에 대한 잘못된 권한 설정).
 
-## 나는 뭘 하면 되나
+## 대응 방법
 
 ```text
 이 저장소의 AI 도구 설정(.claude/settings.json, .vscode/settings.json, .cursor/)에서 넓게 허용된 규칙을 찾아 줘.
@@ -52,14 +52,14 @@ AI 코딩 도구가 모든 명령을 묻지 않고 실행하도록(YOLO 모드, 
 
 - 설정을 바꾼 뒤 AI에게 `rm` 명령을 요청했을 때, 바로 실행되지 않고 확인을 물어야 한다.
 
-## 체크 항목
+## 점검 항목
 
 - 저장소에 커밋하는 AI 도구 설정에는 `Bash(*)`·`Bash` 같은 전체 허용, `"defaultMode": "bypassPermissions"`, VS Code의 `"chat.tools.global.autoApprove": true`(1.104 전 이름 `chat.tools.autoApprove`), `chat.tools.terminal.autoApprove`의 `"/.*/": true` 같은 넓은 정규식이 없어야 한다.
 - 허용(allow)에는 정확한 명령만 두어야 한다(`Bash(npm run test)`). push·설치·삭제·배포·DB 명령은 묻게(ask) 하고, `.env`·키 파일 읽기는 막아야(deny) 한다.
 - 권한 확인을 건너뛰는 모드(`--dangerously-skip-permissions`, `bypassPermissions`)는 키·운영 접속 정보가 없는 격리 환경(컨테이너·VM)에서만 써야 한다. Claude Code는 `disableBypassPermissionsMode`로 이 모드를 막을 수 있음.
 - AI가 자기 설정 파일(`.vscode/settings.json`, `.cursor/mcp.json`, `.claude/settings.json`)을 고치거나 새로 만들 때는 사람이 확인해야 한다. 2025년 GitHub Copilot(CVE-2025-53773)과 Cursor(CVE-2025-54135)에서 프롬프트 인젝션으로 이런 설정 파일을 써서 확인 없이 명령을 실행하게 만드는 취약점이 수정됨.
 
-## 스킬이 잡는 방식
+## 탐지 규칙
 
 **찾는 곳**: `.claude/settings.json`, `.claude/settings.local.json`, `.vscode/settings.json`, `.cursor/**`, `.mcp.json`, CI 워크플로(`.github/workflows/*.yml`)의 AI 도구 실행 줄, 자동 승인 스크립트.
 
@@ -80,7 +80,7 @@ AI 코딩 도구가 모든 명령을 묻지 않고 실행하도록(YOLO 모드, 
 
 예: `[위험] WS-AGT-006 .claude/settings.json:4 — allow 에 "Bash(*)" 와 bypassPermissions 기본 모드 → 정확한 명령만 allow, push·설치·삭제는 ask, .env 는 deny, disableBypassPermissionsMode 설정`
 
-## 코드
+## 코드 예시
 
 ### json
 

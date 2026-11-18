@@ -44,11 +44,11 @@ sources:
     year: 2024
 ---
 
-## 한 줄 요약
+## 요약
 
 AI가 알려 준 패키지(남이 만들어 둔 코드 묶음) 이름이 사실은 AI가 지어낸 이름일 수 있다. 확인 없이 설치하면, 그 이름을 먼저 차지한 사람이 만든 코드가 내 컴퓨터와 서버에서 돌아간다.
 
-## 이런 장면에서
+## 발생 상황
 
 - AI에게 "엑셀 파일 읽는 기능 만들어 줘"라고 했다. AI가 그럴듯한 이름의 패키지를 설치하라고 한다. 그런데 그 이름은 원래 세상에 없었다. AI가 지어낸 이름이다.
 - 누군가 이런 '지어낸 이름'을 미리 알아내서 같은 이름으로 패키지를 올려 두었다면, 설치하는 순간 그 사람이 넣은 코드가 실행된다. 설치는 '남이 만든 프로그램을 내 컴퓨터에서 돌려도 된다'고 허락하는 일이다.
@@ -56,14 +56,14 @@ AI가 알려 준 패키지(남이 만들어 둔 코드 묶음) 이름이 사실�
 - 에이전트(명령 실행까지 스스로 하는 AI 코딩 도구)가 오류를 고치다가 `npm install`이나 `pip install`을 직접 실행하면, 내가 이름을 확인할 틈도 없다.
 - 유명 패키지와 한 글자만 다른 이름도 같은 함정이다.
 
-## 왜 요즘 더 위험한가
+## 위험 배경
 
 - 2025년 USENIX Security(보안 분야 주요 학회)에 실린 연구는 코드 생성 AI 16개로 코드 57만 6천 개를 만들어 봤다. AI가 추천한 패키지 가운데 실제로 없는 이름이 상용 AI는 5.2% 이상, 공개 모델은 21.7%였다. 지어낸 이름만 20만 5천여 개(205,474개)가 나왔다.
 - 2024년 3월 공개된 실험에서는 한 보안 연구자가 AI가 자주 지어내던 이름 `huggingface-cli`로 빈 패키지를 올렸다. 석 달 만에 1만 5천 번 넘게 내려받혔다(보도 기준). 실험용이라 해는 없었다. 나쁜 코드였다면 그만큼 퍼진 셈이다.
 - AI가 지어낸 이름을 먼저 차지하는 수법을 '슬롭스쿼팅(slopsquatting)'이라고 부른다.
 - 웹 보안 국제 기준인 OWASP Top 10:2025는 '소프트웨어 공급망 실패'(남이 만든 부품을 통해 들어오는 문제)를 3위에 올렸다. 국내에서도 과기정통부·KISA·국정원이 「SW 공급망 보안 가이드라인 1.0」(2024)을 내고 프로그램에 들어간 부품 목록(SBOM) 관리를 안내한다.
 
-## 나는 뭘 하면 되나
+## 대응 방법
 
 **1. AI에게 이렇게 말한다**
 
@@ -86,7 +86,7 @@ AI가 알려 준 패키지(남이 만들어 둔 코드 묶음) 이름이 사실�
 
 **4.** 화이트 보안 스킬을 깔아 두면 AI가 새 패키지를 넣으려 할 때 이 확인을 먼저 하도록 알려 준다.
 
-## 체크 항목
+## 점검 항목
 
 - 새 의존성은 설치 전에 레지스트리에 실제로 있는지 확인한다. PyPI `https://pypi.org/pypi/<이름>/json`, npm `https://registry.npmjs.org/<이름>`, Packagist `https://packagist.org/packages/<vendor>/<이름>.json` 이 404면 없는 패키지다.
 - 처음 등록일이 최근(기본 90일 이내)이거나 내려받은 수가 매우 적으면 멈추고 사람에게 묻는다.
@@ -97,7 +97,7 @@ AI가 알려 준 패키지(남이 만들어 둔 코드 묶음) 이름이 사실�
 - 에이전트의 설치 명령(`npm install`, `pip install`, `composer require`)을 자동 승인 목록에 넣지 않는다.
 - 사내 전용 패키지 이름이 공개 레지스트리에서 비어 있어 남이 먼저 등록할 수 있는지(의존성 혼동) 확인하고, 레지스트리 범위를 고정한다.
 
-## 스킬이 잡는 방식
+## 탐지 규칙
 
 **찾는 곳**: 이번 변경에서 추가된 의존성(`package.json`, `requirements*.txt`, `pyproject.toml`, `composer.json`의 차이), 코드의 새 `import`·`require`·`use`, 에이전트가 실행하려는 설치 명령, 프로젝트 에이전트 설정의 허용 목록(예: `.claude/settings.json`의 `Bash(npm install:*)`).
 
@@ -129,11 +129,11 @@ AI가 알려 준 패키지(남이 만들어 둔 코드 묶음) 이름이 사실�
 - 비슷한 이름을 새로 지어내 바꿔 넣지 않는다. 공식 문서에서 이름을 확인해 사용자에게 보여 주고 승인을 받는다.
 - 설치는 정확한 버전으로 고정하고 잠금 파일을 함께 커밋한다.
 
-## 코드
+## 코드 예시
 
 ### python
 
-✗ 뚫리는 코드
+✗ 취약 코드
 
 ```python
 import subprocess
@@ -144,7 +144,7 @@ def add_dependencies(suggested: list[str]) -> None:
         subprocess.run(["pip", "install", name], check=True)
 ```
 
-✓ 막는 코드
+✓ 안전 코드
 
 ```python
 import json
@@ -180,7 +180,7 @@ def check_pypi(name: str, min_age_days: int = 90) -> str:
 
 ### js
 
-✗ 뚫리는 코드
+✗ 취약 코드
 
 ```js
 import { exec } from "node:child_process";
@@ -191,7 +191,7 @@ export function installPackage(name) {
 }
 ```
 
-✓ 막는 코드
+✓ 안전 코드
 
 ```js
 import { execFile } from "node:child_process";
@@ -227,7 +227,7 @@ export async function installApproved(name, version) {
 
 ### php
 
-✗ 뚫리는 코드
+✗ 취약 코드
 
 ```php
 <?php
@@ -235,7 +235,7 @@ export async function installApproved(name, version) {
 shell_exec('composer require ' . escapeshellarg($suggested)); // 따옴표 처리를 해도 실재 확인은 없다
 ```
 
-✓ 막는 코드
+✓ 안전 코드
 
 ```php
 <?php

@@ -6,7 +6,7 @@ $total = count($site->repo->all());
 <nav class="ws-nav" aria-label="이슈 목록">
 <div class="ws-search">
 <svg class="ws-search-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5L13.5 13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-<input type="search" id="ws-q" class="ws-search-input" placeholder="이슈·체크 항목 검색" aria-label="이슈 검색" autocomplete="off" spellcheck="false" data-search="<?= Site::e($site->url('api/search.json')) ?>">
+<input type="search" id="ws-q" class="ws-search-input" placeholder="이슈·점검 항목 검색" aria-label="이슈 검색" autocomplete="off" spellcheck="false" data-search="<?= Site::e($site->url('api/search.json')) ?>">
 </div>
 <p class="ws-search-status" id="ws-q-status" aria-live="polite"></p>
 <details class="ws-nav-fold" open>

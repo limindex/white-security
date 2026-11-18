@@ -50,11 +50,11 @@ sources:
     year: 2021
 ---
 
-## 한 줄 요약
+## 요약
 
 XML(태그로 내용을 감싸 적는 데이터 형식) 파일을 읽는 프로그램이 파일 속 특별한 선언을 그대로 따르면, 서버의 비밀 파일이 새어 나가거나 작은 파일 하나가 서버 메모리를 다 써서 서비스가 멈춘다. 진단가이드 이름은 '부적절한 XML 외부 개체 참조'다.
 
-## 이런 장면에서
+## 발생 상황
 
 - AI에게 "거래처가 보내는 XML 주문서를 읽어서 DB에 넣어 줘", "블로그 RSS(새 글 목록 파일)를 긁어 와서 요약해 줘"라고 했다. SVG 그림 파일과 엑셀(xlsx) 파일도 속은 XML이다.
 - XML 맨 위에는 '줄임말 사전'(DTD, `<!DOCTYPE ...>`)을 둘 수 있다. 줄임말을 엔티티(개체)라고 한다. `&회사;`라고 쓰면 '화이트 주식회사'로 바뀌는 식이다.
@@ -71,14 +71,14 @@ XML(태그로 내용을 감싸 적는 데이터 형식) 파일을 읽는 프로�
 
 - `&b;`는 "ha"가 10번, 20글자가 된다. 단계를 하나 늘릴 때마다 10배씩 커진다. 10단계면 "ha"가 10억 번, 글자만 약 2GB다. 1KB도 안 되는 파일이 서버 메모리를 다 먹는다. 그래서 '10억 번 웃기(Billion Laughs)' 공격, 또는 엔티티 폭탄이라고 부른다.
 
-## 왜 요즘 더 위험한가
+## 위험 배경
 
 - 스크래퍼와 AI 에이전트가 사람이 고르지 않은 외부 파일(RSS, 사이트맵, SVG, 오피스 파일)을 자동으로 읽는 일이 늘었다. 낯선 파일이 확인 없이 파서로 바로 들어간다.
 - 언어마다 기본값이 다르다. 옵션 하나만 켜도 다시 위험해진다. PHP는 기본으로 막혀 있지만 `LIBXML_NOENT` 같은 옵션을 켜면 다시 열린다(PHP 매뉴얼). Python 표준 모듈은 함께 쓰는 Expat이라는 부품이 2.7.2보다 오래되면 10억 번 웃기에 약할 수 있다(Python 공식 문서).
 - 외부 파일 읽기(XXE)를 막아도 10억 번 웃기는 따로 막아야 한다. OWASP 치트시트도 XXE 방어가 모든 XML 서비스 거부 공격을 막지는 않는다고 적는다.
 - 웹 보안 국제 기준인 OWASP Top 10:2025는 두 문제를 모두 '보안 설정 오류'(A02)에 넣었다. 국내 공공 개발보안 기준 49개 항목에도 '부적절한 XML 외부 개체 참조'가 들어 있다.
 
-## 나는 뭘 하면 되나
+## 대응 방법
 
 **1. AI에게 이렇게 말한다**
 
@@ -100,7 +100,7 @@ XML(태그로 내용을 감싸 적는 데이터 형식) 파일을 읽는 프로�
 
 **4.** 화이트 보안 스킬을 깔아 두면 AI가 XML을 읽는 코드를 쓸 때 위험한 옵션이 켜졌는지 같이 살펴본다.
 
-## 체크 항목
+## 점검 항목
 
 - 외부에서 온 XML에 DTD(`<!DOCTYPE`)가 있으면 거절한다. DTD가 꼭 필요하면 외부 개체·외부 DTD 로딩을 끄고 개체 확장 한도를 둔다.
 - Python: 외부 XML은 표준 `xml.*` 대신 `defusedxml`로 읽는다(`forbid_dtd=True`). lxml을 쓰면 `resolve_entities=False`, `no_network=True`, `load_dtd=False`로 둔다. 표준 모듈을 써야 하면 `pyexpat.EXPAT_VERSION`이 2.7.2 이상인지 확인한다.
@@ -111,7 +111,7 @@ XML(태그로 내용을 감싸 적는 데이터 형식) 파일을 읽는 프로�
 - 파서 오류 원문을 응답에 넣지 않는다. 읽어 온 파일 내용이 오류 문장에 섞여 나올 수 있다.
 - SVG, 오피스 파일, RSS, SAML 응답처럼 XML인 줄 모르고 다루는 형식도 같은 파서 설정을 거친다.
 
-## 스킬이 잡는 방식
+## 탐지 규칙
 
 **찾는 곳**: XML 파싱 호출과 그 입력의 출처. Python `xml.etree`, `xml.dom.minidom`, `xml.sax`, `lxml.etree.XMLParser(`, `etree.fromstring(`, `etree.parse(`. PHP `loadXML(`, `DOMDocument::load(`, `simplexml_load_string(`, `simplexml_load_file(`, `XMLReader`, `LIBXML_NOENT`. Node `libxmljs`, `parseXml(`, `xml2js`, `fast-xml-parser`, `@xmldom/xmldom`.
 
@@ -139,11 +139,11 @@ XML(태그로 내용을 감싸 적는 데이터 형식) 파일을 읽는 프로�
 - 정상 문서에 DTD가 정말 필요한지 먼저 확인한다. 대부분 필요 없으므로 DTD 거절을 기본으로 둔다.
 - 보고에는 XXE면 CWE-611, 엔티티 폭탄이면 CWE-776을 함께 적는다.
 
-## 코드
+## 코드 예시
 
 ### python
 
-✗ 뚫리는 코드
+✗ 취약 코드
 
 ```python
 from lxml import etree
@@ -154,7 +154,7 @@ def import_order(xml_bytes: bytes):
     return root.findtext("customer/name")
 ```
 
-✓ 막는 코드
+✓ 안전 코드
 
 ```python
 from defusedxml import DefusedXmlException
@@ -174,7 +174,7 @@ def import_order(xml_bytes: bytes):
 
 ### js
 
-✗ 뚫리는 코드
+✗ 취약 코드
 
 ```js
 import express from "express";
@@ -187,7 +187,7 @@ app.post("/api/import", express.text({ type: "application/xml" }), (req, res) =>
 });
 ```
 
-✓ 막는 코드
+✓ 안전 코드
 
 ```js
 import express from "express";
@@ -212,7 +212,7 @@ app.post("/api/import", express.text({ type: "application/xml", limit: "1mb" }),
 
 ### php
 
-✗ 뚫리는 코드
+✗ 취약 코드
 
 ```php
 <?php
@@ -223,7 +223,7 @@ header('Content-Type: application/json');
 echo json_encode(['name' => $doc->getElementsByTagName('name')->item(0)?->textContent]);
 ```
 
-✓ 막는 코드
+✓ 안전 코드
 
 ```php
 <?php

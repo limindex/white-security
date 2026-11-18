@@ -114,7 +114,7 @@ final class Repository
     {
         $out = [];
         foreach ($this->issues as $i) {
-            $text = trim(($i->sections['한 줄 요약'] ?? '') . ' ' . ($i->sections['체크 항목'] ?? ''));
+            $text = trim(($i->sections['요약'] ?? '') . ' ' . ($i->sections['점검 항목'] ?? ''));
             $text = trim(preg_replace('/\s+/u', ' ', preg_replace('/^\s*[-*]\s+/m', '', $text)));
             if (mb_strlen($text) > 300) $text = mb_substr($text, 0, 299) . '…';
             $out[] = ['id' => $i->id, 'title' => $i->title, 'group' => $i->group, 'severity' => $i->severity, 'text' => $text];

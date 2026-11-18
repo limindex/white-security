@@ -32,11 +32,11 @@ sources:
     year: 2026
 ---
 
-## 한 줄 요약
+## 요약
 
 AI가 쓴 글·코드·SQL·명령을 확인 없이 `eval`, 셸, DB, `innerHTML`에 넘길 때, AI를 속인 사람의 코드가 서버나 사용자 화면에서 실행되는 문제. Improper Output Handling(부적절한 출력 처리)이라 부름(진단가이드 이름: 코드 삽입·SQL 삽입·운영체제 명령어 삽입·크로스사이트 스크립트).
 
-## 나는 뭘 하면 되나
+## 대응 방법
 
 ```text
 AI 답을 eval·exec·셸 명령·SQL·innerHTML 로 넘기는 곳을 모두 찾아 줘.
@@ -46,7 +46,7 @@ AI 답은 정해진 JSON 형식으로만 받아 검사하고, 실행할 일은 �
 
 - AI에게 "답에 `<b>굵게</b>`를 넣어 줘"라고 요청했을 때, 화면에 태그 글자가 그대로 보여야 한다(텍스트로 그린다는 뜻).
 
-## 체크 항목
+## 점검 항목
 
 - AI 출력은 사용자 입력과 똑같이 믿지 않고, 받는 쪽에서 형식(JSON 스키마·길이·허용 값)을 검사해야 한다.
 - AI 출력을 `eval`·`exec`·`new Function`·셸 문자열로 실행하지 않고, 할 일은 서버에 미리 정한 목록에서 고르게 해야 한다.
@@ -54,7 +54,7 @@ AI 답은 정해진 JSON 형식으로만 받아 검사하고, 실행할 일은 �
 - 화면에는 `textContent`나 자동 이스케이프로 그려야 하고, HTML이 필요하면 새니타이저를 거쳐야 한다(이미지 유출 통로는 WS-PI-002).
 - AI가 고른 파일 경로·URL도 허용 목록으로 검사해야 한다.
 
-## 스킬이 잡는 방식
+## 탐지 규칙
 
 **찾는 곳**: LLM 응답 변수(`reply`, `completion`, `response.text`, `output`, `content`)가 흘러가는 곳 — `eval(`, `exec(`, `new Function(`, `subprocess`, `child_process.exec(`, `shell_exec(`, `query(`·`execute(`의 SQL 문자열, `innerHTML`, `dangerouslySetInnerHTML`, `v-html`, 이스케이프 없는 `echo`.
 
@@ -75,7 +75,7 @@ AI 답은 정해진 JSON 형식으로만 받아 검사하고, 실행할 일은 �
 
 예: `[위험] WS-LLM-001 api/report.py:57 — 모델이 쓴 SQL 을 cursor.execute 로 그대로 실행 → 조건만 JSON 으로 받아 허용 목록 검사 후 매개변수 바인딩`
 
-## 코드
+## 코드 예시
 
 ### python
 

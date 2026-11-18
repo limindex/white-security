@@ -14,7 +14,7 @@ test('머리말 예시 전체를 파싱한다', function () {
     assert_same(2025, $fm['sources'][0]['year']);
     assert_same('https://owasp.org/Top10/', $fm['sources'][0]['url']);
     assert_same(2, count($fm['sources']));
-    assert_true(str_starts_with(ltrim($body), '## 한 줄 요약'));
+    assert_true(str_starts_with(ltrim($body), '## 요약'));
 });
 
 test('블록 목록·따옴표·주석', function () {

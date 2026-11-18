@@ -3,7 +3,7 @@
 
 위험 · OWASP A02 · OWASP A07 · ASVS V13.3 · CWE-798 · CWE-540 · CWE-312 · 진단가이드 보안기능-6 · 진단가이드 보안기능-5 · 기반시설 IL
 
-## 체크 항목
+## 점검 항목
 
 - 소스·설정 파일·테스트 데이터·주석에 비밀값 리터럴이 없다(키 접두어가 붙은 문자열, `password=`, `secret`, `token`, 비밀번호가 든 접속 문자열, `-----BEGIN ... PRIVATE KEY-----`).
 - 비밀값은 실행 환경(환경 변수, 시크릿 매니저, KMS)에서 읽는다. 값이 없으면 기본값으로 대신하지 않고 시작을 멈춘다.
@@ -15,7 +15,7 @@
 - 키는 필요한 권한만 주고 만료·교체 주기를 정한다.
 - 저장소에 비밀값 검사(pre-commit 훅, 푸시 보호, CI 스캔)를 둔다.
 
-## 스킬이 잡는 방식
+## 탐지 규칙
 
 **찾는 곳**: 이번에 쓰거나 고친 파일 전체. 특히 설정 파일(`.env*`, `config.*`, `settings.py`, `application.yml`, `docker-compose.yml`, CI 워크플로, `.mcp.json`), 브라우저 코드의 `import.meta.env.VITE_*`·`process.env.NEXT_PUBLIC_*`, 로그 출력부.
 
@@ -54,11 +54,11 @@
 - 사용자에게 "이 키는 이미 노출됐으니 서비스에서 새로 발급하고 옛 키를 폐기해야 한다"고 반드시 알린다. 코드만 고치고 끝내지 않는다.
 - git 기록을 다시 쓰는 작업(`git filter-repo` 등)은 사용자 확인 없이 하지 않는다.
 
-## 코드
+## 코드 예시
 
 ### python
 
-✗ 뚫리는 코드
+✗ 취약 코드
 
 ```python
 # settings.py (저장소에 커밋됨)
@@ -69,7 +69,7 @@ PAYMENT_SECRET_KEY = "live_secret_9f8a7c6d5e4b3a2f1e0d"
 JWT_SECRET = os.getenv("JWT_SECRET", "dev-secret")  # 없으면 모두가 아는 값으로 돈다
 ```
 
-✓ 막는 코드
+✓ 안전 코드
 
 ```python
 # settings.py
@@ -91,7 +91,7 @@ JWT_SECRET = required("JWT_SECRET")
 
 ### js
 
-✗ 뚫리는 코드
+✗ 취약 코드
 
 ```js
 // src/api.js (브라우저 번들에 들어간다)
@@ -105,7 +105,7 @@ export async function ask(prompt) {
 }
 ```
 
-✓ 막는 코드
+✓ 안전 코드
 
 ```js
 // server.js (Node, 서버에서만 실행)
@@ -132,7 +132,7 @@ app.post("/api/chat", requireLogin, async (req, res) => {
 
 ### php
 
-✗ 뚫리는 코드
+✗ 취약 코드
 
 ```php
 <?php
@@ -141,7 +141,7 @@ $pdo = new PDO('mysql:host=db;dbname=shop;charset=utf8mb4', 'shop', 'Winter2026!
 define('SMS_API_SECRET', 'b1946ac92492d2347c6235b4d2611184');
 ```
 
-✓ 막는 코드
+✓ 안전 코드
 
 ```php
 <?php

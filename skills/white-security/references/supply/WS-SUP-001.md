@@ -3,7 +3,7 @@
 
 위험 · OWASP A03 · LLM LLM07 · 에이전트 ASI05 · ASVS V15.2 · 진단가이드 보안기능-15
 
-## 체크 항목
+## 점검 항목
 
 - 새 의존성은 설치 전에 레지스트리에 실제로 있는지 확인한다. PyPI `https://pypi.org/pypi/<이름>/json`, npm `https://registry.npmjs.org/<이름>`, Packagist `https://packagist.org/packages/<vendor>/<이름>.json` 이 404면 없는 패키지다.
 - 처음 등록일이 최근(기본 90일 이내)이거나 내려받은 수가 매우 적으면 멈추고 사람에게 묻는다.
@@ -14,7 +14,7 @@
 - 에이전트의 설치 명령(`npm install`, `pip install`, `composer require`)을 자동 승인 목록에 넣지 않는다.
 - 사내 전용 패키지 이름이 공개 레지스트리에서 비어 있어 남이 먼저 등록할 수 있는지(의존성 혼동) 확인하고, 레지스트리 범위를 고정한다.
 
-## 스킬이 잡는 방식
+## 탐지 규칙
 
 **찾는 곳**: 이번 변경에서 추가된 의존성(`package.json`, `requirements*.txt`, `pyproject.toml`, `composer.json`의 차이), 코드의 새 `import`·`require`·`use`, 에이전트가 실행하려는 설치 명령, 프로젝트 에이전트 설정의 허용 목록(예: `.claude/settings.json`의 `Bash(npm install:*)`).
 
@@ -46,11 +46,11 @@
 - 비슷한 이름을 새로 지어내 바꿔 넣지 않는다. 공식 문서에서 이름을 확인해 사용자에게 보여 주고 승인을 받는다.
 - 설치는 정확한 버전으로 고정하고 잠금 파일을 함께 커밋한다.
 
-## 코드
+## 코드 예시
 
 ### python
 
-✗ 뚫리는 코드
+✗ 취약 코드
 
 ```python
 import subprocess
@@ -61,7 +61,7 @@ def add_dependencies(suggested: list[str]) -> None:
         subprocess.run(["pip", "install", name], check=True)
 ```
 
-✓ 막는 코드
+✓ 안전 코드
 
 ```python
 import json
@@ -97,7 +97,7 @@ def check_pypi(name: str, min_age_days: int = 90) -> str:
 
 ### js
 
-✗ 뚫리는 코드
+✗ 취약 코드
 
 ```js
 import { exec } from "node:child_process";
@@ -108,7 +108,7 @@ export function installPackage(name) {
 }
 ```
 
-✓ 막는 코드
+✓ 안전 코드
 
 ```js
 import { execFile } from "node:child_process";
@@ -144,7 +144,7 @@ export async function installApproved(name, version) {
 
 ### php
 
-✗ 뚫리는 코드
+✗ 취약 코드
 
 ```php
 <?php
@@ -152,7 +152,7 @@ export async function installApproved(name, version) {
 shell_exec('composer require ' . escapeshellarg($suggested)); // 따옴표 처리를 해도 실재 확인은 없다
 ```
 
-✓ 막는 코드
+✓ 안전 코드
 
 ```php
 <?php

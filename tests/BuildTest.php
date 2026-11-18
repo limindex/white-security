@@ -6,10 +6,10 @@ const BT_PHP = PHP_BINARY;
 function bt_issue(string $id, string $slug, string $group, string $extra = '', bool $siteOnly = false): string
 {
     $langs = $siteOnly ? '[]' : '[python]';
-    $code = $siteOnly ? '' : "\n## 코드\n\n### python\n\n✗ 뚫리는 코드\n\n```python\nbad()\n```\n\n✓ 막는 코드\n\n```python\ngood()\n```\n";
+    $code = $siteOnly ? '' : "\n## 코드 예시\n\n### python\n\n✗ 취약 코드\n\n```python\nbad()\n```\n\n✓ 안전 코드\n\n```python\ngood()\n```\n";
     return "---\nid: $id\ntitle: 제목 $slug\nslug: $slug\ngroup: $group\nseverity: medium\nsite_only: " . ($siteOnly ? 'true' : 'false')
         . "\ndepth: brief\nlanguages: $langs\nmaps:\n  owasp2025: [A05]\nchecked: 2026-11-18\nsources:\n  - title: t\n    url: https://example.org/x\n    year: 2025\n---\n\n"
-        . "## 한 줄 요약\n\n요약 $slug.\n\n## 체크 항목\n\n- 항목 $slug\n$code$extra";
+        . "## 요약\n\n요약 $slug.\n\n## 점검 항목\n\n- 항목 $slug\n$code$extra";
 }
 
 /** 임시 루트에 build.php 를 실행한다. @return array{0:int,1:string,2:string} 종료코드·출력·루트 */
@@ -69,8 +69,8 @@ test('build: 스킬 references — 장면 절 없음·site_only 제외·INDEX', 
     assert_contains('위험 · OWASP A05', $f);
     assert_contains('CWE-89', $f);
     assert_contains('입력데이터 검증 및 표현-1', $f);
-    foreach (['## 체크 항목', '## 스킬이 잡는 방식', '## 코드', 'cur.execute("SELECT * FROM u WHERE id=%s", (uid,))'] as $s) assert_contains($s, $f);
-    foreach (['## 이런 장면에서', '## 한 줄 요약', '## 왜 요즘', '## 나는 뭘'] as $s) assert_true(!str_contains($f, $s), $s);
+    foreach (['## 점검 항목', '## 탐지 규칙', '## 코드 예시', 'cur.execute("SELECT * FROM u WHERE id=%s", (uid,))'] as $s) assert_contains($s, $f);
+    foreach (['## 발생 상황', '## 요약', '## 위험 배경', '## 대응 방법'] as $s) assert_true(!str_contains($f, $s), $s);
     assert_true(!is_file("$ref/people/WS-PPL-001.md") && !is_dir("$ref/people"), 'site_only 제외');
     $idx = file_get_contents("$ref/INDEX.md");
     assert_true(str_starts_with($idx, '<!-- 생성 파일'), 'INDEX 머리');

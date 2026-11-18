@@ -7,8 +7,8 @@ final class Issue
     public const SEVERITIES = ['high', 'medium', 'low'];
     public const DEPTHS = ['full', 'brief'];
     public const MAP_KEYS = ['owasp2025', 'api2023', 'llm2026', 'agentic2026', 'asvs5', 'cwe', 'kr_guide', 'kr_ciip'];
-    public const FULL_SECTIONS = ['한 줄 요약', '이런 장면에서', '왜 요즘 더 위험한가', '나는 뭘 하면 되나', '체크 항목', '스킬이 잡는 방식', '코드'];
-    public const BRIEF_SECTIONS = ['한 줄 요약', '체크 항목', '코드'];
+    public const FULL_SECTIONS = ['요약', '발생 상황', '위험 배경', '대응 방법', '점검 항목', '탐지 규칙', '코드 예시'];
+    public const BRIEF_SECTIONS = ['요약', '점검 항목', '코드 예시'];
     /** maps.cwe 는 Top 25 밖 번호도 받는다. 커버리지 표는 data/frameworks/cwe.json(Top 25)만 센다. */
     public const CWE_ID = '/^CWE-\d+$/';
 
@@ -110,17 +110,17 @@ final class Issue
         $sections = self::sections($body);
         $required = $depth === 'full' ? self::FULL_SECTIONS : self::BRIEF_SECTIONS;
         foreach ($required as $h) {
-            if ($siteOnly && $h === '코드') continue; // 사람 영역 이슈는 코드 절이 없어도 된다
+            if ($siteOnly && $h === '코드 예시') continue; // 사람 영역 이슈는 코드 예시 절이 없어도 된다
             if (!isset($sections[$h])) throw $fail("필수 제목 `## $h` 가 없습니다 (depth: $depth)");
         }
         try {
-            $code = self::extractCode($sections['코드'] ?? '');
+            $code = self::extractCode($sections['코드 예시'] ?? '');
         } catch (IssueError $e) {
             throw $fail($e->getMessage());
         }
         $found = array_keys($code);
         $a = $languages; $b = $found; sort($a); sort($b);
-        if ($a !== $b) throw $fail('languages [' . implode(', ', $languages) . '] 와 `## 코드` 의 ### 소제목 [' . implode(', ', $found) . '] 이(가) 다릅니다');
+        if ($a !== $b) throw $fail('languages [' . implode(', ', $languages) . '] 와 `## 코드 예시` 의 ### 소제목 [' . implode(', ', $found) . '] 이(가) 다릅니다');
 
         return new Issue($id, $title, $slug, $group, $severity, $siteOnly, $depth, $languages, $maps, $checked, $sources, $body, $sections, $code, $path);
     }
@@ -171,7 +171,7 @@ final class Issue
         if ($fence !== null) throw new IssueError('코드 블록이 닫히지 않았습니다');
         foreach ($out as $l => $pair) {
             if (!isset($pair['bad'], $pair['good']) || trim($pair['bad']) === '' || trim($pair['good']) === '') {
-                throw new IssueError("$l: ✗ 뚫리는 코드와 ✓ 막는 코드 블록이 둘 다 있어야 합니다");
+                throw new IssueError("$l: ✗ 취약 코드와 ✓ 안전 코드 블록이 둘 다 있어야 합니다");
             }
         }
         return $out;

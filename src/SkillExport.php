@@ -8,7 +8,7 @@ final class SkillExport
         'asvs5' => 'ASVS', 'cwe' => '', 'kr_guide' => '진단가이드', 'kr_ciip' => '기반시설',
     ];
     /** 스킬 파일에 옮기는 절 (이 순서) */
-    private const SECTIONS = ['체크 항목', '스킬이 잡는 방식', '코드'];
+    private const SECTIONS = ['점검 항목', '탐지 규칙', '코드 예시'];
 
     /** @return list<string> 쓴 파일(상대 경로, 정렬됨) */
     public static function write(Repository $repo, string $dir): array
@@ -66,7 +66,7 @@ final class SkillExport
 
     private static function summary(Issue $i): string
     {
-        $s = trim(preg_replace('/\s+/u', ' ', $i->sections['한 줄 요약'] ?? ''));
+        $s = trim(preg_replace('/\s+/u', ' ', $i->sections['요약'] ?? ''));
         return $s !== '' ? $s : $i->title;
     }
 

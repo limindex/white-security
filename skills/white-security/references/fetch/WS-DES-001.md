@@ -3,7 +3,7 @@
 
 위험 · OWASP A08 · ASVS V1.5.2 · CWE-502 · 진단가이드 코드오류-5
 
-## 체크 항목
+## 점검 항목
 
 - 남이 준 데이터(쿠키·요청 본문·큐 메시지·업로드 파일)는 `pickle`, 안전 로더 없는 `yaml.load`, PHP `unserialize`, Java `ObjectInputStream`, `node-serialize`로 되살리지 않고 JSON을 써야 한다.
 - YAML은 `yaml.safe_load`를 써야 한다.
@@ -12,7 +12,7 @@
 - JSON으로 읽은 뒤에도 타입·필드를 검사하고, 쓸 값만 꺼내야 한다.
 - AI 모델 파일(`.pkl`, `.pt` 등)도 pickle일 수 있음. 모델 공급망은 WS-SUP-008 범위.
 
-## 스킬이 잡는 방식
+## 탐지 규칙
 
 **찾는 곳**: `pickle.load(s)`, `cPickle`, `dill`, `joblib.load`, `yaml.load(`·`yaml.unsafe_load`, `jsonpickle.decode`, `unserialize(`, `node-serialize`, `serialize-javascript`를 되살릴 때의 `eval`, `ObjectInputStream`, `XMLDecoder`, `BinaryFormatter`.
 
@@ -33,7 +33,7 @@
 
 예: `[위험] WS-DES-001 shop/cart.py:19 — cart 쿠키를 pickle.loads 로 되살림 → JSON + HMAC 서명 확인, 또는 쿠키에는 장바구니 ID만`
 
-## 코드
+## 코드 예시
 
 ### python
 

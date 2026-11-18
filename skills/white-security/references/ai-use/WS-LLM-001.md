@@ -3,7 +3,7 @@
 
 위험 · OWASP A05 · LLM LLM10 · 에이전트 ASI05 · ASVS V1.3.2 · ASVS V1.2.4 · ASVS V1.2.5 · ASVS V3.2.2 · CWE-1426 · CWE-94 · CWE-79 · CWE-89 · CWE-78 · 진단가이드 입력데이터 검증 및 표현-1 · 진단가이드 입력데이터 검증 및 표현-2 · 진단가이드 입력데이터 검증 및 표현-4 · 진단가이드 입력데이터 검증 및 표현-5 · 기반시설 CI · 기반시설 SI · 기반시설 XS
 
-## 체크 항목
+## 점검 항목
 
 - AI 출력은 사용자 입력과 똑같이 믿지 않고, 받는 쪽에서 형식(JSON 스키마·길이·허용 값)을 검사해야 한다.
 - AI 출력을 `eval`·`exec`·`new Function`·셸 문자열로 실행하지 않고, 할 일은 서버에 미리 정한 목록에서 고르게 해야 한다.
@@ -11,7 +11,7 @@
 - 화면에는 `textContent`나 자동 이스케이프로 그려야 하고, HTML이 필요하면 새니타이저를 거쳐야 한다(이미지 유출 통로는 WS-PI-002).
 - AI가 고른 파일 경로·URL도 허용 목록으로 검사해야 한다.
 
-## 스킬이 잡는 방식
+## 탐지 규칙
 
 **찾는 곳**: LLM 응답 변수(`reply`, `completion`, `response.text`, `output`, `content`)가 흘러가는 곳 — `eval(`, `exec(`, `new Function(`, `subprocess`, `child_process.exec(`, `shell_exec(`, `query(`·`execute(`의 SQL 문자열, `innerHTML`, `dangerouslySetInnerHTML`, `v-html`, 이스케이프 없는 `echo`.
 
@@ -32,7 +32,7 @@
 
 예: `[위험] WS-LLM-001 api/report.py:57 — 모델이 쓴 SQL 을 cursor.execute 로 그대로 실행 → 조건만 JSON 으로 받아 허용 목록 검사 후 매개변수 바인딩`
 
-## 코드
+## 코드 예시
 
 ### python
 

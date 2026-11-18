@@ -40,7 +40,7 @@ test('route: api/issues/<id>.json', function () {
     $a = json_decode($r['body'], true);
     assert_true(isset($a['code']['php']['good']));
     assert_same('2026-11-18', $a['checked']);
-    assert_true(isset($a['sections']['한 줄 요약']));
+    assert_true(isset($a['sections']['요약']));
     assert_same(404, mk_site()->route('api/issues/WS-NOPE-999.json')['status']);
 });
 

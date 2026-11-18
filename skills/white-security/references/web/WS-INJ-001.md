@@ -3,7 +3,7 @@
 
 위험 · OWASP A05 · ASVS V1.2 · CWE-89 · 진단가이드 입력데이터 검증 및 표현-1 · 기반시설 SI
 
-## 체크 항목
+## 점검 항목
 
 - 쿼리에 들어가는 값은 모두 바인딩(`?`, `%s`, `:name`, `$1`)으로 넘긴다. 문자열 연결, f-string, 템플릿 리터럴, `sprintf`로 값을 넣지 않는다.
 - 이스케이프 함수(`addslashes`, 직접 만든 `sql_escape`, `mysqli_real_escape_string`)를 주된 방어로 쓰지 않는다.
@@ -16,7 +16,7 @@
 - DB 오류 원문을 화면에 보여 주지 않는다.
 - 참고(국내 레거시): "EUC-KR·CP949에서는 `addslashes`가 멀티바이트 문자로 우회된다"는 설명이 돌지만 한국어 문자셋에는 해당하지 않는다. 이 우회는 앞 바이트와 `\`(0x5C)가 한 글자로 묶이는 GBK·Big5·Shift_JIS·CP932에서 생기는데, EUC-KR·CP949에는 0x5C를 둘째 바이트로 쓰는 글자가 없다(Python 표준 코덱으로 0x81~0xFE 뒤에 0x5C를 붙여 확인). 그래도 `addslashes`에 문자열을 이어 붙이는 쿼리는 인코딩과 상관없이 SQL 삽입 항목에 걸린다. 바인딩으로 바꾸고 연결 문자셋을 DSN에 적는다.
 
-## 스킬이 잡는 방식
+## 탐지 규칙
 
 **찾는 곳**: 쿼리 실행부와 그 인자. `execute(`, `executemany(`, `cursor.`, `query(`, `raw(`, `text(`, `->query(`, `->exec(`, `->prepare(`, `mysqli_query(`, `pg_query(`, `db.query(`, `pool.query(`, `sequelize.query(`, `knex.raw(`, `whereRaw(`.
 
@@ -45,11 +45,11 @@
 - 쿼리 모양은 그대로 두고 값만 자리표시자로 바꾼다.
 - 바꾼 뒤 기존 테스트로 결과가 같은지 확인하고, 따옴표가 든 입력 테스트를 하나 추가한다.
 
-## 코드
+## 코드 예시
 
 ### python
 
-✗ 뚫리는 코드
+✗ 취약 코드
 
 ```python
 def search_products(conn, q: str, sort: str):
@@ -59,7 +59,7 @@ def search_products(conn, q: str, sort: str):
         return cur.fetchall()
 ```
 
-✓ 막는 코드
+✓ 안전 코드
 
 ```python
 SORT_COLUMNS = {"name": "name", "price": "price", "new": "created_at DESC"}
@@ -74,7 +74,7 @@ def search_products(conn, q: str, sort: str):
 
 ### js
 
-✗ 뚫리는 코드
+✗ 취약 코드
 
 ```js
 // Express + mysql2
@@ -92,7 +92,7 @@ app.post("/login", async (req, res) => {
 });
 ```
 
-✓ 막는 코드
+✓ 안전 코드
 
 ```js
 app.post("/login", async (req, res) => {
@@ -116,7 +116,7 @@ app.post("/login", async (req, res) => {
 
 ### php
 
-✗ 뚫리는 코드
+✗ 취약 코드
 
 ```php
 <?php
@@ -125,7 +125,7 @@ $sql = "SELECT id, title FROM board WHERE title LIKE '%$q%' ORDER BY " . ($_GET[
 $rows = $pdo->query($sql)->fetchAll();
 ```
 
-✓ 막는 코드
+✓ 안전 코드
 
 ```php
 <?php
