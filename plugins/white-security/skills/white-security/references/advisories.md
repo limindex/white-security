@@ -14,6 +14,15 @@ Grade a match as 위험 (`WS-SUP-002`), unless the entry's "Affects" line names 
 - Expires: 2027-05-31
 - Sources: https://www.cve.org/CVERecord?id=CVE-2026-114938 · https://www.cisa.gov/news-events/alerts/2026/11/17/critical-java-vulnerability-requires-immediate-patching · https://access.redhat.com/security/cve/cve-2026-114938
 
+## React2Shell — React Server Components RCE — CVE-2025-55182 (CISA KEV)
+- Published: 2025-12-03 · CVSS 3.1 10.0 · KEV added 2025-12-05
+- Watch: `react-server-dom-webpack`/`-parcel`/`-turbopack` 19.0.0, 19.1.0, 19.1.1, 19.2.0, or `next` 15.0–16.0 with App Router before its line's patch 15.0.5 / 15.1.9 / 15.2.6 / 15.3.6 / 15.4.8 / 15.5.7 / 16.0.7 (also 14.3.0-canary.77+ canaries) → that patch, `react-server-dom-*` 19.0.1 / 19.1.2 / 19.2.1; rotate secrets
+- Affects: `react-server-dom-webpack`, `react-server-dom-parcel`, `react-server-dom-turbopack` 19.0.0, 19.1.0, 19.1.1, 19.2.0 (unauthenticated request to a Server Function endpoint; apps that support React Server Components may be affected even without Server Functions). Next.js (CVE-2025-66478, rejected by NVD as a duplicate of this CVE): 15.x, 16.x and 14.3.0-canary.77 and later canaries using the App Router. Not affected: Next.js 13.x, 14.x stable, Pages Router only, Edge Runtime, and apps without a React Server Components framework or bundler. Other affected frameworks per React: `react-router` (unstable RSC APIs), `waku`, `@parcel/rsc`, `@vitejs/plugin-rsc`, `rwsdk`.
+- Check: `next` and `react-server-dom-*` versions in `package-lock.json`/`pnpm-lock.yaml`/`yarn.lock`; whether `app/` (App Router) exists.
+- Fixed: `react-server-dom-*` 19.0.1, 19.1.2, 19.2.1; `next` 15.0.5, 15.1.9, 15.2.6, 15.3.6, 15.4.8, 15.5.7, 16.0.7, 15.6.0-canary.58, 16.1.0-canary.12; 14.3.0-canary.77+ → latest stable 14.x. No workaround. Prefer the latest patch in each line (React lists later releases that also fix follow-up DoS and source-exposure CVEs). Apps online and unpatched on 2025-12-04: rotate secrets after upgrading.
+- Expires: 2027-06-30
+- Sources: https://react.dev/blog/2025/12/03/critical-security-vulnerability-in-react-server-components · https://github.com/advisories/GHSA-fv66-9v8q-g76r · https://nextjs.org/blog/CVE-2025-66478 · https://github.com/vercel/next.js/security/advisories/GHSA-9qr9-h5gf-34mp · https://nvd.nist.gov/vuln/detail/CVE-2025-55182
+
 ## Next.js middleware auth bypass — CVE-2025-29927
 - Published: 2025-03-21 · CVSS 3.1 9.1
 - Watch: `next` 12.0.0–12.3.4, 13.0.0–13.5.8, 14.0.0–14.2.24, 15.0.0–15.2.2 with auth in middleware → 12.3.5 / 13.5.9 / 14.2.25 / 15.2.3
