@@ -64,7 +64,7 @@ final class Coverage
         $byId = [];
         foreach ($frameworks as $fw) $byId[$fw['id']] = $fw;
         $rows = [];
-        foreach ($byId as $id => $fw) foreach ($fw['items'] as $it) $rows[$id][$it['id']] = ['item' => $it['id'], 'title' => $it['title'], 'title_ko' => $it['title_ko'], 'issues' => [], 'site_only' => false];
+        foreach ($byId as $id => $fw) foreach ($fw['items'] as $it) $rows[$id][$it['id']] = ['item' => $it['id'], 'title' => $it['title'], 'title_ko' => $it['title_ko'], 'issues' => [], 'site_only' => false, 'verified' => ($it['verified'] ?? true) !== false];
 
         $problems = [];
         $siteOnly = []; // fw => item => 이슈가 전부 site_only 인가

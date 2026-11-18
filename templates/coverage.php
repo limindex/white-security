@@ -41,7 +41,7 @@ foreach ($coverage as $fw) {
 <?php foreach ($coverage as $fw): $c = $sum[$fw['id']]; ?>
 <section class="ws-cov" id="fw-<?= Site::e($fw['id']) ?>">
 <h2 class="ws-cov-h"><?= Site::e($fw['name']) ?></h2>
-<p class="ws-cov-meta"><?= Site::e((string)$fw['year']) ?>년판 · 항목 <?= count($fw['items']) ?>개 중 덮음 <?= $c['covered'] ?> · 사이트 전용 <?= $c['site'] ?> · 빈칸 <?= $c['gap'] ?> · <a href="<?= Site::e($fw['url']) ?>" rel="noopener noreferrer">공식 출처</a></p>
+<p class="ws-cov-meta"><?= Site::e((string)$fw['year']) ?>년판 · 항목 <?= count($fw['items']) ?>개 중 덮음 <?= $c['covered'] ?> · 사이트 전용 <?= $c['site'] ?> · 빈칸 <?= $c['gap'] ?> · <a href="<?= Site::e($fw['url']) ?>" rel="noopener noreferrer">공식 출처</a><?php if (!$fw['verified']): ?> · <span class="ws-cov-pending">일부 항목 출처 확인 중</span><?php endif ?></p>
 <div class="ws-table-wrap">
 <table class="ws-table ws-cov-table">
 <thead>

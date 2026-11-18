@@ -1,0 +1,134 @@
+<?php
+require_once __DIR__ . '/support.php';
+
+const BT_PHP = PHP_BINARY;
+
+function bt_issue(string $id, string $slug, string $group, string $extra = '', bool $siteOnly = false): string
+{
+    $langs = $siteOnly ? '[]' : '[python]';
+    $code = $siteOnly ? '' : "\n## 코드\n\n### python\n\n✗ 뚫리는 코드\n\n```python\nbad()\n```\n\n✓ 막는 코드\n\n```python\ngood()\n```\n";
+    return "---\nid: $id\ntitle: 제목 $slug\nslug: $slug\ngroup: $group\nseverity: medium\nsite_only: " . ($siteOnly ? 'true' : 'false')
+        . "\ndepth: brief\nlanguages: $langs\nmaps:\n  owasp2025: [A05]\nchecked: 2026-11-18\nsources:\n  - title: t\n    url: https://example.org/x\n    year: 2025\n---\n\n"
+        . "## 한 줄 요약\n\n요약 $slug.\n\n## 체크 항목\n\n- 항목 $slug\n$code$extra";
+}
+
+/** 임시 루트에 build.php 를 실행한다. @return array{0:int,1:string,2:string} 종료코드·출력·루트 */
+function bt_build(array $extra = [], string $args = ''): array
+{
+    $root = make_root($extra);
+    mkdir($root . '/issues/people', 0777, true);
+    file_put_contents($root . '/issues/people/WS-PPL-001-people.md', bt_issue('WS-PPL-001', 'people', 'people', '', true));
+    $cmd = escapeshellarg(BT_PHP) . ' ' . escapeshellarg(__DIR__ . '/../build.php') . ' --root=' . escapeshellarg($root)
+        . ' --out=dist --today=2026-11-18 ' . $args . ' 2>&1';
+    exec($cmd, $lines, $code);
+    return [$code, implode("\n", $lines), $root];
+}
+
+test('build: 쪽·API·assets·404 가 만들어진다', function () {
+    [$code, $out, $root] = bt_build();
+    assert_same(0, $code, $out);
+    foreach (['index.html', 'issues/WS-INJ-001/index.html', 'issues/WS-PPL-001/index.html', 'coverage/index.html', '404.html',
+        'api/issues.json', 'api/search.json', 'api/coverage.json', 'api/issues/WS-INJ-001.json', 'assets/css/site.css', 'assets/js/site.js'] as $f) {
+        assert_true(is_file("$root/dist/$f"), $f);
+    }
+    assert_true(is_array(json_decode(file_get_contents("$root/dist/api/issues.json"), true)), 'issues.json');
+});
+
+test('build: dist 안 링크가 전부 dist 안 파일로 풀린다', function () {
+    [$code, $out, $root] = bt_build();
+    assert_same(0, $code, $out);
+    $dist = "$root/dist";
+    $n = 0;
+    $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dist, FilesystemIterator::SKIP_DOTS));
+    foreach ($it as $f) {
+        if (!str_ends_with($f->getPathname(), '.html')) continue;
+        $html = file_get_contents($f->getPathname());
+        preg_match_all('/\b(?:href|src|data-search)="([^"]*)"/', $html, $m);
+        foreach ($m[1] as $u) {
+            if (preg_match('#^(https?:|mailto:|\#)#', $u)) continue;
+            $u = html_entity_decode($u);
+            assert_true(str_starts_with($u, '/white-security/'), "base 밖 링크 $u");
+            $p = rawurldecode(explode('#', substr($u, strlen('/white-security/')))[0]);
+            $ok = $p === '' || is_file("$dist/$p") || is_file("$dist/" . rtrim($p, '/') . '/index.html');
+            assert_true($ok, "깨진 링크 $u (" . basename($f->getPathname()) . ')');
+            $n++;
+        }
+        assert_true(!str_contains($html, $root), '서버 경로 노출');
+        assert_true(!str_contains($html, '원본 오류'), '오류 띠 노출');
+    }
+    assert_true($n > 20, "링크 $n 개");
+});
+
+test('build: 스킬 references — 장면 절 없음·site_only 제외·INDEX', function () {
+    [$code, $out, $root] = bt_build();
+    assert_same(0, $code, $out);
+    $ref = "$root/skills/white-security/references";
+    $f = file_get_contents("$ref/web/WS-INJ-001.md");
+    assert_true(str_starts_with($f, "<!-- 생성 파일: issues/ 원본을 고치세요 -->\n"), '머리 주석');
+    assert_contains("# WS-INJ-001 SQL 삽입\n", $f);
+    assert_contains('위험 · OWASP A05', $f);
+    assert_contains('CWE-89', $f);
+    assert_contains('입력데이터 검증 및 표현-1', $f);
+    foreach (['## 체크 항목', '## 스킬이 잡는 방식', '## 코드', 'cur.execute("SELECT * FROM u WHERE id=%s", (uid,))'] as $s) assert_contains($s, $f);
+    foreach (['## 이런 장면에서', '## 한 줄 요약', '## 왜 요즘', '## 나는 뭘'] as $s) assert_true(!str_contains($f, $s), $s);
+    assert_true(!is_file("$ref/people/WS-PPL-001.md") && !is_dir("$ref/people"), 'site_only 제외');
+    $idx = file_get_contents("$ref/INDEX.md");
+    assert_true(str_starts_with($idx, '<!-- 생성 파일'), 'INDEX 머리');
+    assert_contains('[WS-INJ-001 SQL 삽입](web/WS-INJ-001.md) — ', $idx);
+    assert_true(!str_contains($idx, 'WS-PPL-001'), 'INDEX 에 site_only 없음');
+    assert_true(!str_contains($idx, '사람'), 'site_only 묶음 제외');
+    // INDEX 링크가 실제 파일로 풀린다
+    preg_match_all('/\]\(([^)]+\.md)\)/', $idx, $m);
+    assert_true(count($m[1]) >= 1);
+    foreach ($m[1] as $l) assert_true(is_file("$ref/$l"), $l);
+});
+
+test('build: 같은 입력이면 출력이 바이트까지 같다', function () {
+    [$c1, $o1, $root] = bt_build();
+    assert_same(0, $c1, $o1);
+    $hash = function (string $root): array {
+        $h = [];
+        foreach ([$root . '/dist', $root . '/skills'] as $base) {
+            $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($base, FilesystemIterator::SKIP_DOTS));
+            foreach ($it as $f) if ($f->isFile()) $h[substr($f->getPathname(), strlen($root))] = md5_file($f->getPathname());
+        }
+        ksort($h);
+        return $h;
+    };
+    $a = $hash($root);
+    exec(escapeshellarg(BT_PHP) . ' ' . escapeshellarg(__DIR__ . '/../build.php') . ' --root=' . escapeshellarg($root) . ' --out=dist --today=2026-11-18 2>&1', $l, $c2);
+    assert_same(0, $c2);
+    assert_same($a, $hash($root));
+});
+
+test('build: 원본 오류가 있으면 종료코드 1 이고 dist 를 만들지 않는다', function () {
+    [$code, $out, $root] = bt_build(['WS-BAD-001-bad.md' => "---\nid: nope\n---\n"]);
+    assert_same(1, $code);
+    assert_contains('오류', $out);
+    assert_true(!is_dir("$root/dist"), 'dist 없음');
+});
+
+test('build: 위험한 out 은 거부하고 지우지 않는다', function () {
+    foreach (['/', '..', '/etc', '../..', '.', '', 'src', 'issues'] as $o) {
+        $root = make_root();
+        file_put_contents("$root/keep.txt", 'x');
+        exec(escapeshellarg(BT_PHP) . ' ' . escapeshellarg(__DIR__ . '/../build.php') . ' --root=' . escapeshellarg($root) . ' --out=' . escapeshellarg($o) . ' 2>&1', $l, $c);
+        assert_same(1, $c, "out=$o");
+        assert_true(is_file("$root/keep.txt"), "out=$o 파일 보존");
+    }
+});
+
+test('build: 확인 안 된 표준 항목은 적용 범위에 안내가 나오고 JSON 에 verified 가 실린다', function () {
+    [$code, $out, $root] = bt_build();
+    assert_same(0, $code, $out);
+    $cov = file_get_contents("$root/dist/coverage/index.html");
+    assert_contains('일부 항목 출처 확인 중', $cov);
+    $j = json_decode(file_get_contents("$root/dist/api/coverage.json"), true);
+    $by = [];
+    foreach ($j['frameworks'] as $fw) {
+        $by[$fw['id']] = $fw;
+        foreach ($fw['items'] as $it) assert_true(is_bool($it['verified']), 'verified bool');
+    }
+    assert_same(false, $by['agentic2026']['items'][0]['verified']);
+    assert_same(true, $by['owasp2025']['items'][0]['verified']);
+});

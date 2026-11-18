@@ -1,0 +1,95 @@
+<?php
+// 정적 사이트(dist/)와 스킬 참고 파일을 만든다. 사용: php build.php [--out=dist] [--base=/white-security/] [--today=YYYY-MM-DD]
+// --root 는 테스트용(원본 폴더 지정). 같은 입력이면 같은 출력이 나온다.
+declare(strict_types=1);
+if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
+
+require __DIR__ . '/src/bootstrap.php';
+require __DIR__ . '/src/SkillExport.php';
+
+function bail(string $msg): never { fwrite(STDERR, "오류: $msg\n"); exit(1); }
+
+$opt = ['out' => 'dist', 'base' => '/white-security/', 'today' => date('Y-m-d'), 'root' => __DIR__];
+foreach (array_slice($argv, 1) as $a) {
+    if (!preg_match('/^--(out|base|today|root)=(.*)$/s', $a, $m)) bail("알 수 없는 옵션 $a");
+    $opt[$m[1]] = $m[2];
+}
+$root = realpath($opt['root']) ?: bail('--root 폴더를 찾을 수 없습니다');
+$today = DateTimeImmutable::createFromFormat('!Y-m-d', $opt['today']);
+if (!$today || $today->format('Y-m-d') !== $opt['today']) bail('--today 는 YYYY-MM-DD 여야 합니다');
+if (!preg_match('#^/[A-Za-z0-9._~/-]*$#', $opt['base'])) bail('--base 는 / 로 시작하는 경로여야 합니다');
+
+// 출력 폴더: 프로젝트 안이나 시스템 임시 폴더 아래의 "하위" 폴더만 허용
+if (trim($opt['out']) === '') bail('--out 이 비어 있습니다');
+$out = str_starts_with($opt['out'], '/') ? $opt['out'] : $root . '/' . $opt['out'];
+$parts = [];
+foreach (explode('/', $out) as $seg) {
+    if ($seg === '' || $seg === '.') continue;
+    if ($seg === '..') { array_pop($parts); continue; }
+    $parts[] = $seg;
+}
+$out = '/' . implode('/', $parts);
+$tmp = realpath(sys_get_temp_dir()) ?: '/tmp';
+$under = fn(string $p, string $base) => str_starts_with($p, rtrim($base, '/') . '/');
+// 심볼릭 링크로 빠져나가지 못하게, 이미 있는 가장 가까운 상위 폴더를 실경로로 바꿔 비교한다.
+$probe = $out;
+while (!file_exists($probe) && $probe !== '/') $probe = dirname($probe);
+$real = realpath($probe) . substr($out, strlen($probe));
+if (!($under($real, $root) || $under($real, $tmp)) || $real === $root . '/src' || $under($real, $root . '/src') || $real === $root . '/.git' || $under($real, $root . '/.git')) {
+    bail('--out 은 프로젝트 안이나 임시 폴더 아래의 하위 폴더여야 합니다');
+}
+if ($real === $root || $under($root, $real)) bail('--out 이 프로젝트 폴더 자신이거나 그 상위 폴더입니다');
+foreach (['issues', 'data', 'templates', 'assets', 'tests', 'skills'] as $keep) {
+    if ($real === $root . '/' . $keep || $under($real, $root . '/' . $keep)) bail("--out 이 원본 폴더($keep)와 겹칩니다");
+}
+
+$repo = Repository::load($root);
+if ($repo->errors()) {
+    fwrite(STDERR, "원본 오류가 있어 빌드하지 않습니다:\n");
+    foreach ($repo->errors() as $e) fwrite(STDERR, "  - $e\n");
+    exit(1);
+}
+$site = new Site($repo, $opt['base'], 'static', $today);
+
+// 경로 목록 (정렬해 같은 순서로)
+$paths = ['', 'coverage', 'install', 'changelog', 'about', 'api/issues.json', 'api/search.json', 'api/coverage.json'];
+foreach ($repo->all() as $i) { $paths[] = 'issues/' . $i->id; $paths[] = 'api/issues/' . $i->id . '.json'; }
+sort($paths);
+
+function rrmdir(string $d): void
+{
+    if (!is_dir($d)) return;
+    foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($d, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST) as $f) {
+        $f->isDir() && !$f->isLink() ? rmdir($f->getPathname()) : unlink($f->getPathname());
+    }
+    rmdir($d);
+}
+function put(string $path, string $body): void
+{
+    if (!is_dir(dirname($path))) mkdir(dirname($path), 0777, true);
+    file_put_contents($path, $body);
+}
+
+// 먼저 전부 렌더해 보고(실패하면 dist 를 건드리지 않는다), 그다음 비우고 쓴다.
+$files = [];
+foreach ($paths as $p) {
+    $r = $site->route($p);
+    if ($r['status'] !== 200) bail("$p 가 {$r['status']} 입니다");
+    $files[str_ends_with($p, '.json') ? $p : ($p === '' ? 'index.html' : $p . '/index.html')] = $r['body'];
+}
+$files['404.html'] = $site->route('__not-found__')['body'];
+
+rrmdir($out);
+foreach ($files as $rel => $body) put($out . '/' . $rel, $body);
+// GitHub Pages 가 _ 로 시작하는 파일을 처리하지 않게 한다
+put($out . '/.nojekyll', '');
+$assets = __DIR__ . '/assets';
+$it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($assets, FilesystemIterator::SKIP_DOTS));
+$list = [];
+foreach ($it as $f) if ($f->isFile()) $list[] = $f->getPathname();
+sort($list);
+foreach ($list as $f) put($out . '/assets/' . substr($f, strlen($assets) + 1), (string)file_get_contents($f));
+
+$refs = SkillExport::write($repo, $root . '/skills/white-security/references');
+echo count($files) . "개 쪽과 API, assets " . count($list) . "개를 {$opt['out']} 에 만들었습니다.\n";
+echo "스킬 참고 파일 " . count($refs) . "개를 skills/white-security/references 에 만들었습니다.\n";
