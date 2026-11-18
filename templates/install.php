@@ -35,7 +35,7 @@ $use = fn(string $sub): string => $prompt('보안 점검해 줘')
 $tabs = ['claude' => 'Claude Code'];
 $report = $site->render('_report', []);
 /** 첫 실행 허용 안내(Plugin 설치만): 스킬은 allowed-tools 로 자기 설치 폴더만 읽음(훅·설정 변경 없음) */
-$allow = '<p class="ws-step-note">' . Site::t('보안 점검을 처음 요청할 때 Claude Code가 검토 스킬 실행 허용을 한 번 확인. 허용 범위는 이 Plugin의 규칙 폴더 읽기뿐이며 훅 설치나 설정 변경 없음. 코드 작성 중 자동 점검은 허용 확인 없이 동작.') . '</p>';
+$allow = '<p class="ws-step-note">' . Site::t('보안 점검을 처음 요청할 때 Claude Code가 검토 스킬 실행 허용을 한 번 확인. 허용 범위는 이 Plugin의 규칙 폴더 읽기뿐이며 훅 설치나 설정 변경 없음.') . '</p>';
 ?>
 <div class="ws-page">
 <?= $site->render('_pagehead', ['title' => $title, 'lead' => $lead]) ?>
@@ -62,7 +62,7 @@ $allow = '<p class="ws-step-note">' . Site::t('보안 점검을 처음 요청할
     $cmd('claude') . $out("✻ Welcome to Claude Code!\n\n>")) ?>
 <?= $step(2, 'Marketplace 추가', '최초 1회', Site::e($market) . ' 저장소를 Marketplace로 등록하는 명령. Claude Code 대화창에 입력.',
     $cmd('/plugin marketplace add ' . $market) . $out('✔ Successfully added marketplace: ' . $mname)) ?>
-<?= $step(3, 'Plugin 설치', '② 완료 후 실행', '점검 스킬을 설치하는 명령. 다음 대화부터 점검 스킬 동작.',
+<?= $step(3, 'Plugin 설치', '② 완료 후 실행', '점검 스킬을 설치하는 명령. 다음 대화부터 사용 가능.',
     $cmd('/plugin install ' . $plugin) . $out('✔ Successfully installed plugin: ' . $plugin . ' (scope: user)')) ?>
 <?= $step(4, '동작 확인', '', '프로젝트 폴더의 Claude Code 대화창에 한마디 입력. 위험·주의·참고 등급별 표와 고칠 방법 보고.',
     $use($cmd('/' . $pluginName . ':review')) . $allow . $report) ?>
@@ -76,7 +76,7 @@ $allow = '<p class="ws-step-note">' . Site::t('보안 점검을 처음 요청할
 <?= $step(1, '저장소 내려받기', '', '터미널에서 실행. 현재 폴더 아래에 ' . Site::e(basename($repo)) . ' 폴더 생성.',
     $cmd('git clone https://github.com/' . $repo . '.git') . $out("Cloning into '" . basename($repo) . "'...")) ?>
 <?= $step(2, '스킬 폴더 복사', '① 완료 후 실행', 'Claude Code 개인 skills 폴더로 스킬만 복사하는 명령.',
-    $cmd('cp -r ' . basename($repo) . '/plugins/' . $pluginName . '/skills/' . $pluginName . ' ~/.claude/skills/')) ?>
+    $cmd('cp -r ' . basename($repo) . '/plugins/' . $pluginName . '/skills/review ~/.claude/skills/')) ?>
 <?= $step(3, '동작 확인', '', 'Claude Code를 다시 연 뒤 대화창에 한마디 입력. 위험·주의·참고 등급별 표와 고칠 방법 보고.',
     $use($prompt($pluginName . ' 스킬로 보안 점검해 줘')) . $report) ?>
 </ol>
@@ -99,9 +99,9 @@ $allow = '<p class="ws-step-note">' . Site::t('보안 점검을 처음 요청할
 <section class="ws-sec">
 <h2>설치 후 동작</h2>
 <ul>
-<li>대화창에 “보안 점검해 줘” 한마디면 위험·주의·참고 등급별 보고. 등급 뜻은 <a href="<?= Site::e($site->url('severity')) ?>">심각도 기준</a>.</li>
+<li>필요할 때, 특히 배포 전에 대화창에 “보안 점검해 줘” 한마디로 프로젝트 전체 읽기 전용 검토. 위험·주의·참고 등급별 보고. 등급 뜻은 <a href="<?= Site::e($site->url('severity')) ?>">심각도 기준</a>.</li>
 <li>확실하게 실행하려면 <code>/<?= Site::e($pluginName ?: 'white-security') ?>:review</code>.</li>
-<li>코드 작성·수정 중 위험한 코드는 별도 요청 없이 스킬이 자동 점검. 파일 읽기·허용 확인 없음.</li>
+<li>요청할 때만 실행. “배포할게”처럼 배포 이야기가 나오면 점검 여부를 대화당 한 번 먼저 질문, 답이 예일 때만 실행.</li>
 <li>흔한 실수를 줄이는 용도이며 보안 감사·침투 테스트의 대체 수단 아님.</li>
 </ul>
 </section>

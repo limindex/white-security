@@ -84,7 +84,11 @@ test('설치: 사용법 안내 순서 — 큰 줄 "보안 점검해 줘", 작은
     }
     assert_true((bool)preg_match('#ws-step-sub.*<code>/white-security:review</code>#s', $m[0][2]), 'Claude Code: command');
     assert_true(!str_contains($m[0][2], 'white-security 스킬로 보안 점검해 줘'), 'Claude Code 탭엔 스킬 이름 문구 없음');
-    assert_contains('코드 작성·수정 중 위험한 코드는 별도 요청 없이 스킬이 자동 점검', $b);
+    // 요청할 때만(11-19): 배포 전 한마디, 배포 이야기에는 먼저 질문, 코드 작성 중 자동 점검 주장 없음
+    assert_contains('특히 배포 전에', $b);
+    assert_contains('요청할 때만 실행', $b);
+    assert_contains('점검 여부를 대화당 한 번 먼저 질문', $b);
+    foreach (['자동 점검', '코드 작성', '상시', '허용 확인 없이'] as $s) assert_true(!str_contains(nw_strip($b), $s), "설치 화면에 \"$s\" 없음");
 });
 
 test('보고 예시: 설치·심각도 기준이 같은 표(등급·문서 번호·파일:줄·이유·고칠 방법), 한 줄 형식은 스킬 보고 줄과 같음', function () {
@@ -97,10 +101,9 @@ test('보고 예시: 설치·심각도 기준이 같은 표(등급·문서 번�
     foreach (['등급', '문서 번호', '파일:줄', '영향', '이유', '고칠 방법'] as $h) assert_contains('<th scope="col">' . $h . '</th>', $a);
     $skill = file_get_contents(__DIR__ . '/../' . SkillExport::REVIEW_DIR . '/SKILL.md');
     assert_contains('`[위험|주의|참고] <id> <file:line> — <reason> → <fix>`', $skill);
-    // 상시 메모는 쉬운 말 + 괄호 id(스킬 분리 11-18): 사이트 예시와 상시 스킬 예시가 같은 모양
-    $always = file_get_contents(__DIR__ . '/../' . SkillExport::SKILL_DIR . '/SKILL.md');
-    assert_contains('`보안 메모: 검색어를 SQL 자리표시자로 넘김 (WS-INJ-001).', $always);
-    assert_contains('<code class="ws-code-line">보안 메모: 검색어를 SQL 자리표시자로 넘김 (WS-INJ-001).</code>', nw_strip($s->route('severity')['body']));
+    // 상시 스킬을 없앤 뒤(11-19) 코드 작성 중 메모 항목 없음
+    $sev = nw_strip($s->route('severity')['body']);
+    assert_true(!str_contains($sev, '보안 메모') && !str_contains($sev, '코드 작성 중'), '심각도 기준에 상시 메모 없음');
     $review = file_get_contents(__DIR__ . '/../' . SkillExport::REF_DIR . '/review.md');
     assert_contains('| # | id | 파일:줄 | 영향 | 이유 | 고칠 방법 |', $review);
 });

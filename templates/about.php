@@ -3,14 +3,14 @@
 <?= $site->render('_pagehead', ['title' => $title, 'lead' => $lead]) ?>
 <section class="ws-sec">
 <h2>목적</h2>
-<p>White Security(화이트 보안)는 바이브 코딩 보안 가이드와 AI 코딩 도구용 점검 스킬의 이름. 빠르게 코드를 만드는 AI 코딩 도구가 입력 검증·비밀키 관리 같은 기본을 자주 빠뜨리는 문제에 대한 대응. 같은 기준을 사람은 문서로 읽고, AI 코딩 도구는 스킬로 따르는 구조.</p>
+<p>White Security(화이트 보안)는 바이브 코딩 보안 가이드와 AI 코딩 도구용 점검 스킬의 이름. 빠르게 코드를 만드는 AI 코딩 도구가 입력 검증·비밀키 관리 같은 기본을 자주 빠뜨리는 문제에 대한 대응. 같은 기준을 사람은 문서로 읽고, AI 코딩 도구는 스킬로 점검하는 구조.</p>
 </section>
 <section class="ws-sec">
 <h2>사용 방법</h2>
 <ul>
-<li>설치 뒤 대화창에 <code>보안 점검해 줘</code> 한마디면 충분.</li>
+<li>필요할 때, 특히 배포 전에 대화창에 <code>보안 점검해 줘</code> 한마디로 프로젝트 전체 읽기 전용 검토.</li>
 <li>확실하게 실행하려면 <code>/white-security:review</code>.</li>
-<li>코드 작성 중 위험한 코드는 별도 요청 없이 자동 점검.</li>
+<li>요청할 때만 실행. “배포할게”처럼 배포 이야기가 나오면 점검 여부를 먼저 질문.</li>
 </ul>
 <p>설치 방법은 <a href="<?= Site::e($site->url('install')) ?>">스킬 설치</a>.</p>
 </section>

@@ -39,9 +39,9 @@ $first = array_slice($site->repo->start(), 0, 3);
 </a>
 <?php endif ?>
 <a class="ws-path" href="<?= Site::e($site->url('install')) ?>">
-<span class="ws-path-k">자동화하기</span>
+<span class="ws-path-k">검토하기</span>
 <h3>스킬 설치</h3>
-<p>설치 뒤 대화창에 “보안 점검해 줘” 한마디. 코드 작성 중 위험한 코드는 자동 점검.</p>
+<p>필요할 때, 특히 배포 전에 “보안 점검해 줘” 한마디. 프로젝트 전체 읽기 전용 검토.</p>
 <span class="ws-path-go">설치 안내 4단계</span>
 </a>
 </section>

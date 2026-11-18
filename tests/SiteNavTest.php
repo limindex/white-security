@@ -230,17 +230,20 @@ test('data/frameworks: 기준 파일 모두 about 한 줄 풀이', function () {
     }
 });
 
-test('소개: 점검 기준 대응표 링크 한 줄과 사용 방법(한마디 → 확실하게 → 자동 점검)', function () {
+test('소개: 점검 기준 대응표 링크 한 줄과 사용 방법(배포 전 한마디 → 확실하게 → 요청할 때만)', function () {
     $b = nw_strip(nav_site()->route('about')['body']);
     assert_true((bool)preg_match('#9개 기준에 맞춰 작성.*href="/white-security/coverage"[^>]*>점검 기준 대응표#su', $b), '대응표 링크');
-    $p1 = strpos($b, '보안 점검해 줘</code> 한마디'); $p2 = strpos($b, '확실하게 실행하려면'); $p3 = strpos($b, '별도 요청 없이 자동 점검');
+    $p1 = strpos($b, '보안 점검해 줘</code> 한마디'); $p2 = strpos($b, '확실하게 실행하려면'); $p3 = strpos($b, '요청할 때만 실행');
     assert_true($p1 !== false && $p2 > $p1 && $p3 > $p2, '사용법 순서');
+    assert_contains('특히 배포 전에', $b);
+    foreach (['자동 점검', '코드 작성 중', '상시'] as $s) assert_true(!str_contains($b, $s), "소개에 \"$s\" 없음");
 });
 
-test('홈 스킬 설치 카드: 한마디 안내 · 자동 점검 한 줄', function () {
+test('홈 스킬 설치 카드: 배포 전 한마디 안내 · 읽기 전용 검토 한 줄(자동 점검 주장 없음)', function () {
     $b = nav_site()->route('')['body'];
-    assert_contains('“보안 점검해 줘” 한마디', $b);
-    assert_contains('코드 작성 중 위험한 코드는 자동 점검', $b);
+    assert_contains('특히 배포 전에 “보안 점검해 줘” 한마디', $b);
+    assert_contains('프로젝트 전체 읽기 전용 검토', $b);
+    foreach (['자동 점검', '자동화하기', '코드 작성 중', '상시'] as $s) assert_true(!str_contains($b, $s), "홈에 \"$s\" 없음");
 });
 
 test('홈 시작점: 처음이라면 카드는 start.json 앞 3건 제목 링크 + 10건 모두 보기, 스킬 설치 카드에 부분 command 없음, 카드 안 링크 중첩 없음', function () {

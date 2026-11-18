@@ -32,6 +32,6 @@
 <ul class="ws-links">
 <li><a href="<?= Site::e($site->url('install')) ?>"><span class="ws-tx">스킬 설치</span></a></li>
 </ul>
-<p class="ws-page-note">설치 뒤에는 코드 작성 중 위 이슈를 스킬이 자동 점검.</p>
+<p class="ws-page-note">설치 뒤에는 필요할 때, 특히 배포 전에 “보안 점검해 줘” 한마디로 위 이슈 기준의 읽기 전용 검토.</p>
 </section>
 </div>
