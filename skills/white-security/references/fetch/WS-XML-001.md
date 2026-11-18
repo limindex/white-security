@@ -1,7 +1,7 @@
 <!-- 생성 파일: issues/ 원본을 고치세요 -->
 # WS-XML-001 XML 외부 개체 참조·엔티티 폭탄
 
-위험 · OWASP A02 · ASVS V1.5 · CWE-770 · 진단가이드 입력데이터 검증 및 표현-8
+위험 · OWASP A02 · ASVS V1.5 · CWE-611 · CWE-776 · 진단가이드 입력데이터 검증 및 표현-8
 
 ## 체크 항목
 
@@ -40,7 +40,7 @@
 
 **고칠 때**
 - 정상 문서에 DTD가 정말 필요한지 먼저 확인한다. 대부분 필요 없으므로 DTD 거절을 기본으로 둔다.
-- CWE 번호는 XXE가 CWE-611, 엔티티 폭탄이 CWE-776이다. 보고에 함께 적어도 된다.
+- 보고에는 XXE면 CWE-611, 엔티티 폭탄이면 CWE-776을 함께 적는다.
 
 ## 코드
 
@@ -131,7 +131,8 @@ echo json_encode(['name' => $doc->getElementsByTagName('name')->item(0)?->textCo
 ```php
 <?php
 $xml = file_get_contents('php://input', false, null, 0, 1_000_001);
-if ($xml === false || strlen($xml) > 1_000_000) { http_response_code(413); exit; }
+if ($xml === false || $xml === '') { http_response_code(400); exit; }   // 빈 문서는 loadXML 이 ValueError 를 낸다
+if (strlen($xml) > 1_000_000) { http_response_code(413); exit; }
 // UTF-16 처럼 NUL 바이트가 섞인 문서로 DOCTYPE 검사를 피하지 못하게 함께 거절한다
 if (stripos($xml, '<!DOCTYPE') !== false || str_contains($xml, "\0")) {
     http_response_code(400);

@@ -13,7 +13,7 @@ maps:
   llm2026: [LLM01, LLM03, LLM10]
   agentic2026: [ASI01, ASI02]
   asvs5: []
-  cwe: []
+  cwe: [CWE-1427]
   kr_guide: []
   kr_ciip: []
 checked: 2026-11-18
@@ -85,6 +85,7 @@ AI 답은 정해진 형식으로만 받고, 화면에는 글자로만 보여 줘
 
 - 외부 내용(웹페이지, 메일, 업로드 파일, 검색 결과, RAG 문서, 도구·MCP 응답)을 시스템 지시문과 같은 문자열로 이어 붙이지 않는다. 지시문은 상수로 두고, 외부 내용은 별도 메시지에 데이터로 넣는다.
 - 외부 내용에서 보이지 않는 문자(`U+200B`~`U+200F`, `U+202A`~`U+202E`, `U+2060`~`U+2064`, `U+FEFF`, `U+E0000`~`U+E007F`)를 지우거나 표시하고, 길이를 자른다.
+- 구분자(`<data>` 같은 태그)로 외부 내용을 감쌀 때는 태그를 지우지 말고 외부 내용의 `<`·`>`·`&`를 이스케이프한다. 지우기는 `</da</data>ta>`나 대문자로 쉽게 우회된다. 구분자는 보조 수단이고, 이것만으로 막히지 않는다.
 - 외부 내용을 읽는 단계의 모델에는 읽기 전용 도구만 준다. 보내기·쓰기·지우기·결제·외부 요청 도구는 사람이 확인한 뒤에만 실행한다.
 - 모델이 낸 도구 호출을 그대로 실행하지 않는다. 도구 이름, 인자 형식, 대상(받는 사람·경로·금액)을 서버 코드의 허용 목록으로 검사한다.
 - 출력은 정해진 형식(JSON 스키마, 길이 상한)으로 받아 검증하고, 형식이 틀리면 버린다.
@@ -164,7 +165,10 @@ INVISIBLE = re.compile("[\u200b-\u200f\u202a-\u202e\u2060-\u2064\ufeff\U000e0000
 
 def summarize_url(url: str) -> str:
     page = requests.get(url, timeout=10).text[:20000]
-    page = INVISIBLE.sub("", page).replace("</data>", "")
+    page = INVISIBLE.sub("", page)
+    # 구분자는 보조 수단이다. < > & 를 이스케이프해 외부 글이 </data> 를 흉내 내지 못하게 할 뿐이다.
+    # 실제 방어는 도구를 주지 않기, 사람 확인, 출력 검증과 이스케이프다.
+    page = page.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
     reply = llm.chat(                      # llm: 앱이 쓰는 LLM 클라이언트
         [{"role": "system", "content": SYSTEM},
          {"role": "user", "content": f"<data>\n{page}\n</data>"}],
@@ -208,7 +212,10 @@ const ALLOWED_ACTIONS = new Set(["addCalendar"]); // 제안만 받는다
 app.post("/api/mail/:id/assist", requireLogin, async (req, res) => {
   const mail = await mailbox.getOwned(req.user.id, req.params.id);
   if (!mail) return res.sendStatus(404);
-  const body = mail.body.replace(INVISIBLE, "").replaceAll("</mail>", "").slice(0, 20000);
+  // 구분자는 보조 수단이다. < > & 를 이스케이프해 메일이 </mail> 을 흉내 내지 못하게 할 뿐이다.
+  // 실제 방어는 도구를 주지 않기, 사람 확인, 출력 검증이다.
+  const ESC = { "&": "&amp;", "<": "&lt;", ">": "&gt;" };
+  const body = mail.body.replace(INVISIBLE, "").replace(/[&<>]/g, (c) => ESC[c]).slice(0, 20000);
   const reply = await llm.chat({
     messages: [
       { role: "system", content: SYSTEM },
@@ -259,7 +266,9 @@ $st->execute([$productId]);
 $clean = [];
 foreach ($st->fetchAll(PDO::FETCH_COLUMN) as $body) {
     $body = preg_replace($invisible, '', $body) ?? '';   // 잘못된 UTF-8 이면 빈 문자열
-    $clean[] = mb_substr(str_replace('</reviews>', '', $body), 0, 1000);
+    // 구분자는 보조 수단이다. < > & 를 이스케이프해 후기가 </reviews> 를 흉내 내지 못하게 할 뿐이다.
+    // 실제 방어는 도구를 주지 않기와 출력 이스케이프다.
+    $clean[] = mb_substr(htmlspecialchars($body, ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8'), 0, 1000);
 }
 
 $summary = llm_chat([

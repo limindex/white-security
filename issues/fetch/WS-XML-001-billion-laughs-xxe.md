@@ -13,7 +13,7 @@ maps:
   llm2026: []
   agentic2026: []
   asvs5: [V1.5]
-  cwe: [CWE-770]
+  cwe: [CWE-611, CWE-776]
   kr_guide: ["입력데이터 검증 및 표현-8"]
   kr_ciip: []
 checked: 2026-11-18
@@ -42,6 +42,9 @@ sources:
   - title: "fast-xml-parser - XML parse options (processEntities)"
     url: https://github.com/NaturalIntelligence/fast-xml-parser/blob/master/docs/v4%2C%20v5/2.XMLparseOptions.md
     year: 2026
+  - title: 행정기관 및 공공기관 정보시스템 구축·운영 지침 (행정안전부고시 제2025-1호, 별표 3)
+    url: https://www.law.go.kr/%ED%96%89%EC%A0%95%EA%B7%9C%EC%B9%99/%ED%96%89%EC%A0%95%EA%B8%B0%EA%B4%80%EB%B0%8F%EA%B3%B5%EA%B3%B5%EA%B8%B0%EA%B4%80%EC%A0%95%EB%B3%B4%EC%8B%9C%EC%8A%A4%ED%85%9C%EA%B5%AC%EC%B6%95%E3%86%8D%EC%9A%B4%EC%98%81%EC%A7%80%EC%B9%A8
+    year: 2025
   - title: 행정안전부·KISA 소프트웨어 보안약점 진단가이드 (2021)
     url: https://www.kisa.or.kr/2060204/form?postSeq=9
     year: 2021
@@ -88,7 +91,7 @@ XML(태그로 내용을 감싸 적는 데이터 형식) 파일을 읽는 프로�
 **2. 결과를 이렇게 확인한다**
 
 - 위의 두 단계 예시를 파일로 저장해 내 기능에 넣어 본다. "받지 않는 형식" 같은 거절 메시지가 나오면 정상이다. "hahaha…"가 펼쳐져 나오면 줄임말 처리가 켜져 있다는 신호다.
-- 코드에서 Python은 `defusedxml`을 쓰는지, PHP는 `LIBXML_NOENT`가 없는지, Node는 `noent: true`가 없는지 본다.
+- 코드에서 PHP는 `LIBXML_NOENT`, Node는 `noent: true`가 없는지 본다. 둘 다 "문서 속 줄임말(엔티티)을 바깥 파일 것까지 모두 풀어 넣어라"라는 위험 옵션이다. Python은 `defusedxml`을 쓰는지 본다.
 
 **3. 코드 칸 보는 법**
 
@@ -134,7 +137,7 @@ XML(태그로 내용을 감싸 적는 데이터 형식) 파일을 읽는 프로�
 
 **고칠 때**
 - 정상 문서에 DTD가 정말 필요한지 먼저 확인한다. 대부분 필요 없으므로 DTD 거절을 기본으로 둔다.
-- CWE 번호는 XXE가 CWE-611, 엔티티 폭탄이 CWE-776이다. 보고에 함께 적어도 된다.
+- 보고에는 XXE면 CWE-611, 엔티티 폭탄이면 CWE-776을 함께 적는다.
 
 ## 코드
 
@@ -225,7 +228,8 @@ echo json_encode(['name' => $doc->getElementsByTagName('name')->item(0)?->textCo
 ```php
 <?php
 $xml = file_get_contents('php://input', false, null, 0, 1_000_001);
-if ($xml === false || strlen($xml) > 1_000_000) { http_response_code(413); exit; }
+if ($xml === false || $xml === '') { http_response_code(400); exit; }   // 빈 문서는 loadXML 이 ValueError 를 낸다
+if (strlen($xml) > 1_000_000) { http_response_code(413); exit; }
 // UTF-16 처럼 NUL 바이트가 섞인 문서로 DOCTYPE 검사를 피하지 못하게 함께 거절한다
 if (stripos($xml, '<!DOCTYPE') !== false || str_contains($xml, "\0")) {
     http_response_code(400);

@@ -36,6 +36,9 @@ sources:
   - title: "OWASP ASVS 5.0 - V1.2 Injection Prevention"
     url: https://github.com/OWASP/ASVS/tree/master/5.0/en
     year: 2025
+  - title: 행정기관 및 공공기관 정보시스템 구축·운영 지침 (행정안전부고시 제2025-1호, 별표 3)
+    url: https://www.law.go.kr/%ED%96%89%EC%A0%95%EA%B7%9C%EC%B9%99/%ED%96%89%EC%A0%95%EA%B8%B0%EA%B4%80%EB%B0%8F%EA%B3%B5%EA%B3%B5%EA%B8%B0%EA%B4%80%EC%A0%95%EB%B3%B4%EC%8B%9C%EC%8A%A4%ED%85%9C%EA%B5%AC%EC%B6%95%E3%86%8D%EC%9A%B4%EC%98%81%EC%A7%80%EC%B9%A8
+    year: 2025
   - title: 행정안전부·KISA 소프트웨어 보안약점 진단가이드 (2021)
     url: https://www.kisa.or.kr/2060204/form?postSeq=9
     year: 2021

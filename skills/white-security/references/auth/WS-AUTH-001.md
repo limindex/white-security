@@ -94,7 +94,7 @@ def get_order(order_id):
 @app.post("/api/orders/<int:order_id>/refund")
 @login_required
 def refund(order_id):
-    if not current_user.has_role("admin"):          # 역할은 서버 DB 기준
+    if current_user.role != "admin":               # 앱의 User 모델에 저장된 역할(DB 값)로 판단
         abort(403)
     order = db.session.get(Order, order_id)
     if order is None:
