@@ -1,6 +1,6 @@
 ---
 id: WS-SUP-008
-title: Model Supply Chain (pickle·safetensors, AI 모델·데이터셋 공급망)
+title: Model Supply Chain (AI 모델·데이터셋 공급망)
 slug: model-supply-chain
 group: supply
 severity: high
@@ -46,7 +46,11 @@ sources:
 
 ## 요약
 
-모델 저장소에서 받은 가중치를 pickle 기반 형식(`.bin`·`.pt`·`.pkl`)으로 열거나 `trust_remote_code=True`로 저장소의 파이썬 코드를 실행해, 모델을 불러오는 순간 남의 코드가 서버에서 돌아가는 문제. 버전(`revision`)을 고정하지 않으면 저장소 주인이 나중에 바꾼 가중치·데이터셋이 그대로 들어옴(데이터·모델 오염).
+모델 저장소에서 받은 가중치를 pickle 기반 형식(`.bin`·`.pt`·`.pkl`)으로 열거나 `trust_remote_code=True`로 저장소의 파이썬 코드를 실행해, 모델을 불러오는 순간 남의 코드가 서버에서 돌아가는 문제(진단가이드 이름: 신뢰할 수 없는 데이터의 역직렬화).
+
+## 위험 배경
+
+- 버전(`revision`)을 고정하지 않으면 저장소 주인이 나중에 바꾼 가중치·데이터셋이 그대로 들어오는 구조(데이터·모델 오염).
 
 ## 대응 방법
 

@@ -1,6 +1,6 @@
 ---
 id: WS-INJ-004
-title: NoSQL·LDAP·XPath Injection (NoSQL·LDAP·XPath 삽입)
+title: NoSQL · LDAP · XPath Injection (NoSQL·LDAP·XPath 인젝션)
 slug: nosql-ldap-xpath-injection
 group: web
 severity: high

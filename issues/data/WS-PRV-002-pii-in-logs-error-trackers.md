@@ -1,6 +1,6 @@
 ---
 id: WS-PRV-002
-title: Sensitive Data in Logs·Error Trackers (로그·오류 추적 도구에 남는 개인정보)
+title: Sensitive Data in Logs · Error Trackers (로그·오류 추적 도구에 남는 개인정보)
 slug: pii-in-logs-error-trackers
 group: data
 severity: medium

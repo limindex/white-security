@@ -1,6 +1,6 @@
 ---
 id: WS-INJ-003
-title: SSTI·Code Injection (서버 템플릿 삽입·코드 삽입)
+title: SSTI · Code Injection (서버 템플릿 인젝션·코드 인젝션)
 slug: ssti-code-injection
 group: web
 severity: high

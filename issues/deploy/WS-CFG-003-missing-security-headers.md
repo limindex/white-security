@@ -46,7 +46,7 @@ sources:
 
 ## 요약
 
-응답에 CSP(Content-Security-Policy, 불러올 수 있는 스크립트 출처 제한)·HSTS(Strict-Transport-Security, 브라우저가 HTTPS로만 접속하게 함)·`X-Content-Type-Options: nosniff`·`frame-ancestors`(남의 사이트가 내 화면을 iframe으로 싸는 것 금지) 같은 보안 헤더가 없어, XSS 피해가 커지고 HTTP 가로채기·클릭재킹(보이지 않게 덮은 내 화면을 누르게 하는 공격)에 무방비인 문제. 헤더는 코드 버그를 고치지 않는 보조 방어.
+응답에 CSP(스크립트 출처 제한)·HSTS(HTTPS 강제)·`nosniff`·`frame-ancestors`(남의 사이트의 iframe 금지) 같은 보안 헤더가 없어, XSS 피해가 커지고 HTTP 가로채기·클릭재킹(보이지 않게 덮은 내 화면을 누르게 하는 공격)에 무방비인 문제. 헤더는 코드 버그를 고치지 않는 보조 방어.
 
 ## 대응 방법
 

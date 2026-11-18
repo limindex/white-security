@@ -1,5 +1,5 @@
 <!-- generated from white-security issues; do not edit -->
-# WS-PRV-004 RRN Processing (주민등록번호 처리 제한·대체수단)
+# WS-PRV-004 RRN Processing (주민등록번호 처리 제한·대체 가입 수단)
 
 ## 탐지 규칙
 

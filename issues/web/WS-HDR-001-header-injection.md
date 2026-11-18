@@ -1,6 +1,6 @@
 ---
 id: WS-HDR-001
-title: HTTP Response Splitting·Header Injection (HTTP 응답 분할·헤더 삽입)
+title: HTTP Response Splitting · Header Injection (HTTP 응답 분할·헤더 인젝션)
 slug: header-injection
 group: web
 severity: medium

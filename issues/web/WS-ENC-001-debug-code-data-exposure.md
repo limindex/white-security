@@ -1,6 +1,6 @@
 ---
 id: WS-ENC-001
-title: Leftover Debug Code·Data Exposure (남은 디버그 코드·잘못된 데이터 노출)
+title: Leftover Debug Code · Data Exposure (남은 디버그 코드·잘못된 데이터 노출)
 slug: debug-code-data-exposure
 group: web
 severity: medium

@@ -50,7 +50,7 @@ sources:
 
 ## 요약
 
-로그인 토큰·개인정보를 AsyncStorage, SharedPreferences, UserDefaults, MMKV처럼 암호화되지 않는 저장소에 두어, 기기 백업이나 루팅·탈옥된 기기에서 그대로 읽히는 문제. 토큰은 iOS Keychain·Android Keystore를 쓰는 `expo-secure-store`·`flutter_secure_storage`에 두고, 앱 코드에 박은 키로 직접 암호화하는 방식은 쓰지 않아야 함.
+로그인 토큰·개인정보를 AsyncStorage, SharedPreferences, UserDefaults, MMKV처럼 암호화되지 않는 저장소에 두어, 기기 백업이나 루팅·탈옥된 기기에서 그대로 읽히는 문제(진단가이드 이름: 암호화되지 않은 중요정보).
 
 ## 대응 방법
 
@@ -65,7 +65,7 @@ AsyncStorage, SharedPreferences, UserDefaults, MMKV, SQLite, 파일에 저장하
 
 ## 점검 항목
 
-- 로그인 토큰·리프레시 토큰·비밀번호는 Keychain·Keystore 기반 저장소에만 두어야 한다.
+- 로그인 토큰·리프레시 토큰·비밀번호는 Keychain·Keystore 기반 저장소(`expo-secure-store`·`flutter_secure_storage` 등)에만 두어야 한다.
 - AsyncStorage, SharedPreferences, UserDefaults, MMKV에는 화면 설정 같은 민감하지 않은 값만 두어야 한다.
 - 앱 코드에 박은 키로 직접 암호화하지 않고, 키는 Keystore·Keychain이 만들고 보관하게 해야 한다.
 - 로그(`console.log`·`print`·`Log.d`)에 토큰·개인정보를 남기지 않아야 한다.

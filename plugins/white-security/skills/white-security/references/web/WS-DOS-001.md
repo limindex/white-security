@@ -1,5 +1,5 @@
 <!-- generated from white-security issues; do not edit -->
-# WS-DOS-001 ReDoS·Resource Exhaustion (정규식 서비스 거부·자원 고갈)
+# WS-DOS-001 ReDoS · Resource Exhaustion (정규식 서비스 거부·자원 고갈)
 
 ## 탐지 규칙
 

@@ -1,6 +1,6 @@
 ---
 id: WS-INJ-002
-title: OS Command Injection (운영체제 명령어 삽입)
+title: OS Command Injection (운영체제 명령어 인젝션)
 slug: os-command-injection
 group: web
 severity: high

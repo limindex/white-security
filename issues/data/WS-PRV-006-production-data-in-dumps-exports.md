@@ -1,6 +1,6 @@
 ---
 id: WS-PRV-006
-title: Production Data in Dumps·Exports·Test Data (백업·내보내기·테스트 데이터 속 실데이터)
+title: Production Data in Dumps · Exports · Test Data (백업·내보내기·테스트 데이터 속 실데이터)
 slug: production-data-in-dumps-exports
 group: data
 severity: medium

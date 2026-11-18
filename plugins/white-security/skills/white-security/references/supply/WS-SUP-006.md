@@ -1,5 +1,5 @@
 <!-- generated from white-security issues; do not edit -->
-# WS-SUP-006 Vendored·Copied Code (복사해 온 코드·공통 코드 패치 누락)
+# WS-SUP-006 Vendored · Copied Code (복사해 온 코드·공통 코드 패치 누락)
 
 ## 탐지 규칙
 

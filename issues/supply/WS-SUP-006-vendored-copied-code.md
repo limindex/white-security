@@ -1,6 +1,6 @@
 ---
 id: WS-SUP-006
-title: Vendored·Copied Code (복사해 온 코드·공통 코드 패치 누락)
+title: Vendored · Copied Code (복사해 온 코드·공통 코드 패치 누락)
 slug: vendored-copied-code
 group: supply
 severity: medium

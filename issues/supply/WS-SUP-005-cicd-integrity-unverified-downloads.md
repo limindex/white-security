@@ -1,6 +1,6 @@
 ---
 id: WS-SUP-005
-title: CI/CD Integrity·Unverified Downloads (CI 파이프라인·검증 없는 다운로드)
+title: CI/CD Integrity · Unverified Downloads (CI 파이프라인·검증 없는 다운로드)
 title_en: CI/CD Integrity · Unverified Downloads (GitHub Actions, curl | sh)
 slug: cicd-integrity-unverified-downloads
 group: supply
@@ -44,7 +44,11 @@ sources:
 
 ## 요약
 
-GitHub Actions에서 남의 액션을 태그(`@v4`)로 부르고, 토큰 권한을 넓게 두고, `pull_request_target`에서 외부 PR 코드를 실행하고, `curl … | sh`·태그만 지정한 이미지·CDN 스크립트를 확인 없이 받아 쓰는 문제(진단가이드 이름: 무결성 검사 없는 코드 다운로드). 2025년 3월 tj-actions/changed-files 액션이 탈취되어 이 액션을 쓰던 저장소의 CI 비밀값이 노출될 수 있었고, CISA가 CVE-2025-30066으로 경보를 냄.
+GitHub Actions에서 남의 액션을 태그(`@v4`)로 부르고, 토큰 권한을 넓게 두고, `pull_request_target`에서 외부 PR 코드를 실행하고, `curl … | sh`·태그만 지정한 이미지·CDN 스크립트를 확인 없이 받아 쓰는 문제(진단가이드 이름: 무결성 검사 없는 코드 다운로드).
+
+## 위험 배경
+
+- 2025년 3월 tj-actions/changed-files 액션 탈취로 이 액션을 쓰던 저장소의 CI 비밀값이 노출될 수 있었던 사고, CISA가 CVE-2025-30066으로 경보.
 
 ## 대응 방법
 

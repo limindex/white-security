@@ -1,5 +1,5 @@
 <!-- generated from white-security issues; do not edit -->
-# WS-PRV-002 Sensitive Data in Logs·Error Trackers (로그·오류 추적 도구에 남는 개인정보)
+# WS-PRV-002 Sensitive Data in Logs · Error Trackers (로그·오류 추적 도구에 남는 개인정보)
 
 ## 탐지 규칙
 

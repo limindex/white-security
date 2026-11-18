@@ -46,7 +46,11 @@ sources:
 
 ## 요약
 
-잠금 파일(설치한 버전과 파일 해시를 적어 둔 `package-lock.json`·`pnpm-lock.yaml`·`uv.lock`·`poetry.lock`·`composer.lock`)이 없거나, CI·Docker가 이를 무시하고 `npm install`·해시 없는 `pip install -r`로 설치해 빌드마다 검토하지 않은 버전이 들어오는 문제(진단가이드 이름: 무결성 검사 없는 코드 다운로드). 잠금 파일 속 주소(`resolved`)를 바꿔치기한 변경이나 여러 저장소를 섞어 쓰는 설정도 같은 결과.
+잠금 파일(설치한 버전과 파일 해시를 적어 둔 `package-lock.json`·`pnpm-lock.yaml`·`uv.lock`·`poetry.lock`·`composer.lock`)이 없거나, CI·Docker가 이를 무시하고 `npm install`·해시 없는 `pip install -r`로 설치해 빌드마다 검토하지 않은 버전이 들어오는 문제(진단가이드 이름: 무결성 검사 없는 코드 다운로드).
+
+## 위험 배경
+
+- 잠금 파일 속 주소(`resolved`)를 바꿔치기한 변경이나 여러 저장소를 섞어 쓰는 설정도 같은 결과로 이어지는 구조.
 
 ## 대응 방법
 

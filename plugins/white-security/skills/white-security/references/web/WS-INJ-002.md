@@ -1,5 +1,5 @@
 <!-- generated from white-security issues; do not edit -->
-# WS-INJ-002 OS Command Injection (운영체제 명령어 삽입)
+# WS-INJ-002 OS Command Injection (운영체제 명령어 인젝션)
 
 ## 탐지 규칙
 

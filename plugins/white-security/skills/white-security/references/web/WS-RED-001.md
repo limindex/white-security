@@ -1,5 +1,5 @@
 <!-- generated from white-security issues; do not edit -->
-# WS-RED-001 Open Redirect (신뢰되지 않는 URL 자동 접속 연결)
+# WS-RED-001 Open Redirect (외부 주소로 자동 이동)
 
 ## 탐지 규칙
 

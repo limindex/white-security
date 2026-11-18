@@ -56,12 +56,17 @@ sources:
 
 ## 요약
 
-개발 서버 연결이나 오래된 http API 때문에 평문(http) 통신을 허용하거나(`usesCleartextTraffic`·`NSAllowsArbitraryLoads`), 개발 프록시 인증서 때문에 인증서 검증을 꺼 둔 채 배포해 같은 와이파이에서 토큰·개인정보를 가로챌 수 있는 문제(진단가이드 이름: 부적절한 인증서 유효성 검증). Android는 targetSdk 28 이상, iOS는 ATS(App Transport Security, https 강제 기능)로 기본이 https이므로, 예외 설정을 넣지 않고 검증 코드를 덮어쓰지 않는 것이 핵심.
+개발 서버 연결이나 오래된 http API 때문에 평문(http) 통신을 허용하거나(`usesCleartextTraffic`·`NSAllowsArbitraryLoads`), 개발 프록시 인증서 때문에 인증서 검증을 꺼 둔 채 배포해 같은 와이파이에서 토큰·개인정보를 가로챌 수 있는 문제(진단가이드 이름: 부적절한 인증서 유효성 검증).
+
+## 위험 배경
+
+- Android(targetSdk 28 이상)와 iOS(ATS, App Transport Security, https 강제 기능)는 기본이 https라, 예외 설정과 검증 코드 덮어쓰기가 주된 원인.
 
 ## 대응 방법
 
 ```text
-AndroidManifest.xml, network_security_config.xml, Info.plist, app.json, 네트워크 코드에서 http 허용과 인증서 검증을 끄는 설정(TrustManager, hostnameVerifier, badCertificateCallback, onReceivedSslError)을 찾아 표로 보여 줘.
+AndroidManifest.xml, network_security_config.xml, Info.plist, app.json, 네트워크 코드에서 http 허용 설정을 찾아 줘.
+인증서 검증을 끄는 코드(TrustManager, hostnameVerifier, badCertificateCallback, onReceivedSslError)도 찾아 함께 표로 보여 줘.
 모든 API·이미지·WebView 주소를 https 로 바꾸고, cleartext 허용과 ATS 예외, 검증을 끄는 코드를 지워 줘.
 개발 프록시 인증서가 필요하면 Android 는 debug-overrides, 그 밖에는 디버그 빌드에서만 쓰는 설정으로 옮겨 줘.
 ```

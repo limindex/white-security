@@ -1,6 +1,6 @@
 ---
 id: WS-SUP-003
-title: Install Scripts (postinstall)·Build Plugins (설치 스크립트·빌드 플러그인)
+title: Install Scripts (postinstall) · Build Plugins (설치 스크립트·빌드 플러그인)
 slug: install-scripts-build-plugins
 group: supply
 severity: high
@@ -46,7 +46,11 @@ sources:
 
 ## 요약
 
-npm의 `preinstall`·`postinstall` 같은 설치 스크립트, Composer 플러그인, 파이썬 소스 배포판의 빌드 코드, Vite·webpack 같은 빌드 도구 플러그인처럼 설치·빌드하는 순간 실행되는 코드 때문에, 탈취된 의존성 하나가 개발 PC·CI의 토큰과 클라우드 키를 가져가는 문제(진단가이드 이름: 무결성 검사 없는 코드 다운로드). 2025년 9월 npm 생태계에서는 자기 복제 웜이 500개 넘는 패키지를 감염시켜 GitHub 토큰·클라우드 키를 빼냄(CISA 경보).
+npm의 `preinstall`·`postinstall` 같은 설치 스크립트, Composer 플러그인, 파이썬 소스 배포판의 빌드 코드, Vite·webpack 같은 빌드 도구 플러그인처럼 설치·빌드하는 순간 실행되는 코드 때문에, 탈취된 의존성 하나가 개발 PC·CI의 토큰과 클라우드 키를 가져가는 문제(진단가이드 이름: 무결성 검사 없는 코드 다운로드).
+
+## 위험 배경
+
+- 2025년 9월 npm 생태계의 자기 복제 웜이 500개 넘는 패키지를 감염시켜 GitHub 토큰·클라우드 키를 빼낸 사고(CISA 경보).
 
 ## 대응 방법
 

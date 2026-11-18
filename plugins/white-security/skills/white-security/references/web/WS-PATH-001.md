@@ -1,5 +1,5 @@
 <!-- generated from white-security issues; do not edit -->
-# WS-PATH-001 Path Traversal (경로 조작 및 자원 삽입)
+# WS-PATH-001 Path Traversal (경로 조작)
 
 ## 탐지 규칙
 

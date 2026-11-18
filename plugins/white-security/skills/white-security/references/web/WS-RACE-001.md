@@ -1,5 +1,5 @@
 <!-- generated from white-security issues; do not edit -->
-# WS-RACE-001 Race Condition (경쟁 조건: 검사 시점과 사용 시점)
+# WS-RACE-001 Race Condition (경쟁 조건)
 
 ## 탐지 규칙
 

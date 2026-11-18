@@ -1,5 +1,5 @@
 <!-- generated from white-security issues; do not edit -->
-# WS-SUP-003 Install Scripts (postinstall)·Build Plugins (설치 스크립트·빌드 플러그인)
+# WS-SUP-003 Install Scripts (postinstall) · Build Plugins (설치 스크립트·빌드 플러그인)
 
 ## 탐지 규칙
 

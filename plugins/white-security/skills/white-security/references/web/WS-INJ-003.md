@@ -1,5 +1,5 @@
 <!-- generated from white-security issues; do not edit -->
-# WS-INJ-003 SSTI·Code Injection (서버 템플릿 삽입·코드 삽입)
+# WS-INJ-003 SSTI · Code Injection (서버 템플릿 인젝션·코드 인젝션)
 
 ## 탐지 규칙
 

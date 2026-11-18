@@ -1,5 +1,5 @@
 <!-- generated from white-security issues; do not edit -->
-# WS-ENC-001 Leftover Debug Code·Data Exposure (남은 디버그 코드·잘못된 데이터 노출)
+# WS-ENC-001 Leftover Debug Code · Data Exposure (남은 디버그 코드·잘못된 데이터 노출)
 
 ## 탐지 규칙
 

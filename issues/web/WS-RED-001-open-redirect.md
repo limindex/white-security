@@ -1,6 +1,6 @@
 ---
 id: WS-RED-001
-title: Open Redirect (신뢰되지 않는 URL 자동 접속 연결)
+title: Open Redirect (외부 주소로 자동 이동)
 slug: open-redirect
 group: web
 severity: medium

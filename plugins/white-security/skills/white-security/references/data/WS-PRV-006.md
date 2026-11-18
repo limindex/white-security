@@ -1,5 +1,5 @@
 <!-- generated from white-security issues; do not edit -->
-# WS-PRV-006 Production Data in Dumps·Exports·Test Data (백업·내보내기·테스트 데이터 속 실데이터)
+# WS-PRV-006 Production Data in Dumps · Exports · Test Data (백업·내보내기·테스트 데이터 속 실데이터)
 
 ## 탐지 규칙
 

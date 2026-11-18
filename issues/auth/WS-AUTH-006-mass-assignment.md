@@ -46,7 +46,11 @@ sources:
 
 ## 요약
 
-회원정보 수정·가입 API가 요청 본문을 통째로 모델에 넣어, 본문에 `role`·`is_admin`·`points`·`owner_id` 같은 필드를 끼워 보내면 바꾸면 안 되는 값까지 바뀌는 문제(진단가이드 이름: 보안기능 결정에 사용되는 부적절한 입력값). OWASP API Security 2023은 필요 이상 필드를 응답으로 내주는 문제와 함께 BOPLA(Broken Object Property Level Authorization, 속성 수준 권한 검증 실패)로 묶음.
+회원정보 수정·가입 API가 요청 본문을 통째로 모델에 넣어, 본문에 `role`·`is_admin`·`points`·`owner_id` 같은 필드를 끼워 보내면 바꾸면 안 되는 값까지 바뀌는 문제(진단가이드 이름: 보안기능 결정에 사용되는 부적절한 입력값).
+
+## 위험 배경
+
+- OWASP API Security 2023은 필요 이상 필드를 응답으로 내주는 문제와 함께 BOPLA(Broken Object Property Level Authorization, 속성 수준 권한 검증 실패)로 분류.
 
 ## 대응 방법
 

@@ -1,6 +1,6 @@
 ---
 id: WS-DOS-001
-title: ReDoS·Resource Exhaustion (정규식 서비스 거부·자원 고갈)
+title: ReDoS · Resource Exhaustion (정규식 서비스 거부·자원 고갈)
 slug: redos-resource-exhaustion
 group: web
 severity: medium

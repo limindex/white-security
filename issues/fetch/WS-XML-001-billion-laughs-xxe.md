@@ -96,7 +96,7 @@ XXE(XML External Entity, XML 외부 개체 참조)와 Billion Laughs(엔티티 �
 
 - 외부에서 온 XML에 DTD(`<!DOCTYPE`)가 있으면 거절해야 한다. DTD가 꼭 필요하면 외부 개체·외부 DTD 로딩을 끄고 개체 확장 한도를 둬야 하며, XInclude와 XSLT의 외부 문서 불러오기도 꺼야 한다.
 - Python: 외부 XML은 표준 `xml.*` 대신 `defusedxml`(`forbid_dtd=True`)로 읽어야 한다. lxml은 `resolve_entities=False`, `no_network=True`, `load_dtd=False`로 둬야 하고, 표준 모듈을 써야 하면 `pyexpat.EXPAT_VERSION`이 2.7.2 이상인지 확인해야 한다.
-- PHP: 외부 XML에 `LIBXML_NOENT`, `LIBXML_DTDLOAD`, `LIBXML_DTDVALID`, `LIBXML_PARSEHUGE`를 쓰지 않아야 한다. PHP 8.4 이상·libxml 2.13 이상이면 `LIBXML_NO_XXE` 사용 가능. `libxml_disable_entity_loader()`는 PHP 8.0부터 폐기된 함수라 기대지 않아야 한다.
+- PHP: 외부 XML에 `LIBXML_NOENT`, `LIBXML_DTDLOAD`, `LIBXML_DTDVALID`, `LIBXML_PARSEHUGE`를 쓰지 않아야 한다. `libxml_disable_entity_loader()`는 PHP 8.0부터 폐기된 함수라 기대지 않아야 한다.
 - Node: `libxmljs`에서 `noent: true`를 쓰지 않아야 하고, `fast-xml-parser`는 `processEntities: false`로 둬야 한다.
 - 요청 본문·업로드 파일·압축을 푼 뒤의 크기에 각각 상한을 둬야 하고, 파서 오류 원문은 응답에 넣지 않아야 한다(읽어 온 파일 내용이 오류 문장에 섞여 나올 수 있음).
 - SVG, 오피스 파일, RSS, SAML 응답처럼 XML인 줄 모르고 다루는 형식도 같은 파서 설정을 거쳐야 한다.
@@ -110,6 +110,7 @@ XXE(XML External Entity, XML 외부 개체 참조)와 Billion Laughs(엔티티 �
 - **등급**: 위험: 외부 입력에 외부 개체 해석이 켜진 경우. / 주의: 외부 입력인데 엔티티 확장 한도를 알 수 없는 경우. `fast-xml-parser`를 `processEntities` 기본값(켜짐)으로 외부 입력에 쓰는 경우. / 참고: 크기 상한 없음, 오류 원문 노출.
 - **보고 형식**: `[위험|주의|참고] <id> <파일:줄> — <이유> → <고칠 방법>`
 - **보고 예**: `[위험] WS-XML-001 api/import.py:27 — 업로드한 XML을 resolve_entities=True 인 lxml 파서로 읽음(XXE) → defusedxml.ElementTree.fromstring(data, forbid_dtd=True) 로 바꿈`
+- **검토 주의**: PHP 8.4 이상·libxml 2.13 이상이면 `LIBXML_NO_XXE`로 외부 개체를 막을 수 있으므로, 이 옵션을 쓴 코드는 XXE 지적에서 빼야 한다.
 - **고칠 방법**: 정상 문서에 DTD가 정말 필요한지 먼저 확인하고(대부분 불필요) DTD 거절을 기본으로 둬야 한다. 보고에는 XXE면 CWE-611, 엔티티 폭탄이면 CWE-776을 함께 적어야 한다.
 
 ## 코드 예시

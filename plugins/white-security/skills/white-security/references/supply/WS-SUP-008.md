@@ -1,5 +1,5 @@
 <!-- generated from white-security issues; do not edit -->
-# WS-SUP-008 Model Supply Chain (pickle·safetensors, AI 모델·데이터셋 공급망)
+# WS-SUP-008 Model Supply Chain (AI 모델·데이터셋 공급망)
 
 ## 탐지 규칙
 

@@ -13,7 +13,7 @@
 
 ## 점검 항목
 
-- 로그인 토큰·리프레시 토큰·비밀번호는 Keychain·Keystore 기반 저장소에만 두어야 한다.
+- 로그인 토큰·리프레시 토큰·비밀번호는 Keychain·Keystore 기반 저장소(`expo-secure-store`·`flutter_secure_storage` 등)에만 두어야 한다.
 - AsyncStorage, SharedPreferences, UserDefaults, MMKV에는 화면 설정 같은 민감하지 않은 값만 두어야 한다.
 - 앱 코드에 박은 키로 직접 암호화하지 않고, 키는 Keystore·Keychain이 만들고 보관하게 해야 한다.
 - 로그(`console.log`·`print`·`Log.d`)에 토큰·개인정보를 남기지 않아야 한다.

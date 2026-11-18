@@ -1,5 +1,5 @@
 <!-- generated from white-security issues; do not edit -->
-# WS-SUP-005 CI/CD Integrity·Unverified Downloads (CI 파이프라인·검증 없는 다운로드)
+# WS-SUP-005 CI/CD Integrity · Unverified Downloads (CI 파이프라인·검증 없는 다운로드)
 
 ## 탐지 규칙
 

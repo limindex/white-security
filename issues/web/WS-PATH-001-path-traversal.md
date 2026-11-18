@@ -1,6 +1,6 @@
 ---
 id: WS-PATH-001
-title: Path Traversal (경로 조작 및 자원 삽입)
+title: Path Traversal (경로 조작)
 slug: path-traversal
 group: web
 severity: high

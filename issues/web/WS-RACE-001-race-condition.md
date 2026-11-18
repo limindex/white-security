@@ -1,6 +1,6 @@
 ---
 id: WS-RACE-001
-title: Race Condition (경쟁 조건: 검사 시점과 사용 시점)
+title: Race Condition (경쟁 조건)
 slug: race-condition
 group: web
 severity: high
@@ -40,7 +40,7 @@ sources:
 
 ## 요약
 
-쿠폰 사용 여부·잔액·재고를 "먼저 확인하고 나중에 바꾸는" 코드에 같은 요청이 동시에 들어와, 모두 확인을 통과한 뒤 여러 번 차감·지급되는 문제(진단가이드 이름: 경쟁조건: 검사 시점과 사용 시점). TOCTOU(Time-of-check to time-of-use)라고도 부름.
+쿠폰 사용 여부·잔액·재고를 "먼저 확인하고 나중에 바꾸는" 코드에 같은 요청이 동시에 들어와, 모두 확인을 통과한 뒤 여러 번 차감·지급되는 문제(진단가이드 이름: 경쟁조건: 검사 시점과 사용 시점(TOCTOU)). TOCTOU는 Time-of-check to time-of-use의 줄임말.
 
 ## 대응 방법
 

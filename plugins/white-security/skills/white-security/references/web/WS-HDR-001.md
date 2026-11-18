@@ -1,5 +1,5 @@
 <!-- generated from white-security issues; do not edit -->
-# WS-HDR-001 HTTP Response Splitting·Header Injection (HTTP 응답 분할·헤더 삽입)
+# WS-HDR-001 HTTP Response Splitting · Header Injection (HTTP 응답 분할·헤더 인젝션)
 
 ## 탐지 규칙
 

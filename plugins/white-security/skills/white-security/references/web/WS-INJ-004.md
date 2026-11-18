@@ -1,5 +1,5 @@
 <!-- generated from white-security issues; do not edit -->
-# WS-INJ-004 NoSQL·LDAP·XPath Injection (NoSQL·LDAP·XPath 삽입)
+# WS-INJ-004 NoSQL · LDAP · XPath Injection (NoSQL·LDAP·XPath 인젝션)
 
 ## 탐지 규칙
 
