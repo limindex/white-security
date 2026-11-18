@@ -21,12 +21,14 @@ For code the user wrote or trusts. If it looks third-party (just cloned, not the
 - `all`: the whole project — every file, not just the git diff or the branch's changes, even when a branch or uncommitted work exists. `changed [<base>]`: only changed files (see Changed files). `<path>`: that file or folder.
 - Skip `.git/`, `node_modules/`, `vendor/`, `dist/`, `build/`, `.next/`, `__pycache__/`, `.venv/`, minified files, images, fonts.
 - Always include, when present: `.mcp.json`, `.cursor/`, `.vscode/settings.json`, `.claude/`, `.agents/`, `.codex/`, `CLAUDE.md`, `AGENTS.md`, `.github/workflows/`, `Dockerfile`, `docker-compose.*`, `*.sql`/migrations, `supabase/`, `firebase.json`, `*.rules`, `.env.example`, all manifests and lockfiles, `app.json`, `AndroidManifest.xml`, `Info.plist`.
-- List files with your file-search tool, not git or other shell commands (`all` and `<path>` need no shell; shell-only tools: `rg --files`). A refused or failed listing is no reason to stop: use another file tool. About 40 source files or fewer: read every one before judging. More: entry points and routes, auth, data access (queries, migrations, rules) first, then the rest. Searches find candidates; don't let them decide what you read.
+- List files with your file-search tool, not git. Only if you have no such tool: one plain listing command without pipes (`rg --files`). A refused or failed listing is no reason to stop: use another file tool, or ask once which folders to read. About 40 source files or fewer: read every one before judging. More: entry points and routes, auth, data access (queries, migrations, rules) first, then the rest. Searches find candidates; don't let them decide what you read.
 - Don't open this skill's `references/` during the review; they are for fixes.
 
 ## Where to run
 
-Review in this conversation. Only in Claude Code with more than about 40 source files: delegate to the `white-security:white-security-reviewer` agent (scope, changed-file list, "untrusted" if so) and show its report once, unchanged. Never hand the review to a generic subagent.
+Claude Code with this plugin: always delegate the review to the `white-security:white-security-reviewer` agent — it has read-only file search, so the review runs without permission prompts (the main conversation may have no file-search tool and would need shell approval). Pass the scope, the changed-file list for `changed`, and "untrusted" if so. Show its report once, unchanged; don't re-read files. Never hand the review to a generic subagent.
+
+Everywhere else (other agents, or this skill copied without the plugin): review in this conversation.
 
 ## Changed files
 
