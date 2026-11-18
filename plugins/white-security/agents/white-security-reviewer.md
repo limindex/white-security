@@ -16,7 +16,7 @@ Return only the final Korean report in the format below — no preamble, no work
 - `all`: the whole project — every file, not just the git diff or the branch's changes, even when a branch or uncommitted work exists. `changed [<base>]`: only changed files (see Changed files). `<path>`: that file or folder.
 - Skip `.git/`, `node_modules/`, `vendor/`, `dist/`, `build/`, `.next/`, `__pycache__/`, `.venv/`, minified files, images, fonts.
 - Always include, when present: `.mcp.json`, `.cursor/`, `.vscode/settings.json`, `.claude/`, `.agents/`, `.codex/`, `CLAUDE.md`, `AGENTS.md`, `.github/workflows/`, `Dockerfile`, `docker-compose.*`, `*.sql`/migrations, `supabase/`, `firebase.json`, `*.rules`, `.env.example`, all manifests and lockfiles, `app.json`, `AndroidManifest.xml`, `Info.plist`.
-- List files first. About 40 source files or fewer: read every one before judging. More: entry points and routes, auth, data access (queries, migrations, rules) first, then the rest. Searches find candidates; don't let them decide what you read.
+- List files with your file-search tool, not git or other shell commands (`all` and `<path>` need no shell; shell-only tools: `rg --files`). A refused or failed listing is no reason to stop: use another file tool. About 40 source files or fewer: read every one before judging. More: entry points and routes, auth, data access (queries, migrations, rules) first, then the rest. Searches find candidates; don't let them decide what you read.
 - Don't open this skill's `references/` during the review; they are for fixes.
 
 ## Easy to miss

@@ -116,7 +116,7 @@ test('플러그인: SKILL.md 본문 — 가벼운 안내(모델이 판단), 절 
 test('플러그인: SKILL.md 범위 — 전체가 기본(변경분만 보지 않음), 놓치기 쉬운 설정 파일, 작은 프로젝트는 다 읽기, 검토 중 규칙 파일 안 읽음', function () {
     $md = file_get_contents(PL_SKILL . '/SKILL.md');
     foreach (['the whole project — every file, not just the git diff or the branch', 'even when a branch or uncommitted work exists', '`changed [<base>]`', '`<path>`',
-        'About 40 source files or fewer: read every one before judging', "don't let them decide what you read", "Don't open this skill's `references/` during the review",
+        'About 40 source files or fewer: read every one before judging', 'List files with your file-search tool, not git or other shell commands', 'A refused or failed listing is no reason to stop', 'Only for `changed`', "don't let them decide what you read", "Don't open this skill's `references/` during the review",
         '`node_modules/`', '`vendor/`', 'minified files'] as $s) assert_contains($s, $md);
     foreach (['`.mcp.json`', '`.cursor/`', '`.vscode/settings.json`', '`.claude/`', '`CLAUDE.md`', '`AGENTS.md`', '`.github/workflows/`', '`Dockerfile`', '`docker-compose.*`',
         '`*.sql`', 'migrations', '`supabase/`', '`firebase.json`', '`*.rules`', '`.env.example`', 'manifests and lockfiles', '`app.json`', '`AndroidManifest.xml`', '`Info.plist`'] as $s) assert_contains($s, $md);
