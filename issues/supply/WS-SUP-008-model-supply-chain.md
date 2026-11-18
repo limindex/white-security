@@ -53,7 +53,7 @@ sources:
 ## 대응 방법
 
 ```text
-torch.load·joblib·from_pretrained·hf_hub_download·snapshot_download·load_dataset 로 모델·데이터를 불러오는 곳을 찾아, 파일 형식·trust_remote_code·revision 고정 여부를 표로 보여 줘.
+torch.load, joblib, from_pretrained, hf_hub_download, snapshot_download, load_dataset 로 모델·데이터를 불러오는 곳을 찾아, 파일 형식·trust_remote_code, revision 고정 여부를 표로 보여 줘.
 가중치는 safetensors 로만 받게(use_safetensors=True) 하고, torch 는 2.6 이상으로 올려 torch.load 는 weights_only=True 로, trust_remote_code 는 끄게 고쳐 줘.
 모델·데이터셋은 검토한 커밋 해시(revision)로 고정하고, 이미지 빌드 때 받아 두고 실행 중에는 새로 받지 않게 해 줘.
 ```

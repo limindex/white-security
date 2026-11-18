@@ -50,13 +50,13 @@ sources:
 
 ## 요약
 
-로그인 토큰·개인정보를 AsyncStorage·SharedPreferences·UserDefaults·MMKV처럼 암호화되지 않는 저장소에 두어, 기기 백업이나 루팅·탈옥된 기기에서 그대로 읽히는 문제. 토큰은 iOS Keychain·Android Keystore를 쓰는 `expo-secure-store`·`flutter_secure_storage`에 두고, 앱 코드에 박은 키로 직접 암호화하는 방식은 쓰지 않아야 함.
+로그인 토큰·개인정보를 AsyncStorage, SharedPreferences, UserDefaults, MMKV처럼 암호화되지 않는 저장소에 두어, 기기 백업이나 루팅·탈옥된 기기에서 그대로 읽히는 문제. 토큰은 iOS Keychain·Android Keystore를 쓰는 `expo-secure-store`·`flutter_secure_storage`에 두고, 앱 코드에 박은 키로 직접 암호화하는 방식은 쓰지 않아야 함.
 
 ## 대응 방법
 
 ```text
-AsyncStorage·SharedPreferences·UserDefaults·MMKV·SQLite·파일에 저장하는 값을 찾아, 토큰·비밀번호·개인정보가 있는지 표로 보여 줘.
-토큰·비밀값은 expo-secure-store(또는 react-native-keychain)·flutter_secure_storage·Android Keystore 로 옮기고, 기존 평문 값은 앱 업데이트 때 지워 줘.
+AsyncStorage, SharedPreferences, UserDefaults, MMKV, SQLite·파일에 저장하는 값을 찾아, 토큰·비밀번호·개인정보가 있는지 표로 보여 줘.
+토큰·비밀값은 expo-secure-store(또는 react-native-keychain), flutter_secure_storage, Android Keystore 로 옮기고, 기존 평문 값은 앱 업데이트 때 지워 줘.
 개인정보는 꼭 필요한 것만 기기에 남기고, 로그·백업 대상에서 빼 줘.
 ```
 
@@ -66,7 +66,7 @@ AsyncStorage·SharedPreferences·UserDefaults·MMKV·SQLite·파일에 저장하
 ## 점검 항목
 
 - 로그인 토큰·리프레시 토큰·비밀번호는 Keychain·Keystore 기반 저장소에만 두어야 한다.
-- AsyncStorage·SharedPreferences·UserDefaults·MMKV에는 화면 설정 같은 민감하지 않은 값만 두어야 한다.
+- AsyncStorage, SharedPreferences, UserDefaults, MMKV에는 화면 설정 같은 민감하지 않은 값만 두어야 한다.
 - 앱 코드에 박은 키로 직접 암호화하지 않고, 키는 Keystore·Keychain이 만들고 보관하게 해야 한다.
 - 로그(`console.log`·`print`·`Log.d`)에 토큰·개인정보를 남기지 않아야 한다.
 - 민감한 저장소는 기기 백업(`android:allowBackup`·백업 규칙)에서 빼야 한다.
@@ -75,7 +75,7 @@ AsyncStorage·SharedPreferences·UserDefaults·MMKV·SQLite·파일에 저장하
 ## 탐지 규칙
 
 - **찾는 곳**: `AsyncStorage.setItem(`, `SharedPreferences.getInstance(`, `getSharedPreferences(`, `UserDefaults.standard`, `react-native-mmkv`, `android:allowBackup="true"`, `CryptoJS.AES.encrypt(`, `EncryptedSharedPreferences`, 그 밖에 토큰·비밀번호·주민등록번호를 저장하는 SQLite·파일 쓰기, 토큰을 찍는 로그.
-- **검사 1 — 평문 저장소의 민감값**: 지적할 때: 토큰·비밀번호·카드·신분증 번호를 AsyncStorage·SharedPreferences·UserDefaults·MMKV·일반 파일·SQLite에 평문으로 저장하는 경우, Expo 웹 빌드에서 토큰을 localStorage에 두는 경우. / 지적하지 않을 때: `expo-secure-store`·`react-native-keychain`·`flutter_secure_storage`·Keychain·Keystore를 쓰는 경우, 테마·언어 같은 민감하지 않은 값.
+- **검사 1 — 평문 저장소의 민감값**: 지적할 때: 토큰·비밀번호·카드·신분증 번호를 AsyncStorage, SharedPreferences, UserDefaults, MMKV·일반 파일·SQLite에 평문으로 저장하는 경우, Expo 웹 빌드에서 토큰을 localStorage에 두는 경우. / 지적하지 않을 때: `expo-secure-store`·`react-native-keychain`·`flutter_secure_storage`·Keychain·Keystore를 쓰는 경우, 테마·언어 같은 민감하지 않은 값.
 - **검사 2 — 앱 안의 키로 직접 암호화**: 지적할 때: 앱 코드에 들어 있는 고정 키로 `CryptoJS.AES.encrypt`·직접 만든 암호화를 해서 저장하는 경우, ECB·고정 IV. / 지적하지 않을 때: Keystore·Keychain이 만든 꺼낼 수 없는 키로 AES-GCM 암호화하는 경우.
 - **검사 3 — 로그·백업으로 새는 값**: 지적할 때: 토큰·개인정보를 로그로 찍는 경우, 민감한 저장소가 백업 대상에 포함된 경우. / 지적하지 않을 때: 개발 빌드에서만 켜지는 로그에 가린 값만 찍는 경우, 백업 규칙에서 해당 파일을 뺀 경우.
 - **등급**: 위험: 로그인 토큰·비밀번호·고유식별정보를 평문 저장소에 저장, 앱 코드 속 키로 암호화. / 주의: 운영 로그에 토큰·개인정보, 민감 저장소가 백업 대상, 지원 중단된 `EncryptedSharedPreferences`를 새로 도입. / 참고: 로그아웃 때 저장값을 지우지 않음.

@@ -55,7 +55,7 @@ WebView에 JS 브리지(웹 페이지가 앱 기능을 부르는 통로)를 열�
 ## 대응 방법
 
 ```text
-WebView 를 쓰는 곳을 찾아 여는 주소의 출처, JS 브리지(onMessage·addJavascriptInterface·JavaScriptChannel)로 할 수 있는 일, file 접근 설정을 표로 보여 줘.
+WebView 를 쓰는 곳을 찾아 여는 주소의 출처, JS 브리지(onMessage, addJavascriptInterface, JavaScriptChannel)로 할 수 있는 일, file 접근 설정을 표로 보여 줘.
 WebView 는 우리 도메인 https 페이지만 열게 하고, 다른 주소는 외부 브라우저로 넘기게 고쳐 줘.
 브리지는 보낸 페이지의 출처를 확인하고 정해 둔 메시지만 처리하게, 토큰·결제는 브리지로 넘기지 않게 바꿔 줘.
 ```

@@ -58,8 +58,8 @@ sources:
 ## 대응 방법
 
 ```text
-AndroidManifest.xml·network_security_config.xml·Info.plist·app.json·네트워크 코드에서 http 허용과 인증서 검증을 끄는 설정(TrustManager·hostnameVerifier·badCertificateCallback·onReceivedSslError)을 찾아 표로 보여 줘.
-모든 API·이미지·WebView 주소를 https 로 바꾸고, cleartext·ATS 예외와 검증을 끄는 코드를 지워 줘.
+AndroidManifest.xml, network_security_config.xml, Info.plist, app.json·네트워크 코드에서 http 허용과 인증서 검증을 끄는 설정(TrustManager, hostnameVerifier, badCertificateCallback, onReceivedSslError)을 찾아 표로 보여 줘.
+모든 API·이미지·WebView 주소를 https 로 바꾸고, cleartext, ATS 예외와 검증을 끄는 코드를 지워 줘.
 개발 프록시 인증서가 필요하면 Android 는 debug-overrides, 그 밖에는 디버그 빌드에서만 쓰는 설정으로 옮겨 줘.
 ```
 
