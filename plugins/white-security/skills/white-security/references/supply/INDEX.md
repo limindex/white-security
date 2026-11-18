@@ -12,4 +12,4 @@ Stacks: Python · FastAPI · JavaScript · Next.js · PHP · Laravel · Shell ·
 - `pull_request_target` `workflow_run` `${{ github.event.` `${{ github.head_ref` `write-all` `persist-credentials` `| bash` `ADD http` → WS-SUP-005 CI/CD Integrity · Unverified Downloads (GitHub Actions, curl | sh)
 - `jquery-1.` `jquery-2.` `/*! jQuery v` `public/vendor/` `static/vendor/` `third_party/` `"github:` `"overrides"` → WS-SUP-006 Vendored·Copied Code
 - `requests.get(` `requests.post(` `httpx.` `axios.get(` `Http::get(` `allow_redirects` `follow_redirects=True` `AbortSignal.timeout(` → WS-SUP-007 Unsafe Consumption of APIs
-- `torch.load(` `weights_only=False` `trust_remote_code=True` `from_pretrained(` `hf_hub_download(` `snapshot_download(` `load_dataset(` `.safetensors` → WS-SUP-008 Model Supply Chain
+- `torch.load(` `torch==2.` `weights_only=False` `trust_remote_code=True` `from_pretrained(` `hf_hub_download(` `snapshot_download(` `load_dataset(` → WS-SUP-008 Model Supply Chain

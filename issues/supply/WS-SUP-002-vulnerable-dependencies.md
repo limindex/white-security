@@ -12,6 +12,7 @@ maps:
   api2023: []
   llm2026: []
   agentic2026: []
+  owasp_mobile2024: [M2]
   asvs5: [V15.1.1, V15.1.2, V15.2.1]
   cwe: [CWE-1395, CWE-1104]
   kr_guide: []
@@ -20,8 +21,10 @@ published: 2026-11-18
 checked: 2026-11-18
 revisions:
   - date: 2026-11-18
+    note: 점검 기준 대응에 OWASP Mobile Top 10 2024 M2 추가
+  - date: 2026-11-18
     note: 최초 작성
-applies_to: [Node.js(npm·pnpm), Python(pip·uv·Poetry), PHP(Composer), GitHub Actions, 오픈소스 패키지를 쓰는 모든 앱]
+applies_to: [Node.js(npm·pnpm), Python(pip·uv·Poetry), PHP(Composer), GitHub Actions, React Native·Flutter 앱이 쓰는 SDK(npm·pub), 오픈소스 패키지를 쓰는 모든 앱]
 severity_reason: "영향: 내 코드에 실수가 없어도 프레임워크·라이브러리의 공개된 취약점으로 원격 코드 실행·인증 우회 · 악용: 공개 공지를 보고 그 버전을 쓰는 사이트를 자동으로 찾아 공격"
 sources:
   - title: "OWASP Top 10:2025 - A03 Software Supply Chain Failures"

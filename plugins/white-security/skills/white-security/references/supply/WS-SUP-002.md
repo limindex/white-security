@@ -2,7 +2,7 @@
 # WS-SUP-002 Vulnerable Dependencies (알려진 취약점이 있는 패키지)
 
 심각도: 위험
-기준: OWASP Top 10:2025 A03(소프트웨어 공급망 실패) · ASVS 5.0 V15.1.1 · ASVS 5.0 V15.1.2 · ASVS 5.0 V15.2.1 · CWE-1395 · CWE-1104
+기준: OWASP Top 10:2025 A03(소프트웨어 공급망 실패) · OWASP Mobile 2024 M2(공급망 보안 미흡) · ASVS 5.0 V15.1.1 · ASVS 5.0 V15.1.2 · ASVS 5.0 V15.2.1 · CWE-1395 · CWE-1104
 
 ## 점검 항목
 
