@@ -872,6 +872,45 @@ html:not(.js) .ws-copy, html:not(.js) .ws-tabs, html:not(.js) .ws-check-status {
 .ws-code .ws-copy.is-done { color: var(--code-good); }
 .ws-code :focus-visible { outline-color: var(--code-ink); }
 
+/* ---------- 점검 기준 대응표: 미터 목록 (막대 = 각 기준 전체 대비, 같은 남색 계열 단계) ---------- */
+.ws-page-head + .ws-cov-line { margin-top: 32px; }
+.ws-cov-chart { margin-top: 48px; }
+.ws-cov-chart-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 24px; }
+.ws-cov-chart-head h2 { margin: 0; font-size: 1.28rem; font-weight: 800; letter-spacing: -0.035em; }
+.ws-cov-note { font-size: .86rem; color: var(--ink-3); }
+.ws-legend { list-style: none; display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 0; padding: 0; font-size: .82rem; color: var(--ink-2); }
+.ws-legend li { display: flex; align-items: center; gap: 8px; }
+.ws-legend-key { display: block; width: 14px; height: 8px; border-radius: var(--r-pill); }
+.ws-legend-key--gap { background: var(--cov-gap); box-shadow: inset 0 0 0 1px var(--line-strong); }
+.ws-meters { box-shadow: inset 0 1px 0 var(--line); }
+.ws-meter {
+  display: grid;
+  grid-template-columns: minmax(0, 15rem) minmax(0, 1fr) 7.5rem;
+  grid-template-areas: "name bar num";
+  align-items: center;
+  gap: 8px 24px;
+  padding: 12px 8px;
+  box-shadow: inset 0 -1px 0 var(--line);
+}
+.ws-meter:hover { background: var(--sunken); }
+.ws-meter-name { grid-area: name; display: grid; gap: 2px; min-width: 0; font-weight: 600; font-size: .92rem; line-height: 1.4; }
+.ws-meter-name a { color: var(--ink); text-decoration: none; }
+.ws-meter-name a:hover { color: var(--accent); text-decoration: underline; }
+.ws-meter-bar { grid-area: bar; display: flex; gap: 2px; height: 8px; border-radius: var(--r-pill); background: var(--cov-gap); overflow: hidden; }
+.ws-meter-fill { display: block; height: 100%; flex: none; }
+.ws-meter-fill:last-child { border-radius: 0 var(--r-pill) var(--r-pill) 0; }
+.ws-meter-fill--covered { background: var(--cov-covered); }
+.ws-meter-fill--site { background: var(--cov-site); }
+.ws-meter-num { grid-area: num; display: flex; align-items: baseline; justify-content: flex-end; gap: 12px; font: 600 .86rem var(--font-display); color: var(--ink-2); font-variant-numeric: lining-nums tabular-nums; white-space: nowrap; }
+.ws-meter-num b { font-size: 1rem; font-weight: 800; color: var(--ink); }
+.ws-meter-pct { min-width: 3.2em; text-align: right; color: var(--ink-3); }
+.ws-cov-pending { font-size: .78rem; font-weight: 500; color: var(--medium-ink); }
+.ws-cov-meta { margin: 0 0 12px; font-size: .86rem; color: var(--ink-3); line-height: 1.6; }
+.ws-cov-en { display: block; margin-top: 2px; font-size: .8rem; color: var(--ink-3); }
+.ws-cov-none { color: var(--ink-3); }
+.ws-cov-table td:last-child, .ws-cov-table th:last-child { text-align: right; padding-right: 0; }
+.ws-cov-table td:first-child { min-width: 14em; }
+.ws-w-0{width:0%} .ws-w-1{width:1%} .ws-w-2{width:2%} .ws-w-3{width:3%} .ws-w-4{width:4%} .ws-w-5{width:5%} .ws-w-6{width:6%} .ws-w-7{width:7%} .ws-w-8{width:8%} .ws-w-9{width:9%} .ws-w-10{width:10%} .ws-w-11{width:11%} .ws-w-12{width:12%} .ws-w-13{width:13%} .ws-w-14{width:14%} .ws-w-15{width:15%} .ws-w-16{width:16%} .ws-w-17{width:17%} .ws-w-18{width:18%} .ws-w-19{width:19%} .ws-w-20{width:20%} .ws-w-21{width:21%} .ws-w-22{width:22%} .ws-w-23{width:23%} .ws-w-24{width:24%} .ws-w-25{width:25%} .ws-w-26{width:26%} .ws-w-27{width:27%} .ws-w-28{width:28%} .ws-w-29{width:29%} .ws-w-30{width:30%} .ws-w-31{width:31%} .ws-w-32{width:32%} .ws-w-33{width:33%} .ws-w-34{width:34%} .ws-w-35{width:35%} .ws-w-36{width:36%} .ws-w-37{width:37%} .ws-w-38{width:38%} .ws-w-39{width:39%} .ws-w-40{width:40%} .ws-w-41{width:41%} .ws-w-42{width:42%} .ws-w-43{width:43%} .ws-w-44{width:44%} .ws-w-45{width:45%} .ws-w-46{width:46%} .ws-w-47{width:47%} .ws-w-48{width:48%} .ws-w-49{width:49%} .ws-w-50{width:50%} .ws-w-51{width:51%} .ws-w-52{width:52%} .ws-w-53{width:53%} .ws-w-54{width:54%} .ws-w-55{width:55%} .ws-w-56{width:56%} .ws-w-57{width:57%} .ws-w-58{width:58%} .ws-w-59{width:59%} .ws-w-60{width:60%} .ws-w-61{width:61%} .ws-w-62{width:62%} .ws-w-63{width:63%} .ws-w-64{width:64%} .ws-w-65{width:65%} .ws-w-66{width:66%} .ws-w-67{width:67%} .ws-w-68{width:68%} .ws-w-69{width:69%} .ws-w-70{width:70%} .ws-w-71{width:71%} .ws-w-72{width:72%} .ws-w-73{width:73%} .ws-w-74{width:74%} .ws-w-75{width:75%} .ws-w-76{width:76%} .ws-w-77{width:77%} .ws-w-78{width:78%} .ws-w-79{width:79%} .ws-w-80{width:80%} .ws-w-81{width:81%} .ws-w-82{width:82%} .ws-w-83{width:83%} .ws-w-84{width:84%} .ws-w-85{width:85%} .ws-w-86{width:86%} .ws-w-87{width:87%} .ws-w-88{width:88%} .ws-w-89{width:89%} .ws-w-90{width:90%} .ws-w-91{width:91%} .ws-w-92{width:92%} .ws-w-93{width:93%} .ws-w-94{width:94%} .ws-w-95{width:95%} .ws-w-96{width:96%} .ws-w-97{width:97%} .ws-w-98{width:98%} .ws-w-99{width:99%} .ws-w-100{width:100%}
 
 /* ---------- 넓은 화면 이하 ---------- */
 @media (max-width: 1279.98px) {
@@ -942,6 +981,7 @@ html:not(.js) .ws-copy, html:not(.js) .ws-tabs, html:not(.js) .ws-check-status {
   .ws-deflist { grid-template-columns: minmax(0, 1fr); }
   .ws-deflist > div { row-gap: 4px; }
   .ws-foot { margin-top: 64px; }
+  .ws-meter { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "name num" "bar bar"; gap: 10px 16px; padding: 14px 2px; }
   .ws-anchor.is-done::after { margin-left: 0; margin-top: 52px; }
 }
 
