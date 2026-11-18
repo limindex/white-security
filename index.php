@@ -1,11 +1,12 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>화이트 보안 — 준비 중</title>
-</head>
-<body>
-<p>화이트 보안 — 준비 중</p>
-</body>
-</html>
+<?php
+// 단일 진입점. 경로는 ?p= (없으면 PATH_INFO)에서만 읽고, 파일 경로를 만드는 데 쓰지 않는다.
+declare(strict_types=1);
+require __DIR__ . '/src/bootstrap.php';
+
+$path = $_GET['p'] ?? ($_SERVER['PATH_INFO'] ?? '');
+if (!is_string($path)) $path = '';
+$site = new Site(Repository::load(__DIR__), '/white-security/', 'live');
+$r = $site->route($path);
+http_response_code($r['status']);
+header($r['type'] === 'json' ? 'Content-Type: application/json; charset=utf-8' : 'Content-Type: text/html; charset=utf-8');
+echo $r['body'];
