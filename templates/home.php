@@ -5,8 +5,8 @@ $first = array_slice($site->repo->start(), 0, 3);
 <div class="ws-home">
 <section class="ws-home-intro" aria-labelledby="ws-home-h">
 <p class="ws-home-k"><?= Site::e(Site::BRAND) ?> · <?= Site::e(Site::BRAND_DESC) ?></p>
-<h1 id="ws-home-h">AI가 만든 코드의 보안 점검 기준</h1>
-<p class="ws-home-lead"><span>AI 코딩 도구가 자주 만드는 보안 실수를 정리한 보안 이슈 문서</span> <span>같은 기준으로 코드를 점검하는 AI 코딩 도구용 스킬</span></p>
+<h1 id="ws-home-h">AI 코딩 보안 취약점 점검 지원</h1>
+<p class="ws-home-lead"><span><?= Site::e(Site::HOME_DESC) ?></span></p>
 <p class="ws-scope"><span>흔한 실수를 크게 줄이는 용도</span><i></i><span>보안 감사를 대신하지 않음</span></p>
 </section>
 

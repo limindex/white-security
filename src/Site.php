@@ -108,6 +108,7 @@ final class Site
         return '<span class="ws-badge ws-badge--' . self::e($severity) . '">' . self::e($label . $suffix) . '</span>';
     }
 
+    public const HOME_DESC = '바이브 코딩 개발자 누구나 활용하는 공개 점검 스킬 · 국내외 보안 기준 반영';
     public const DEFAULT_DESC = 'AI 코딩 도구가 자주 만드는 보안 실수를 정리한 보안 이슈 문서와 AI 코딩 도구용 점검 스킬';
 
     /** data/site.json 설정값 (없으면 빈 문자열) */
@@ -191,7 +192,7 @@ final class Site
     public function route(string $path): array
     {
         $path = trim($path, '/');
-        if ($path === '') return $this->html(200, 'home', ['title' => '', 'groups' => $this->repo->groups(), 'byGroup' => $this->repo->byGroup()]);
+        if ($path === '') return $this->html(200, 'home', ['title' => '', 'desc' => self::HOME_DESC, 'groups' => $this->repo->groups(), 'byGroup' => $this->repo->byGroup()]);
         if ($this->pageOn($path)) {
             $meta = self::PAGES[$path];
             $vars = ['title' => $meta['title'], 'lead' => $meta['lead'], 'desc' => $meta['lead'], 'page' => $path,
