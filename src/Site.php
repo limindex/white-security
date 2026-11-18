@@ -359,7 +359,7 @@ final class Site
         foreach ($this->repo->frameworks() as $fw) {
             $items = [];
             foreach ($built[$fw['id']] ?? [] as $row) {
-                $items[] = ['id' => $row['item'], 'title' => $row['title'], 'title_ko' => $row['title_ko'], 'issues' => $row['issues'], 'site_only' => $row['site_only'], 'verified' => $row['verified']];
+                $items[] = ['id' => $row['item'], 'title' => $row['title'], 'title_ko' => $row['title_ko'], 'issues' => $row['issues'], 'site_only' => $row['site_only'], 'verified' => $row['verified'], 'out_of_scope' => $row['out_of_scope']];
             }
             $out[] = ['id' => $fw['id'], 'name' => $fw['name'], 'year' => $fw['year'], 'url' => $fw['url'], 'verified' => !in_array(false, array_column($items, 'verified'), true), 'items' => $items];
         }

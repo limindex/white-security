@@ -153,12 +153,15 @@ final class Repository
     private function attachCoverage(string $root): void
     {
         $this->frameworks = Coverage::loadFrameworks($root, $this->errors);
+        $oos = Coverage::loadOutOfScope($root . '/data/out_of_scope.json', $this->frameworks, $this->errors);
         try {
-            $this->coverage = Coverage::build($this, $this->frameworks);
+            $this->coverage = Coverage::build($this, $this->frameworks, true, $oos);
         } catch (CoverageError $e) {
             foreach ($e->problems as $p) $this->errors[] = $p;
-            $this->coverage = Coverage::build($this, $this->frameworks, false);
+            $this->coverage = Coverage::build($this, $this->frameworks, false, $oos);
         }
+        // 이슈가 생긴 항목은 더 이상 지원 스택 밖이 아니다: 표시를 지우라고 알린다
+        foreach ($this->coverage as $fw => $rows) foreach ($rows as $row) if ($row['out_of_scope'] !== null && $row['issues']) $this->errors[] = "data/out_of_scope.json: `$fw` `{$row['item']}` 에 대응 이슈가 있어 지원 스택 밖 표시를 지워야 합니다";
     }
 
     /**

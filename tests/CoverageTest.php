@@ -179,3 +179,26 @@ test('Site::cweUrl: CWE 번호만 링크', function () {
     assert_same(null, Site::cweUrl('cwe', 'CWE-x'));
     assert_same(null, Site::cweUrl('owasp2025', 'A01'));
 });
+
+test('지원 스택 밖(data/out_of_scope.json): 빈칸과 따로 표시, gaps 에서 빠짐, 잘못된 항목·이슈 있는 항목은 오류', function () {
+    $root = make_root();
+    file_put_contents($root . '/data/out_of_scope.json', json_encode(['owasp2025' => ['A02' => 'C·C++ 메모리 약점', 'A05' => '이슈 있음', 'Z99' => '없는 항목'], 'nope' => ['X' => 'y']], JSON_UNESCAPED_UNICODE));
+    $repo = Repository::load($root);
+    $rows = array_column($repo->coverage()['owasp2025'], null, 'item');
+    assert_same('C·C++ 메모리 약점', $rows['A02']['out_of_scope']);
+    assert_true(!in_array(['fw' => 'owasp2025', 'item' => 'A02'], Coverage::gaps($repo->coverage()), true), 'gaps 에서 빠짐');
+    $errs = implode("\n", $repo->errors());
+    foreach (['모르는 기준 `nope`', '없는 항목 `Z99`', '`A05` 에 대응 이슈가 있어'] as $w) assert_contains($w, $errs);
+    $b = nw_strip((new Site($repo, '/white-security/', 'static', new DateTimeImmutable('2026-11-18')))->route('coverage')['body']);
+    assert_contains('<span class="ws-badge ws-badge--oos">지원 스택 밖</span><span class="ws-cov-en">C·C++ 메모리 약점</span>', $b);
+    assert_contains('ws-meter-fill--oos', $b);
+});
+
+test('실제 data/out_of_scope.json: ASVS V17·CWE 메모리 6·kr_guide 입력데이터-16 이 지원 스택 밖', function () {
+    $repo = Repository::load(dirname(__DIR__));
+    assert_same([], array_values(array_filter($repo->errors(), fn($e) => str_contains($e, 'out_of_scope'))));
+    $oos = [];
+    foreach ($repo->coverage() as $fw => $rows) foreach ($rows as $r) if ($r['out_of_scope'] !== null) $oos[] = "$fw:{$r['item']}";
+    sort($oos);
+    assert_same(['asvs5:V17', 'cwe:CWE-120', 'cwe:CWE-121', 'cwe:CWE-122', 'cwe:CWE-125', 'cwe:CWE-416', 'cwe:CWE-787', 'kr_guide:입력데이터 검증 및 표현-16'], $oos);
+});

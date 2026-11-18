@@ -59,14 +59,15 @@ final class Coverage
     /**
      * 항목마다 이슈를 모은다. 이슈가 가리키는 항목이 표준에 없으면 모아서 CoverageError.
      * @param array<int,array<string,mixed>> $frameworks
-     * @return array<string,list<array{item:string,title:string,title_ko:string,issues:list<string>,site_only:bool}>>
+     * @param array<string,array<string,string>> $outOfScope 기준 → 항목 → 지원 스택 밖 이유(data/out_of_scope.json)
+     * @return array<string,list<array{item:string,title:string,title_ko:string,issues:list<string>,site_only:bool,verified:bool,out_of_scope:?string}>>
      */
-    public static function build(Repository $r, array $frameworks, bool $strict = true): array
+    public static function build(Repository $r, array $frameworks, bool $strict = true, array $outOfScope = []): array
     {
         $byId = [];
         foreach ($frameworks as $fw) $byId[$fw['id']] = $fw;
         $rows = [];
-        foreach ($byId as $id => $fw) foreach ($fw['items'] as $it) $rows[$id][$it['id']] = ['item' => $it['id'], 'title' => $it['title'], 'title_ko' => $it['title_ko'], 'issues' => [], 'site_only' => false, 'verified' => ($it['verified'] ?? true) !== false];
+        foreach ($byId as $id => $fw) foreach ($fw['items'] as $it) $rows[$id][$it['id']] = ['item' => $it['id'], 'title' => $it['title'], 'title_ko' => $it['title_ko'], 'issues' => [], 'site_only' => false, 'verified' => ($it['verified'] ?? true) !== false, 'out_of_scope' => $outOfScope[$id][$it['id']] ?? null];
 
         $problems = [];
         $siteOnly = []; // fw => item => 이슈가 전부 site_only 인가
@@ -100,11 +101,36 @@ final class Coverage
         return $out;
     }
 
-    /** 이슈가 하나도 없는 항목. @param array<string,list<array<string,mixed>>> $built @return list<array{fw:string,item:string}> */
+    /** 이슈가 하나도 없는 항목(지원 스택 밖으로 표시한 항목은 빈칸이 아님). @param array<string,list<array<string,mixed>>> $built @return list<array{fw:string,item:string}> */
     public static function gaps(array $built): array
     {
         $out = [];
-        foreach ($built as $fw => $rows) foreach ($rows as $row) if (!$row['issues']) $out[] = ['fw' => $fw, 'item' => $row['item']];
+        foreach ($built as $fw => $rows) foreach ($rows as $row) if (!$row['issues'] && ($row['out_of_scope'] ?? null) === null) $out[] = ['fw' => $fw, 'item' => $row['item']];
+        return $out;
+    }
+
+    /**
+     * data/out_of_scope.json(선택): {"기준 id": {"항목 id": "이유 한 줄"}}. 없는 기준·항목, 이슈가 이미 있는 항목, 빈 이유는 오류로 남기고 뺀다.
+     * @param list<array<string,mixed>> $frameworks @param list<string> $errors @return array<string,array<string,string>>
+     */
+    public static function loadOutOfScope(string $file, array $frameworks, array &$errors): array
+    {
+        if (!is_file($file)) return [];
+        $name = 'data/out_of_scope.json';
+        $data = json_decode((string)@file_get_contents($file), true);
+        if (!is_array($data) || ($data !== [] && array_is_list($data))) { $errors[] = "$name: {\"기준\": {\"항목\": \"이유\"}} 객체여야 합니다"; return []; }
+        $items = [];
+        foreach ($frameworks as $fw) foreach ($fw['items'] as $it) $items[$fw['id']][$it['id']] = true;
+        $out = [];
+        foreach ($data as $fw => $map) {
+            if (!isset($items[$fw])) { $errors[] = "$name: 모르는 기준 `$fw`"; continue; }
+            if (!is_array($map) || ($map !== [] && array_is_list($map))) { $errors[] = "$name: `$fw` 는 {\"항목\": \"이유\"} 객체여야 합니다"; continue; }
+            foreach ($map as $item => $why) {
+                if (!isset($items[$fw][$item])) { $errors[] = "$name: `$fw` 에 없는 항목 `$item`"; continue; }
+                if (!is_string($why) || trim($why) === '' || mb_strlen($why) > 80) { $errors[] = "$name: `$fw` `$item` 의 이유는 80자 이하 한 줄이어야 합니다"; continue; }
+                $out[$fw][(string)$item] = trim($why);
+            }
+        }
         return $out;
     }
 

@@ -390,6 +390,7 @@ html:not(.js) .ws-search { display: none; }
 .ws-badge--covered { color: var(--paper); background: var(--cov-covered); }
 .ws-badge--site { color: var(--ink); background: var(--accent-bg); }
 .ws-badge--gap { color: var(--ink-2); background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-strong); }
+.ws-badge--oos { color: var(--ink-3); background: var(--sunken); }
 
 .ws-id { font: 700 .8rem var(--font-display); letter-spacing: 0; color: var(--ink-3); font-variant-numeric: lining-nums tabular-nums; white-space: nowrap; }
 
@@ -1089,6 +1090,8 @@ html:not(.js) .ws-itabs-list { display: none; }
 .ws-meter-fill:last-child { border-radius: 0 var(--r-pill) var(--r-pill) 0; }
 .ws-meter-fill--covered { background: var(--cov-covered); }
 .ws-meter-fill--site { background: var(--cov-site); }
+.ws-meter-fill--oos { margin-left: auto; background: repeating-linear-gradient(135deg, var(--line-strong) 0 2px, transparent 2px 4px); }
+.ws-legend-key.ws-meter-fill--oos { margin-left: 0; box-shadow: inset 0 0 0 1px var(--line-strong); }
 .ws-meter-num { grid-area: num; display: flex; align-items: baseline; justify-content: flex-end; gap: 12px; font: 600 .86rem var(--font-display); color: var(--ink-2); font-variant-numeric: lining-nums tabular-nums; white-space: nowrap; }
 .ws-meter-num b { font-size: 1rem; font-weight: 800; color: var(--ink); }
 .ws-meter-pct { min-width: 3.2em; text-align: right; color: var(--ink-3); }
