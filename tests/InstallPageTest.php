@@ -12,7 +12,7 @@ function inst_body(?string $json = INST_JSON): string
 }
 
 test('설치: 탭 3개, Claude Code 가 첫 탭', function () {
-    $b = inst_body();
+    $b = nw_strip(inst_body());
     assert_true((bool)preg_match_all('#<button type="button" role="tab"[^>]*>(?:<span class="ws-tx">)?([^<]+)#u', $b, $m), '탭');
     assert_same(['Claude Code', 'Codex·Cursor 등 (terminal)', '직접 복사'], $m[1]);
     assert_true((bool)preg_match('#<div class="ws-itabs" data-tabs>#', $b), '탭 묶음');
@@ -38,8 +38,8 @@ test('설치: Troubleshooting 접힘(업데이트·삭제 포함), 공개 전 �
     $b = inst_body();
     assert_true((bool)preg_match('#<details class="ws-trouble">\s*<summary>#', $b), '접힌 Troubleshooting');
     foreach (['command not found', 'marketplace add', '반응 없음', '/plugin marketplace update limindex', '/plugin marketplace remove limindex'] as $w) assert_contains($w, $b);
-    assert_contains('공개 전 · command는', $b);
-    assert_true(!str_contains(inst_body(str_replace('"released": false', '"released": true', INST_JSON)), '공개 전 · command는'), '공개 후 안내 없음');
+    assert_contains('공개 전 · command는', nw_strip($b));
+    assert_true(!str_contains(nw_strip(inst_body(str_replace('"released": false', '"released": true', INST_JSON))), '공개 전 · command는'), '공개 후 안내 없음');
 });
 
 test('설치: 설정이 비면 command 를 그리지 않음, 옛 repository 이름 없음', function () {

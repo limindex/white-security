@@ -124,8 +124,6 @@ p, li, dd, td, label { text-wrap: pretty; }
 code { font-family: var(--font-mono); }
 [hidden] { display: none !important; }
 .ws-nw { white-space: nowrap; }
-/* 코드+조사 묶음: 조사는 코드에 붙여 두되 긴 코드 안에서는 줄바꿈 허용 */
-.ws-nw > code { white-space: normal; }
 .ws-sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* 한 줄 글자 상자: 세로 가운데 (flex 상자 안 글자는 .ws-tx·span 으로 감쌈) */
@@ -627,7 +625,17 @@ html:not(.js) .ws-copy, html:not(.js) .ws-tabs, html:not(.js) .ws-check-status {
   background: var(--sunken);
   box-shadow: inset 0 0 0 1px var(--line);
   font: 500 .86em var(--font-mono);
+  white-space: nowrap;
 }
+/* 긴 인라인 코드(Site::CODE_LONG 초과): 중간에서 끊지 않고 칩 안에서 가로 스크롤. 뒤에 붙은 조사 자리만큼 줄임 */
+.ws-doc :not(pre) > code.ws-code-long, .ws-page :not(pre) > code.ws-code-long {
+  display: inline-block;
+  max-width: 100%;
+  overflow-x: auto;
+  vertical-align: bottom;
+  scrollbar-width: thin;
+}
+.ws-nw > code.ws-code-long { max-width: calc(100% - 2.6em); }
 
 .ws-pending { margin-top: 40px; padding: 24px 24px 20px; border-radius: var(--r-lg); background: var(--sunken); box-shadow: inset 0 0 0 1px var(--line); }
 .ws-pending h2 { display: inline-block; margin: 0 0 8px; padding: 4px 8px; border-radius: var(--r-pill); background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-strong); font-size: .78rem; letter-spacing: -0.01em; line-height: 1.2; text-box: trim-both cap alphabetic; color: var(--ink-2); }

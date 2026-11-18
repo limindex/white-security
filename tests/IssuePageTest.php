@@ -88,7 +88,7 @@ test('심각도 근거: "영향: … · 악용: …" 은 영향/악용 두 줄 �
     $raw = str_replace(['WS-INJ-001', 'severity_reason: 데이터베이스 전체 유출·변조로 이어지는 영향, 입력 한 줄로 악용 가능'], ['WS-INJ-003', 'severity_reason: "영향: DB 전체 조회·변조 · 악용: 입력 칸 하나로 가능"'], $raw);
     $s = new Site(Repository::load(make_root(['WS-INJ-003-x.md' => $raw])), '/white-security/', 'live', new DateTimeImmutable('2026-11-18'));
     $b = $s->route('issues/WS-INJ-003')['body'];
-    assert_true((bool)preg_match('#<dl class="ws-sevwhy"><div><dt>영향</dt><dd>DB 전체 <span class="ws-nw">조회·</span>변조</dd></div><div><dt>악용</dt><dd>입력 칸 하나로 가능</dd></div></dl>#su', $b), '두 줄 정의');
+    assert_true((bool)preg_match('#<dl class="ws-sevwhy"><div><dt>영향</dt><dd>DB 전체 <span class="ws-nw">조회·변조</span></dd></div><div><dt>악용</dt><dd>입력 칸 하나로 가능</dd></div></dl>#su', $b), '두 줄 정의');
     assert_true(!str_contains($b, '영향: DB'), '콜론 라벨 문장 없음');
     $plain = ip_body();
     assert_true((bool)preg_match('#<p class="ws-sevwhy-text">데이터베이스 전체 #u', $plain), '형식 밖은 문장');
@@ -97,12 +97,18 @@ test('심각도 근거: "영향: … · 악용: …" 은 영향/악용 두 줄 �
 test('줄머리 금칙: 괄호·코드 뒤 조사와 가운뎃점을 nowrap 으로 묶고 pre 안은 건드리지 않음', function () {
     $h = Site::keep('<p>인젝션)는 AI · 보내기·파일 <code>x</code>를 쓴다</p><pre><code>a)는 b·c</code></pre>');
     assert_contains('<span class="ws-nw">인젝션)는</span>', $h);
-    assert_contains('<span class="ws-nw">보내기·</span>', $h);
+    assert_contains('<span class="ws-nw">보내기·파일</span>', $h, '짧은 묶음은 통째로');
     assert_contains('<span class="ws-nw">AI ·</span>', $h);
     assert_contains('<span class="ws-nw"><code>x</code>를</span>', $h);
     assert_contains('<span class="ws-nw"><code>a</code>·</span><code>b</code>', Site::keep('<p><code>a</code>·<code>b</code></p>'));
     assert_contains('<pre><code>a)는 b·c</code></pre>', $h);
-    assert_same('<span class="ws-nw"><span class="ws-nw">글(웹·</span>메일)을</span>', Site::keep('글(웹·메일)을'), '두 규칙이 겹쳐도 태그가 깨지지 않음(겹친 span)');
+    assert_same('<span class="ws-nw">글(웹·메일)을</span>', Site::keep('글(웹·메일)을'), '짧은 묶음 안 괄호+조사도 한 덩어리');
+    assert_same('<span class="ws-nw">비밀번호·</span><span class="ws-nw">토큰·</span><span class="ws-nw">주민등록번호·</span>카드번호', Site::keep('비밀번호·토큰·주민등록번호·카드번호'), '긴 묶음은 낱말마다 앞에 붙임');
+    assert_same('<span class="ws-nw"><code>crypto.randomInt</code>)로</span>', Site::keep('<code>crypto.randomInt</code>)로'), '코드 뒤 닫는 괄호+조사');
+    assert_same('<span class="ws-nw"><code>uses:</code>가</span>', Site::keep('<code>uses:</code>가'));
+    assert_same(Site::keep('<p>a <code>x</code>를 b·c</p>'), Site::keep(Site::keep('<p>a <code>x</code>를 b·c</p>')), '두 번 적용해도 같음');
+    assert_contains('<code class="ws-code-long">', Site::keep('<code>' . str_repeat('a', Site::CODE_LONG + 1) . '</code>'));
+    assert_true(!str_contains(Site::keep('<code>' . str_repeat('a', Site::CODE_LONG) . '</code>'), 'ws-code-long'), '짧은 코드는 보통 칩');
     assert_true(!preg_match('/[\x{200B}-\x{200F}\x{2060}\x{FEFF}]/u', $h), '보이지 않는 문자 없음');
 });
 

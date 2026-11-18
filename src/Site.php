@@ -154,30 +154,71 @@ final class Site
         return preg_match('#^https://github\.com/([A-Za-z0-9._-]+/[A-Za-z0-9._-]+)/?$#', $this->setting('github'), $m) ? $m[1] : '';
     }
 
-    /** 본문 HTML 줄머리 금칙: 닫는 괄호·코드 뒤 조사, 가운뎃점이 줄 맨 앞에 오지 않게 nowrap 묶음(보이지 않는 문자 없음) */
+    /** 가운뎃점으로 이은 짧은 낱말 묶음(위험·주의·참고)은 이 글자 수 이하면 통째로 한 줄에 둔다. */
+    public const KEEP_CHAIN = 10;
+    /** 인라인 코드 폭(ASCII 1, 한글 등 넓은 글자 1.7)이 이 값을 넘으면 긴 코드(가로 스크롤 칩)로 둔다. */
+    public const CODE_LONG = 28;
+
+    /**
+     * 본문 HTML 줄머리 금칙(보이지 않는 문자 없이 nowrap 묶음만 씀). pre 안은 건드리지 않는다.
+     * - 인라인 코드 + 바로 뒤 닫는 괄호·문장부호·조사(1–2자)·가운뎃점: 코드 뒤 글자가 줄 맨 앞에 오지 않게
+     * - 닫는 괄호 + 조사: `인젝션)는`
+     * - 가운뎃점: 짧은 묶음(KEEP_CHAIN 자 이하)은 통째로, 긴 묶음은 낱말마다 앞 낱말에 붙여 줄 끝에 둠
+     * - 마지막으로 긴 인라인 코드에 ws-code-long(가로 스크롤 칩)
+     */
     public static function keep(string $html): string
     {
         $parts = preg_split('#(<pre\b.*?</pre>)#s', $html, -1, PREG_SPLIT_DELIM_CAPTURE);
         foreach ($parts as $i => $p) {
             if ($i % 2) continue;
-            $p = (string)preg_replace('#(<code>[^<]*</code>)([가-힣]{1,2})#u', '<span class="ws-nw">$1$2</span>', $p);
-            $p = (string)preg_replace('#(<code>[^<]*</code>)( ?·)#u', '<span class="ws-nw">$1$2</span>', $p);
-            $p = self::inText($p, '#(\S*\))([가-힣]{1,2})#u', '<span class="ws-nw">$1$2</span>');
-            $p = self::inText($p, '#(\S+ ?·)#u', '<span class="ws-nw">$1</span>');
+            $p = (string)preg_replace('#(?<!<span class="ws-nw">)(<code>[^<]*</code>)([)\]」,.:;]*(?:[가-힣]{1,2}| ?·)|[)\]」,.:;]+)#u', '<span class="ws-nw">$1$2</span>', $p);
+            // 짧은 인라인 요소(강조·링크) 바로 뒤 가운뎃점: 요소와 묶음
+            $p = (string)preg_replace('#(?<!<span class="ws-nw">)(<(em|strong|a)\b[^>]*>[^<]{1,24}</\2>)( ?·)#u', '<span class="ws-nw">$1$3</span>', $p);
+            $p = self::inText($p, '#([^\s·<>]+(?:·[^\s·<>]+)+(?:·| ·)?)|([^\s·]+ ?·)|([^\s·]*[)\]」][가-힣]{1,2})#u', fn(array $m): string => self::keepText($m));
+            $p = (string)preg_replace_callback('#<code>([^<]*)</code>#u', fn(array $m): string => self::codeWidth(html_entity_decode($m[1], ENT_QUOTES | ENT_HTML5, 'UTF-8')) > self::CODE_LONG ? '<code class="ws-code-long">' . $m[1] . '</code>' : $m[0], $p);
             $parts[$i] = $p;
         }
         return implode('', $parts);
     }
 
+    /** keep() 의 글자 조각 규칙 하나: [1] 가운뎃점 묶음 [2] `낱말 ·` [3] 닫는 괄호+조사 */
+    private static function keepText(array $m): string
+    {
+        $nw = fn(string $s): string => '<span class="ws-nw">' . $s . '</span>';
+        if (($m[1] ?? '') !== '') {
+            $chain = $m[1];
+            if (mb_strlen(html_entity_decode((string)preg_replace('/ ?·$/u', '', $chain), ENT_QUOTES | ENT_HTML5, 'UTF-8')) <= self::KEEP_CHAIN) return $nw($chain);
+            $pieces = explode('·', $chain);
+            $last = array_pop($pieces);
+            $out = implode('', array_map(fn(string $w): string => $nw($w . '·'), $pieces));
+            return $out . ($last !== '' && preg_match('#[)\]」][가-힣]{1,2}$#u', $last) ? $nw($last) : $last);
+        }
+        if (($m[2] ?? '') !== '') return $nw($m[2]);
+        return $nw($m[3]);
+    }
+
+    /** 고정폭 글꼴에서의 대략 폭: ASCII 1, 그 밖(한글 등) 1.7 */
+    public static function codeWidth(string $s): float
+    {
+        $ascii = strlen((string)preg_replace('/[^\x00-\x7F]/u', '', $s));
+        return $ascii + 1.7 * (mb_strlen($s) - $ascii);
+    }
+
     /** 태그 밖·코드 밖 글자 조각에만 정규식 치환(앞 규칙이 넣은 태그는 건드리지 않음) */
-    private static function inText(string $html, string $re, string $to): string
+    private static function inText(string $html, string $re, callable $to): string
     {
         $seg = preg_split('#(<[^>]+>)#', $html, -1, PREG_SPLIT_DELIM_CAPTURE);
         $code = 0;
+        $nw = 0;
         foreach ($seg as $j => $s) {
-            if ($j % 2) { if (preg_match('#^<code\b#', $s)) $code++; elseif ($s === '</code>') $code--; continue; }
-            if ($code > 0 || $s === '') continue;
-            $seg[$j] = (string)preg_replace($re, $to, $s);
+            if ($j % 2) {
+                if (preg_match('#^<code\b#', $s)) $code++; elseif ($s === '</code>') $code--;
+                // 이미 묶인 조각(코드+조사) 안은 다시 묶지 않는다
+                if ($s === '<span class="ws-nw">') $nw++; elseif ($nw > 0 && $s === '</span>') $nw--;
+                continue;
+            }
+            if ($code > 0 || $nw > 0 || $s === '') continue;
+            $seg[$j] = (string)preg_replace_callback($re, $to, $s);
         }
         return implode('', $seg);
     }
@@ -330,7 +371,8 @@ final class Site
     /** @param array<string,mixed> $vars @return array{status:int,type:string,body:string} */
     private function html(int $status, string $template, array $vars): array
     {
-        $content = $this->render($template, $vars);
+        // 줄머리 금칙은 화면 본문 전체에 한 번 더(템플릿에 직접 쓴 문장도 빠지지 않게, 이미 묶인 곳은 그대로)
+        $content = self::keep($this->render($template, $vars));
         $errors = $this->mode === 'live' ? $this->repo->errors() : [];
         $body = $this->render('layout', [
             'title' => $vars['title'] ?? '', 'content' => $content, 'errors' => $errors,

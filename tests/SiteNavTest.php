@@ -19,8 +19,8 @@ test('켜진 새 페이지 4개: 200 html · 제목 · 한 줄 설명', function
         assert_same(200, $r['status'], $p);
         assert_same('html', $r['type'], $p);
         $meta = Site::PAGES[$p];
-        assert_contains('<h1>' . $meta['title'] . '</h1>', $r['body']);
-        assert_contains('<p class="ws-page-lead">' . Site::e($meta['lead']) . '</p>', $r['body']);
+        assert_contains('<h1>' . $meta['title'] . '</h1>', nw_strip($r['body']));
+        assert_contains('<p class="ws-page-lead">' . Site::e($meta['lead']) . '</p>', nw_strip($r['body']));
     }
 });
 
@@ -231,7 +231,7 @@ test('data/frameworks: 기준 파일 모두 about 한 줄 풀이', function () {
 });
 
 test('소개: 점검 기준 대응표 링크 한 줄과 사용 방법(한마디 → 확실하게 → 자동 점검)', function () {
-    $b = nav_site()->route('about')['body'];
+    $b = nw_strip(nav_site()->route('about')['body']);
     assert_true((bool)preg_match('#9개 기준에 맞춰 작성.*href="/white-security/coverage"[^>]*>점검 기준 대응표#su', $b), '대응표 링크');
     $p1 = strpos($b, '보안 점검해 줘</code> 한마디'); $p2 = strpos($b, '확실하게 실행하려면'); $p3 = strpos($b, '별도 요청 없이 자동 점검');
     assert_true($p1 !== false && $p2 > $p1 && $p3 > $p2, '사용법 순서');

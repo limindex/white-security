@@ -68,7 +68,7 @@ $w = fn(int $n, int $m): string => 'ws-w-' . ($m && $n ? max(1, (int)round($n * 
 <?php foreach ($fw['items'] as $it): [$k, $label] = $status($it); ?>
 <tr>
 <td><span class="ws-id"><?= Site::e($it['id']) ?></span> <?= Site::e($it['title_ko']) ?><?php if ($it['title'] !== $it['title_ko']): ?><span class="ws-cov-en"><?= Site::e($it['title']) ?></span><?php endif ?></td>
-<td><?php if ($it['issues']): foreach ($it['issues'] as $n => $iid): ?><?= $n ? ' · ' : '' ?><a class="ws-id" href="<?= Site::e($site->url('issues/' . $iid)) ?>"><?= Site::e($iid) ?></a><?php endforeach; else: ?><span class="ws-cov-none">없음</span><?php endif ?></td>
+<td><?php if ($it['issues']): $last = count($it['issues']) - 1; foreach ($it['issues'] as $n => $iid): ?><span class="ws-nw"><a class="ws-id" href="<?= Site::e($site->url('issues/' . $iid)) ?>"><?= Site::e($iid) ?></a><?= $n < $last ? ' ·' : '' ?></span><?= $n < $last ? ' ' : '' ?><?php endforeach; else: ?><span class="ws-cov-none">없음</span><?php endif ?></td>
 <td><span class="ws-badge ws-badge--<?= $k ?>"><?= Site::e($label) ?></span></td>
 </tr>
 <?php endforeach ?>

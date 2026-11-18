@@ -49,7 +49,7 @@ if ($issue->revisions) $toc[] = ['revisions', '개정 이력'];
 <div><dt>게시</dt><dd><time datetime="<?= Site::e($published) ?>"><?= Site::e($published) ?></time></dd></div>
 <div><dt>최종 확인</dt><dd><time datetime="<?= Site::e($checked) ?>"><?= Site::e($checked) ?></time></dd></div>
 <?php if ($issue->appliesTo): ?>
-<div class="ws-docinfo-wide"><dt>적용 대상</dt><dd><?= Site::e(implode(' · ', $issue->appliesTo)) ?></dd></div>
+<div class="ws-docinfo-wide"><dt>적용 대상</dt><dd><?= Site::t(implode(' · ', $issue->appliesTo)) ?></dd></div>
 <?php endif ?>
 </dl>
 <?php if ($maps): ?>
@@ -74,11 +74,11 @@ if ($issue->revisions) $toc[] = ['revisions', '개정 이력'];
 
 <?php
 $src = '<ol class="ws-sources">';
-foreach ($issue->sources as $s) $src .= '<li><a href="' . Site::e($s['url']) . '" rel="noopener noreferrer">' . Site::e($s['title']) . '</a><span class="ws-year">' . Site::e((string)$s['year']) . '</span></li>';
+foreach ($issue->sources as $s) $src .= '<li><a href="' . Site::e($s['url']) . '" rel="noopener noreferrer">' . Site::t($s['title']) . '</a><span class="ws-year">' . Site::e((string)$s['year']) . '</span></li>';
 echo $fold('sources', '출처', $src . '</ol>', count($issue->sources) . '건');
 if ($issue->revisions) {
     $rev = '<ol class="ws-revlist">';
-    foreach ($issue->revisions as $r) $rev .= '<li><time datetime="' . Site::e($r['date']) . '">' . Site::e($r['date']) . '</time><span>' . Site::e($r['note']) . '</span></li>';
+    foreach ($issue->revisions as $r) $rev .= '<li><time datetime="' . Site::e($r['date']) . '">' . Site::e($r['date']) . '</time><span>' . Site::t($r['note']) . '</span></li>';
     echo $fold('revisions', '개정 이력', $rev . '</ol>', count($issue->revisions) . '건');
 }
 ?>
