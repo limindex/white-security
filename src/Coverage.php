@@ -12,6 +12,7 @@ class CoverageError extends RuntimeException
 final class Coverage
 {
     private static ?array $nameCache = null;
+    private static ?array $aboutCache = null;
 
     /**
      * data/frameworks/*.json 을 Issue::MAP_KEYS 순서로 읽는다. 문제는 $errors 에 남기고 그 파일만 뺀다.
@@ -44,6 +45,7 @@ final class Coverage
         foreach (['id', 'name', 'url'] as $k) if (!isset($fw[$k]) || !is_string($fw[$k]) || trim($fw[$k]) === '') return "`$k` 가 없습니다";
         if (!isset($fw['year']) || !is_int($fw['year'])) return '`year` 가 없습니다';
         if (!preg_match('#^https://\S+$#', $fw['url'])) return '`url` 은 https:// 로 시작해야 합니다';
+        if (isset($fw['about']) && (!is_string($fw['about']) || trim($fw['about']) === '' || mb_strlen($fw['about']) > 140)) return '`about` 은 140자 이하 한 줄 문자열이어야 합니다';
         if (!isset($fw['items']) || !is_array($fw['items']) || !array_is_list($fw['items']) || !$fw['items']) return '`items` 목록이 없습니다';
         $ids = [];
         foreach ($fw['items'] as $n => $it) {
@@ -115,5 +117,16 @@ final class Coverage
             foreach (self::loadFrameworks(__DIR__ . '/..', $errs) as $fw) self::$nameCache[$fw['id']] = (string)($fw['short'] ?? $fw['name']);
         }
         return self::$nameCache;
+    }
+
+    /** 맵 키 → 기준 한 줄 풀이(about). 없으면 키가 빠짐. @return array<string,string> */
+    public static function abouts(): array
+    {
+        if (self::$aboutCache === null) {
+            $errs = [];
+            self::$aboutCache = [];
+            foreach (self::loadFrameworks(__DIR__ . '/..', $errs) as $fw) if (isset($fw['about'])) self::$aboutCache[$fw['id']] = trim($fw['about']);
+        }
+        return self::$aboutCache;
     }
 }

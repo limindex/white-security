@@ -96,15 +96,15 @@ test('pathFromRequest: base 뒤 경로만, 쿼리 제거, 한 번만 디코딩',
     assert_same(null, Site::pathFromRequest('', $b));
 });
 
-test('route: 이슈 JSON 에 문서 메타와 다음 검토 예정일(확인일+180일)', function () {
+test('route: 이슈 JSON 에 문서 메타(다음 검토 예정일 없음)', function () {
     $s = mk_site();
     $a = json_decode($s->route('api/issues/WS-INJ-001.json')['body'], true);
     assert_same('2026-09-01', $a['published']);
-    assert_same('2027-05-17', $a['next_review']);
+    assert_true(!array_key_exists('next_review', $a), 'next_review 폐기');
     assert_same(['Python', 'PHP', '모든 웹 애플리케이션'], $a['applies_to']);
     assert_contains('악용', $a['severity_reason']);
     assert_same('최초 작성', $a['revisions'][1]['note']);
     $l = json_decode($s->route('api/issues.json')['body'], true)[0];
-    foreach (['published' => '2026-09-01', 'checked' => '2026-11-18', 'next_review' => '2027-05-17'] as $k => $v) assert_same($v, $l[$k], $k);
-    assert_same('2027-05-17', $s->nextReview($s->repo->find('WS-INJ-001'))->format('Y-m-d'));
+    foreach (['published' => '2026-09-01', 'checked' => '2026-11-18'] as $k => $v) assert_same($v, $l[$k], $k);
+    assert_true(!array_key_exists('next_review', $l), '목록에도 next_review 없음');
 });

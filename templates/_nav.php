@@ -8,8 +8,8 @@ $byGroup = $site->repo->byGroup();
 $total = count($site->repo->all());
 $section = function (string $name) use ($site, $page): string {
     $out = '<h2 class="ws-nav-h">' . Site::e($name) . '</h2><ul class="ws-nav-pages">';
-    foreach (Site::PAGES as $slug => $m) {
-        if ($m['section'] !== $name) continue;
+    foreach ($site->pages() as $slug => $m) {
+        if ($m['section'] !== $name || ($m['nav'] ?? true) === false) continue;
         $out .= '<li><a href="' . Site::e($site->url($slug)) . '"' . ($page === $slug ? ' aria-current="page"' : '') . '>' . Site::e($m['title']) . '</a></li>';
     }
     return $out . '</ul>';
@@ -21,21 +21,17 @@ $where = $page !== null ? Site::PAGES[$page]['title'] ?? '' : ($group !== null ?
 <nav class="ws-nav" aria-label="문서 메뉴">
 <?= $section(Site::NAV_SECTIONS[0]) ?>
 <h2 class="ws-nav-h ws-nav-h--count"><span>보안 이슈</span> <span class="ws-nav-count"><?= $total ?></span></h2>
-<?php foreach ($site->repo->groups() as $g): $list = $byGroup[$g['id']] ?? []; ?>
+<?php foreach ($site->repo->groups() as $g): $list = $byGroup[$g['id']] ?? []; if (!$list) continue; ?>
 <details class="ws-nav-grp" data-group="<?= Site::e($g['id']) ?>"<?= $group === $g['id'] ? ' open' : '' ?>>
 <summary>
 <span class="ws-nav-grp-name"><?= Site::e($g['name']) ?></span>
 <span class="ws-nav-count"><?= count($list) ?></span>
 </summary>
-<?php if ($list): ?>
 <ul>
 <?php foreach ($list as $i): ?>
-<li><a href="<?= Site::e($site->url('issues/' . $i->id)) ?>"<?= $current === $i->id ? ' aria-current="page"' : '' ?>><span class="ws-nav-name"><?= Site::e($i->title) ?></span><?= $site->staleBadge($i) ?></a></li>
+<li><a href="<?= Site::e($site->url('issues/' . $i->id)) ?>"<?= $current === $i->id ? ' aria-current="page"' : '' ?>><span class="ws-nav-name"><?= Site::e($i->title) ?></span></a></li>
 <?php endforeach ?>
 </ul>
-<?php else: ?>
-<p class="ws-nav-empty">준비 중</p>
-<?php endif ?>
 </details>
 <?php endforeach ?>
 <?= $section(Site::NAV_SECTIONS[1]) ?>

@@ -1,8 +1,5 @@
 <?php
-/** @var Site $site @var array $groups @var array $byGroup @var list<array<string,mixed>> $coverage */
-$all = $site->repo->all();
-$items = 0; $covered = 0;
-foreach ($coverage as $fw) foreach ($fw['items'] as $it) { $items++; if ($it['issues']) $covered++; }
+/** @var Site $site @var array $groups @var array $byGroup */
 $install = $site->setting('plugin_id') !== '' ? '/plugin install ' . $site->setting('plugin_id') : '';
 ?>
 <div class="ws-home">
@@ -25,15 +22,23 @@ $install = $site->setting('plugin_id') !== '' ? '/plugin install ' . $site->sett
 <li>가장 흔한 사고 10건</li>
 </ol>
 </a>
+<?php if ($site->pageOn('check')): ?>
 <a class="ws-path" href="<?= Site::e($site->url('check')) ?>">
 <span class="ws-path-k">점검하기</span>
 <h3>내 사이트 점검</h3>
 <p>사용 기술과 기능에 맞춘 점검표 · AI 점검 지시문</p>
 </a>
+<?php else: ?>
+<a class="ws-path" href="<?= Site::e($site->url('guide')) ?>">
+<span class="ws-path-k">이해하기</span>
+<h3>문서 읽는 법</h3>
+<p>문서 번호 · 절 구성 · 기준 번호의 의미</p>
+</a>
+<?php endif ?>
 <a class="ws-path" href="<?= Site::e($site->url('install')) ?>">
 <span class="ws-path-k">자동화하기</span>
 <h3>스킬 설치</h3>
-<p>코딩 도구가 코드를 쓸 때마다 같은 기준으로 점검</p>
+<p>설치 뒤 대화창에 “보안 점검해 줘” 한마디. 코드 작성 중 위험한 코드는 자동 점검.</p>
 <?php if ($install !== ''): ?><code class="ws-path-cmd"><?= Site::e($install) ?></code><?php endif ?>
 </a>
 </section>
@@ -50,7 +55,7 @@ $install = $site->setting('plugin_id') !== '' ? '/plugin install ' . $site->sett
 <time class="ws-recent-date" datetime="<?= Site::e($r['date']) ?>"><?= Site::e($r['date']) ?></time>
 <span class="ws-recent-main"><span class="ws-recent-title"><?= Site::t($i->title) ?></span><span class="ws-recent-note"><?= Site::t($r['note']) ?></span></span>
 <span class="ws-id"><?= Site::e($i->id) ?></span>
-<span class="ws-recent-badges"><?= Site::severityBadge($i->severity) ?><?= $site->staleBadge($i) ?></span>
+<span class="ws-recent-badges"><?= Site::severityBadge($i->severity) ?></span>
 </a></li>
 <?php endforeach ?>
 </ol>
@@ -59,20 +64,12 @@ $install = $site->setting('plugin_id') !== '' ? '/plugin install ' . $site->sett
 <?php endif ?>
 </section>
 
-<section class="ws-home-sec" aria-labelledby="ws-cov-h">
-<div class="ws-home-sec-head">
-<h2 id="ws-cov-h">점검 기준 대응</h2>
-<a class="ws-more" href="<?= Site::e($site->url('coverage')) ?>"><span class="ws-tx">점검 기준 대응표</span></a>
-</div>
-<p class="ws-cov-line"><span>기준 <b><?= count($coverage) ?></b>종</span><i></i><span>항목 <b><?= $items ?></b>개 중 대응 <b><?= $covered ?></b>개</span><i></i><span>보안 이슈 <b><?= count($all) ?></b>건</span></p>
-</section>
-
 <section class="ws-home-sec" aria-labelledby="ws-grp-h">
 <div class="ws-home-sec-head">
 <h2 id="ws-grp-h">보안 이슈 묶음</h2>
 </div>
 <ul class="ws-grp-index">
-<?php foreach ($groups as $g): $list = $byGroup[$g['id']] ?? []; ?>
+<?php foreach ($groups as $g): $list = $byGroup[$g['id']] ?? []; if (!$list) continue; ?>
 <li id="grp-<?= Site::e($g['id']) ?>"<?= $list ? '' : ' class="is-empty"' ?>>
 <div class="ws-grp-row">
 <h3><?= Site::e($g['name']) ?></h3>

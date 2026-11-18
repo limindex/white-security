@@ -3,6 +3,7 @@
   "name": "CWE Top 25 Most Dangerous Software Weaknesses 2025",
   "short": "CWE Top 25",
   "year": 2025,
+  "about": "CWE Top 25 — 비영리 연구기관 MITRE가 발표하는 가장 위험한 소프트웨어 약점 25가지(CWE는 약점 번호 체계)",
   "url": "https://cwe.mitre.org/top25/archive/2025/2025_cwe_top25.html",
   "items": [
     {

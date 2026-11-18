@@ -26,18 +26,19 @@ $out = fn(string $text): string =>
 $step = fn(int $n, string $head, string $tag, string $desc, string $body): string =>
     '<li class="ws-step"><div class="ws-step-head"><span class="ws-step-n" aria-hidden="true">' . $n . '</span><h3>' . Site::e($head) . '</h3>'
     . ($tag !== '' ? '<span class="ws-step-tag">' . Site::e($tag) . '</span>' : '') . '</div>'
-    . '<p class="ws-step-desc">' . $desc . '</p>' . $body . '</li>';
+    . '<p class="ws-step-desc">' . Site::keep($desc) . '</p>' . $body . '</li>';
 $report = "[위험] WS-INJ-001 app/search.py:42\n       검색어가 SQL 문장에 그대로 연결\n[주의] WS-SEC-001 .env.example:3\n       실제 키로 보이는 값";
+/** 사용법 안내: 큰 줄 = 한마디 프롬프트, 작은 줄 = 확실하게 실행하려면(command 또는 스킬 이름 프롬프트) */
+$use = fn(string $sub): string => $prompt('보안 점검해 줘')
+    . '<div class="ws-step-sub"><p class="ws-step-sub-h">확실하게 실행하려면</p>' . $sub . '</div>';
 $tabs = ['claude' => 'Claude Code', 'cli' => 'Codex·Cursor 등 (terminal)', 'copy' => '직접 복사'];
 ?>
 <div class="ws-page">
 <?= $site->render('_pagehead', ['title' => $title, 'lead' => $lead]) ?>
 
-<?php if (!$ready): ?>
-<?= $site->render('_pending', ['items' => ['Claude Code Plugin install command', 'Codex·Cursor 등 skills 형식 도구용 command', 'repository 직접 복사 방법']]) ?>
-<?php else: ?>
+<?php if ($ready): ?>
 <?php if (!$site->released()): ?>
-<p class="ws-note"><span class="ws-tx">공개 준비 중 · command는 repository 공개 후 동작</span></p>
+<p class="ws-note"><span class="ws-tx">공개 전 · command는 repository 공개 후 동작</span></p>
 <?php endif ?>
 
 <div class="ws-itabs" data-tabs>
@@ -56,8 +57,8 @@ $tabs = ['claude' => 'Claude Code', 'cli' => 'Codex·Cursor 등 (terminal)', 'co
     $cmd('/plugin marketplace add ' . $market) . $out('✔ Successfully added marketplace: ' . $mname)) ?>
 <?= $step(3, 'Plugin 설치', '② 완료 후 실행', 'command 입력 시 설치 진행 · 다음 대화부터 점검 스킬 동작',
     $cmd('/plugin install ' . $plugin) . $out('✔ Successfully installed plugin: ' . $plugin . ' (scope: user)')) ?>
-<?= $step(4, '동작 확인', '', '프로젝트 폴더의 Claude Code 대화창에 프롬프트 또는 command 중 하나 입력 · 위험·주의·참고 등급별 보고',
-    $prompt('이 프로젝트 보안 점검해 줘') . $cmd('/' . $pluginName . ':review') . $out($report)) ?>
+<?= $step(4, '동작 확인', '', '프로젝트 폴더의 Claude Code 대화창에 한마디 입력 · 위험·주의·참고 등급별 보고. 코드 작성 중 위험한 코드는 별도 요청 없이 자동 점검.',
+    $use($cmd('/' . $pluginName . ':review')) . $out($report)) ?>
 </ol>
 </section>
 
@@ -68,8 +69,8 @@ $tabs = ['claude' => 'Claude Code', 'cli' => 'Codex·Cursor 등 (terminal)', 'co
     $cmd('node -v') . $out('v22.11.0')) ?>
 <?= $step(2, '스킬 install', '', 'skills 형식을 읽는 코딩 도구용 install · 프로젝트 폴더의 terminal에서 실행',
     $cmd('npx skills add ' . $repo) . $out('✔ Installed ' . $pluginName)) ?>
-<?= $step(3, '동작 확인', '', '코딩 도구의 대화창에 요청 · 위험·주의·참고 등급별 보고',
-    $prompt('이 프로젝트 보안 점검해 줘') . $out($report)) ?>
+<?= $step(3, '동작 확인', '', '코딩 도구의 대화창에 한마디 입력 · 위험·주의·참고 등급별 보고. 코드 작성 중 위험한 코드는 별도 요청 없이 자동 점검.',
+    $use($prompt('white-security 스킬로 보안 점검해 줘')) . $out($report)) ?>
 </ol>
 </section>
 
@@ -80,8 +81,8 @@ $tabs = ['claude' => 'Claude Code', 'cli' => 'Codex·Cursor 등 (terminal)', 'co
     $cmd('git clone https://github.com/' . $repo . '.git') . $out("Cloning into '" . basename($repo) . "'...")) ?>
 <?= $step(2, '스킬 폴더 복사', '① 완료 후 실행', 'Claude Code 개인 skills 폴더로 복사 · 다른 도구는 그 도구의 skills 폴더',
     $cmd('cp -r ' . basename($repo) . '/plugins/' . $pluginName . '/skills/' . $pluginName . ' ~/.claude/skills/')) ?>
-<?= $step(3, '동작 확인', '', '코딩 도구를 다시 연 뒤 대화창에 요청 · 위험·주의·참고 등급별 보고',
-    $prompt('이 프로젝트 보안 점검해 줘') . $out($report)) ?>
+<?= $step(3, '동작 확인', '', '코딩 도구를 다시 연 뒤 대화창에 한마디 입력 · 위험·주의·참고 등급별 보고. 코드 작성 중 위험한 코드는 별도 요청 없이 자동 점검.',
+    $use($prompt('white-security 스킬로 보안 점검해 줘')) . $out($report)) ?>
 </ol>
 </section>
 </div>
@@ -101,8 +102,9 @@ $tabs = ['claude' => 'Claude Code', 'cli' => 'Codex·Cursor 등 (terminal)', 'co
 <section class="ws-sec">
 <h2>설치 후 동작</h2>
 <ul>
-<li>코드 작성·수정 때 해당 묶음의 점검 항목을 스킬이 스스로 대조.</li>
-<li>보안 검토 요청 시 위험·주의·참고 등급별 보고. 등급 뜻은 <a href="<?= Site::e($site->url('severity')) ?>">심각도 기준</a>.</li>
+<li>대화창에 “보안 점검해 줘” 한마디면 위험·주의·참고 등급별 보고. 등급 뜻은 <a href="<?= Site::e($site->url('severity')) ?>">심각도 기준</a>.</li>
+<li>확실하게 실행하려면 <code>/<?= Site::e($pluginName ?: 'white-security') ?>:review</code>. Codex·Cursor 등에서는 “<?= Site::e($pluginName ?: 'white-security') ?> 스킬로 보안 점검해 줘”.</li>
+<li>코드 작성·수정 중 위험한 코드는 별도 요청 없이 스킬이 자동 점검.</li>
 <li>흔한 실수를 줄이는 용도이며 보안 감사·침투 테스트의 대체 수단 아님.</li>
 </ul>
 </section>

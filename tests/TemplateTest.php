@@ -10,7 +10,7 @@ function tpl_site(?string $today = '2026-11-18', array $extra = []): Site
 /** @return list<string> 모든 화면 경로 */
 function tpl_paths(): array
 {
-    return ['', 'issues/WS-INJ-001', ...array_keys(Site::PAGES), 'nope'];
+    return ['', 'issues/WS-INJ-001', ...array_keys(tpl_site()->pages()), 'nope'];
 }
 
 test('이슈 화면: 심각도 배지·id·기준 번호·언어 탭', function () {
@@ -78,29 +78,16 @@ test('홈: 최근 개정은 이슈마다 최신 개정 1건, 최대 5건, 날짜
     assert_same(5, substr_count($m[1], '<li>'), '5건');
 });
 
-test('확인 필요 배지: 180일 넘으면 이슈 화면·목록에 표시', function () {
-    $s = tpl_site('2027-05-18'); // 2026-11-18 + 181일
-    $issue = $s->route('issues/WS-INJ-001')['body'];
-    assert_contains('class="ws-badge ws-badge--stale"', $issue);
-    assert_contains('확인 필요', $issue);
-    assert_true((bool)preg_match('#<article[^>]*class="ws-doc".*ws-badge--stale.*</article>#s', $issue), '본문 머리에 배지');
-    assert_true((bool)preg_match('#<nav[^>]*class="ws-nav".*ws-badge--stale.*</nav>#s', $issue), '왼쪽 목록에 배지');
-    $home = $s->route('')['body'];
-    assert_true((bool)preg_match('#class="ws-recent".*ws-badge--stale#s', $home), '최근 업데이트 목록에 배지');
-});
-
-test('확인 필요 배지: 180일 이내면 없음', function () {
-    foreach (['2026-11-18', '2027-05-17'] as $today) { // 0일, 180일
+test('180일 재확인 폐기: 오래돼도 "확인 필요" 배지·다음 검토 예정일 없음, 최종 확인일만 표시', function () {
+    foreach (['2026-11-18', '2027-05-18', '2030-01-01'] as $today) {
         $s = tpl_site($today);
-        foreach (['', 'issues/WS-INJ-001'] as $p) assert_true(!str_contains($s->route($p)['body'], 'ws-badge--stale'), "$today $p");
+        foreach (['', 'issues/WS-INJ-001', 'guide', 'about'] as $p) {
+            $b = $s->route($p)['body'];
+            foreach (['ws-badge--stale', '확인 필요', '다음 검토', '180일'] as $w) assert_true(!str_contains($b, $w), "$today $p: $w");
+        }
+        assert_contains('최종 확인', $s->route('issues/WS-INJ-001')['body']);
     }
-});
-
-test('Site::isStale 는 주입한 오늘 기준', function () {
-    $i = Repository::load(make_root())->find('WS-INJ-001');
-    assert_true(tpl_site('2027-05-18')->isStale($i));
-    assert_true(!tpl_site('2027-05-17')->isStale($i));
-    assert_true(!tpl_site(null)->isStale($i) || (new DateTimeImmutable('today'))->diff($i->checked)->days > 180);
+    assert_true(!method_exists('Site', 'isStale') && !method_exists('Site', 'nextReview') && !defined('Site::STALE_DAYS'), '계산 코드 제거');
 });
 
 test('모든 화면: href/src 는 base · # · https:// 로만', function () {
@@ -168,9 +155,10 @@ test('오류 띠: live 에서 groups.json 문제도 보인다', function () {
     assert_true(!str_contains($b, $root), '서버 경로 노출');
 });
 
-test('이슈 화면: 게시일·다음 검토 예정일·적용 대상·심각도 근거·개정 이력', function () {
+test('이슈 화면: 게시일·최종 확인일·적용 대상·심각도 근거·개정 이력', function () {
     $b = tpl_site()->route('issues/WS-INJ-001')['body'];
-    assert_true((bool)preg_match('#<article[^>]*class="ws-doc".*게시.*2026-09-01.*다음 검토 예정.*2027-05-17.*</article>#s', $b), '게시일·다음 검토');
+    assert_true((bool)preg_match('#<article[^>]*class="ws-doc".*게시.*2026-09-01.*최종 확인.*2026-11-18.*</article>#s', $b), '게시일·최종 확인일');
+    assert_true(!str_contains($b, '다음 검토'), '다음 검토 예정일 폐기');
     assert_contains('적용 대상', $b);
     assert_contains('모든 웹 애플리케이션', $b);
     assert_contains('심각도 근거', $b);

@@ -37,14 +37,20 @@ final class Repository
         $repo = new Repository($issues, $errors, $groups);
         $repo->attachCoverage($root);
         $repo->settings = self::loadSettings($root . '/data/site.json', $repo->errors);
+        $repo->start = self::loadStart($root . '/data/start.json', $repo, $repo->errors);
         return $repo;
     }
 
     /** 사이트 설정 기본값. 빈 값이면 화면에 그 자리를 그리지 않는다. */
-    public const SETTINGS = ['publisher' => '', 'github' => '', 'origin' => '', 'marketplace' => '', 'plugin_id' => '', 'released' => false];
+    public const SETTINGS = ['publisher' => '', 'github' => '', 'origin' => '', 'marketplace' => '', 'plugin_id' => '', 'released' => false, 'pages' => []];
 
-    /** @var array<string,string|bool> */
+    /** 페이지 스위치 기본값: 내용이 아직 없는 페이지(check·glossary)는 꺼 둠. data/site.json 의 pages 로 바꾼다. */
+    public const PAGE_DEFAULTS = ['check' => false, 'glossary' => false];
+
+    /** @var array<string,string|bool|array<string,bool>> */
     private array $settings = self::SETTINGS;
+    /** @var list<array{issue:Issue,reason:string}> */
+    private array $start = [];
 
     /**
      * data/site.json(선택): publisher(발행 주체 표기) · github(https 주소) · origin(공개 주소 앞부분, 예: https://example.org)
@@ -61,6 +67,15 @@ final class Repository
         if (!is_array($data) || array_is_list($data)) { $errors[] = "$name: 설정(JSON 객체) 형식이 아닙니다"; return $out; }
         foreach ($data as $k => $v) {
             if (!array_key_exists($k, self::SETTINGS)) { $errors[] = "$name: 모르는 키 `$k`"; continue; }
+            if ($k === 'pages') {
+                if (!is_array($v) || array_is_list($v) && $v !== []) { $errors[] = "$name: pages 는 {\"페이지\": true|false} 객체여야 합니다"; continue; }
+                foreach ($v as $slug => $on) {
+                    if (!isset(Site::PAGES[$slug])) { $errors[] = "$name: pages 에 모르는 페이지 `$slug`"; continue; }
+                    if (!is_bool($on)) { $errors[] = "$name: pages.$slug 는 true|false 여야 합니다"; continue; }
+                    $out['pages'][$slug] = $on;
+                }
+                continue;
+            }
             if ($k === 'released') { if (!is_bool($v)) $errors[] = "$name: released 는 true|false 여야 합니다"; else $out[$k] = $v; continue; }
             if (!is_string($v)) { $errors[] = "$name: `$k` 는 문자열이어야 합니다"; continue; }
             $v = trim($v);
@@ -74,8 +89,42 @@ final class Repository
         return $out;
     }
 
-    /** @return array<string,string|bool> */
+    /** @return array<string,string|bool|array<string,bool>> */
     public function settings(): array { return $this->settings; }
+
+    /** 페이지 켬/끔: site.json pages 값 > 기본값(PAGE_DEFAULTS) > 켬 */
+    public function pageOn(string $slug): bool
+    {
+        $pages = $this->settings['pages'];
+        return is_array($pages) && array_key_exists($slug, $pages) ? $pages[$slug] : (self::PAGE_DEFAULTS[$slug] ?? true);
+    }
+
+    /**
+     * data/start.json(처음이라면 읽는 순서): [{"id": "WS-…", "reason": "한 줄 이유"}, …]. 없는 id·빈 이유·겹침은 오류.
+     * @param list<string> $errors @return list<array{issue:Issue,reason:string}>
+     */
+    private static function loadStart(string $file, Repository $repo, array &$errors): array
+    {
+        if (!is_file($file)) return [];
+        $name = 'data/start.json';
+        $data = json_decode((string)@file_get_contents($file), true);
+        if (!is_array($data) || !array_is_list($data)) { $errors[] = "$name: 목록(JSON 배열) 형식이 아닙니다"; return []; }
+        $out = [];
+        $seen = [];
+        foreach ($data as $n => $row) {
+            $no = $n + 1;
+            if (!is_array($row) || !isset($row['id'], $row['reason']) || !is_string($row['id']) || !is_string($row['reason']) || trim($row['reason']) === '') { $errors[] = "$name: {$no}번째 항목에 id·reason 이 없습니다"; continue; }
+            if (isset($seen[$row['id']])) { $errors[] = "$name: id `{$row['id']}` 가 두 번 나옵니다"; continue; }
+            $seen[$row['id']] = true;
+            $issue = $repo->find($row['id']);
+            if ($issue === null) { $errors[] = "$name: {$no}번째 id `{$row['id']}` 이슈가 없습니다"; continue; }
+            $out[] = ['issue' => $issue, 'reason' => trim($row['reason'])];
+        }
+        return $out;
+    }
+
+    /** 처음이라면 읽는 순서 @return list<array{issue:Issue,reason:string}> */
+    public function start(): array { return $this->start; }
 
     /** 표준 항목 파일을 읽고 대응표를 만든다. 없는 항목은 오류 띠 목록에 넣고, 표는 있는 항목만으로 그린다. */
     private function attachCoverage(string $root): void

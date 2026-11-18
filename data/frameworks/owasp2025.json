@@ -2,6 +2,7 @@
   "id": "owasp2025",
   "name": "OWASP Top 10:2025",
   "year": 2025,
+  "about": "OWASP Top 10:2025 — 웹 보안 국제 비영리 단체 OWASP가 정리한 가장 흔한 웹 취약점 10가지",
   "url": "https://top10.owasp.org/2025",
   "items": [
     {

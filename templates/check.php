@@ -1,7 +1,5 @@
-<?php /** @var Site $site @var string $title @var string $lead */ ?>
+<?php /** 내 사이트 점검: 내용이 생길 때까지 data/site.json 의 pages.check=false 로 꺼 둠(공개 화면에 나오지 않음). @var Site $site @var string $title @var string $lead */ ?>
 <div class="ws-page">
 <?= $site->render('_pagehead', ['title' => $title, 'lead' => $lead]) ?>
-<?= $site->render('_pending', ['items' => ['사용 언어·프레임워크·기능 선택', '선택에 맞춘 점검표와 진행 저장(이 브라우저에만 저장)', 'AI 코딩 도구에 붙여 넣을 점검 지시문', '인쇄용 점검표와 Markdown 내보내기']]) ?>
-<p class="ws-page-note">현재 가능한 점검 방법은 스킬 설치 후 코딩 도구에 보안 검토 요청.</p>
 <?= $site->render('_related', ['links' => ['install', 'severity']]) ?>
 </div>

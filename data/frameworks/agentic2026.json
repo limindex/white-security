@@ -3,6 +3,7 @@
   "name": "OWASP Top 10 for Agentic Applications 2026",
   "short": "OWASP 에이전트 2026",
   "year": 2026,
+  "about": "OWASP Top 10 for Agentic Applications 2026 — OWASP가 정리한 AI 에이전트(스스로 도구를 쓰고 작업하는 AI) 앱의 가장 흔한 보안 문제 10가지",
   "url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/",
   "items": [
     {

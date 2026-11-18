@@ -177,7 +177,8 @@ test('build: origin 이 있으면 sitemap.xml(절대 주소, 쪽만), 없으면 
     assert_same(0, $code, $out);
     assert_true(!is_file("$root/dist/sitemap.xml"), 'origin 없으면 sitemap 없음');
     assert_contains('sitemap.xml', $out);
-    foreach (['start', 'check', 'severity', 'guide', 'glossary', 'sources'] as $p) assert_true(is_file("$root/dist/$p/index.html"), $p);
+    foreach (['start', 'severity', 'guide', 'sources', 'coverage'] as $p) assert_true(is_file("$root/dist/$p/index.html"), $p);
+    foreach (['check', 'glossary'] as $p) assert_true(!file_exists("$root/dist/$p"), "꺼진 페이지는 내보내지 않음: $p");
     [$code, $out, $root] = bt_build([], '--origin=https://docs.example.org');
     assert_same(0, $code, $out);
     $xml = file_get_contents("$root/dist/sitemap.xml");
@@ -187,6 +188,7 @@ test('build: origin 이 있으면 sitemap.xml(절대 주소, 쪽만), 없으면 
     assert_contains('<loc>https://docs.example.org/white-security/severity</loc>', $xml);
     assert_contains('<loc>https://docs.example.org/white-security/issues/WS-INJ-001</loc>', $xml);
     assert_contains('<lastmod>2026-11-18</lastmod>', $xml);
+    foreach (['/check<', '/glossary<'] as $p) assert_true(!str_contains($xml, $p), "sitemap 에 꺼진 페이지 없음: $p");
     assert_true(!str_contains($xml, 'api/'), 'API 제외');
     assert_true(!str_contains($xml, '404'), '404 제외');
     $html = file_get_contents("$root/dist/severity/index.html");

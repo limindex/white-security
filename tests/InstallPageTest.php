@@ -34,19 +34,19 @@ test('설치(Claude Code): 번호 단계 4개, command 는 한 상자에 하나,
     assert_true(substr_count($p, '예시 출력') >= 3, '예시 표시');
 });
 
-test('설치: Troubleshooting 접힘(업데이트·삭제 포함), 공개 준비 중 안내', function () {
+test('설치: Troubleshooting 접힘(업데이트·삭제 포함), 공개 전 안내', function () {
     $b = inst_body();
     assert_true((bool)preg_match('#<details class="ws-trouble">\s*<summary>#', $b), '접힌 Troubleshooting');
     foreach (['command not found', 'marketplace add', '반응 없음', '/plugin marketplace update limindex', '/plugin marketplace remove limindex'] as $w) assert_contains($w, $b);
-    assert_contains('공개 준비 중', $b);
-    assert_true(!str_contains(inst_body(str_replace('"released": false', '"released": true', INST_JSON)), '공개 준비 중'), '공개 후 안내 없음');
+    assert_contains('공개 전 · command는', $b);
+    assert_true(!str_contains(inst_body(str_replace('"released": false', '"released": true', INST_JSON)), '공개 전 · command는'), '공개 후 안내 없음');
 });
 
 test('설치: 설정이 비면 command 를 그리지 않음, 옛 repository 이름 없음', function () {
     $b = inst_body(null);
     assert_true(!str_contains($b, '/plugin install'), 'command 숨김');
     assert_true(!str_contains($b, 'juslim'), '옛 이름');
-    assert_contains('class="ws-pending"', $b);
+    assert_true(!str_contains($b, '준비 중') && !str_contains($b, 'ws-pending'), '준비 중 구역 없음');
 });
 
 test('용어: 개발 용어·고유명사는 원문, 번역어 없음(전 페이지)', function () {
@@ -65,4 +65,21 @@ test('설치(직접 복사): 스킬 폴더 경로는 plugins/white-security/skil
     $b = inst_body();
     assert_true((bool)preg_match('#<section[^>]*id="inst-copy"[^>]*>(.*?)</section>#s', $b, $m), '직접 복사 판');
     assert_contains('cp -r white-security/' . SkillExport::SKILL_DIR . ' ~/.claude/skills/', html_entity_decode($m[1]));
+});
+
+test('설치: 사용법 안내 순서 — 큰 줄 "보안 점검해 줘", 작은 줄 확실하게 실행(/white-security:review · 스킬 이름 포함 프롬프트)', function () {
+    $b = inst_body();
+    preg_match_all('#<section[^>]*id="inst-(claude|cli|copy)"[^>]*>(.*?)</section>#s', $b, $m, PREG_SET_ORDER);
+    assert_same(3, count($m));
+    foreach ($m as [, $id, $p]) {
+        $main = strpos($p, '<code>보안 점검해 줘</code>');
+        $sub = strpos($p, 'ws-step-sub');
+        assert_true($main !== false && $sub !== false && $main < $sub, "$id: 한마디가 먼저");
+        assert_contains('확실하게 실행하려면', $p);
+        assert_contains('코드 작성 중 위험한 코드는 별도 요청 없이 자동 점검', $p);
+        assert_true(!str_contains($p, '이 프로젝트 보안 점검해 줘'), "$id: 옛 문구 없음");
+    }
+    assert_true((bool)preg_match('#ws-step-sub.*<code>/white-security:review</code>#s', $m[0][2]), 'Claude Code: command');
+    foreach ([1, 2] as $k) assert_contains('<code>white-security 스킬로 보안 점검해 줘</code>', $m[$k][2]);
+    assert_true(!str_contains($m[0][2], 'white-security 스킬로 보안 점검해 줘'), 'Claude Code 탭엔 스킬 이름 문구 없음');
 });

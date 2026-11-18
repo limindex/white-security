@@ -3,16 +3,16 @@
 final class Site
 {
     private const JSON_FLAGS = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT;
-    /** 일반 페이지: 주소 → 제목 · 메뉴 구역 · 한 줄 설명(명사형). 왼쪽 메뉴·경로 표시·설명 메타가 모두 여기서 나온다. */
+    /** 일반 페이지: 주소 → 제목 · 메뉴 구역 · 한 줄 설명(명사형). nav=false 는 왼쪽 메뉴에서만 뺌. 왼쪽 메뉴·경로 표시·설명 메타가 모두 여기서 나온다. */
     public const PAGES = [
         'about' => ['title' => '소개', 'section' => '시작하기', 'lead' => 'AI와 함께 코딩하는 사람을 위한 한국어 보안 문서와 점검 스킬의 목적·범위·운영 원칙'],
-        'start' => ['title' => '처음이라면', 'section' => '시작하기', 'lead' => '보안 지식 없이 시작하는 사람을 위한 읽는 순서와 첫 점검 안내'],
+        'start' => ['title' => '처음이라면', 'section' => '시작하기', 'lead' => '바이브 코딩을 시작한 사람이 가장 먼저 읽을 보안 이슈 10건과 읽는 순서'],
         'install' => ['title' => '스킬 설치', 'section' => '시작하기', 'lead' => '코딩 도구에 점검 스킬 설치 · 이후 코드 작성·검토 때 스킬의 자동 점검'],
         'check' => ['title' => '내 사이트 점검', 'section' => '시작하기', 'lead' => '사용 기술과 기능에 맞춘 점검표와 AI 점검 지시문'],
         'severity' => ['title' => '심각도 기준', 'section' => '시작하기', 'lead' => '위험·주의·참고 등급의 판정 기준 · 영향과 악용 쉬움의 조합'],
         'guide' => ['title' => '문서 읽는 법', 'section' => '시작하기', 'lead' => '문서 번호 체계·절 구성·문서 정보·기준 번호의 의미'],
         'glossary' => ['title' => '용어 사전', 'section' => '참고', 'lead' => '보안 업계 용어와 공식 용어의 쉬운 풀이·관련 이슈'],
-        'coverage' => ['title' => '점검 기준 대응표', 'section' => '참고', 'lead' => '공인 보안 기준 8종의 항목별 대응 이슈와 빈칸'],
+        'coverage' => ['title' => '점검 기준 대응표', 'section' => '참고', 'nav' => false, 'lead' => '공인 보안 기준 8종의 항목별 대응 이슈와 빈칸'],
         'changelog' => ['title' => '개정 이력', 'section' => '참고', 'lead' => '스킬과 문서의 버전별 변경 내역'],
         'sources' => ['title' => '출처·라이선스', 'section' => '참고', 'lead' => '문서·코드·글꼴의 라이선스와 인용 원칙'],
     ];
@@ -22,8 +22,6 @@ final class Site
     /** 사이트 성격: 웹사이트는 가이드, 제품은 스킬 */
     public const BRAND_DESC = '바이브 코딩 보안 가이드';
     private const ID_RE = '/^WS-[A-Z]{2,5}-\d{3}$/';
-    /** 마지막 확인일이 이 일수를 넘으면 "확인 필요" */
-    public const STALE_DAYS = 180;
     public const SEVERITY_LABELS = ['high' => '위험', 'medium' => '주의', 'low' => '참고'];
     public const LANG_LABELS = ['python' => 'Python', 'php' => 'PHP', 'js' => 'JavaScript', 'ts' => 'TypeScript', 'go' => 'Go', 'java' => 'Java', 'ruby' => 'Ruby', 'shell' => 'Shell', 'yaml' => 'YAML'];
 
@@ -51,24 +49,20 @@ final class Site
         return rawurldecode(substr($uri, strlen($base) + 1));
     }
 
-    /** 마지막 확인일이 STALE_DAYS 를 넘었나 (주입한 오늘 기준) */
-    public function isStale(Issue $i): bool
+    /** 켜진 페이지 목록(data/site.json pages 반영): 왼쪽 메뉴·홈·정적 내보내기가 이것만 쓴다. @return array<string,array<string,string>> */
+    public function pages(): array
     {
-        return $i->checked < $this->today && $this->today->diff($i->checked)->days > self::STALE_DAYS;
+        return array_filter(self::PAGES, fn(string $slug) => $this->repo->pageOn($slug), ARRAY_FILTER_USE_KEY);
     }
 
-    /** 다음 검토 예정일 = 마지막 확인일 + STALE_DAYS (이 날이 지나면 "확인 필요") */
-    public function nextReview(Issue $i): DateTimeImmutable
-    {
-        return $i->checked->modify('+' . self::STALE_DAYS . ' days');
-    }
+    public function pageOn(string $slug): bool { return isset(self::PAGES[$slug]) && $this->repo->pageOn($slug); }
 
-    /** 문서 메타(게시·확인·다음 검토·적용 대상·심각도 근거·개정 이력): 이슈 상세 JSON 용 @return array<string,mixed> */
+    /** 문서 메타(게시·확인·적용 대상·심각도 근거·개정 이력): 이슈 상세 JSON 용 @return array<string,mixed> */
     private function docMeta(Issue $i): array
     {
         return [
             'published' => $i->published->format('Y-m-d'), 'checked' => $i->checked->format('Y-m-d'),
-            'next_review' => $this->nextReview($i)->format('Y-m-d'), 'applies_to' => $i->appliesTo,
+            'applies_to' => $i->appliesTo,
             'severity_reason' => $i->severityReason, 'revisions' => $i->revisions,
         ];
     }
@@ -90,16 +84,21 @@ final class Site
         return $key === 'cwe' && preg_match('/^CWE-(\d+)$/', $code, $m) ? 'https://cwe.mitre.org/data/definitions/' . $m[1] . '.html' : null;
     }
 
-    /** 기준 번호 칩 HTML: 기준 이름(번호에 이름이 없을 때) + 번호, CWE 는 정의 페이지 링크 */
+    /** 기준 번호 칩 HTML: 기준 이름(번호에 이름이 없을 때) + 번호, CWE 는 정의 페이지 링크. 기준 한 줄 풀이(about)는 올리거나 포커스하면 나타남. */
     public static function mapChip(string $key, string $code): string
     {
+        static $n = 0;
         $k = str_starts_with($code, strtoupper($key) . '-') ? '' : '<span class="ws-chip-k">' . self::e(self::mapLabel($key)) . '</span>';
         $u = self::cweUrl($key, $code);
+        $about = Coverage::abouts()[$key] ?? '';
+        $tip = $about !== '' ? 'ws-tip-' . (++$n) : '';
+        $desc = $tip !== '' ? ' aria-describedby="' . $tip . '"' : '';
         $v = $u !== null
-            ? '<a class="ws-chip-v" href="' . self::e($u) . '" rel="noopener noreferrer"><span>' . self::e($code) . '</span>'
+            ? '<a class="ws-chip-v" href="' . self::e($u) . '" rel="noopener noreferrer"' . $desc . '><span>' . self::e($code) . '</span>'
                 . '<svg class="ws-ext" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true" focusable="false"><path d="M4.5 2.5h5v5M9.5 2.5l-7 7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>'
             : '<span class="ws-chip-v">' . self::e($code) . '</span>';
-        return '<li class="ws-chip">' . $k . $v . '</li>';
+        $focus = $u === null && $tip !== '' ? ' tabindex="0"' . $desc : '';
+        return '<li class="ws-chip"' . $focus . '>' . $k . $v . ($tip !== '' ? '<span class="ws-tip" role="tooltip" id="' . $tip . '">' . self::e($about) . '</span>' : '') . '</li>';
     }
 
     /** 심각도 배지 HTML (위험 빨강 · 주의 주황 · 참고 회색) */
@@ -107,13 +106,6 @@ final class Site
     {
         $label = self::SEVERITY_LABELS[$severity] ?? $severity;
         return '<span class="ws-badge ws-badge--' . self::e($severity) . '">' . self::e($label . $suffix) . '</span>';
-    }
-
-    /** 마지막 확인일이 오래됐을 때만 "확인 필요" 배지 */
-    public function staleBadge(Issue $i): string
-    {
-        if (!$this->isStale($i)) return '';
-        return '<span class="ws-badge ws-badge--stale" title="마지막 확인 뒤 ' . self::STALE_DAYS . '일 넘게 지남">확인 필요</span>';
     }
 
     public const DEFAULT_DESC = 'AI 코딩 도구가 자주 만드는 보안 실수를 정리한 보안 이슈 문서와 AI 코딩 도구용 점검 스킬';
@@ -199,12 +191,13 @@ final class Site
     public function route(string $path): array
     {
         $path = trim($path, '/');
-        if ($path === '') return $this->html(200, 'home', ['title' => '', 'groups' => $this->repo->groups(), 'byGroup' => $this->repo->byGroup(), 'coverage' => $this->coverage()]);
-        if (isset(self::PAGES[$path])) {
+        if ($path === '') return $this->html(200, 'home', ['title' => '', 'groups' => $this->repo->groups(), 'byGroup' => $this->repo->byGroup()]);
+        if ($this->pageOn($path)) {
             $meta = self::PAGES[$path];
             $vars = ['title' => $meta['title'], 'lead' => $meta['lead'], 'desc' => $meta['lead'], 'page' => $path,
                 'crumbs' => [['홈', $this->url('')], [$meta['section'], null], [$meta['title'], null]]];
             if ($path === 'coverage') $vars['coverage'] = $this->coverage();
+            if ($path === 'start') $vars['start'] = $this->repo->start();
             return $this->html(200, $path, $vars);
         }
         if (preg_match('#^issues/([^/]+)$#', $path, $m) && preg_match(self::ID_RE, $m[1]) && ($i = $this->repo->find($m[1]))) {
@@ -217,7 +210,6 @@ final class Site
                 'id' => $i->id, 'title' => $i->title, 'slug' => $i->slug, 'group' => $i->group, 'severity' => $i->severity,
                 'site_only' => $i->siteOnly, 'depth' => $i->depth, 'languages' => $i->languages, 'maps' => $i->maps,
                 'published' => $i->published->format('Y-m-d'), 'checked' => $i->checked->format('Y-m-d'),
-                'next_review' => $this->nextReview($i)->format('Y-m-d'),
                 'url' => $this->url('issues/' . $i->id),
             ], $this->repo->all()));
         }

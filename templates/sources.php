@@ -9,5 +9,4 @@
 <div><dt>글꼴</dt><dd>Pretendard · Manrope · JetBrains Mono, 모두 SIL Open Font License 1.1</dd></div>
 </dl>
 </section>
-<?= $site->render('_pending', ['items' => ['인용 방법(문서 번호·최종 확인일 표기)', '참고 기준 8종의 공식 출처와 판본', '정정·제보 경로']]) ?>
 </div>

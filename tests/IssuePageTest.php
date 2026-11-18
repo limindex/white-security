@@ -22,7 +22,8 @@ test('이슈 머리: 문서 번호·유형 라벨(묶음) → 제목 → 심각�
     foreach ($order as $k) { $p = strpos($h, $k); assert_true($p !== false && $p > $last, "순서 $k"); $last = $p; }
     assert_true((bool)preg_match('#class="ws-docid">.*?WS-INJ-002.*?웹 애플리케이션.*?상세 문서#s', $h), '문서 번호·묶음·깊이');
     assert_true((bool)preg_match('#class="ws-sevline">.*?ws-badge--high.*?입력 한 줄로 악용 가능#s', $h), '심각도 근거 한 줄');
-    foreach (['게시', '최종 확인', '다음 검토 예정', '적용 대상'] as $k) assert_contains('<dt>' . $k . '</dt>', $h);
+    foreach (['게시', '최종 확인', '적용 대상'] as $k) assert_contains('<dt>' . $k . '</dt>', $h);
+    assert_true(!str_contains($h, '다음 검토'), '다음 검토 예정일 폐기');
 });
 
 test('이슈 절: 영구 링크 앵커(고정 id), 요약은 강조 상자', function () {

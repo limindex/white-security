@@ -67,7 +67,7 @@ $site = new Site($repo, $opt['base'], 'static', $today, $opt['origin']);
 $origin = $site->setting('origin');
 
 // 경로 목록 (정렬해 같은 순서로)
-$paths = ['', ...array_keys(Site::PAGES), 'api/issues.json', 'api/search.json', 'api/coverage.json'];
+$paths = ['', ...array_keys($site->pages()), 'api/issues.json', 'api/search.json', 'api/coverage.json'];
 foreach ($repo->all() as $i) { $paths[] = 'issues/' . $i->id; $paths[] = 'api/issues/' . $i->id . '.json'; }
 sort($paths);
 

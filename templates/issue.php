@@ -2,7 +2,6 @@
 /** @var Site $site @var Issue $issue */
 $checked = $issue->checked->format('Y-m-d');
 $published = $issue->published->format('Y-m-d');
-$next = $site->nextReview($issue)->format('Y-m-d');
 $maps = array_filter($issue->maps);
 $addr = $site->setting('origin') . $site->url('issues/' . $issue->id);
 $fold = function (string $id, string $heading, string $body, string $count = ''): string {
@@ -45,11 +44,10 @@ if ($issue->revisions) $toc[] = ['revisions', '개정 이력'];
 <header class="ws-doc-head">
 <p class="ws-docid"><span class="ws-id"><?= Site::e($issue->id) ?></span><i></i><span><?= Site::e($site->groupName($issue->group)) ?></span><i></i><span><?= $issue->depth === 'full' ? '상세 문서' : '간략 문서' ?></span></p>
 <h1><?= Site::t($issue->title) ?></h1>
-<div class="ws-sevline"><span class="ws-sevline-badges"><?= Site::severityBadge($issue->severity) ?><?= $site->staleBadge($issue) ?></span><?php if ($issue->severityReason !== null): ?><span class="ws-sr">심각도 근거</span><?php if (preg_match('/^영향:\s*(.+?)\s+·\s+악용:\s*(.+)$/u', $issue->severityReason, $why)): ?><dl class="ws-sevwhy"><div><dt>영향</dt><dd><?= Site::t($why[1]) ?></dd></div><div><dt>악용</dt><dd><?= Site::t($why[2]) ?></dd></div></dl><?php else: ?><p class="ws-sevwhy-text"><?= Site::t($issue->severityReason) ?></p><?php endif ?><?php endif ?></div>
+<div class="ws-sevline"><span class="ws-sevline-badges"><?= Site::severityBadge($issue->severity) ?></span><?php if ($issue->severityReason !== null): ?><span class="ws-sr">심각도 근거</span><?php if (preg_match('/^영향:\s*(.+?)\s+·\s+악용:\s*(.+)$/u', $issue->severityReason, $why)): ?><dl class="ws-sevwhy"><div><dt>영향</dt><dd><?= Site::t($why[1]) ?></dd></div><div><dt>악용</dt><dd><?= Site::t($why[2]) ?></dd></div></dl><?php else: ?><p class="ws-sevwhy-text"><?= Site::t($issue->severityReason) ?></p><?php endif ?><?php endif ?></div>
 <dl class="ws-docinfo">
 <div><dt>게시</dt><dd><time datetime="<?= Site::e($published) ?>"><?= Site::e($published) ?></time></dd></div>
 <div><dt>최종 확인</dt><dd><time datetime="<?= Site::e($checked) ?>"><?= Site::e($checked) ?></time></dd></div>
-<div><dt>다음 검토 예정</dt><dd><time datetime="<?= Site::e($next) ?>"><?= Site::e($next) ?></time></dd></div>
 <?php if ($issue->appliesTo): ?>
 <div class="ws-docinfo-wide"><dt>적용 대상</dt><dd><?= Site::e(implode(' · ', $issue->appliesTo)) ?></dd></div>
 <?php endif ?>
@@ -85,7 +83,7 @@ if ($issue->revisions) {
 }
 ?>
 
-<p class="ws-checked"><span>최종 확인 <time datetime="<?= Site::e($checked) ?>"><?= Site::e($checked) ?></time></span><i></i><span>다음 검토 예정 <time datetime="<?= Site::e($next) ?>"><?= Site::e($next) ?></time></span><?php if ($site->isStale($issue)): ?><i></i><span>확인일 뒤 <?= Site::STALE_DAYS ?>일 넘게 지남 · 출처와 최신 동향 재확인 필요</span><?php endif ?></p>
+<p class="ws-checked"><span>최종 확인 <time datetime="<?= Site::e($checked) ?>"><?= Site::e($checked) ?></time></span></p>
 </article>
 
 <div class="ws-rail">

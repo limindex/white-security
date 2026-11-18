@@ -4,5 +4,11 @@
   "origin": "",
   "marketplace": "limindex/skills",
   "plugin_id": "white-security@limindex",
-  "released": false
+  "released": false,
+  "pages": {
+    "start": true,
+    "check": false,
+    "glossary": false,
+    "sources": true
+  }
 }

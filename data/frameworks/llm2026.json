@@ -3,6 +3,7 @@
   "name": "OWASP Top 10 for LLM Applications 2026",
   "short": "OWASP LLM 2026",
   "year": 2026,
+  "about": "OWASP Top 10 for LLM Applications 2026 — OWASP가 정리한 LLM(대규모 언어 모델) 기반 앱의 가장 흔한 보안 문제 10가지",
   "url": "https://genai.owasp.org/resource/owasp-genai-llm-top-10-2026/",
   "items": [
     {

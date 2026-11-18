@@ -8,6 +8,6 @@
 <ul class="ws-links">
 <li><a href="<?= Site::e($site->url('')) ?>"><span class="ws-tx">홈</span></a></li>
 <li><a href="<?= Site::e($site->url('start')) ?>"><span class="ws-tx">처음이라면</span></a></li>
-<li><a href="<?= Site::e($site->url('coverage')) ?>"><span class="ws-tx">점검 기준 대응표</span></a></li>
+<li><a href="<?= Site::e($site->url('install')) ?>"><span class="ws-tx">스킬 설치</span></a></li>
 </ul>
 </div>
