@@ -134,7 +134,7 @@ test('SkillExport: 코드 예시는 언어별 파일로 분리, 이슈 파일에
     assert_contains('`WS-INJ-001.code.php.md`', $f);
     $py = file_get_contents("$ref/web/WS-INJ-001.code.python.md");
     assert_true(str_starts_with($py, SkillExport::HEADER), '머리');
-    assert_contains("# WS-INJ-001 코드 예시 — python\n", $py);
+    assert_contains("# WS-INJ-001 코드 예시 — Python\n", $py);
     assert_contains("✗ 취약 코드 (vulnerable example — do not use)\n", $py);
     assert_contains("✓ 안전 코드 (safe example)\n", $py);
     assert_contains('cur.execute("SELECT * FROM u WHERE id=%s", (uid,))', $py);

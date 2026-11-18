@@ -23,4 +23,4 @@
 - **보고 예**: `[위험] WS-SUP-001 package.json:14 — "<이름>" 이 npm 레지스트리에 없음(404) → 원래 쓰려던 기능의 공식 문서에서 패키지 이름을 다시 확인하고, 없으면 의존성 제거`
 - **고칠 방법**: 비슷한 이름을 새로 지어내 바꿔 넣지 않고 공식 문서에서 이름을 확인해 사용자 승인을 받아야 하며, 정확한 버전으로 고정하고 잠금 파일을 함께 커밋해야 한다.
 
-Code examples (read only the file for the language you are writing): `WS-SUP-001.code.python.md` · `WS-SUP-001.code.js.md` · `WS-SUP-001.code.php.md`
+Code examples (read only the file for the stack you are writing): `WS-SUP-001.code.python.md` (Python) · `WS-SUP-001.code.js.md` (JavaScript) · `WS-SUP-001.code.php.md` (PHP)

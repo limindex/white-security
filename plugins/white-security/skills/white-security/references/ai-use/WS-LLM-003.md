@@ -20,4 +20,4 @@
 - **등급**: 위험: 고유식별정보·카드번호·비밀번호·API 키가 외부 AI API나 로그로 나가는 경우. / 주의: 이름·전화번호·이메일이 가려지지 않고 나가는 경우. 프롬프트 원문 로그가 남는 경우. / 참고: 처리방침에 AI 위탁 내용이 있는지 확인이 필요한 경우.
 - **보고 예**: `[위험] WS-LLM-003 support/ai.py:22 — customer.__dict__ 를 통째로 프롬프트에 넣어 주민등록번호까지 외부 API로 전송 → 보낼 필드를 허용 목록으로 고르고 문의 글은 가려서 전송`
 
-Code examples (read only the file for the language you are writing): `WS-LLM-003.code.python.md`
+Code examples (read only the file for the stack you are writing): `WS-LLM-003.code.python.md` (Python)

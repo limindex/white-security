@@ -20,4 +20,4 @@
 - **등급**: 위험: 프롬프트에 실제 키·비밀번호가 있는 경우. 프롬프트 판단만으로 환불·관리 기능이 실행되는 경우. / 주의: 할인 코드·내부 규칙·내부 주소가 프롬프트에 있는 경우. / 참고: "공개하지 마" 문구에만 기대는 경우.
 - **보고 예**: `[위험] WS-LLM-002 bot/prompt.py:8 — 시스템 프롬프트에 SHIPPING_API_KEY 값을 넣음 → 키는 track_order 도구 함수 안에서만 쓰고 프롬프트에서 뺌, 키 교체`
 
-Code examples (read only the file for the language you are writing): `WS-LLM-002.code.python.md` · `WS-LLM-002.code.js.md`
+Code examples (read only the file for the stack you are writing): `WS-LLM-002.code.python.md` (Python) · `WS-LLM-002.code.js.md` (JavaScript)

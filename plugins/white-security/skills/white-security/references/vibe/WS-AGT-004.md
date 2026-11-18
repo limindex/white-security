@@ -20,4 +20,4 @@
 - **등급**: 위험: 에이전트를 통해 다른 사용자 데이터에 닿는 경우. 인증 없는 에이전트 엔드포인트가 쓰기 작업을 하는 경우. / 주의: 서명은 있지만 재전송 방지·보낸 쪽 권한 확인이 없는 경우. 여러 에이전트가 관리자 키 하나를 나눠 쓰는 경우. / 참고: 에이전트별 호출 기록이 없는 경우.
 - **보고 예**: `[위험] WS-AGT-004 agent/tools.py:30 — get_invoice 가 모델이 준 user_id 로 서비스 계정 조회 → 세션 사용자로 도구를 만들고 customer_id 조건을 고정`
 
-Code examples (read only the file for the language you are writing): `WS-AGT-004.code.python.md` · `WS-AGT-004.code.js.md`
+Code examples (read only the file for the stack you are writing): `WS-AGT-004.code.python.md` (Python) · `WS-AGT-004.code.js.md` (JavaScript)

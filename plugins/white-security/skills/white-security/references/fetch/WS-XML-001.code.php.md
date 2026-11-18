@@ -1,5 +1,5 @@
 <!-- generated from white-security issues; do not edit -->
-# WS-XML-001 코드 예시 — php
+# WS-XML-001 코드 예시 — PHP
 
 ✗ 취약 코드 (vulnerable example — do not use)
 

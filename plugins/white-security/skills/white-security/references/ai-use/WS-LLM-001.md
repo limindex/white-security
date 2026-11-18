@@ -20,4 +20,4 @@
 - **등급**: 위험: AI 출력이 `eval`·셸·SQL로 들어가는 경우. 남이 쓴 글이 섞인 AI 출력이 HTML로 그려지는 경우. / 주의: 사용자 본인 입력만 들어가는 AI 출력이 HTML로 그려지는 경우. 출력 형식 검사가 없는 경우. / 참고: 샌드박스에서만 실행하지만 시간·메모리 제한이 없는 경우.
 - **보고 예**: `[위험] WS-LLM-001 api/report.py:57 — 모델이 쓴 SQL 을 cursor.execute 로 그대로 실행 → 조건만 JSON 으로 받아 허용 목록 검사 후 매개변수 바인딩`
 
-Code examples (read only the file for the language you are writing): `WS-LLM-001.code.python.md` · `WS-LLM-001.code.js.md` · `WS-LLM-001.code.php.md`
+Code examples (read only the file for the stack you are writing): `WS-LLM-001.code.python.md` (Python) · `WS-LLM-001.code.js.md` (JavaScript) · `WS-LLM-001.code.php.md` (PHP)

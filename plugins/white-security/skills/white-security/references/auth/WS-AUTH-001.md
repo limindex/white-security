@@ -22,4 +22,4 @@
 - **보고 예**: `[위험] WS-AUTH-001 routes/orders.js:31 — 주문 ID만으로 조회하고 소유자를 확인하지 않음(IDOR) → 조회 조건에 userId: req.user.id 를 넣고 없으면 404`
 - **고칠 방법**: 조회 뒤 비교(빠뜨리기 쉬움)보다 조회 조건에 소유자를 넣는 방식을 먼저 골라야 하고, 계정 두 개로 읽기·수정·삭제·내려받기를 각각 확인하는 테스트를 함께 추가해야 한다.
 
-Code examples (read only the file for the language you are writing): `WS-AUTH-001.code.python.md` · `WS-AUTH-001.code.js.md` · `WS-AUTH-001.code.php.md`
+Code examples (read only the file for the stack you are writing): `WS-AUTH-001.code.python.md` (Python) · `WS-AUTH-001.code.js.md` (JavaScript) · `WS-AUTH-001.code.php.md` (PHP)

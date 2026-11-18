@@ -22,4 +22,4 @@
 - **등급**: 위험: 남이 준 파일을 ImageMagick·Ghostscript로 처리하는데, 정책이 없거나 넓게 열려 있음을 확인한 경우(저장소·이미지 안 설정). / 주의: 정책 파일을 볼 수 없어 "확인 필요"인 경우. 크기·픽셀 상한이 없는 경우. 공개 이미지에 위치 정보가 남는 경우. / 참고: 변환에 시간 제한이 없는 경우.
 - **보고 예**: `[주의] WS-FILE-001 media/thumbs.py:9 — Image.MAX_IMAGE_PIXELS = None 으로 픽셀 폭탄 보호를 끔 → 기본값으로 되돌리고 파일 크기 상한 추가`
 
-Code examples (read only the file for the language you are writing): `WS-FILE-001.code.python.md` · `WS-FILE-001.code.php.md`
+Code examples (read only the file for the stack you are writing): `WS-FILE-001.code.python.md` (Python) · `WS-FILE-001.code.php.md` (PHP)

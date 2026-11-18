@@ -1,5 +1,5 @@
 <!-- generated from white-security issues; do not edit -->
-# WS-BOT-001 코드 예시 — nginx
+# WS-BOT-001 코드 예시 — Nginx
 
 ✗ 취약 코드 (vulnerable example — do not use)
 

@@ -20,4 +20,4 @@
 - **등급**: 위험: 비공개 데이터(대화 기록·문서·메일)와 남이 쓴 글이 함께 들어가는 AI 출력에서 외부 이미지가 자동으로 뜨는 경우. / 주의: 외부 이미지가 뜨지만 AI 입력이 사용자 본인 글뿐인 경우. CSP `img-src`가 없는 경우. / 참고: 링크에 `rel` 속성이 없는 경우.
 - **보고 예**: `[위험] WS-PI-002 web/chat.js:31 — 메일 요약 답을 marked 로 그대로 그려 외부 이미지가 자동 로딩 → DOMPurify 로 정리하고 img src 를 우리 도메인만 남김, CSP img-src 'self'`
 
-Code examples (read only the file for the language you are writing): `WS-PI-002.code.js.md` · `WS-PI-002.code.python.md`
+Code examples (read only the file for the stack you are writing): `WS-PI-002.code.js.md` (JavaScript) · `WS-PI-002.code.python.md` (Python)

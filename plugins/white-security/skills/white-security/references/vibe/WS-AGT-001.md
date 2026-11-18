@@ -20,4 +20,4 @@
 - **등급**: 위험: 운영 자원에 닿는 셸·SQL·삭제·배포 도구가 확인 없이 실행되는 경우. / 주의: 도구 계정 권한이 필요보다 넓은 경우(관리자 DB 계정 등). 확인 창이 AI 설명만 보여 주는 경우. / 참고: 도구 호출 기록이 없는 경우.
 - **보고 예**: `[위험] WS-AGT-001 agent/tools.py:12 — run_sql 도구가 운영 관리자 계정으로 모델이 쓴 SQL 을 확인 없이 실행 → 읽기 전용 조회 도구로 좁히고, 변경 도구는 승인 대기열로`
 
-Code examples (read only the file for the language you are writing): `WS-AGT-001.code.python.md`
+Code examples (read only the file for the stack you are writing): `WS-AGT-001.code.python.md` (Python)

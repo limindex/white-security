@@ -21,4 +21,4 @@
 - **등급**: 위험: 사용자·AI가 준 URL을 검사 없이 여는 경우. 특히 응답이 사용자에게 돌아가거나 클라우드 서버에서 도는 경우. / 주의: 문자열 검사만 있거나 DNS를 두 번 조회하는 경우. 리다이렉트를 따라가는 경우. / 참고: 시간·크기 제한이 없는 경우. PHP `CURLOPT_MAXFILESIZE`에만 기대는 경우(curl 8.4 전에는 길이를 모르는 응답에 효과 없음).
 - **보고 예**: `[위험] WS-SSRF-001 api/preview.py:12 — 링크 미리보기가 받은 URL 을 requests.get 으로 그대로 열고 본문을 돌려줌 → https 기본 포트만, 내부 IP 차단, 검사한 IP 로만 접속, 리다이렉트 끔`
 
-Code examples (read only the file for the language you are writing): `WS-SSRF-001.code.python.md` · `WS-SSRF-001.code.js.md` · `WS-SSRF-001.code.php.md`
+Code examples (read only the file for the stack you are writing): `WS-SSRF-001.code.python.md` (Python) · `WS-SSRF-001.code.js.md` (JavaScript) · `WS-SSRF-001.code.php.md` (PHP)

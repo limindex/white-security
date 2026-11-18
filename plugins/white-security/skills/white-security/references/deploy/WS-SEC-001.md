@@ -24,4 +24,4 @@
 - **검토 주의**: 비밀값 자체는 옮겨 적지 않고 앞 4자만 남겨 `…[가림]`으로 표기해야 한다.
 - **고칠 방법**: 코드에서 값을 지우고 환경 변수나 시크릿 매니저에서 읽게 바꿔야 하고, 사용자에게 "이 키는 이미 노출됐으니 서비스에서 새로 발급하고 옛 키를 폐기해야 한다"고 반드시 알려야 한다. git 기록을 다시 쓰는 작업(`git filter-repo` 등)은 사용자 확인 없이 하지 않아야 한다.
 
-Code examples (read only the file for the language you are writing): `WS-SEC-001.code.python.md` · `WS-SEC-001.code.js.md` · `WS-SEC-001.code.php.md`
+Code examples (read only the file for the stack you are writing): `WS-SEC-001.code.python.md` (Python) · `WS-SEC-001.code.js.md` (JavaScript) · `WS-SEC-001.code.php.md` (PHP)

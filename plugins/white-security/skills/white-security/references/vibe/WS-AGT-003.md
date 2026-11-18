@@ -20,4 +20,4 @@
 - **등급**: 위험: 여러 사용자가 공유하는 메모리에 외부 글이 자동 저장되는 경우. / 주의: 사용자별 메모리지만 외부 글이 자동 저장되는 경우. 메모리가 시스템 지시문에 들어가는 경우. / 참고: 만료·개수 상한이나 사용자 삭제 기능이 없는 경우.
 - **보고 예**: `[위험] WS-AGT-003 agent/memory.py:21 — 웹 검색 결과를 모든 사용자 공용 메모리에 자동 저장 → 사용자별 메모리로 나누고, 사용자가 확인한 내용만 저장`
 
-Code examples (read only the file for the language you are writing): `WS-AGT-003.code.python.md`
+Code examples (read only the file for the stack you are writing): `WS-AGT-003.code.python.md` (Python)

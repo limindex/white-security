@@ -1,5 +1,5 @@
 <!-- generated from white-security issues; do not edit -->
-# WS-SSRF-001 코드 예시 — js
+# WS-SSRF-001 코드 예시 — JavaScript
 
 ✗ 취약 코드 (vulnerable example — do not use)
 

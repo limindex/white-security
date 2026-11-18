@@ -27,8 +27,9 @@ final class SkillExport
         'index_when_default' => '「%s」 상황에서 코드를 쓰거나 고칠 때',
         'index_how' => 'Match code signals to the lines below, then read only the matching issue file (`<ID>.md` in this folder), at most 2.',
         'routing_head' => "| Code signals | Read |\n|---|---|",
-        'code_files' => 'Code examples (read only the file for the language you are writing): %s',
+        'code_files' => 'Code examples (read only the file for the stack you are writing): %s',
         'code_title' => '# %s 코드 예시 — %s',
+        'index_stacks' => 'Stacks: %s',
     ];
     /** 묶음 INDEX 하나의 상한(estimateTokens 기준). 넘으면 빌드 실패. */
     public const INDEX_MAX_TOKENS = 600;
@@ -153,12 +154,23 @@ final class SkillExport
         $when = $g['when'] ?? null;
         if ($when === null || $when === '') $when = sprintf(self::TEXT['index_when_default'], $g['name']);
         $out = self::HEADER . sprintf(self::TEXT['index_title'], $g['id'], $g['name']) . "\n\n"
-            . sprintf(self::TEXT['index_when'], $when) . "\n" . self::TEXT['index_how'] . "\n\n";
+            . sprintf(self::TEXT['index_when'], $when) . "\n" . self::TEXT['index_how'] . "\n"
+            . sprintf(self::TEXT['index_stacks'], implode(' · ', self::stackLabels($g['issues']))) . "\n\n";
         foreach ($g['issues'] as $i) {
             $signals = $i->detection['signals'] ?? [];
             if (!$signals) throw new SkillExportError(basename($i->path) . ': 탐지 규칙 `찾는 곳` 에서 코드 신호를 뽑지 못했습니다');
             $out .= '- ' . implode(' ', array_map([self::class, 'code'], self::topSignals($signals))) . ' → ' . $i->id . ' ' . self::indexTitle($i) . "\n";
         }
+        return $out;
+    }
+
+    /** 묶음 이슈들이 가진 코드 키의 label (data/stacks.json 순서, 중복 없음). @param list<Issue> $issues @return list<string> */
+    private static function stackLabels(array $issues): array
+    {
+        $used = [];
+        foreach ($issues as $i) foreach (array_keys($i->code) as $k) $used[$k] = true;
+        $out = [];
+        foreach (Stacks::byKey() as $k => $s) if (isset($used[$k])) $out[] = $s['label'];
         return $out;
     }
 
@@ -182,6 +194,12 @@ final class SkillExport
         if ($s === '') return $i->title;
         if (preg_match('/^[A-Za-z0-9]{2,8}$/', $s) && preg_match_all('/[A-Z]/', $s) >= 2) throw new SkillExportError(basename($i->path) . ": 제목이 약어({$s})뿐이라 INDEX 에 쓸 title_en(예: `{$s} (풀어 쓴 영어 이름)`)이 필요합니다");
         return $s;
+    }
+
+    /** 코드 파일 이름(`WS-X-001.code.react-native.md`)에서 코드 키 */
+    private static function keyOf(string $file): string
+    {
+        return preg_match('/\.code\.(.+)\.md$/', $file, $m) ? $m[1] : $file;
     }
 
     /** 인라인 코드로 감싼다(안에 백틱이 있으면 더 긴 백틱으로). */
@@ -221,7 +239,7 @@ final class SkillExport
             if ($h === '탐지 규칙') $body = self::detection($i->detection);
             $out .= "\n## $h\n\n" . $body . "\n";
         }
-        if ($codeFiles) $out .= "\n" . sprintf(self::TEXT['code_files'], implode(' · ', array_map(fn($f) => "`$f`", $codeFiles))) . "\n";
+        if ($codeFiles) $out .= "\n" . sprintf(self::TEXT['code_files'], implode(' · ', array_map(fn($f) => "`$f` (" . Stacks::label(self::keyOf($f)) . ')', $codeFiles))) . "\n";
         return $out;
     }
 
@@ -240,8 +258,8 @@ final class SkillExport
         }
         $out = [];
         foreach ($parts as $lang => $lines) {
-            if (!preg_match('/^[a-z0-9][a-z0-9+#-]*$/', $lang)) throw new SkillExportError(basename($i->path) . ": 코드 예시 소제목 `### $lang` 은(는) 파일 이름에 쓸 수 있는 소문자 언어 이름이어야 합니다");
-            $out[$i->id . '.code.' . $lang . '.md'] = self::HEADER . sprintf(self::TEXT['code_title'], $i->id, $lang) . "\n\n" . trim(self::markCode(implode("\n", $lines)), "\n") . "\n";
+            if (!isset(Stacks::byKey()[$lang]) || !preg_match('/^[a-z0-9][a-z0-9-]*$/', $lang)) throw new SkillExportError(basename($i->path) . ": 코드 예시 소제목 `### $lang` 은(는) 파일 이름에 쓸 수 있는 소문자 언어 이름이어야 합니다");
+            $out[$i->id . '.code.' . $lang . '.md'] = self::HEADER . sprintf(self::TEXT['code_title'], $i->id, Stacks::label($lang)) . "\n\n" . trim(self::markCode(implode("\n", $lines)), "\n") . "\n";
         }
         return $out;
     }

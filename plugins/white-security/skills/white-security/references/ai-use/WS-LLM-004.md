@@ -20,4 +20,4 @@
 - **등급**: 위험: 로그인 없이 누구나 LLM 호출 API를 횟수 제한 없이 부를 수 있는 경우. 브라우저 코드에 AI API 키가 있는 경우. / 주의: 로그인은 있지만 사용자별 횟수·비용 한도가 없는 경우. / 참고: 시간 초과·재시도 상한이 없는 경우.
 - **보고 예**: `[위험] WS-LLM-004 app/routes.py:40 — /api/ask 가 로그인·횟수 제한 없이 모델을 호출 → 로그인 필수, 사용자별 하루 50회, 입력 4,000자, max_tokens 800`
 
-Code examples (read only the file for the language you are writing): `WS-LLM-004.code.python.md` · `WS-LLM-004.code.js.md`
+Code examples (read only the file for the stack you are writing): `WS-LLM-004.code.python.md` (Python) · `WS-LLM-004.code.js.md` (JavaScript)

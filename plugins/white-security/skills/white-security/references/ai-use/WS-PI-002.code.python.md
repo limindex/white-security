@@ -1,5 +1,5 @@
 <!-- generated from white-security issues; do not edit -->
-# WS-PI-002 코드 예시 — python
+# WS-PI-002 코드 예시 — Python
 
 ✗ 취약 코드 (vulnerable example — do not use)
 

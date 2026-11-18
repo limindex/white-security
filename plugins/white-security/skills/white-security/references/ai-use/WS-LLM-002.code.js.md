@@ -1,5 +1,5 @@
 <!-- generated from white-security issues; do not edit -->
-# WS-LLM-002 코드 예시 — js
+# WS-LLM-002 코드 예시 — JavaScript
 
 ✗ 취약 코드 (vulnerable example — do not use)
 

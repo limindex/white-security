@@ -20,4 +20,4 @@
 - **등급**: 위험: 남이 올린 압축을 경로 검사 없이 푸는 경우. / 주의: 경로 검사는 있지만 크기·개수 상한이 없는 경우. / 참고: 웹에서 바로 열리는 폴더에 푸는 경우. 실패 때 정리가 없는 경우.
 - **보고 예**: `[위험] WS-ZIP-001 upload/import.php:28 — getNameIndex 이름을 "uploads/$name" 으로 바로 씀 → 이름 검사로 .. · 절대 경로 거절, 개수·실제 크기 상한`
 
-Code examples (read only the file for the language you are writing): `WS-ZIP-001.code.python.md` · `WS-ZIP-001.code.php.md`
+Code examples (read only the file for the stack you are writing): `WS-ZIP-001.code.python.md` (Python) · `WS-ZIP-001.code.php.md` (PHP)

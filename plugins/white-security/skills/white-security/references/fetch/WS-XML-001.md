@@ -23,4 +23,4 @@
 - **보고 예**: `[위험] WS-XML-001 api/import.py:27 — 업로드한 XML을 resolve_entities=True 인 lxml 파서로 읽음(XXE) → defusedxml.ElementTree.fromstring(data, forbid_dtd=True) 로 바꿈`
 - **고칠 방법**: 정상 문서에 DTD가 정말 필요한지 먼저 확인하고(대부분 불필요) DTD 거절을 기본으로 둬야 한다. 보고에는 XXE면 CWE-611, 엔티티 폭탄이면 CWE-776을 함께 적어야 한다.
 
-Code examples (read only the file for the language you are writing): `WS-XML-001.code.python.md` · `WS-XML-001.code.js.md` · `WS-XML-001.code.php.md`
+Code examples (read only the file for the stack you are writing): `WS-XML-001.code.python.md` (Python) · `WS-XML-001.code.js.md` (JavaScript) · `WS-XML-001.code.php.md` (PHP)

@@ -21,4 +21,4 @@
 - **등급**: 위험: 요청·쿠키·업로드 데이터가 `pickle`·`unserialize`·`node-serialize`·안전하지 않은 YAML 로더로 들어가는 경우. / 주의: 서명은 확인하지만 여전히 `pickle`·`unserialize`를 쓰는 경우(키가 새면 바로 뚫림). / 참고: 서버 내부 데이터에 `pickle`을 쓰는 경우.
 - **보고 예**: `[위험] WS-DES-001 shop/cart.py:19 — cart 쿠키를 pickle.loads 로 되살림 → JSON + HMAC 서명 확인, 또는 쿠키에는 장바구니 ID만`
 
-Code examples (read only the file for the language you are writing): `WS-DES-001.code.python.md` · `WS-DES-001.code.js.md` · `WS-DES-001.code.php.md`
+Code examples (read only the file for the stack you are writing): `WS-DES-001.code.python.md` (Python) · `WS-DES-001.code.js.md` (JavaScript) · `WS-DES-001.code.php.md` (PHP)

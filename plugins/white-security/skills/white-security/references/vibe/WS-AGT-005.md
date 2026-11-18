@@ -21,4 +21,4 @@
 - **등급**: 위험: 쓰기·결제·발송 도구를 가진 에이전트에 멈춤 조건이 없는 경우. / 주의: 읽기 전용 에이전트에 멈춤 조건·비용 상한이 없는 경우. 무한 재시도가 있는 경우. / 참고: 멈춤 스위치나 멱등 키가 없는 경우.
 - **보고 예**: `[위험] WS-AGT-005 agent/loop.py:15 — send_email 도구를 가진 에이전트가 while True 로 돌고 상한이 없음 → 최대 20단계·5분·토큰 한도, 같은 행동 반복·연속 실패 시 중단`
 
-Code examples (read only the file for the language you are writing): `WS-AGT-005.code.python.md`
+Code examples (read only the file for the stack you are writing): `WS-AGT-005.code.python.md` (Python)

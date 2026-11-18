@@ -1,5 +1,5 @@
 <!-- generated from white-security issues; do not edit -->
-# WS-AGT-006 코드 예시 — json
+# WS-AGT-006 코드 예시 — JSON
 
 ✗ 취약 코드 (vulnerable example — do not use)
 

@@ -1,5 +1,5 @@
 <!-- generated from white-security issues; do not edit -->
-# WS-ZIP-001 코드 예시 — python
+# WS-ZIP-001 코드 예시 — Python
 
 ✗ 취약 코드 (vulnerable example — do not use)
 

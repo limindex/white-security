@@ -21,4 +21,4 @@
 - **등급**: 위험: 도구 설명에 숨은 지시가 있는 경우. 키를 넘기는 서버가 버전 없이 최신판을 받는 경우. / 주의: 버전 고정이 없는 경우. 키 값이 설정 파일에 그대로 있는 경우(WS-SEC-001도 확인). / 참고: 서버 목록·호출 기록이 없는 경우. 버전은 고정했지만 하위 의존성 잠금이 없는 경우.
 - **보고 예**: `[주의] WS-MCP-001 .mcp.json:6 — mail 서버를 버전 없이 npx -y 로 실행하고 키 값을 그대로 적음 → 확인한 버전으로 고정, 키는 ${MAIL_API_KEY} 로`
 
-Code examples (read only the file for the language you are writing): `WS-MCP-001.code.json.md` · `WS-MCP-001.code.python.md`
+Code examples (read only the file for the stack you are writing): `WS-MCP-001.code.json.md` (JSON) · `WS-MCP-001.code.python.md` (Python)

@@ -3,6 +3,7 @@
 
 When: 외부 URL·파일·XML·압축 파일을 가져와 읽거나 파싱하는 경우
 Match code signals to the lines below, then read only the matching issue file (`<ID>.md` in this folder), at most 2.
+Stacks: Python · JavaScript · PHP
 
 - `pickle.load(s)` `yaml.load(` `yaml.unsafe_load` `unserialize(` `node-serialize` `serialize-javascript` `joblib.load` `jsonpickle.decode` → WS-DES-001 Insecure Deserialization
 - `PIL.Image.open` `Image.MAX_IMAGE_PIXELS` `Imagick` `imagecreatefrom*` `getimagesize` `subprocess.` `magick` `gs -` → WS-FILE-001 Decompression Bomb · 파서 취약점

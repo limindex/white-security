@@ -1,5 +1,5 @@
 <!-- generated from white-security issues; do not edit -->
-# WS-MCP-001 코드 예시 — json
+# WS-MCP-001 코드 예시 — JSON
 
 ✗ 취약 코드 (vulnerable example — do not use)
 

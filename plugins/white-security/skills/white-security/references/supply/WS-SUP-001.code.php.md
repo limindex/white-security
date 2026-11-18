@@ -1,5 +1,5 @@
 <!-- generated from white-security issues; do not edit -->
-# WS-SUP-001 코드 예시 — php
+# WS-SUP-001 코드 예시 — PHP
 
 ✗ 취약 코드 (vulnerable example — do not use)
 

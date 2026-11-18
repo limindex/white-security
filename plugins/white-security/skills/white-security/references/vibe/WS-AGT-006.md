@@ -19,4 +19,4 @@
 - **등급**: 위험: 저장소에 커밋된 설정에 전체 허용이나 확인 건너뛰기가 있는 경우. 외부 입력(PR·이슈 글)을 읽는 CI에서 확인 없이 AI 도구가 도는 경우. / 주의: 설치·push·삭제 명령이 자동 허용인 경우. `.env` deny가 없는 경우. / 참고: 개인 설정(`settings.local.json`)에만 넓은 허용이 있는 경우.
 - **보고 예**: `[위험] WS-AGT-006 .claude/settings.json:4 — allow 에 "Bash(*)" 와 bypassPermissions 기본 모드 → 정확한 명령만 allow, push·설치·삭제는 ask, .env 는 deny, disableBypassPermissionsMode 설정`
 
-Code examples (read only the file for the language you are writing): `WS-AGT-006.code.json.md`
+Code examples (read only the file for the stack you are writing): `WS-AGT-006.code.json.md` (JSON)

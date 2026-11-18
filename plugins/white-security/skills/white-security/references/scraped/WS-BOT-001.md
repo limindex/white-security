@@ -20,4 +20,4 @@
 - **등급**: 위험: 로그인 없이 전체 데이터 내보내기나 무거운 검색이 횟수 제한 없이 열린 경우. / 주의: 횟수 제한이 `X-Forwarded-For`처럼 바꿀 수 있는 값에 기대는 경우. 페이지 크기 상한이 없는 경우. / 참고: 캐시·비용 경보가 없는 경우.
 - **보고 예**: `[주의] WS-BOT-001 api/products.py:7 — size 를 요청값 그대로 쓰고 횟수 제한이 없음 → 한 쪽 최대 100개, IP별 분당 60회, 결과 5분 캐시`
 
-Code examples (read only the file for the language you are writing): `WS-BOT-001.code.python.md` · `WS-BOT-001.code.nginx.md`
+Code examples (read only the file for the stack you are writing): `WS-BOT-001.code.python.md` (Python) · `WS-BOT-001.code.nginx.md` (Nginx)

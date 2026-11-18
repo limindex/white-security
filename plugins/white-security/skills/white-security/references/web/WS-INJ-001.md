@@ -24,4 +24,4 @@
 - **검토 주의**: 이스케이프 코드를 지적할 때 이유로 "EUC-KR 멀티바이트 우회"를 들지 않아야 하고, 연결 문자셋이 GBK·Big5·Shift_JIS·CP932일 때만 그 우회를 근거로 함께 적어야 한다(EUC-KR이어도 이어 붙이는 쿼리 자체는 지적 대상).
 - **고칠 방법**: 쿼리 모양은 그대로 두고 값만 자리표시자로 바꿔야 하고, 기존 테스트로 결과가 같은지 확인한 뒤 따옴표가 든 입력 테스트를 하나 추가해야 한다.
 
-Code examples (read only the file for the language you are writing): `WS-INJ-001.code.python.md` · `WS-INJ-001.code.js.md` · `WS-INJ-001.code.php.md`
+Code examples (read only the file for the stack you are writing): `WS-INJ-001.code.python.md` (Python) · `WS-INJ-001.code.js.md` (JavaScript) · `WS-INJ-001.code.php.md` (PHP)

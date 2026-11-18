@@ -20,4 +20,4 @@
 - **등급**: 위험: AI 답만으로 환불·결제·권한 변경이 실행되는 경우. / 주의: 정책·가격 안내가 근거 없이 고객에게 나가는 경우. / 참고: AI 표시나 근거 링크가 없는 경우.
 - **보고 예**: `[위험] WS-LLM-006 support/auto.py:33 — 모델이 정한 refund_amount 로 바로 환불 실행 → 금액은 주문·정책 규칙으로 계산하고, 규칙 밖이면 사람 확인 대기열로`
 
-Code examples (read only the file for the language you are writing): `WS-LLM-006.code.python.md`
+Code examples (read only the file for the stack you are writing): `WS-LLM-006.code.python.md` (Python)

@@ -20,4 +20,4 @@
 - **등급**: 위험: 다른 사용자·회사 문서가 검색될 수 있는 경우. / 주의: 공용 인덱스에 확인 없이 문서가 들어가는 경우. / 참고: 원본 삭제가 벡터 DB에 반영되지 않는 경우. 답에 근거가 없는 경우.
 - **보고 예**: `[위험] WS-LLM-005 rag/search.py:18 — index.query 에 tenant 필터가 없어 다른 회사 문서가 검색됨 → filter={"tenant_id": user.tenant_id} 추가, 원본 권한 재확인`
 
-Code examples (read only the file for the language you are writing): `WS-LLM-005.code.python.md`
+Code examples (read only the file for the stack you are writing): `WS-LLM-005.code.python.md` (Python)
