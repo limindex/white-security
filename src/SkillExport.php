@@ -232,21 +232,20 @@ final class SkillExport
     }
 
     /**
-     * 상시 스킬 본문의 규칙 요약(표시 포함): 묶음마다 기본 심각도 high 이슈 한 줄씩 "- <ruleLine> (WS-ID)".
+     * 상시 스킬 본문의 규칙 요약(표시 포함): 기본 심각도 high 이슈 한 줄씩 "- <ruleLine> (WS-ID)", 묶음 순서로 이어 쓴다
+     * (묶음 제목 줄은 없음 — id 접두어가 묶음을 알려 주고, 발동 1회 예산을 아낀다).
      * 상시 스킬은 이 요약만 보고 안전한 코드를 쓴다(파일 읽기 0).
      */
     public static function rules(Repository $repo): string
     {
         $out = [];
         foreach (self::groups($repo) as $g) {
-            $lines = [];
             foreach ($g['issues'] as $i) {
                 if ($i->severity !== 'high' || !$i->detection) continue;
-                $lines[] = '- ' . self::ruleLine($i) . " ({$i->id})";
+                $out[] = '- ' . self::ruleLine($i) . " ({$i->id})";
             }
-            if ($lines) $out[] = "**{$g['name']}**\n" . implode("\n", $lines);
         }
-        return self::RULES_START . "\n" . implode("\n\n", $out) . "\n" . self::RULES_END;
+        return self::RULES_START . "\n" . implode("\n", $out) . "\n" . self::RULES_END;
     }
 
     /**

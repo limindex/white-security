@@ -90,6 +90,10 @@ test('플러그인: 상시 스킬 본문 — 예산(5k토큰·150줄), 파일 �
     assert_contains('plain Korean first, ids in parentheses', $md);
     assert_true((bool)preg_match('/`보안 메모: [^`(]*[\x{AC00}-\x{D7A3}][^`(]* \(WS-[A-Z]+-\d{3}\)/u', $md), '메모 예: 쉬운 말 먼저, id 는 괄호');
     assert_contains('except auth, web and deploy', $md);
+    // U3 결정: 이번 작업 코드에만 적용, 다른 파일은 고치지 않고 메모에 한 번, 메모는 한 줄(위험이 남을 때만 두 줄), 적용한 규칙 id 만
+    foreach (['only to the code this task writes or changes', "Never edit a file the task doesn't need", 'at most one `직접 확인:` mention in the memo, no fix',
+        'one line at the end', 'only rules you applied', 'a second line only if a real 위험 remains'] as $s) assert_contains($s, $md);
+    assert_true(!str_contains($md, 'Apply matching rules in the code itself'), '옛 문장(범위 밖 수정 유발) 없음');
     $built = SkillExport::injectRules($md, SkillExport::rules(Repository::load(__DIR__ . '/..')));
     assert_true($built === $md, '규칙 요약이 원본과 다름 (php build.php 실행 필요)');
     foreach (['(WS-AUTH-002)', '`use server`', '`sk-`', '(WS-BAAS-001)', '(WS-PRV-004)', '(WS-SUP-001)'] as $s) assert_contains($s, $md);

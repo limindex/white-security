@@ -240,7 +240,7 @@ test('SkillExport: 상시 규칙 요약 — high 이슈만 한 줄씩(신호 2�
     $low = str_replace(['WS-INJ-001', 'severity: high'], ['WS-INJ-008', 'severity: low'], $fx);
     $block = SkillExport::rules(Repository::load(make_root(['WS-INJ-008-x.md' => $low])));
     assert_true(str_starts_with($block, SkillExport::RULES_START . "\n") && str_ends_with($block, SkillExport::RULES_END), '표시');
-    assert_contains('**웹 애플리케이션**', $block);
+    assert_true(!str_contains($block, '**웹 애플리케이션**'), '묶음 제목 줄 없음(예산)');
     assert_true((bool)preg_match('/^- `cursor\.execute\(` `db\.query\(` → \S.+ \(WS-INJ-001\)$/mu', $block), $block);
     assert_true(!str_contains($block, 'WS-INJ-008'), 'high 가 아니면 빠짐');
     // 점검 항목 첫 줄의 첫 문장, 코드 칸 밖 괄호(예시)는 빼고 코드 칸 속 괄호는 그대로
