@@ -26,7 +26,7 @@ create policy "notes_insert_own" on public.notes for insert
   to authenticated with check ((select auth.uid()) = user_id);
 create policy "notes_update_own" on public.notes for update
   to authenticated using ((select auth.uid()) = user_id)
-  with check ((select auth.uid()) = user_id);   -- 남의 user_id 로 바꾸기 금지
+  with check ((select auth.uid()) = user_id);   -- 생략해도 using 식이 쓰이지만 적어 두면 읽기 쉬움
 create policy "notes_delete_own" on public.notes for delete
   to authenticated using ((select auth.uid()) = user_id);
 ```
