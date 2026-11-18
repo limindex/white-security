@@ -476,8 +476,8 @@ html:not(.js) .ws-copy, html:not(.js) .ws-tabs, html:not(.js) .ws-check-status {
   transition: box-shadow var(--dur) var(--ease-out);
 }
 .ws-path:hover { box-shadow: inset 0 0 0 1px var(--ink-3); }
-.ws-path--lead { grid-row: span 2; padding: 24px 28px 24px; background: var(--sunken); }
-.ws-path-steps { list-style: none; counter-reset: step; display: grid; gap: 0; margin: auto 0 0; padding: 20px 0 0; font-size: .88rem; color: var(--ink-2); }
+.ws-path--lead { grid-row: span 2; justify-content: center; padding: 24px 28px 24px; background: var(--sunken); }
+.ws-path-steps { list-style: none; counter-reset: step; display: grid; gap: 0; margin: 24px 0 0; padding: 0; font-size: .88rem; color: var(--ink-2); }
 .ws-path-steps li { display: flex; align-items: center; gap: 12px; padding: 8px 0; box-shadow: inset 0 1px 0 var(--line-strong); counter-increment: step; line-height: 1.4; }
 .ws-path-steps li::before { content: counter(step); flex: none; display: grid; place-items: center; width: 22px; height: 22px; border-radius: var(--r-pill); background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-strong); font: 700 .72rem var(--font-display); color: var(--ink-2); }
 .ws-path-k { align-self: flex-start; font: 700 .76rem var(--font-display); color: var(--accent); letter-spacing: -0.01em; }

@@ -54,7 +54,7 @@ $tabs = ['claude' => 'Claude Code', 'cli' => 'Codex·Cursor 등 (terminal)', 'co
     $cmd('claude') . $out("✻ Welcome to Claude Code!\n\n>")) ?>
 <?= $step(2, 'Marketplace 추가', '최초 1회', Site::e($market) . ' repository를 Marketplace로 등록 · Claude Code 대화창에 입력',
     $cmd('/plugin marketplace add ' . $market) . $out('✔ Successfully added marketplace: ' . $mname)) ?>
-<?= $step(3, 'Plugin 설치', '② 완료 후 실행', Site::e($pluginName) . ' Plugin 상세 화면에서 Install 선택 · 다음 대화부터 점검 스킬 동작',
+<?= $step(3, 'Plugin 설치', '② 완료 후 실행', 'command 입력 시 설치 진행 · 다음 대화부터 점검 스킬 동작',
     $cmd('/plugin install ' . $plugin) . $out('✔ Successfully installed plugin: ' . $plugin . ' (scope: user)')) ?>
 <?= $step(4, '동작 확인', '', '프로젝트 폴더의 Claude Code 대화창에 프롬프트 또는 command 중 하나 입력 · 위험·주의·참고 등급별 보고',
     $prompt('이 프로젝트 보안 점검해 줘') . $cmd('/' . $pluginName . ':review') . $out($report)) ?>
