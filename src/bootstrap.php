@@ -7,3 +7,4 @@ require_once __DIR__ . '/Issue.php';
 require_once __DIR__ . '/Coverage.php';
 require_once __DIR__ . '/Repository.php';
 require_once __DIR__ . '/Site.php';
+require_once __DIR__ . '/SkillExport.php';

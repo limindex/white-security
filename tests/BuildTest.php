@@ -109,7 +109,7 @@ test('build: 원본 오류가 있으면 종료코드 1 이고 dist 를 만들지
 });
 
 test('build: 위험한 out 은 거부하고 지우지 않는다', function () {
-    foreach (['/', '..', '/etc', '../..', '.', '', 'src', 'issues'] as $o) {
+    foreach (['/', '..', '/etc', '../..', '.', '', 'src', 'issues', 'lib', '.superpowers', '_notes', 'assets'] as $o) {
         $root = make_root();
         file_put_contents("$root/keep.txt", 'x');
         exec(escapeshellarg(BT_PHP) . ' ' . escapeshellarg(__DIR__ . '/../build.php') . ' --root=' . escapeshellarg($root) . ' --out=' . escapeshellarg($o) . ' 2>&1', $l, $c);
@@ -131,4 +131,41 @@ test('build: 확인 안 된 표준 항목은 적용 범위에 안내가 나오�
     }
     assert_same(false, $by['agentic2026']['items'][0]['verified']);
     assert_same(true, $by['owasp2025']['items'][0]['verified']);
+});
+
+test('build: 표시 없는 비어 있지 않은 임시 폴더와 링크로 우회한 out 은 거부', function () {
+    $root = make_root();
+    mkdir("$root/lib"); file_put_contents("$root/lib/keep.txt", 'x');
+    mkdir("$root/src"); file_put_contents("$root/src/keep.txt", 'x');
+    $dir = sys_get_temp_dir() . '/ws-out-' . bin2hex(random_bytes(4));
+    mkdir($dir); file_put_contents("$dir/sentinel.txt", 'x');
+    $link = sys_get_temp_dir() . '/ws-link-' . bin2hex(random_bytes(4));
+    symlink("$root/src", $link);
+    foreach ([$dir => "$dir/sentinel.txt", $link => "$root/src/keep.txt"] as $o => $sentinel) {
+        exec(escapeshellarg(BT_PHP) . ' ' . escapeshellarg(__DIR__ . '/../build.php') . ' --root=' . escapeshellarg($root) . ' --out=' . escapeshellarg($o) . ' 2>&1', $l, $c);
+        assert_same(1, $c, $o);
+        assert_true(is_file($sentinel), "보존 $o");
+    }
+    assert_true(is_file("$root/lib/keep.txt"));
+    // 표시가 생긴 뒤에는 같은 폴더를 다시 빌드할 수 있다
+    $fresh = sys_get_temp_dir() . '/ws-out-' . bin2hex(random_bytes(4));
+    foreach ([1, 2] as $n) {
+        exec(escapeshellarg(BT_PHP) . ' ' . escapeshellarg(__DIR__ . '/../build.php') . ' --root=' . escapeshellarg($root) . ' --out=' . escapeshellarg($fresh) . ' 2>&1', $l, $c);
+        assert_same(0, $c, "빌드 $n");
+    }
+});
+
+test('SkillExport: 사라진 이슈의 생성 파일만 지우고 직접 둔 파일은 남긴다', function () {
+    $root = make_root();
+    $ref = "$root/refs";
+    SkillExport::write(Repository::load($root), $ref);
+    assert_true(is_file("$ref/web/WS-INJ-001.md"));
+    mkdir("$ref/old"); file_put_contents("$ref/old/WS-OLD-001.md", SkillExport::HEADER . "# old\n");
+    file_put_contents("$ref/web/NOTES.md", "직접 쓴 글\n");
+    unlink("$root/issues/web/WS-INJ-001-sql-injection.md");
+    SkillExport::write(Repository::load($root), $ref);
+    assert_true(!is_file("$ref/web/WS-INJ-001.md"), '사라진 이슈 파일');
+    assert_true(!is_dir("$ref/old"), '빈 폴더');
+    assert_true(is_file("$ref/web/NOTES.md"), '직접 쓴 파일');
+    assert_true(is_file("$ref/INDEX.md"));
 });

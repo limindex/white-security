@@ -15,13 +15,15 @@ final class SkillExport
     {
         $dir = rtrim($dir, '/');
         $written = [];
-        $put = function (string $rel, string $text) use ($dir, &$written): void {
+        $put = function (string $rel, string $text) use ($dir, &$written, &$keep): void {
             $path = $dir . '/' . $rel;
             if (!is_dir(dirname($path))) mkdir(dirname($path), 0777, true);
             file_put_contents($path, $text);
             $written[] = $rel;
+            $keep[$rel] = true;
         };
         $siteOnlyGroups = [];
+        $keep = [];
         foreach ($repo->groups() as $g) if ($g['site_only']) $siteOnlyGroups[$g['id']] = true;
 
         $index = self::HEADER . "# 화이트 보안 — 이슈 목록\n\n"
@@ -38,8 +40,26 @@ final class SkillExport
             }
         }
         $put('INDEX.md', $index);
+        self::prune($dir, $keep);
         sort($written);
         return $written;
+    }
+
+    /** 이번에 만들지 않은 생성 파일(머리 주석이 있는 .md)만 지우고, 빈 묶음 폴더를 치운다. */
+    private static function prune(string $dir, array $keep): void
+    {
+        if (!is_dir($dir)) return;
+        $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
+        foreach ($it as $f) {
+            $rel = substr($f->getPathname(), strlen($dir) + 1);
+            if ($f->isLink()) continue;
+            if ($f->isDir()) { @rmdir($f->getPathname()); continue; } // 비어 있을 때만 지워진다
+            if (strtolower($f->getExtension()) !== 'md' || isset($keep[$rel])) continue;
+            $h = fopen($f->getPathname(), 'r');
+            $first = $h ? fgets($h) : false;
+            if ($h) fclose($h);
+            if ($first === rtrim(self::HEADER, "\n") . "\n") unlink($f->getPathname());
+        }
     }
 
     private static function summary(Issue $i): string

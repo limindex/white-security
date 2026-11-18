@@ -5,7 +5,6 @@ declare(strict_types=1);
 if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
 
 require __DIR__ . '/src/bootstrap.php';
-require __DIR__ . '/src/SkillExport.php';
 
 function bail(string $msg): never { fwrite(STDERR, "오류: $msg\n"); exit(1); }
 
@@ -35,12 +34,16 @@ $under = fn(string $p, string $base) => str_starts_with($p, rtrim($base, '/') . 
 $probe = $out;
 while (!file_exists($probe) && $probe !== '/') $probe = dirname($probe);
 $real = realpath($probe) . substr($out, strlen($probe));
-if (!($under($real, $root) || $under($real, $tmp)) || $real === $root . '/src' || $under($real, $root . '/src') || $real === $root . '/.git' || $under($real, $root . '/.git')) {
-    bail('--out 은 프로젝트 안이나 임시 폴더 아래의 하위 폴더여야 합니다');
-}
+// 프로젝트 안이면 dist(와 그 하위)만, 프로젝트 밖이면 시스템 임시 폴더 하위만 허용한다.
+$ok = ($real === $root || $under($real, $root))
+    ? ($real === $root . '/dist' || $under($real, $root . '/dist'))
+    : $under($real, $tmp);
+if (!$ok) bail('--out 은 프로젝트의 dist 폴더 안이나 임시 폴더 아래의 하위 폴더여야 합니다');
 if ($real === $root || $under($root, $real)) bail('--out 이 프로젝트 폴더 자신이거나 그 상위 폴더입니다');
-foreach (['issues', 'data', 'templates', 'assets', 'tests', 'skills'] as $keep) {
-    if ($real === $root . '/' . $keep || $under($real, $root . '/' . $keep)) bail("--out 이 원본 폴더($keep)와 겹칩니다");
+// 비어 있지 않은 폴더는 이전 빌드가 남긴 표시 파일이 있을 때만 비운다.
+const BUILD_MARK = '.white-security-build';
+if (is_dir($real) && count(scandir($real)) > 2 && !is_file($real . '/' . BUILD_MARK)) {
+    bail('--out 폴더가 비어 있지 않고 이전 빌드 표시(' . BUILD_MARK . ')가 없어 지우지 않습니다');
 }
 
 $repo = Repository::load($root);
@@ -83,6 +86,7 @@ rrmdir($out);
 foreach ($files as $rel => $body) put($out . '/' . $rel, $body);
 // GitHub Pages 가 _ 로 시작하는 파일을 처리하지 않게 한다
 put($out . '/.nojekyll', '');
+put($out . '/' . BUILD_MARK, "생성 폴더: 다음 빌드 때 비워집니다\n");
 $assets = __DIR__ . '/assets';
 $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($assets, FilesystemIterator::SKIP_DOTS));
 $list = [];
