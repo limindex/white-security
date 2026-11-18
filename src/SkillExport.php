@@ -5,7 +5,7 @@ class SkillExportError extends RuntimeException {}
  * issues/ 원본에서 스킬 파일을 만든다. site_only 이슈·묶음은 뺀다. 스킬은 요청할 때만 도는 가벼운 검토 안내 스킬 하나(11-19 사용자 결정):
  * 판단은 모델이 자기 지식으로 하고, 스킬은 범위·놓치기 쉬운 목록·안전 규칙·보고 형식만 정한다(U3·U3b 벤치마크: 규칙 파일 절차가 읽는 범위를 좁힘).
  * - SKILL.md(SKILL_DIR): 손으로 쓰고, 빌드는 표시 사이 세 곳만 채운다 — 감시 목록(references/advisories.md 의 Watch 줄),
- *   이슈 id 목록(묶음별 `id 짧은 한국어 제목`), 보고서 링크 규칙(data/site.json origin).
+ *   이슈 id 목록(묶음별 `id 짧은 영어 업계 용어`), 보고서 링크 규칙(data/site.json origin).
  * - references/<group>/<id>.md(점검 항목·탐지 규칙) + <id>.code.<lang>.md(언어별 코드 예시): 고칠 때만 연다. 검토 중에는 읽지 않는다.
  * - 검토 에이전트(AGENT_FILE, Claude Code 의 큰 프로젝트 전용): 본문 블록을 SKILL.md 의 검토 절(REVIEWER_SECTIONS)로 만든다(어긋나지 않게).
  */
@@ -40,7 +40,7 @@ final class SkillExport
     public const HAND_FILES = ['deps.md', 'advisories.md', 'config.md'];
     /**
      * SKILL.md 전체(머리말·생성 블록 포함) 상한(estimateTokens 기준). 넘으면 빌드 실패.
-     * 정해진 내용만으로 약 4k: 이슈 id 목록 ~1.2k(84개 한국어 제목, 이슈 하나에 ~14씩 늘어남) · 놓치기 쉬운 목록 ~0.55k ·
+     * 정해진 내용만으로 약 4k: 이슈 id 목록 ~0.9k(84개 영어 업계 용어, 이슈 하나에 ~11씩 늘어남) · 놓치기 쉬운 목록 ~0.55k ·
      * 보고 형식 ~0.6k · 안전 규칙 ~0.4k · 감시 목록 ~0.25k · 범위·실행 위치·변경 목록 ~0.6k.
      * 상한은 새 이슈 몇 개분 여유만 두고, 규칙을 다시 본문에 쌓는 되돌림을 막는다
      * (옛 설계: SKILL ~2.9k + 에이전트 ~5.1k + INDEX·이슈 파일 10~27k자를 매 검토마다 읽음).
@@ -149,14 +149,18 @@ final class SkillExport
     }
 
     /**
-     * 목록에 쓰는 짧은 제목: 제목이 "업계 용어 (한국어 풀이)" 꼴이면 한국어 풀이, 괄호 안이 한국어가 아니면(`SQL 인젝션 (SQLi)`) 괄호 앞,
-     * 괄호가 없으면 제목 그대로. 목록 구분자 `;` 는 `,` 로 바꾼다.
+     * 목록에 쓰는 짧은 제목 = 영어 업계 용어(11-19 U3c: 한국어 풀이보다 토큰이 적고 모델이 바로 알아봄).
+     * 머리말 `title_en` 이 있으면 그것, 없으면 `title` 에서 괄호 묶음을 모두 뗀 앞부분(`SQL Injection (SQL 인젝션)` → `SQL Injection`,
+     * `IPI (Indirect Prompt Injection)` → `IPI`). 떼고 나서도 한국어가 남으면(영어 용어가 없는 제목) 예전처럼 한국어 풀이로 물러난다 —
+     * 실제 이슈에서는 테스트가 막으므로 그런 제목에는 `title_en` 을 넣을 것. 목록 구분자 `;` 는 `,` 로 바꾼다.
      */
     public static function shortTitle(Issue $i): string
     {
-        $t = trim($i->title);
-        if (preg_match('/^(.*?)\s*\(([^()]*)\)\s*$/u', $t, $m)) {
-            $t = preg_match('/[\x{AC00}-\x{D7A3}]/u', $m[2]) ? $m[2] : $m[1];
+        $strip = fn(string $s) => trim((string)preg_replace(['/\s*\([^()]*\)/u', '/\s{2,}/u'], ['', ' '], $s));
+        $t = $strip($i->titleEn ?? $i->title);
+        if ($t === '' || preg_match('/[\x{AC00}-\x{D7A3}]/u', $t)) {
+            $t = trim($i->title);
+            if (preg_match('/^(.*?)\s*\(([^()]*)\)\s*$/u', $t, $m)) $t = preg_match('/[\x{AC00}-\x{D7A3}]/u', $m[2]) ? $m[2] : $m[1];
         }
         return str_replace(';', ',', trim($t));
     }

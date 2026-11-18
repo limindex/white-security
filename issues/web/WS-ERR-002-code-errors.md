@@ -1,6 +1,7 @@
 ---
 id: WS-ERR-002
 title: Code Errors (Null 역참조·자원 누수·정수 오버플로)
+title_en: Null Dereference · Resource Leak · Integer Overflow
 slug: code-errors
 group: web
 severity: medium

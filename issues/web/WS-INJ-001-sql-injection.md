@@ -1,6 +1,7 @@
 ---
 id: WS-INJ-001
 title: SQL 인젝션 (SQLi)
+title_en: SQL Injection (SQLi)
 slug: sql-injection
 group: web
 severity: high

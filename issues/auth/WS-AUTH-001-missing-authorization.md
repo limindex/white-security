@@ -1,6 +1,7 @@
 ---
 id: WS-AUTH-001
 title: IDOR · 접근 제어 실패 (Broken Access Control)
+title_en: IDOR · Broken Access Control
 slug: missing-authorization
 group: auth
 severity: high

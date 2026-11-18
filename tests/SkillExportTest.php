@@ -60,20 +60,30 @@ test('SkillExport: INDEX 파일 없음(11-19 가벼운 안내) — references �
     assert_true(!is_dir("$ref/people"), 'site_only 묶음 없음');
     assert_true(!is_dir("$ref/auth"), '이슈 없는 묶음 폴더 없음');
 });
-test('SkillExport: 이슈 id 목록 — 묶음마다 한 줄 `<group>: <WS- 뺀 id> <짧은 제목>; …`, 짧은 제목은 한국어 풀이', function () {
+test('SkillExport: 이슈 id 목록 — 묶음마다 한 줄 `<group>: <WS- 뺀 id> <짧은 제목>; …`, 짧은 제목은 영어 업계 용어', function () {
     $repo = Repository::load(make_root());
     $block = SkillExport::catalogue($repo);
     assert_true(str_starts_with($block, SkillExport::IDS_START . "\n") && str_ends_with($block, SkillExport::IDS_END), '표시');
     assert_true((bool)preg_match('/^web: INJ-001 /m', $block), $block);
     assert_true(!preg_match('/^(people|auth):/m', $block), '이슈 있는 묶음만');
     assert_true(!str_contains($block, 'WS-'), 'WS- 접두어 뺌');
-    // 짧은 제목: "용어 (한국어 풀이)" → 풀이, "한국어 (약어)" → 괄호 앞, 괄호 없으면 그대로
+    // 짧은 제목: title_en 우선, 괄호 묶음은 모두 뗌. 영어가 안 남으면 한국어 풀이로 물러남(실제 이슈는 아래 테스트가 막음)
     $fx = file_get_contents(__DIR__ . '/fixtures/issues/web/WS-INJ-001-sql-injection.md');
-    $mk = fn(string $id, string $title) => Repository::load(make_root(["$id-x.md" => preg_replace('/^title: .*$/m', "title: $title", str_replace('WS-INJ-001', $id, $fx), 1)]));
+    $mk = fn(string $id, string $title, string $en = '') => Repository::load(make_root(["$id-x.md" => preg_replace('/^title: .*$/m', "title: $title" . ($en !== '' ? "\ntitle_en: $en" : ''), str_replace('WS-INJ-001', $id, $fx), 1)]));
     $pick = fn(Repository $r, string $id) => SkillExport::shortTitle(array_values(array_filter($r->all(), fn($i) => $i->id === $id))[0]);
-    assert_same('경로 조작', $pick($mk('WS-INJ-005', 'Path Traversal (경로 조작)'), 'WS-INJ-005'));
-    assert_same('SQL 인젝션', $pick($mk('WS-INJ-006', 'SQL 인젝션 (SQLi)'), 'WS-INJ-006'));
-    assert_same('XXE · Billion Laughs', $pick($mk('WS-INJ-007', 'XXE · Billion Laughs'), 'WS-INJ-007'));
+    assert_same('Path Traversal', $pick($mk('WS-INJ-005', 'Path Traversal (경로 조작)'), 'WS-INJ-005'));
+    assert_same('SQL Injection', $pick($mk('WS-INJ-006', 'SQL 인젝션 (SQLi)', 'SQL Injection (SQLi)'), 'WS-INJ-006'));
+    assert_same('XXE · Billion Laughs', $pick($mk('WS-INJ-007', 'XXE · Billion Laughs', 'XXE (XML External Entity) · Billion Laughs'), 'WS-INJ-007'));
+    assert_same('SSRF', $pick($mk('WS-INJ-008', 'SSRF (서버사이드 요청 위조)', 'SSRF (Server-Side Request Forgery)'), 'WS-INJ-008'));
+    assert_same('SQL 삽입', $pick($mk('WS-INJ-009', 'SQL 삽입 (SQLi)'), 'WS-INJ-009'), '영어 용어 없음 → 예전 방식(괄호 앞 한국어)');
+    assert_same('A, B', $pick($mk('WS-INJ-010', 'A; B (가)'), 'WS-INJ-010'), '구분자 ; → ,');
+});
+test('SkillExport: 실제 SKILL.md 이슈 id 목록에는 한국어가 없다(영어 용어가 없는 제목은 title_en 필요)', function () {
+    $s = file_get_contents(SE_ROOT . '/' . SkillExport::SKILL_DIR . '/SKILL.md');
+    $a = strpos($s, SkillExport::IDS_START); $b = strpos($s, SkillExport::IDS_END);
+    assert_true($a !== false && $b > $a, '표시');
+    $block = substr($s, $a + strlen(SkillExport::IDS_START), $b - $a - strlen(SkillExport::IDS_START));
+    assert_true(!preg_match('/[\x{AC00}-\x{D7A3}]/u', $block), '한국어가 남은 항목: ' . implode(' | ', array_filter(preg_split('/; |\n/', $block), fn($x) => preg_match('/[\x{AC00}-\x{D7A3}]/u', $x))));
 });
 test('SkillExport: 감시 목록 — advisories.md 항목마다 Watch 줄 + CVE + 만료일, 줄·항목 수 규칙 어기면 실패', function () {
     $md = "# W\n\nintro `- Watch:` not an entry\n\n## A — CVE-2025-1111 (x)\n- Published: 2025-01-01\n- Watch: `a` < 2 → 2.\n- Expires: 2027-01-31\n\n## B — CVE-2026-22222\n- Watch: `b` < 3 → 3\n- Expires: 2027-02-28\n";

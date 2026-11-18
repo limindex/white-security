@@ -1,6 +1,7 @@
 ---
 id: WS-LLM-005
 title: RAG Poisoning · 검색 권한 누락 (벡터 DB 문서 오염·남의 문서 노출)
+title_en: RAG Poisoning · Missing Retrieval Authorization
 slug: rag-access-and-poisoning
 group: ai-use
 severity: high

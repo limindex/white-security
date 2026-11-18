@@ -1,6 +1,7 @@
 ---
 id: WS-FILE-001
 title: Decompression Bomb · 파서 취약점 (남이 준 이미지·PDF·오피스 파일 처리)
+title_en: Decompression Bomb · Parser Vulnerabilities (Untrusted Images · PDF · Office Files)
 slug: untrusted-file-parsing
 group: fetch
 severity: medium
