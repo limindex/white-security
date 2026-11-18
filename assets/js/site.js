@@ -223,6 +223,16 @@
   }
 
   /* ---------- 인쇄: 접힌 구역을 모두 펼쳤다가 되돌림 ---------- */
+  /* ---------- 이슈 머리 기준 번호: 좁은 화면(760 미만)은 접어서 요약을 첫 화면에, 넓어지면 다시 펼침 ---------- */
+  function initMapsFold() {
+    var folds = document.querySelectorAll('[data-maps-fold]');
+    if (!folds.length || !window.matchMedia) return;
+    var mq = window.matchMedia('(max-width: 759.98px)');
+    var apply = function () { each(folds, function (d) { d.open = !mq.matches; }); };
+    apply();
+    if (mq.addEventListener) mq.addEventListener('change', apply);
+  }
+
   function initPrint() {
     var closed = [];
     window.addEventListener('beforeprint', function () {
@@ -563,6 +573,7 @@
   }
 
   document.addEventListener('DOMContentLoaded', function () {
+    initMapsFold();
     initWrap();
     initMenu();
     initTabs();

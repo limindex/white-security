@@ -129,3 +129,10 @@ test('탐지 규칙 화면: 한 줄 원본을 검사·등급별 하위 목록으
     assert_contains('<strong>보고 형식</strong>:', $d);
     assert_true(!str_contains($d, ' / 지적하지 않을 때'), '구분자 숨김');
 });
+
+test('이슈 머리 기준 번호: 접을 수 있는 details(기본 펼침, 요약 줄에 개수) 안에 칩 목록', function () {
+    $b = ip_body();
+    assert_true((bool)preg_match('#<details class="ws-maps-fold" open data-maps-fold>\s*<summary><span class="ws-tx">기준 번호 (\d+)개</span>.*?<ul class="ws-maps" aria-label="기준 번호">.*?</ul>\s*</details>#su', $b, $m), '접힘 구조');
+    assert_same((int)$m[1], substr_count(preg_replace('#.*<ul class="ws-maps"[^>]*>(.*?)</ul>.*#su', '$1', $b), '<li class="ws-chip"'), '개수 = 칩 수');
+    assert_contains('initMapsFold', file_get_contents(__DIR__ . '/../assets/js/site.js'));
+});

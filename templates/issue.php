@@ -53,11 +53,14 @@ if ($issue->revisions) $toc[] = ['revisions', '개정 이력'];
 <div class="ws-docinfo-wide"><dt>적용 대상</dt><dd><?= Site::t(implode(' · ', $issue->appliesTo)) ?></dd></div>
 <?php endif ?>
 </dl>
-<?php if ($maps): ?>
+<?php if ($maps): $nMaps = array_sum(array_map('count', $maps)); ?>
+<details class="ws-maps-fold" open data-maps-fold>
+<summary><span class="ws-tx">기준 번호 <?= $nMaps ?>개</span><span class="ws-fold-hint" aria-hidden="true"><span class="ws-fold-closed">펼치기</span><span class="ws-fold-open">접기</span></span></summary>
 <ul class="ws-maps" aria-label="기준 번호">
 <?php foreach ($maps as $key => $codes): foreach ($codes as $c): ?><?= Site::mapChip($key, $c) ?>
 <?php endforeach; endforeach ?>
 </ul>
+</details>
 <?php endif ?>
 <?php if ($issue->code): ?>
 <p class="ws-jump"><a href="#code">코드 예시로 이동</a></p>
