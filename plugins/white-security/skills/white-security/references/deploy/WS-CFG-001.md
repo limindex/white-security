@@ -7,7 +7,7 @@
 ## 점검 항목
 
 - 디버그 모드는 환경 변수로만 켜고, 값이 없으면 꺼진 상태여야 한다.
-- 운영 `.env`는 `APP_ENV=production`·`APP_DEBUG=false`로 두고, `.env.example`을 그대로 복사해 쓰지 않아야 한다.
+- 운영 `.env`는 `APP_DEBUG=false`로 두고, `.env.example`을 그대로 복사하지 않아야 한다.
 - Flask·Werkzeug 디버거와 개발 서버는 운영에서 쓰지 않아야 한다.
 - Django는 `DEBUG = False`와 함께 `ALLOWED_HOSTS`에 실제 도메인만 적어야 한다.
 - 운영 설치는 개발용 패키지 없이(`composer install --no-dev` 등) 해야 한다.

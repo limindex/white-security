@@ -6,7 +6,7 @@
 
 ## 점검 항목
 
-- HTML 응답에는 CSP를 넣고 `object-src 'none'`·`base-uri`·`frame-ancestors`를 정해야 한다.
+- HTML 응답의 CSP에는 `object-src`·`base-uri`·`frame-ancestors`를 정해야 한다.
 - HTTPS 사이트는 HSTS `max-age`를 1년(31536000) 이상으로 해야 한다.
 - 모든 응답에 `X-Content-Type-Options: nosniff`를 붙여야 한다.
 - `Referrer-Policy`로 주소 속 정보가 외부로 새지 않게 해야 한다.

@@ -13,4 +13,7 @@ Stacks: Python · FastAPI · Django · Flask · JavaScript · Next.js · PHP · 
 - `MYSQL_ROOT_PASSWORD` `POSTGRES_PASSWORD` `POSTGRES_HOST_AUTH_METHOD` `createsuperuser` `db:seed --force` → WS-CFG-006 Default Credentials
 - `privileged: true` `docker.sock` `COPY . .` `USER root` `runAsNonRoot` `allowPrivilegeEscalation` → WS-CFG-007 Insecure Container
 - `RateLimiter::for(` `throttleApi(` `throttle:` `slowapi` `limit_req_zone` `client_max_body_size` → WS-CFG-008 Missing Rate Limiting
+- `openapi_url` `docs_url` `introspection` `/api/v1` `route:list` → WS-CFG-009 Shadow · Zombie API
+- `verify=False` `rejectUnauthorized: false` `NODE_TLS_REJECT_UNAUTHORIZED` `withoutVerifying(` `MODE_ECB` → WS-CRY-001 Weak Cryptography
+- `user_login_failed` `Events\Failed` `Log::channel(` `LOGGING = {` → WS-LOG-001 Security Logging & Alerting Failures
 - `.env*` `config.*` `settings.py` `application.yml` `docker-compose.yml` `.mcp.json` `import.meta.env.VITE_*` `process.env.NEXT_PUBLIC_*` → WS-SEC-001 Hardcoded Secrets

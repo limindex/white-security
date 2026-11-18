@@ -66,7 +66,7 @@ Dockerfile·docker-compose·Kubernetes 설정에서 root 실행, 이미지에 �
 - 빌드에 필요한 비밀값은 `RUN --mount=type=secret`으로만 써야 한다.
 - `.dockerignore`에 `.git`·`.env*`·키 파일을 넣어야 한다.
 - `privileged: true`·`docker.sock` 마운트·호스트 네트워크는 쓰지 않아야 한다.
-- Kubernetes는 `runAsNonRoot: true`·`allowPrivilegeEscalation: false`를 둬야 한다.
+- Kubernetes는 `runAsNonRoot`·`allowPrivilegeEscalation: false`를 둬야 한다.
 
 ## 탐지 규칙
 
