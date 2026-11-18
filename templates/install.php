@@ -79,7 +79,7 @@ $tabs = ['claude' => 'Claude Code', 'cli' => 'Codex·Cursor 등 (terminal)', 'co
 <?= $step(1, 'repository 내려받기', '', 'terminal에서 실행 · 현재 폴더 아래에 ' . Site::e($pluginName) . ' 폴더 생성',
     $cmd('git clone https://github.com/' . $repo . '.git') . $out("Cloning into '" . basename($repo) . "'...")) ?>
 <?= $step(2, '스킬 폴더 복사', '① 완료 후 실행', 'Claude Code 개인 skills 폴더로 복사 · 다른 도구는 그 도구의 skills 폴더',
-    $cmd('cp -r ' . basename($repo) . '/skills/' . $pluginName . ' ~/.claude/skills/')) ?>
+    $cmd('cp -r ' . basename($repo) . '/plugins/' . $pluginName . '/skills/' . $pluginName . ' ~/.claude/skills/')) ?>
 <?= $step(3, '동작 확인', '', '코딩 도구를 다시 연 뒤 대화창에 요청 · 위험·주의·참고 등급별 보고',
     $prompt('이 프로젝트 보안 점검해 줘') . $out($report)) ?>
 </ol>

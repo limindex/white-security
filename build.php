@@ -1,5 +1,5 @@
 <?php
-// 정적 사이트(dist/)와 스킬 참고 파일을 만든다. 사용: php build.php [--out=dist] [--base=/white-security/] [--today=YYYY-MM-DD] [--origin=https://도메인]
+// 정적 사이트(dist/)와 스킬 참고 파일(plugins/white-security/skills/white-security/references, SKILL.md 라우팅 표)을 만든다. 사용: php build.php [--out=dist] [--base=/white-security/] [--today=YYYY-MM-DD] [--origin=https://도메인]
 // --origin 이 없으면 data/site.json 의 origin 을 쓰고, 둘 다 비어 있으면 sitemap.xml·canonical 을 만들지 않는다.
 // --root 는 테스트용(원본 폴더 지정). 같은 입력이면 같은 출력이 나온다.
 declare(strict_types=1);
@@ -53,6 +53,15 @@ if ($repo->errors()) {
     fwrite(STDERR, "원본 오류가 있어 빌드하지 않습니다:\n");
     foreach ($repo->errors() as $e) fwrite(STDERR, "  - $e\n");
     exit(1);
+}
+// 스킬 파일도 먼저 만들어 본다(실패하면 dist·references 를 건드리지 않는다).
+$skillDir = $root . '/' . SkillExport::SKILL_DIR;
+$skillMdPath = $skillDir . '/SKILL.md';
+try {
+    $skillFiles = SkillExport::render($repo);
+    $skillMd = is_file($skillMdPath) ? SkillExport::injectRouting((string)file_get_contents($skillMdPath), SkillExport::routing($repo)) : null;
+} catch (SkillExportError $e) {
+    bail($e->getMessage());
 }
 $site = new Site($repo, $opt['base'], 'static', $today, $opt['origin']);
 $origin = $site->setting('origin');
@@ -110,7 +119,9 @@ foreach ($it as $f) if ($f->isFile()) $list[] = $f->getPathname();
 sort($list);
 foreach ($list as $f) put($out . '/assets/' . substr($f, strlen($assets) + 1), (string)file_get_contents($f));
 
-$refs = SkillExport::write($repo, $root . '/skills/white-security/references');
+$refs = SkillExport::write($repo, $skillDir . '/references', $skillFiles);
+if ($skillMd !== null) file_put_contents($skillMdPath, $skillMd);
 echo count($files) . "개 쪽과 API, assets " . count($list) . "개를 {$opt['out']} 에 만들었습니다.\n";
 if ($origin === '') echo "origin 이 비어 sitemap.xml 은 만들지 않았습니다 (--origin=https://도메인 또는 data/site.json).\n";
-echo "스킬 참고 파일 " . count($refs) . "개를 skills/white-security/references 에 만들었습니다.\n";
+echo "스킬 참고 파일 " . count($refs) . "개를 " . SkillExport::SKILL_DIR . "/references 에 만들었습니다.\n";
+echo $skillMd !== null ? "SKILL.md 라우팅 표를 갱신했습니다.\n" : "SKILL.md 가 없어 라우팅 표는 넣지 않았습니다.\n";

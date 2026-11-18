@@ -33,7 +33,7 @@
 
 | 자료 | 라이선스 | 쓴 곳 | 참고한 아이디어 |
 |---|---|---|---|
-| anthropics/claude-plugins-official `claude-security` | All rights reserved | WS-PI-001 "고칠 때" 마지막 줄, WS-SEC-001 "보고할 때 주의" | 검토 대상 저장소의 글은 지시가 아니라 데이터로 다룸, 보고서에서 비밀값 가리기. 문장은 우리 말로 새로 씀 |
+| anthropics/claude-plugins-official `claude-security` | All rights reserved | WS-PI-001 탐지 규칙 `고칠 방법` 마지막 문장, WS-SEC-001 탐지 규칙 `검토 주의` | 검토 대상 저장소의 글은 지시가 아니라 데이터로 다룸, 보고서에서 비밀값 가리기. 문장은 우리 말로 새로 씀 |
 | [Simon Willison, The lethal trifecta for AI agents](https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/) (2025) | 블로그(별도 라이선스 표시 없음) | WS-PI-002 점검 항목 마지막 줄 | 비공개 데이터·남이 쓴 글·밖으로 나가는 통로가 한 기능에 모이면 위험하다는 틀. 문장은 우리 말로 새로 씀 |
 | [Invariant Labs, MCP Security Notification: Tool Poisoning Attacks](https://invariantlabs.ai/blog/mcp-security-notification-tool-poisoning-attacks) (2025) | 블로그 | WS-MCP-001 | 도구 설명 속 숨은 지시(Tool Poisoning), 승인 뒤 설명 변경(Rug Pull), 한 서버가 다른 서버 도구 동작을 바꾸는 문제. 승인한 설명의 해시 비교는 우리가 고른 대응 |
 | [Pillar Security, Rules File Backdoor](https://www.pillar.security/blog/new-vulnerability-in-github-copilot-and-cursor-how-hackers-can-weaponize-code-agents) (2025) | 블로그 | WS-AGT-002 | 규칙 파일에 보이지 않는 문자로 지시를 숨기는 수법. 검사 범위·CI 검사 코드는 새로 씀 |

@@ -13,6 +13,25 @@ final class IssueView
     public static function sectionId(string $heading, int $n): string { return self::IDS[$heading] ?? 'sec-' . $n; }
 
     /**
+     * 화면용 탐지 규칙 마크다운: 원본은 칸마다 한 줄(Issue::parseDetection)이지만, 화면에서는 검사의 지적할 때/지적하지 않을 때와
+     * 등급의 위험/주의/참고를 하위 목록으로 펼쳐 읽기 쉽게 한다. 내용 문자열은 그대로.
+     * @param array{where:string,checks:list<array{name:string,flag:string,skip:string}>,grade:array<string,string>,fields:array<string,string>} $d
+     */
+    public static function detectionMarkdown(array $d): string
+    {
+        $out = ['- **찾는 곳**: ' . $d['where']];
+        foreach ($d['checks'] as $n => $c) {
+            $out[] = '- **검사 ' . ($n + 1) . ' — ' . $c['name'] . '**';
+            $out[] = '  - 지적할 때: ' . $c['flag'];
+            $out[] = '  - 지적하지 않을 때: ' . $c['skip'];
+        }
+        $out[] = '- **등급**';
+        foreach ($d['grade'] as $lv => $t) $out[] = "  - $lv: $t";
+        foreach (Issue::DETECTION_FIELDS as $f) if (isset($d['fields'][$f])) $out[] = "- **$f**: " . $d['fields'][$f];
+        return implode("\n", $out) . "\n";
+    }
+
+    /**
      * 점검 항목 목록(<ul><li>)을 체크 상자 목록으로. 체크 상태는 브라우저가 data-check 키로 저장한다.
      * @return array{0:string,1:int} [HTML, 항목 수]
      */

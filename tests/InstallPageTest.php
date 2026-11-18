@@ -60,3 +60,9 @@ test('용어: 개발 용어·고유명사는 원문, 번역어 없음(전 페이
     $i = inst_body();
     foreach (['Marketplace', 'Plugin', 'terminal', 'repository'] as $w) assert_contains($w, $i);
 });
+
+test('설치(직접 복사): 스킬 폴더 경로는 plugins/white-security/skills/white-security (SkillExport::SKILL_DIR)', function () {
+    $b = inst_body();
+    assert_true((bool)preg_match('#<section[^>]*id="inst-copy"[^>]*>(.*?)</section>#s', $b, $m), '직접 복사 판');
+    assert_contains('cp -r white-security/' . SkillExport::SKILL_DIR . ' ~/.claude/skills/', html_entity_decode($m[1]));
+});

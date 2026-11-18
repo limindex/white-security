@@ -59,29 +59,19 @@ test('build: dist 안 링크가 전부 dist 안 파일로 풀린다', function (
     assert_true($n > 20, "링크 $n 개");
 });
 
-test('build: 스킬 references — 장면 절 없음·site_only 제외·INDEX', function () {
+test('build: 스킬 references — 플러그인 폴더에 묶음별 INDEX·이슈 파일, site_only 제외, 전체 INDEX 없음', function () {
     [$code, $out, $root] = bt_build();
     assert_same(0, $code, $out);
-    $ref = "$root/skills/white-security/references";
+    $ref = "$root/" . SkillExport::SKILL_DIR . '/references';
+    assert_true(!is_dir("$root/skills"), '옛 위치에 만들지 않음');
     $f = file_get_contents("$ref/web/WS-INJ-001.md");
-    assert_true(str_starts_with($f, "<!-- 생성 파일: issues/ 원본을 고치세요 -->\n"), '머리 주석');
-    assert_contains("# WS-INJ-001 SQL 삽입\n", $f);
-    assert_contains('위험 · OWASP A05', $f);
-    assert_contains('CWE-89', $f);
-    assert_contains('입력데이터 검증 및 표현-1', $f);
+    assert_true(str_starts_with($f, SkillExport::HEADER), '머리 주석');
     foreach (['## 점검 항목', '## 탐지 규칙', '## 코드 예시', 'cur.execute("SELECT * FROM u WHERE id=%s", (uid,))'] as $s) assert_contains($s, $f);
     foreach (['## 발생 상황', '## 요약', '## 위험 배경', '## 대응 방법'] as $s) assert_true(!str_contains($f, $s), $s);
     assert_true(!is_file("$ref/people/WS-PPL-001.md") && !is_dir("$ref/people"), 'site_only 제외');
-    $idx = file_get_contents("$ref/INDEX.md");
-    assert_true(str_starts_with($idx, '<!-- 생성 파일'), 'INDEX 머리');
-    assert_contains('[WS-INJ-001 SQL 삽입](web/WS-INJ-001.md) — ', $idx);
-    assert_contains("## 웹 애플리케이션\n\n언제 읽나: 입력을 받아 DB·화면·파일·명령으로 넘기는 웹 기능\n", $idx);
-    assert_true(!str_contains($idx, 'WS-PPL-001'), 'INDEX 에 site_only 없음');
-    assert_true(!str_contains($idx, '사용자 보안'), 'site_only 묶음 제외');
-    // INDEX 링크가 실제 파일로 풀린다
-    preg_match_all('/\]\(([^)]+\.md)\)/', $idx, $m);
-    assert_true(count($m[1]) >= 1);
-    foreach ($m[1] as $l) assert_true(is_file("$ref/$l"), $l);
+    assert_true(is_file("$ref/web/INDEX.md") && !is_file("$ref/INDEX.md"), '묶음 INDEX 만');
+    assert_contains('plugins/white-security/skills/white-security/references', $out);
+    assert_contains('SKILL.md', $out); // SKILL.md 가 없으면 라우팅 표를 넣지 않았다고 알린다
 });
 
 test('build: 같은 입력이면 출력이 바이트까지 같다', function () {
@@ -89,7 +79,7 @@ test('build: 같은 입력이면 출력이 바이트까지 같다', function () 
     assert_same(0, $c1, $o1);
     $hash = function (string $root): array {
         $h = [];
-        foreach ([$root . '/dist', $root . '/skills'] as $base) {
+        foreach ([$root . '/dist', $root . '/plugins'] as $base) {
             $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($base, FilesystemIterator::SKIP_DOTS));
             foreach ($it as $f) if ($f->isFile()) $h[substr($f->getPathname(), strlen($root))] = md5_file($f->getPathname());
         }
@@ -168,16 +158,16 @@ test('SkillExport: 사라진 이슈의 생성 파일만 지우고 직접 둔 파
     assert_true(!is_file("$ref/web/WS-INJ-001.md"), '사라진 이슈 파일');
     assert_true(!is_dir("$ref/old"), '빈 폴더');
     assert_true(is_file("$ref/web/NOTES.md"), '직접 쓴 파일');
-    assert_true(is_file("$ref/INDEX.md"));
+    assert_true(!is_file("$ref/web/INDEX.md"), '이슈가 없어진 묶음의 INDEX');
 });
 
 test('SkillExport: groups.json 에 when 이 없으면 INDEX 는 기본 문장을 쓴다', function () {
     $root = make_root();
-    file_put_contents($root . '/data/groups.json', '[{"id":"web","name":"웹 기본","order":5},{"id":"auth","name":"로그인·권한","order":6,"when":"  "}]');
-    $ref = "$root/skills/white-security/references";
+    file_put_contents($root . '/data/groups.json', '[{"id":"web","name":"웹 기본","order":5,"route":"sql"},{"id":"auth","name":"로그인·권한","order":6,"when":"  "}]');
+    $ref = "$root/" . SkillExport::SKILL_DIR . '/references';
     SkillExport::write(Repository::load($root), $ref);
-    $idx = file_get_contents("$ref/INDEX.md");
-    assert_contains("언제 읽나: 「웹 기본」 상황에서 코드를 쓰거나 고칠 때\n", $idx);
+    $idx = file_get_contents("$ref/web/INDEX.md");
+    assert_contains("When: 「웹 기본」 상황에서 코드를 쓰거나 고칠 때\n", $idx);
     assert_same(null, Repository::load($root)->groups()[1]['when']);
 });
 

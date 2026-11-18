@@ -111,3 +111,14 @@ test('프롬프트 카드: 줄마다 블록 span, 줄바꿈 문자 유지(복사
     $h = IssueView::promptLines("a줄\nb줄)은 끝\n");
     assert_same("<span class=\"ws-pl\">a줄</span>\n<span class=\"ws-pl\"><span class=\"ws-nw\">b줄)은</span> 끝</span>", $h);
 });
+
+test('탐지 규칙 화면: 한 줄 원본을 검사·등급별 하위 목록으로 펼쳐 보인다(원본·스킬 파일은 한 줄 그대로)', function () {
+    $b = ip_body();
+    assert_true((bool)preg_match('#<section class="ws-sec ws-fold" id="detection">(.*?)</section>#s', $b, $m), '탐지 규칙 절');
+    $d = $m[1];
+    assert_true((bool)preg_match('#<li><strong>검사 1 — 값 이어 붙이기</strong>\s*<ul>\s*<li>지적할 때: 요청 값을 쿼리 문자열에 이어 붙이는 경우.</li>\s*<li>지적하지 않을 때: 매개변수 바인딩을 쓰는 경우.</li>#su', $d), '검사 하위 목록');
+    assert_true((bool)preg_match('#<li><strong>등급</strong>\s*<ul>\s*<li>위험: .*?</li>\s*<li>주의: .*?</li>\s*<li>참고: DB 오류 원문 노출.</li>#su', $d), '등급 하위 목록');
+    assert_contains('<strong>찾는 곳</strong>: 쿼리 조립 지점', $d);
+    assert_contains('<strong>보고 형식</strong>:', $d);
+    assert_true(!str_contains($d, ' / 지적하지 않을 때'), '구분자 숨김');
+});

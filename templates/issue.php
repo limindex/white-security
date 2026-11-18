@@ -22,7 +22,7 @@ foreach ($issue->sections as $heading => $md) {
     $n++;
     $id = IssueView::sectionId($heading, $n);
     $toc[] = [$id, $heading];
-    $html = Markdown::render($md);
+    $html = Markdown::render($heading === '탐지 규칙' && $issue->detection !== null ? IssueView::detectionMarkdown($issue->detection) : $md);
     $html = IssueView::blocks($html, $heading === '대응 방법' ? '프롬프트' : '예시');
     if (in_array($heading, IssueView::FOLDED, true)) { $body .= $fold($id, $heading, $html); continue; }
     $extra = '';

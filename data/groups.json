@@ -1,12 +1,12 @@
 [
-  {"id": "ai-use", "name": "AI 활용", "order": 1, "site_only": false, "when": "AI에 문서·웹페이지·메일을 읽히거나 요약시키는 기능, AI API 호출, 문서 검색 답변(RAG), AI 답변을 화면·판단에 쓰는 기능"},
-  {"id": "vibe", "name": "AI 코딩 도구", "order": 2, "site_only": false, "when": "AI 코딩 도구에 코드 작성·설정 변경·명령 실행을 맡기는 경우"},
-  {"id": "fetch", "name": "외부 데이터 수집·처리", "order": 3, "site_only": false, "when": "외부 URL·파일·XML·압축 파일을 가져와 읽거나 파싱하는 경우"},
-  {"id": "scraped", "name": "자동 수집 대응", "order": 4, "site_only": false, "when": "내 사이트·API가 자동 수집(크롤링) 대상이 되는 경우"},
-  {"id": "web", "name": "웹 애플리케이션", "order": 5, "site_only": false, "when": "입력을 받아 DB·화면·파일·명령으로 넘기는 웹 기능"},
-  {"id": "auth", "name": "인증·인가", "order": 6, "site_only": false, "when": "로그인·권한·본인 데이터 접근 기능"},
-  {"id": "deploy", "name": "설정·배포", "order": 7, "site_only": false, "when": "설정 파일·키·서버·컨테이너·배포 환경"},
-  {"id": "data", "name": "개인정보 보호", "order": 8, "site_only": false, "when": "개인정보의 저장·조회·로그·내보내기"},
-  {"id": "supply", "name": "소프트웨어 공급망", "order": 9, "site_only": false, "when": "패키지 설치·업데이트·외부 코드와 모델 사용"},
+  {"id": "ai-use", "name": "AI 활용", "order": 1, "site_only": false, "when": "AI에 문서·웹페이지·메일을 읽히거나 요약시키는 기능, AI API 호출, 문서 검색 답변(RAG), AI 답변을 화면·판단에 쓰는 기능", "route": "LLM/AI API calls (openai, anthropic, gemini), prompts and system messages, RAG/vector search, rendering or executing model output, AI endpoints without limits"},
+  {"id": "vibe", "name": "AI 코딩 도구", "order": 2, "site_only": false, "when": "AI 코딩 도구에 코드 작성·설정 변경·명령 실행을 맡기는 경우", "route": "agent tools and tool_calls, MCP config (.mcp.json), agent memory and loops, CLAUDE.md/AGENTS.md/.cursorrules, .claude/settings.json permissions"},
+  {"id": "fetch", "name": "외부 데이터 수집·처리", "order": 3, "site_only": false, "when": "외부 URL·파일·XML·압축 파일을 가져와 읽거나 파싱하는 경우", "route": "server-side URL fetch (requests, fetch, axios, curl), XML parsing, zip/tar extraction, pickle/yaml.load/unserialize, image/PDF/office file processing"},
+  {"id": "scraped", "name": "자동 수집 대응", "order": 4, "site_only": false, "when": "내 사이트·API가 자동 수집(크롤링) 대상이 되는 경우", "route": "public list, search and download endpoints, page size params (limit, per_page), rate limiting, X-Forwarded-For"},
+  {"id": "web", "name": "웹 애플리케이션", "order": 5, "site_only": false, "when": "입력을 받아 DB·화면·파일·명령으로 넘기는 웹 기능", "route": "SQL built from strings, raw queries (execute, query, whereRaw, knex.raw), ORDER BY or column names from request"},
+  {"id": "auth", "name": "인증·인가", "order": 6, "site_only": false, "when": "로그인·권한·본인 데이터 접근 기능", "route": "routes loading records by id, admin routes, role/is_admin checks, price/amount from request, mass assignment (fill, update)"},
+  {"id": "deploy", "name": "설정·배포", "order": 7, "site_only": false, "when": "설정 파일·키·서버·컨테이너·배포 환경", "route": ".env and config files, docker-compose, CI workflows, API keys/tokens/passwords in code, VITE_/NEXT_PUBLIC_ env vars, secrets in logs"},
+  {"id": "data", "name": "개인정보 보호", "order": 8, "site_only": false, "when": "개인정보의 저장·조회·로그·내보내기", "route": "personal data storage, queries, logs and exports (names, phone numbers, emails, national ID numbers)"},
+  {"id": "supply", "name": "소프트웨어 공급망", "order": 9, "site_only": false, "when": "패키지 설치·업데이트·외부 코드와 모델 사용", "route": "adding dependencies (package.json, requirements.txt, pyproject.toml, composer.json), lockfiles, package install commands, new imports"},
   {"id": "people", "name": "사용자 보안", "order": 10, "site_only": true, "when": "사람을 노리는 사기·계정 탈취 (사이트 전용)"}
 ]
