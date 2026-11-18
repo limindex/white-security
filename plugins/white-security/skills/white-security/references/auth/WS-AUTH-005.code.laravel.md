@@ -34,7 +34,7 @@ public function register(Request $request)
     $cert = session()->pull('cert');                                 // 한 번 쓰면 사라진다
     abort_if(! $cert || now()->timestamp - $cert['at'] > 600, 403);  // 10분 안에만
     abort_if(User::where('di', $cert['di'])->exists(), 409);        // 같은 사람 중복 가입 차단
-    $data = $request->validate(['password' => 'required|string|min:8']);
+    $data = $request->validate(['password' => 'required|string|min:15|max:128']);  // WS-PWD-001 기준
     User::create(['name' => $cert['name'], 'phone' => $cert['phone'], 'birth' => $cert['birth'],
                   'di' => $cert['di'], 'password' => Hash::make($data['password'])]);  // 값은 세션에서
 }

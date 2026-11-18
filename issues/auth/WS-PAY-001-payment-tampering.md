@@ -60,7 +60,7 @@ sources:
 
 - 결제 금액·상품·수량·할인은 서버의 주문·상품 데이터로 계산해야 한다.
 - 결제 완료는 PG 승인·조회 결과의 주문번호·금액·통화·상태를 주문과 대조한 뒤 처리해야 한다.
-- 웹훅은 원문 본문으로 서명을 확인하고, 내용은 조회 API로 다시 확인해야 한다.
+- 웹훅은 원문 본문으로 서명을 확인해야 하고, 서명이 없거나 PG 문서가 권하면 조회 API로 다시 확인해야 한다.
 - 같은 결제 알림은 한 번만 처리해야 한다(결제 ID 유니크 제약·상태 전이 검사).
 - 취소·환불은 본인 주문인지, 누적 환불액이 결제액을 넘지 않는지 확인해야 한다.
 - PG 비밀 키·웹훅 서명 키는 서버에만 두고, 테스트 키와 운영 키를 나눠야 한다.
@@ -109,7 +109,8 @@ public function return(Request $request)
             'amount' => $order->total_amount,              // 금액은 서버의 주문 기록
         ])->throw()->json();
     abort_unless(($res['order_id'] ?? null) === (string) $order->id
-        && (int) ($res['amount'] ?? -1) === $order->total_amount && ($res['status'] ?? '') === 'paid', 409);
+        && (int) ($res['amount'] ?? -1) === (int) $order->total_amount    // DB 값이 문자열로 올 수 있어 정수로 맞춘다
+        && ($res['currency'] ?? '') === $order->currency && ($res['status'] ?? '') === 'paid', 409);
     $done = Order::where('id', $order->id)->where('status', 'pending')       // 대기 상태일 때만 → 한 번만
         ->update(['status' => 'paid', 'payment_id' => $res['payment_id']]);  // payment_id 는 unique 컬럼
     abort_if($done === 0, 409);
@@ -185,13 +186,16 @@ async def pg_webhook(request: Request):
     raw = await request.body()                         # 파싱 전 원문으로 서명 확인
     ts = request.headers.get("x-pg-timestamp", "")     # 헤더 이름·서명 방식은 PG 문서대로
     sig = request.headers.get("x-pg-signature", "")
-    expected = hmac.new(PG_WEBHOOK_SECRET, ts.encode() + b"." + raw, hashlib.sha256).hexdigest()
+    expected = hmac.new(PG_WEBHOOK_SECRET, ts.encode() + b"." + raw, hashlib.sha256).hexdigest()  # 키는 bytes(환경 변수 .encode())
     if not ts.isdigit() or abs(time.time() - int(ts)) > 300 or not hmac.compare_digest(expected, sig):
         raise HTTPException(400)                       # 위조·오래된 알림 거절
     event = json.loads(raw)
     payment = pg_client.get_payment(event["payment_id"])  # 알림 내용 대신 조회 API 로 다시 확인
     order = get_order(payment["order_id"])
-    if payment["status"] == "paid" and payment["amount"] == order.total_amount:
+    if order is None:
+        return {"ok": True}                            # 모르는 주문은 처리하지 않음(기록만)
+    if (payment["status"] == "paid" and payment["amount"] == order.total_amount
+            and payment["currency"] == order.currency):
         mark_paid_once(order.id, payment["payment_id"])   # 대기 상태일 때만 갱신 + payment_id 유니크
     return {"ok": True}
 ```

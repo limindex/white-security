@@ -21,13 +21,8 @@ export const { handlers, auth } = NextAuth({
 // auth.ts (Auth.js)
 export const { handlers, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),            // 계정은 (provider, providerAccountId)로 연결
-  providers: [Google],                       // 기본 checks(PKCE·state) 그대로
-  callbacks: {
-    redirect({ url, baseUrl }) {             // 같은 사이트 안 주소만
-      if (url.startsWith("/") && !url.startsWith("//")) return `${baseUrl}${url}`;
-      return new URL(url).origin === baseUrl ? url : baseUrl;
-    },
-  },
+  providers: [Google],                       // 기본 checks(PKCE) 그대로, 끄지 않기
+  // redirect 콜백은 덮어쓰지 않는다(기본값이 같은 사이트 안 주소만 허용)
 });
 // 제공자 콘솔의 Redirect URI 는 https://example.com/api/auth/callback/google 하나만 정확히 등록
 ```

@@ -17,7 +17,9 @@ Route::middleware('auth')->prefix('admin')->group(base_path('routes/admin.php'))
 ✓ 안전 코드 (safe example)
 
 ```php
-// app/Providers/AppServiceProvider.php — Telescope 는 로컬에서만 등록(공식 문서의 로컬 전용 설치)
+// 공식 문서의 로컬 전용 설치: ① bootstrap/providers.php 에서 App\Providers\TelescopeServiceProvider 줄 삭제
+// ② composer.json "extra": {"laravel": {"dont-discover": ["laravel/telescope"]}}  ③ 운영 .env 는 APP_ENV=production
+// app/Providers/AppServiceProvider.php
 public function register(): void
 {
     if ($this->app->environment('local') && class_exists(\Laravel\Telescope\TelescopeServiceProvider::class)) {
@@ -29,6 +31,12 @@ public function register(): void
 public function boot(): void
 {
     Gate::define('access-admin', fn (User $user) => $user->is_admin);  // DB 에 저장된 역할
+}
+
+// app/Providers/TelescopeServiceProvider.php — 로컬 밖에서 켜질 때를 대비해 허용 목록만
+protected function gate(): void
+{
+    Gate::define('viewTelescope', fn (User $user) => in_array($user->email, ['ops@example.com'], true));
 }
 
 // routes/web.php — 역할 확인 + 중요 화면 진입 전 비밀번호 재확인

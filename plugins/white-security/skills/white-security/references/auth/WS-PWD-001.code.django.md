@@ -19,10 +19,13 @@ user = User.objects.create_user(username=username, password=pw)  # 규칙 확인
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.Argon2PasswordHasher",   # pip install "django[argon2]"
     "django.contrib.auth.hashers.PBKDF2PasswordHasher",
+    # 옛 MD5 해시가 남아 있으면 이전 기간에만 맨 끝에 MD5PasswordHasher 를 두어 로그인 때 새 방식으로 바꾸고,
+    # 로그인하지 않는 계정은 Django 문서의 감싼 해셔(wrapped hasher) 방식으로 한 번에 옮긴 뒤 MD5 를 뺀다
 ]
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator", "OPTIONS": {"min_length": 10}},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+     "OPTIONS": {"min_length": 15}},                     # 2단계 인증과 함께 쓰면 8자까지 허용
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},  # 흔한 비밀번호 목록
 ]
 

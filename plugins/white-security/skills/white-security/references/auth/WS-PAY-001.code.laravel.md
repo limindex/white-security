@@ -29,7 +29,8 @@ public function return(Request $request)
             'amount' => $order->total_amount,              // 금액은 서버의 주문 기록
         ])->throw()->json();
     abort_unless(($res['order_id'] ?? null) === (string) $order->id
-        && (int) ($res['amount'] ?? -1) === $order->total_amount && ($res['status'] ?? '') === 'paid', 409);
+        && (int) ($res['amount'] ?? -1) === (int) $order->total_amount    // DB 값이 문자열로 올 수 있어 정수로 맞춘다
+        && ($res['currency'] ?? '') === $order->currency && ($res['status'] ?? '') === 'paid', 409);
     $done = Order::where('id', $order->id)->where('status', 'pending')       // 대기 상태일 때만 → 한 번만
         ->update(['status' => 'paid', 'payment_id' => $res['payment_id']]);  // payment_id 는 unique 컬럼
     abort_if($done === 0, 409);

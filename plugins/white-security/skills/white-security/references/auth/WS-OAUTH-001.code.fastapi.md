@@ -16,6 +16,7 @@ def app_login(body: TokenIn, db: Session = Depends(get_db)):
 ✓ 안전 코드 (safe example)
 
 ```python
+import hmac
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 
@@ -25,7 +26,8 @@ def app_login(body: IdTokenIn, db: Session = Depends(get_db)):
         claims = id_token.verify_oauth2_token(body.id_token, google_requests.Request(), GOOGLE_CLIENT_ID)
     except ValueError:
         raise HTTPException(401)
-    if claims.get("nonce") != pop_login_nonce(body.login_id):  # 로그인 시작 때 발급한 1회용 값
+    expected = pop_login_nonce(body.login_id)              # 로그인 시작 때 발급한 1회용 값(꺼내면 삭제)
+    if not expected or not hmac.compare_digest(claims.get("nonce", ""), expected):
         raise HTTPException(401)
     account = db.query(SocialAccount).filter_by(provider="google", sub=claims["sub"]).first()
     if account is None:

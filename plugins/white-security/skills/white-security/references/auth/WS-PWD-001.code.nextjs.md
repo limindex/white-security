@@ -22,7 +22,8 @@ import { hash, verify } from "@node-rs/argon2";
 const ARGON = { memoryCost: 19456, timeCost: 2, parallelism: 1 };  // OWASP 최소값(19MiB·2회·1), 기본 Argon2id
 
 // 가입
-if (password.length < 10 || password.length > 128) return Response.json({ error: "10~128자" }, { status: 400 });
+// 15자 이상(2단계 인증과 함께 쓰면 8자까지 허용)
+if (password.length < 15 || password.length > 128) return Response.json({ error: "15~128자" }, { status: 400 });
 if (await isBreached(password)) return Response.json({ error: "유출된 적 있는 비밀번호" }, { status: 400 });
 await db.user.create({ data: { email, passwordHash: await hash(password, ARGON) } });
 // isBreached: 유출 비밀번호 조회(예: Pwned Passwords range API, SHA-1 앞 5자만 보내는 방식)

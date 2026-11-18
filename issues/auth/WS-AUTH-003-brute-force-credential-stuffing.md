@@ -198,6 +198,7 @@ AUTHENTICATION_BACKENDS = ["axes.backends.AxesStandaloneBackend",
 AXES_FAILURE_LIMIT = 10
 AXES_COOLOFF_TIME = timedelta(minutes=15)                 # 영구 잠금 대신 15분 뒤 자동 해제
 AXES_LOCKOUT_PARAMETERS = ["username"]                    # 계정 단위: IP를 바꿔 가며 시도해도 센다
+# (한도가 하나라 계정·IP 조합을 더해도 결과가 같음. 15분 뒤 풀려 남이 잠가도 피해가 짧다)
 AXES_IPWARE_PROXY_COUNT = 1                               # 프록시 한 대 뒤라면 실제 IP 위치를 맞춘다
 
 # views.py — authenticate 에 request 를 넘겨야 axes 가 센다

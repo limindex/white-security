@@ -23,20 +23,32 @@ export async function GET() {
 ✓ 안전 코드 (safe example)
 
 ```tsx
-// app/admin/layout.tsx — 서버에서 확인(role 은 세션 콜백에서 DB 값으로 넣은 것)
+// lib/dal.ts — 관리자 확인을 한 함수로 모은다(role 은 세션 콜백에서 DB 값으로 넣은 것)
+import "server-only";
 import { auth } from "@/auth";
 import { notFound } from "next/navigation";
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+export async function requireAdmin() {
   const session = await auth();
-  if (session?.user?.role !== "admin") notFound();       // 남에게는 없는 페이지처럼
+  if (session?.user?.role !== "admin") notFound();      // 남에게는 없는 페이지처럼
+  return session.user;
+}
+
+// app/admin/layout.tsx — 레이아웃은 1차 거름망, page·데이터 함수에서도 확인
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  await requireAdmin();
   return <>{children}</>;
 }
 
-// app/api/admin/users/route.ts — 레이아웃은 API 를 지켜 주지 않으므로 따로 확인
+// app/admin/users/page.tsx — 페이지마다 다시 확인(레이아웃은 이동할 때 다시 실행되지 않을 수 있음)
+export default async function UsersPage() {
+  await requireAdmin();
+  return <UserTable users={await db.user.findMany({ select: { id: true, email: true } })} />;
+}
+
+// app/api/admin/users/route.ts·Server Action 도 같은 함수로 확인
 export async function GET() {
-  const session = await auth();
-  if (session?.user?.role !== "admin") return new Response(null, { status: 404 });
+  await requireAdmin();
   return Response.json(await db.user.findMany({ select: { id: true, email: true, createdAt: true } }));
 }
 ```

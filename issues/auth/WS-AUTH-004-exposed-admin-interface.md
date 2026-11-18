@@ -69,8 +69,8 @@ sources:
 
 ## 탐지 규칙
 
-- **찾는 곳**: `admin.site.urls`, `viewTelescope`, `viewHorizon`, `app/admin/`, `adminer.php`, `phpmyadmin`, `useSession(`, 그 밖에 /manage·/backoffice 경로와 관리자 로그인 화면.
-- **검사 1 — 서버 확인 없는 관리 화면**: 지적할 때: 관리 화면·API가 클라이언트 컴포넌트의 역할 확인(`useSession(` 뒤 조건 렌더링), 메뉴 숨김, 추측하기 어려운 주소에만 기대는 경우. `viewTelescope`·`viewHorizon` 게이트가 항상 참이거나 운영 환경에서 켜진 경우. / 지적하지 않을 때: 서버 컴포넌트·미들웨어·정책이 DB 역할을 확인하고, 관리용 API도 따로 확인하는 경우.
+- **찾는 곳**: `admin.site.urls`, `viewTelescope`, `viewHorizon`, `app/admin/`, `adminer.php`, `phpmyadmin`, 그 밖에 클라이언트 컴포넌트의 useSession 역할 분기, /manage·/backoffice 경로와 관리자 로그인 화면.
+- **검사 1 — 서버 확인 없는 관리 화면**: 지적할 때: 관리 화면·API가 클라이언트 컴포넌트의 역할 확인(`useSession(` 뒤 조건 렌더링), 메뉴 숨김, 추측하기 어려운 주소, Next.js 레이아웃 한 곳에만 기대는 경우. `viewTelescope`·`viewHorizon` 게이트가 항상 참이거나 운영 환경에서 켜진 경우. / 지적하지 않을 때: 서버의 정책·데이터 접근 함수(예: `requireAdmin()`)가 DB 역할을 확인하고, 페이지·관리용 API·Server Action에서도 같은 확인을 부르는 경우.
 - **검사 2 — 외부 접속 보호**: 지적할 때: 인터넷에 열린 관리자 로그인이 아이디·비밀번호만 받는 경우. Adminer·phpMyAdmin 같은 DB 관리 도구가 웹 루트에 있는 경우. / 지적하지 않을 때: OTP·패스키 같은 2단계 인증이나 VPN·IP 허용 목록이 설정에 보이는 경우(코드만으로 판단이 안 되면 "확인 필요"로 표시).
 - **검사 3 — 오래 유지되는 관리자 세션**: 지적할 때: 관리자 세션이 며칠씩 유지되거나 "로그인 유지"가 관리자에게도 적용되는 경우. / 지적하지 않을 때: 비활동 시간 제한이 있는 경우.
 - **등급**: 위험: 관리 기능·운영 도구가 로그인이나 역할 확인 없이 열리는 경우, DB 관리 도구가 웹에 노출된 경우. / 주의: 관리자 로그인에 2단계 인증·IP 제한이 없는 경우. / 참고: 관리자 세션 시간 제한 없음, 기본 주소(`/admin/`) 그대로.
@@ -98,7 +98,9 @@ Route::middleware('auth')->prefix('admin')->group(base_path('routes/admin.php'))
 ✓ 안전 코드
 
 ```php
-// app/Providers/AppServiceProvider.php — Telescope 는 로컬에서만 등록(공식 문서의 로컬 전용 설치)
+// 공식 문서의 로컬 전용 설치: ① bootstrap/providers.php 에서 App\Providers\TelescopeServiceProvider 줄 삭제
+// ② composer.json "extra": {"laravel": {"dont-discover": ["laravel/telescope"]}}  ③ 운영 .env 는 APP_ENV=production
+// app/Providers/AppServiceProvider.php
 public function register(): void
 {
     if ($this->app->environment('local') && class_exists(\Laravel\Telescope\TelescopeServiceProvider::class)) {
@@ -110,6 +112,12 @@ public function register(): void
 public function boot(): void
 {
     Gate::define('access-admin', fn (User $user) => $user->is_admin);  // DB 에 저장된 역할
+}
+
+// app/Providers/TelescopeServiceProvider.php — 로컬 밖에서 켜질 때를 대비해 허용 목록만
+protected function gate(): void
+{
+    Gate::define('viewTelescope', fn (User $user) => in_array($user->email, ['ops@example.com'], true));
 }
 
 // routes/web.php — 역할 확인 + 중요 화면 진입 전 비밀번호 재확인
@@ -142,20 +150,32 @@ export async function GET() {
 ✓ 안전 코드
 
 ```tsx
-// app/admin/layout.tsx — 서버에서 확인(role 은 세션 콜백에서 DB 값으로 넣은 것)
+// lib/dal.ts — 관리자 확인을 한 함수로 모은다(role 은 세션 콜백에서 DB 값으로 넣은 것)
+import "server-only";
 import { auth } from "@/auth";
 import { notFound } from "next/navigation";
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+export async function requireAdmin() {
   const session = await auth();
-  if (session?.user?.role !== "admin") notFound();       // 남에게는 없는 페이지처럼
+  if (session?.user?.role !== "admin") notFound();      // 남에게는 없는 페이지처럼
+  return session.user;
+}
+
+// app/admin/layout.tsx — 레이아웃은 1차 거름망, page·데이터 함수에서도 확인
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  await requireAdmin();
   return <>{children}</>;
 }
 
-// app/api/admin/users/route.ts — 레이아웃은 API 를 지켜 주지 않으므로 따로 확인
+// app/admin/users/page.tsx — 페이지마다 다시 확인(레이아웃은 이동할 때 다시 실행되지 않을 수 있음)
+export default async function UsersPage() {
+  await requireAdmin();
+  return <UserTable users={await db.user.findMany({ select: { id: true, email: true } })} />;
+}
+
+// app/api/admin/users/route.ts·Server Action 도 같은 함수로 확인
 export async function GET() {
-  const session = await auth();
-  if (session?.user?.role !== "admin") return new Response(null, { status: 404 });
+  await requireAdmin();
   return Response.json(await db.user.findMany({ select: { id: true, email: true, createdAt: true } }));
 }
 ```

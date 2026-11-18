@@ -22,13 +22,14 @@ use Illuminate\Validation\Rules\Password;
 
 $data = $request->validate([
     'email' => 'required|email|unique:users',
-    'password' => ['required', 'string', 'max:128', Password::min(10)->uncompromised()],  // 유출 목록 확인
+    // 15자 이상(2단계 인증과 함께 쓰면 8자까지 허용), 유출 목록 확인
+    'password' => ['required', 'string', 'max:128', Password::min(15)->uncompromised()],
 ]);
-User::create(['email' => $data['email'], 'password' => Hash::make($data['password'])]);  // 기본 bcrypt
+User::create(['email' => $data['email'], 'password' => Hash::make($data['password'])]);  // 기본 bcrypt(72바이트까지 반영)
 
 // 로그인: 비교는 Auth::attempt(내부에서 Hash::check)가 한다. 설정이 바뀌면 로그인 때 다시 해시
 if (Auth::attempt(['email' => $data['email'], 'password' => $data['password']])) {
     $request->session()->regenerate();
 }
-// .env: HASH_DRIVER=argon2id 로 바꾸면 Argon2id
+// 드라이버(bcrypt→argon2id)를 바꿀 때는 HASH_VERIFY 때문에 옛 해시 로그인이 실패하므로 Hashing 문서의 이전 절차를 따른다
 ```
