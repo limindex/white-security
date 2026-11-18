@@ -33,7 +33,7 @@ sources:
   - title: "Anthropic - Building effective agents"
     url: https://www.anthropic.com/engineering/building-effective-agents
     year: 2024
-  - title: "과학기술정보통신부·KISA AI 보안 위협 대응 매뉴얼(2026.7) - A03 에이전트 DoS(26쪽)"
+  - title: "과학기술정보통신부 AI 보안 위협 대응 매뉴얼(2026.7) - A03 에이전트 DoS(26쪽)"
     url: https://www.msit.go.kr/bbs/view.do?sCode=user&mId=328&mPid=243&bbsSeqNo=127&nttSeqNo=3139462
     year: 2026
 ---

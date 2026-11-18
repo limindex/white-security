@@ -33,7 +33,7 @@ sources:
   - title: "Dong 외, Memory Injection Attacks on LLM Agents via Query-Only Interaction (MINJA, arXiv:2503.03704)"
     url: https://arxiv.org/abs/2503.03704
     year: 2025
-  - title: "과학기술정보통신부·KISA AI 보안 위협 대응 매뉴얼(2026.7) - A04 에이전트 메모리 오염(26쪽)"
+  - title: "과학기술정보통신부 AI 보안 위협 대응 매뉴얼(2026.7) - A04 에이전트 메모리 오염(26쪽)"
     url: https://www.msit.go.kr/bbs/view.do?sCode=user&mId=328&mPid=243&bbsSeqNo=127&nttSeqNo=3139462
     year: 2026
 ---

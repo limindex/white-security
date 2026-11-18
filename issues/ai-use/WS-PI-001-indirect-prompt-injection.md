@@ -40,7 +40,7 @@ sources:
   - title: 과학기술정보통신부·KISA 인공지능(AI) 보안 안내서
     url: https://www.kisa.or.kr/2060204/form?postSeq=19
     year: 2025
-  - title: 과학기술정보통신부 AI 보안 위협 대응 매뉴얼
+  - title: 과학기술정보통신부 AI 보안 위협 대응 매뉴얼(2026.7)
     url: https://www.msit.go.kr/bbs/view.do?sCode=user&mId=328&mPid=243&bbsSeqNo=127&nttSeqNo=3139462
     year: 2026
 ---

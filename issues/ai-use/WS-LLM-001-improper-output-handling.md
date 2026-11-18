@@ -33,7 +33,7 @@ sources:
   - title: "NVD CVE-2024-5565 (Vanna, 프롬프트 인젝션으로 시각화 코드 대신 임의 파이썬 실행)"
     url: https://nvd.nist.gov/vuln/detail/CVE-2024-5565
     year: 2024
-  - title: "과학기술정보통신부·KISA AI 보안 위협 대응 매뉴얼(2026.7) - M07 부적절한 출력 처리(25쪽)"
+  - title: "과학기술정보통신부 AI 보안 위협 대응 매뉴얼(2026.7) - M07 부적절한 출력 처리(25쪽)"
     url: https://www.msit.go.kr/bbs/view.do?sCode=user&mId=328&mPid=243&bbsSeqNo=127&nttSeqNo=3139462
     year: 2026
 ---

@@ -27,7 +27,7 @@ sources:
   - title: "OWASP Top 10 for LLM Applications - LLM07:2025 System Prompt Leakage"
     url: https://genai.owasp.org/llmrisk/llm072025-system-prompt-leakage/
     year: 2025
-  - title: "과학기술정보통신부·KISA AI 보안 위협 대응 매뉴얼(2026.7) - M03 시스템 프롬프트 유출(25쪽), 교육 분야 시나리오(86~87쪽)"
+  - title: "과학기술정보통신부 AI 보안 위협 대응 매뉴얼(2026.7) - M03 시스템 프롬프트 유출(25쪽), 교육 분야 시나리오(86~87쪽)"
     url: https://www.msit.go.kr/bbs/view.do?sCode=user&mId=328&mPid=243&bbsSeqNo=127&nttSeqNo=3139462
     year: 2026
 ---

@@ -25,7 +25,7 @@ applies_to: [ChatGPT·Claude·Gemini 같은 AI 채팅, AI 코딩 도구에 붙�
 severity_reason: "영향: 고객 개인정보·영업 비밀·키가 회사 밖 서비스에 저장되고, 설정에 따라 학습·검토에 쓰이거나 계정 탈취 때 함께 유출 · 악용: 대화 기록이 남은 계정 하나만 뚫으면 됨"
 sources:
   - title: "개인정보보호위원회 - 생성형 인공지능(AI) 개발·활용을 위한 개인정보 처리 안내서 (2025.8)"
-    url: https://www.pipc.go.kr/np/cop/bbs/selectBoardArticle.do?bbsId=BS074&mCode=C020010000&nttId=11410
+    url: https://www.pipc.go.kr/np/cop/bbs/selectBoardArticle.do?bbsId=BS217&mCode=D010030000&nttId=11439
     year: 2025
   - title: "NCSC - ChatGPT and large language models: what's the risk?"
     url: https://www.ncsc.gov.uk/blog-post/chatgpt-and-large-language-models-whats-the-risk
