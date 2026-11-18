@@ -30,6 +30,7 @@ from slowapi.util import get_remote_address
 class ReportIn(BaseModel):
     title: str = Field(max_length=200)
 
+# get_remote_address 는 접속 IP 를 쓴다. 프록시 뒤면 uvicorn --proxy-headers --forwarded-allow-ips=<프록시 IP> 로 실행
 limiter = Limiter(key_func=get_remote_address, default_limits=["60/minute"],
                   storage_uri="redis://redis:6379")   # 여러 워커가 같은 카운터를 쓰게
 app = FastAPI()

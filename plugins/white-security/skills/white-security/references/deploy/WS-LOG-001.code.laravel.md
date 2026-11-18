@@ -36,7 +36,7 @@ public function boot(): void
 // 관리자의 개인정보 내려받기(접속기록: 누가·언제·어디서·누구의 정보를·무엇을)
 Log::channel('security')->info('admin.export', [
     'admin_id' => $request->user()->id, 'ip' => $request->ip(),
-    'subject_ids' => $ids, 'action' => 'download',
+    'subject_ids' => $ids, 'action' => 'download', 'reason' => $request->input('reason'),   // 내려받기 사유
 ]);
 
 // config/logging.php — 'security' 채널은 별도 수집 서버로(앱이 지울 수 없게), 1년 이상 보관

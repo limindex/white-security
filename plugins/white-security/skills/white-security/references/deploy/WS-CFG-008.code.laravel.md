@@ -29,6 +29,8 @@ public function boot(): void
 // bootstrap/app.php — api 경로 전체에 'api' 한도
 ->withMiddleware(function (Middleware $middleware): void {
     $middleware->throttleApi();
+    // 로드밸런서·CDN 뒤라면 그 프록시만 신뢰해야 $r->ip() 가 실제 접속 IP 가 된다
+    // $middleware->trustProxies(at: ['10.0.0.0/8']);   // 내 프록시 대역, '*' 금지
 })
 
 // routes/api.php

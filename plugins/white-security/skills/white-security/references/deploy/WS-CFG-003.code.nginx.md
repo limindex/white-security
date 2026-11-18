@@ -19,10 +19,10 @@ server {
 ✓ 안전 코드 (safe example)
 
 ```nginx
-# /etc/nginx/snippets/security-headers.conf
+# /etc/nginx/snippets/security-headers.conf (includeSubDomains 는 모든 하위 도메인이 HTTPS 일 때만)
 add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
 add_header X-Content-Type-Options "nosniff" always;
-add_header Content-Security-Policy "default-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'" always;
+add_header Content-Security-Policy "default-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'" always;
 add_header Referrer-Policy "strict-origin-when-cross-origin" always;
 
 # /etc/nginx/conf.d/example.conf

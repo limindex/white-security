@@ -33,7 +33,8 @@ RUN npm run build && npm prune --omit=dev
 FROM node:22-slim
 WORKDIR /app
 ENV NODE_ENV=production
-COPY --from=build --chown=node:node /app ./
+# 앱 파일은 root 소유로 두어 실행 사용자가 고칠 수 없게 한다(쓰기가 필요한 곳만 따로 볼륨·tmpfs)
+COPY --from=build /app ./
 # 공식 node 이미지에 있는 일반 사용자
 USER node
 CMD ["node", "server.js"]

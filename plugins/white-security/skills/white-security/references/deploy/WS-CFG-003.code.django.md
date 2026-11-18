@@ -29,12 +29,12 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware", # X-Frame-Options: DENY(기본값)
 ]
 SECURE_HSTS_SECONDS = 31536000        # 기본값 0(꺼짐). HTTPS 가 되는 것을 확인한 뒤 켠다
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True   # 모든 하위 도메인이 HTTPS 일 때만
 SECURE_SSL_REDIRECT = True            # 프록시 뒤라면 SECURE_PROXY_SSL_HEADER 도 맞춘다
 SECURE_CSP = {
     "default-src": [CSP.SELF],
     "object-src": [CSP.NONE],
-    "base-uri": [CSP.SELF],
+    "base-uri": [CSP.NONE],
     "frame-ancestors": [CSP.NONE],
 }
 # nosniff(True)·Referrer-Policy(same-origin)는 기본값이 이미 켜져 있다

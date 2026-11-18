@@ -8,7 +8,7 @@ Stacks: Python · FastAPI · Django · Flask · JavaScript · Next.js · PHP · 
 - `APP_DEBUG=true` `DEBUG = True` `debug=True` `FLASK_DEBUG` `manage.py runserver` `flask run` → WS-CFG-001 Debug Mode in Production
 - `Access-Control-Allow-Origin` `CORSMiddleware` `allow_credentials=True` `supports_credentials` → WS-CFG-002 CORS Misconfiguration
 - `Content-Security-Policy` `Strict-Transport-Security` `SECURE_HSTS_SECONDS` `async headers()` `add_header` → WS-CFG-003 Missing Security Headers
-- `getPublicUrl(` `public: true` `"Principal": "*"` `allUsers` `BlockPublicAcls` `ports:` → WS-CFG-004 Public Bucket · Exposed Database
+- `getPublicUrl(` `public: true` `"Principal": "*"` `allUsers` `allAuthenticatedUsers` `ports:` → WS-CFG-004 Public Bucket · Exposed Database
 - `autoindex on` `Options Indexes` `productionBrowserSourceMaps` `sourcemap: true` `.htaccess` → WS-CFG-005 Exposed .git · .env · Backup Files
 - `MYSQL_ROOT_PASSWORD` `POSTGRES_PASSWORD` `POSTGRES_HOST_AUTH_METHOD` `createsuperuser` `db:seed --force` → WS-CFG-006 Default Credentials
 - `privileged: true` `docker.sock` `COPY . .` `USER root` `runAsNonRoot` `allowPrivilegeEscalation` → WS-CFG-007 Insecure Container

@@ -30,11 +30,12 @@ def client_ip(request):
 @receiver(user_login_failed)
 def on_failed(sender, credentials, request=None, **kwargs):
     # credentials 는 비밀번호가 가려져 오지만, 아이디만 골라 남긴다
-    security.warning("auth.failed", extra={"username": credentials.get("username"), "ip": client_ip(request)})
+    # 기본 포맷터는 extra 를 찍지 않으므로 메시지 인자로 남긴다. %r 은 줄바꿈을 이스케이프(로그 위조 방지)
+    security.warning("auth.failed username=%r ip=%s", credentials.get("username"), client_ip(request))
 
 @receiver(user_logged_in)
 def on_login(sender, request, user, **kwargs):
-    security.info("auth.login", extra={"user_id": user.pk, "ip": client_ip(request)})
+    security.info("auth.login user_id=%s ip=%s", user.pk, client_ip(request))
 
 # settings.py LOGGING 의 "security" 로거는 별도 수집 서버로 보내고 1년 이상 보관, 실패 급증에 알림
 ```
