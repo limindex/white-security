@@ -1,6 +1,6 @@
 ---
 id: WS-DES-001
-title: "Insecure Deserialization(안전하지 않은 역직렬화)"
+title: Insecure Deserialization (안전하지 않은 역직렬화)
 slug: insecure-deserialization
 group: fetch
 severity: high

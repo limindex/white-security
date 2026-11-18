@@ -1,6 +1,6 @@
 ---
 id: WS-AGT-001
-title: "Excessive Agency(과도한 권한) — 지우기·배포를 묻지 않고 실행"
+title: Excessive Agency (과도한 권한 위임)
 slug: excessive-agency
 group: vibe
 severity: high

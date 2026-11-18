@@ -1,6 +1,6 @@
 ---
 id: WS-LLM-001
-title: "Improper Output Handling(AI 출력을 그대로 실행·표시)"
+title: Improper Output Handling (AI 출력을 그대로 실행·표시)
 slug: improper-output-handling
 group: ai-use
 severity: high

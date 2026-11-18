@@ -1,6 +1,6 @@
 ---
 id: WS-SSRF-001
-title: "SSRF(서버사이드 요청 위조)"
+title: SSRF (서버사이드 요청 위조)
 slug: ssrf
 group: fetch
 severity: high

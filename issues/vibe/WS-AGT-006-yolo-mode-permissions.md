@@ -1,6 +1,6 @@
 ---
 id: WS-AGT-006
-title: "YOLO 모드 · 과다 허용 설정(AI 코딩 도구 권한)"
+title: YOLO Mode (AI 코딩 도구 과다 허용 설정)
 slug: yolo-mode-permissions
 group: vibe
 severity: high

@@ -1,5 +1,5 @@
 <!-- 생성 파일: issues/ 원본을 고치세요 -->
-# WS-LLM-001 Improper Output Handling(AI 출력을 그대로 실행·표시)
+# WS-LLM-001 Improper Output Handling (AI 출력을 그대로 실행·표시)
 
 위험 · OWASP A05 · LLM LLM10 · 에이전트 ASI05 · ASVS V1.3.2 · ASVS V1.2.4 · ASVS V1.2.5 · ASVS V3.2.2 · CWE-1426 · CWE-94 · CWE-79 · CWE-89 · CWE-78 · 진단가이드 입력데이터 검증 및 표현-1 · 진단가이드 입력데이터 검증 및 표현-2 · 진단가이드 입력데이터 검증 및 표현-4 · 진단가이드 입력데이터 검증 및 표현-5 · 기반시설 CI · 기반시설 SI · 기반시설 XS
 

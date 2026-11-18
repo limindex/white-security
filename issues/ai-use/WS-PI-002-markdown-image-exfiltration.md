@@ -1,6 +1,6 @@
 ---
 id: WS-PI-002
-title: "데이터 엑스필트레이션(Data Exfiltration) — 마크다운 이미지로 새는 정보"
+title: Data Exfiltration (마크다운 이미지로 새는 정보)
 slug: markdown-image-exfiltration
 group: ai-use
 severity: high

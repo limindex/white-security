@@ -1,5 +1,5 @@
 <!-- 생성 파일: issues/ 원본을 고치세요 -->
-# WS-LLM-002 System Prompt Leakage(시스템 프롬프트 유출)
+# WS-LLM-002 System Prompt Leakage (시스템 프롬프트 유출)
 
 주의 · LLM LLM08 · LLM LLM02 · ASVS V13.3.1 · ASVS V8.3.1 · CWE-200 · CWE-798 · 진단가이드 보안기능-6 · 기반시설 IL
 

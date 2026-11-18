@@ -1,5 +1,5 @@
 <!-- 생성 파일: issues/ 원본을 고치세요 -->
-# WS-LLM-004 Unbounded Consumption(토큰·비용 폭탄)
+# WS-LLM-004 Unbounded Consumption (토큰·비용 폭탄)
 
 위험 · API API4 · LLM LLM06 · ASVS V2.4.1 · ASVS V15.2.2 · CWE-770 · CWE-400 · 기반시설 AU
 

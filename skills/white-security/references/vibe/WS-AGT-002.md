@@ -1,5 +1,5 @@
 <!-- 생성 파일: issues/ 원본을 고치세요 -->
-# WS-AGT-002 Rules File Backdoor(규칙 파일 속 숨은 지시)
+# WS-AGT-002 Rules File Backdoor (규칙 파일 속 숨은 지시)
 
 위험 · LLM LLM01 · 에이전트 ASI01 · 에이전트 ASI04 · CWE-451 · CWE-1427
 

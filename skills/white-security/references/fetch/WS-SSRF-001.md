@@ -1,5 +1,5 @@
 <!-- 생성 파일: issues/ 원본을 고치세요 -->
-# WS-SSRF-001 SSRF(서버사이드 요청 위조)
+# WS-SSRF-001 SSRF (서버사이드 요청 위조)
 
 위험 · OWASP A01 · API API7 · ASVS V1.3.6 · ASVS V15.3.2 · ASVS V13.2.4 · CWE-918 · 진단가이드 입력데이터 검증 및 표현-12 · 기반시설 SF
 

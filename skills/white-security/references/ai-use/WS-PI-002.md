@@ -1,5 +1,5 @@
 <!-- 생성 파일: issues/ 원본을 고치세요 -->
-# WS-PI-002 데이터 엑스필트레이션(Data Exfiltration) — 마크다운 이미지로 새는 정보
+# WS-PI-002 Data Exfiltration (마크다운 이미지로 새는 정보)
 
 위험 · LLM LLM01 · LLM LLM02 · LLM LLM10 · ASVS V1.3.5 · ASVS V3.4.3 · CWE-200
 

@@ -1,5 +1,5 @@
 <!-- 생성 파일: issues/ 원본을 고치세요 -->
-# WS-LLM-006 Misinformation · Overreliance(AI 답을 사실로 믿고 자동 처리)
+# WS-LLM-006 Misinformation · Overreliance (AI 답을 사실로 믿고 자동 처리)
 
 주의 · LLM LLM07 · 에이전트 ASI09 · CWE-1426
 

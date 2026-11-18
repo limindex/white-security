@@ -1,6 +1,6 @@
 ---
 id: WS-LLM-003
-title: "Sensitive Information Disclosure — AI API로 보내는 개인정보·키"
+title: Sensitive Information Disclosure (AI API로 보내는 개인정보·키)
 slug: sensitive-data-to-ai-api
 group: ai-use
 severity: medium

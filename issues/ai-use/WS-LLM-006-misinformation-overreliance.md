@@ -1,6 +1,6 @@
 ---
 id: WS-LLM-006
-title: "Misinformation · Overreliance(AI 답을 사실로 믿고 자동 처리)"
+title: Misinformation · Overreliance (AI 답을 사실로 믿고 자동 처리)
 slug: misinformation-overreliance
 group: ai-use
 severity: medium

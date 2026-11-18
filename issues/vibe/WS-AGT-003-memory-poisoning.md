@@ -1,6 +1,6 @@
 ---
 id: WS-AGT-003
-title: "Memory Poisoning(에이전트 메모리 오염)"
+title: Memory Poisoning (에이전트 메모리 오염)
 slug: agent-memory-poisoning
 group: vibe
 severity: medium

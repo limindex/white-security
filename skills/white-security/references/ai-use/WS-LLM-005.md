@@ -1,5 +1,5 @@
 <!-- 생성 파일: issues/ 원본을 고치세요 -->
-# WS-LLM-005 RAG 권한 누락 · RAG Poisoning(벡터 DB 문서 오염)
+# WS-LLM-005 RAG Poisoning · 검색 권한 누락 (벡터 DB 문서 오염·남의 문서 노출)
 
 위험 · OWASP A01 · LLM LLM09 · LLM LLM05 · ASVS V8.2.2 · CWE-862 · 진단가이드 보안기능-2 · 기반시설 IN
 

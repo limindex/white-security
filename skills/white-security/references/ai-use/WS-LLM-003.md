@@ -1,5 +1,5 @@
 <!-- 생성 파일: issues/ 원본을 고치세요 -->
-# WS-LLM-003 Sensitive Information Disclosure — AI API로 보내는 개인정보·키
+# WS-LLM-003 Sensitive Information Disclosure (AI API로 보내는 개인정보·키)
 
 주의 · LLM LLM02 · ASVS V14.2.3 · ASVS V16.2.5 · CWE-359 · CWE-201 · CWE-532
 

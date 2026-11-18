@@ -1,5 +1,5 @@
 <!-- 생성 파일: issues/ 원본을 고치세요 -->
-# WS-DES-001 Insecure Deserialization(안전하지 않은 역직렬화)
+# WS-DES-001 Insecure Deserialization (안전하지 않은 역직렬화)
 
 위험 · OWASP A08 · ASVS V1.5.2 · CWE-502 · 진단가이드 코드오류-5
 

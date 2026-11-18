@@ -1,6 +1,6 @@
 ---
 id: WS-AGT-002
-title: "Rules File Backdoor(규칙 파일 속 숨은 지시)"
+title: Rules File Backdoor (규칙 파일 속 숨은 지시)
 slug: rules-file-backdoor
 group: vibe
 severity: high

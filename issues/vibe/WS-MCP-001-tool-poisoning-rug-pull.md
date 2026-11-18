@@ -1,6 +1,6 @@
 ---
 id: WS-MCP-001
-title: "Tool Poisoning · Rug Pull (MCP)"
+title: Tool Poisoning · Rug Pull (MCP 도구 설명 오염·몰래 바꾸기)
 slug: mcp-tool-poisoning-rug-pull
 group: vibe
 severity: high

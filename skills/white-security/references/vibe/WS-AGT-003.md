@@ -1,5 +1,5 @@
 <!-- 생성 파일: issues/ 원본을 고치세요 -->
-# WS-AGT-003 Memory Poisoning(에이전트 메모리 오염)
+# WS-AGT-003 Memory Poisoning (에이전트 메모리 오염)
 
 주의 · LLM LLM01 · 에이전트 ASI06
 

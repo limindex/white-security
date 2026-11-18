@@ -1,5 +1,5 @@
 <!-- 생성 파일: issues/ 원본을 고치세요 -->
-# WS-FILE-001 Decompression Bomb · 파서 취약점 — 남이 준 이미지·PDF·오피스 파일 처리
+# WS-FILE-001 Decompression Bomb · 파서 취약점 (남이 준 이미지·PDF·오피스 파일 처리)
 
 주의 · ASVS V5.2.1 · ASVS V5.2.6 · ASVS V14.2.8 · CWE-400 · CWE-770 · CWE-212
 

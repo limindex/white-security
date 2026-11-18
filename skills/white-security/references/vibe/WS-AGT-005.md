@@ -1,5 +1,5 @@
 <!-- 생성 파일: issues/ 원본을 고치세요 -->
-# WS-AGT-005 Cascading Failures · Rogue Agent(멈추지 않는 에이전트)
+# WS-AGT-005 Cascading Failures · Rogue Agent (멈추지 않는 에이전트)
 
 주의 · LLM LLM06 · 에이전트 ASI08 · 에이전트 ASI10 · ASVS V15.2.2 · CWE-834 · CWE-770 · 진단가이드 시간 및 상태-2
 

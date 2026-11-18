@@ -1,5 +1,5 @@
 <!-- 생성 파일: issues/ 원본을 고치세요 -->
-# WS-ZIP-001 Zip Slip · 압축 폭탄(Zip Bomb)
+# WS-ZIP-001 Zip Slip · Zip Bomb (경로 탈출·압축 폭탄)
 
 위험 · OWASP A01 · ASVS V5.2.3 · ASVS V5.3.3 · ASVS V5.2.5 · CWE-22 · CWE-409 · 진단가이드 입력데이터 검증 및 표현-3
 

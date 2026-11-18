@@ -1,6 +1,6 @@
 ---
 id: WS-BOT-001
-title: "Scraping · AI 크롤러 대량 수집(robots.txt만으로는 못 막음)"
+title: Scraping · AI Crawler (AI 크롤러 대량 수집)
 slug: ai-crawler-scraping
 group: scraped
 severity: medium

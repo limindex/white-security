@@ -1,5 +1,5 @@
 <!-- 생성 파일: issues/ 원본을 고치세요 -->
-# WS-AGT-004 Confused Deputy(권한 빌려 쓰기) · 에이전트 간 통신 검증 없음
+# WS-AGT-004 Confused Deputy (권한 빌려 쓰기·에이전트 간 통신 검증 누락)
 
 위험 · OWASP A01 · 에이전트 ASI03 · 에이전트 ASI07 · ASVS V8.3.3 · ASVS V13.2.1 · CWE-441 · CWE-306 · 진단가이드 보안기능-2 · 기반시설 IN
 

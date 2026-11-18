@@ -1,6 +1,6 @@
 ---
 id: WS-XML-001
-title: XML 외부 개체 참조·엔티티 폭탄
+title: XXE · Billion Laughs
 slug: billion-laughs-xxe
 group: fetch
 severity: high
@@ -58,14 +58,13 @@ sources:
 
 ## 요약
 
-XML(태그로 내용을 감싸 적는 데이터 형식) 파일을 읽는 프로그램이 파일 속 특별한 선언을 그대로 따르면, 서버의 비밀 파일이 새어 나가거나 작은 파일 하나가 서버 메모리를 다 써서 서비스가 멈춘다. 진단가이드 이름은 '부적절한 XML 외부 개체 참조'다.
+XXE(XML External Entity, XML 외부 개체 참조)와 Billion Laughs(엔티티 폭탄)는 XML(태그로 내용을 감싸 적는 데이터 형식) 파서가 문서 속 선언을 그대로 따라 서버 파일을 읽어 오거나, 작은 파일 하나로 서버 메모리를 다 쓰게 되는 취약점에 대한 이슈(진단가이드 이름: 부적절한 XML 외부 개체 참조). 비밀 파일 유출과 서비스 중단 위험.
 
 ## 발생 상황
 
-- AI에게 "거래처가 보내는 XML 주문서를 읽어서 DB에 넣어 줘", "블로그 RSS(새 글 목록 파일)를 긁어 와서 요약해 줘"라고 했다. SVG 그림 파일과 엑셀(xlsx) 파일도 속은 XML이다.
-- XML 맨 위에는 '줄임말 사전'(DTD, `<!DOCTYPE ...>`)을 둘 수 있다. 줄임말을 엔티티(개체)라고 한다. `&회사;`라고 쓰면 '화이트 주식회사'로 바뀌는 식이다.
-- 이 줄임말 하나를 "서버에 있는 이 파일의 내용"으로 정해 둘 수 있다. 파서(파일을 읽어 해석하는 프로그램)가 그 말을 따르면 서버 파일을 열어 내용을 끼워 넣는다. 이것이 XXE(XML 외부 개체 참조)다. 서류에 "여기에 금고 속 서류를 붙여 넣으시오"라고 적었더니 직원이 정말 붙여 오는 꼴이다.
-- 줄임말이 다른 줄임말을 여러 번 부르게 할 수도 있다. 아래는 두 단계만 쓴 해 없는 예다.
+- 거래처 XML 주문서를 DB에 넣거나 블로그 RSS(새 글 목록 파일)를 긁어 요약하는 기능. SVG 그림 파일과 엑셀(xlsx) 파일도 속은 XML.
+- XML 맨 위 DTD(`<!DOCTYPE ...>`, 문서 안 '줄임말 사전')의 엔티티(개체, 줄임말) 하나를 "서버의 이 파일 내용"으로 정해 두면, 파서(파일을 읽어 해석하는 프로그램)가 서버 파일을 열어 끼워 넣는 XXE.
+- 줄임말이 다른 줄임말을 여러 번 부르게 해 크기를 불리는 Billion Laughs. 아래 두 단계 예시(해 없음)에서 `&b;`는 "ha" 10번, 20글자. 단계마다 10배라 10단계면 "ha" 10억 번, 글자만 약 2GB로 1KB도 안 되는 파일이 서버 메모리를 다 쓰는 구조.
 
 ```xml
 <!DOCTYPE r [
@@ -75,18 +74,13 @@ XML(태그로 내용을 감싸 적는 데이터 형식) 파일을 읽는 프로�
 <r>&b;</r>
 ```
 
-- `&b;`는 "ha"가 10번, 20글자가 된다. 단계를 하나 늘릴 때마다 10배씩 커진다. 10단계면 "ha"가 10억 번, 글자만 약 2GB다. 1KB도 안 되는 파일이 서버 메모리를 다 먹는다. 그래서 '10억 번 웃기(Billion Laughs)' 공격, 또는 엔티티 폭탄이라고 부른다.
-
 ## 위험 배경
 
-- 스크래퍼와 AI 에이전트가 사람이 고르지 않은 외부 파일(RSS, 사이트맵, SVG, 오피스 파일)을 자동으로 읽는 일이 늘었다. 낯선 파일이 확인 없이 파서로 바로 들어간다.
-- 언어마다 기본값이 다르다. 옵션 하나만 켜도 다시 위험해진다. PHP는 기본으로 막혀 있지만 `LIBXML_NOENT` 같은 옵션을 켜면 다시 열린다(PHP 매뉴얼). Python 표준 모듈은 함께 쓰는 Expat이라는 부품이 2.7.2보다 오래되면 10억 번 웃기에 약할 수 있다(Python 공식 문서).
-- 외부 파일 읽기(XXE)를 막아도 10억 번 웃기는 따로 막아야 한다. OWASP 치트시트도 XXE 방어가 모든 XML 서비스 거부 공격을 막지는 않는다고 적는다.
-- 웹 보안 국제 기준인 OWASP Top 10:2025는 두 문제를 모두 '보안 설정 오류'(A02)에 넣었다. 국내 공공 개발보안 기준 49개 항목에도 '부적절한 XML 외부 개체 참조'가 들어 있다.
+- 스크래퍼와 AI 에이전트가 사람이 고르지 않은 외부 파일(RSS, 사이트맵, SVG, 오피스 파일)을 확인 없이 파서로 바로 넘기는 일의 증가.
+- 언어마다 다른 기본값, 옵션 하나로 다시 열리는 구조. PHP는 기본 차단이지만 `LIBXML_NOENT` 같은 옵션을 켜면 다시 열림(PHP 매뉴얼). Python 표준 모듈은 함께 쓰는 Expat 부품이 2.7.2보다 오래되면 Billion Laughs에 취약할 수 있음(Python 공식 문서). XXE를 막아도 Billion Laughs는 따로 막아야 함(OWASP 치트시트).
+- OWASP Top 10:2025는 두 문제를 '보안 설정 오류'(A02)에 포함. 국내 공공 개발보안 기준 49개 항목에도 '부적절한 XML 외부 개체 참조' 포함.
 
 ## 대응 방법
-
-**1. AI에게 이렇게 말한다**
 
 ```text
 외부에서 받은 XML·SVG·RSS·오피스 파일을 읽는 코드를 모두 찾아 줘.
@@ -94,56 +88,44 @@ XML(태그로 내용을 감싸 적는 데이터 형식) 파일을 읽는 프로�
 파일 크기 상한을 넣고, 파싱 오류 원문은 화면에 보여 주지 마.
 ```
 
-**2. 결과를 이렇게 확인한다**
-
-- 위의 두 단계 예시를 파일로 저장해 내 기능에 넣어 본다. "받지 않는 형식" 같은 거절 메시지가 나오면 정상이다. "hahaha…"가 펼쳐져 나오면 줄임말 처리가 켜져 있다는 신호다.
-- 코드에서 PHP는 `LIBXML_NOENT`, Node는 `noent: true`가 없는지 본다. 둘 다 "문서 속 줄임말(엔티티)을 바깥 파일 것까지 모두 풀어 넣어라"라는 위험 옵션이다. Python은 `defusedxml`을 쓰는지 본다.
-
-**3. 코드 칸 보는 법**
-
-- ✗ 코드는 파서에게 "문서 속 줄임말 사전을 다 따르고, 바깥 파일도 열어 와라"라는 옵션을 켜 둔다.
-- ✓ 코드는 줄임말 사전이 든 문서를 아예 받지 않고 파일 크기도 제한한다.
-
-**4.** 화이트 보안 스킬을 깔아 두면 AI가 XML을 읽는 코드를 쓸 때 위험한 옵션이 켜졌는지 같이 살펴본다.
+- 위 두 단계 예시를 파일로 저장해 넣었을 때 "받지 않는 형식" 같은 거절 메시지가 나와야 한다. "hahaha…"가 펼쳐지면 줄임말 처리가 켜진 상태.
+- 코드에 PHP `LIBXML_NOENT`, Node `noent: true`(문서 속 엔티티를 바깥 파일 것까지 풀어 넣는 옵션)가 없어야 하고, Python은 `defusedxml`을 써야 한다.
 
 ## 점검 항목
 
-- 외부에서 온 XML에 DTD(`<!DOCTYPE`)가 있으면 거절한다. DTD가 꼭 필요하면 외부 개체·외부 DTD 로딩을 끄고 개체 확장 한도를 둔다.
-- Python: 외부 XML은 표준 `xml.*` 대신 `defusedxml`로 읽는다(`forbid_dtd=True`). lxml을 쓰면 `resolve_entities=False`, `no_network=True`, `load_dtd=False`로 둔다. 표준 모듈을 써야 하면 `pyexpat.EXPAT_VERSION`이 2.7.2 이상인지 확인한다.
-- PHP: 외부 XML에 `LIBXML_NOENT`, `LIBXML_DTDLOAD`, `LIBXML_DTDVALID`, `LIBXML_PARSEHUGE`를 쓰지 않는다. PHP 8.4 이상이고 libxml 2.13 이상이면 `LIBXML_NO_XXE`를 쓸 수 있다. `libxml_disable_entity_loader()`는 PHP 8.0부터 폐기됐으니 이것에 기대지 않는다.
-- Node: `libxmljs`에서 `noent: true`를 쓰지 않는다. `fast-xml-parser`는 `processEntities: false`로 둔다.
-- 요청 본문, 업로드 파일, 압축을 푼 뒤의 크기에 각각 상한을 둔다.
-- XInclude와 XSLT의 외부 문서 불러오기를 끈다.
-- 파서 오류 원문을 응답에 넣지 않는다. 읽어 온 파일 내용이 오류 문장에 섞여 나올 수 있다.
-- SVG, 오피스 파일, RSS, SAML 응답처럼 XML인 줄 모르고 다루는 형식도 같은 파서 설정을 거친다.
+- 외부에서 온 XML에 DTD(`<!DOCTYPE`)가 있으면 거절해야 한다. DTD가 꼭 필요하면 외부 개체·외부 DTD 로딩을 끄고 개체 확장 한도를 둬야 하며, XInclude와 XSLT의 외부 문서 불러오기도 꺼야 한다.
+- Python: 외부 XML은 표준 `xml.*` 대신 `defusedxml`(`forbid_dtd=True`)로 읽어야 한다. lxml은 `resolve_entities=False`, `no_network=True`, `load_dtd=False`로 둬야 하고, 표준 모듈을 써야 하면 `pyexpat.EXPAT_VERSION`이 2.7.2 이상인지 확인해야 한다.
+- PHP: 외부 XML에 `LIBXML_NOENT`, `LIBXML_DTDLOAD`, `LIBXML_DTDVALID`, `LIBXML_PARSEHUGE`를 쓰지 않아야 한다. PHP 8.4 이상·libxml 2.13 이상이면 `LIBXML_NO_XXE` 사용 가능. `libxml_disable_entity_loader()`는 PHP 8.0부터 폐기된 함수라 기대지 않아야 한다.
+- Node: `libxmljs`에서 `noent: true`를 쓰지 않아야 하고, `fast-xml-parser`는 `processEntities: false`로 둬야 한다.
+- 요청 본문·업로드 파일·압축을 푼 뒤의 크기에 각각 상한을 둬야 하고, 파서 오류 원문은 응답에 넣지 않아야 한다(읽어 온 파일 내용이 오류 문장에 섞여 나올 수 있음).
+- SVG, 오피스 파일, RSS, SAML 응답처럼 XML인 줄 모르고 다루는 형식도 같은 파서 설정을 거쳐야 한다.
 
 ## 탐지 규칙
 
-**찾는 곳**: XML 파싱 호출과 그 입력의 출처. Python `xml.etree`, `xml.dom.minidom`, `xml.sax`, `lxml.etree.XMLParser(`, `etree.fromstring(`, `etree.parse(`. PHP `loadXML(`, `DOMDocument::load(`, `simplexml_load_string(`, `simplexml_load_file(`, `XMLReader`, `LIBXML_NOENT`. Node `libxmljs`, `parseXml(`, `xml2js`, `fast-xml-parser`, `@xmldom/xmldom`.
+**찾는 곳**: XML 파싱 호출과 입력 출처(Python `xml.etree`, `xml.dom.minidom`, `xml.sax`, `lxml.etree.XMLParser(`, `etree.fromstring(`, `etree.parse(` · PHP `loadXML(`, `DOMDocument::load(`, `simplexml_load_string(`, `simplexml_load_file(`, `XMLReader`, `LIBXML_NOENT` · Node `libxmljs`, `parseXml(`, `xml2js`, `fast-xml-parser`, `@xmldom/xmldom`).
 
 **검사 1. 외부 개체를 따라가는 설정**
-- 지적할 때: 외부 입력 XML을 외부 개체 해석이 켜진 설정으로 파싱한다. lxml `resolve_entities=True`나 `no_network=False`와 `load_dtd=True`의 조합, PHP `LIBXML_NOENT`·`LIBXML_DTDLOAD`, libxmljs `noent: true`, `xml.sax`의 `feature_external_ges` 켬.
-- 지적하지 않을 때: 입력이 저장소 안의 고정 파일이나 빌드 산출물이라 외부에서 바꿀 수 없다. 외부 개체가 기본으로 꺼진 라이브러리를 기본 설정 그대로 쓴다.
+- 지적할 때: 외부 입력 XML을 외부 개체 해석이 켜진 설정으로 파싱하는 경우(lxml `resolve_entities=True`나 `no_network=False`와 `load_dtd=True`의 조합, PHP `LIBXML_NOENT`·`LIBXML_DTDLOAD`, libxmljs `noent: true`, `xml.sax`의 `feature_external_ges` 켬).
+- 지적하지 않을 때: 입력이 저장소 안 고정 파일이나 빌드 산출물이라 외부에서 바꿀 수 없는 경우. 외부 개체가 기본으로 꺼진 라이브러리를 기본 설정 그대로 쓰는 경우.
 
 **검사 2. 엔티티 폭탄**
-- 지적할 때: 외부 입력을 Python 표준 `xml.*`로 파싱하면서 `defusedxml`도 Expat 버전 확인도 없다. Expat 버전에 따라 다르므로 주의로 적고 "확인 필요"를 붙인다. PHP `LIBXML_PARSEHUGE`를 외부 입력에 쓴다.
-- 지적하지 않을 때: DTD를 거절한다. `defusedxml`을 쓴다. `fast-xml-parser`를 `processEntities: false`로 쓴다.
+- 지적할 때: 외부 입력을 Python 표준 `xml.*`로 파싱하면서 `defusedxml`도 Expat 버전 확인도 없는 경우(Expat 버전에 따라 달라 주의 + "확인 필요"). PHP `LIBXML_PARSEHUGE`를 외부 입력에 쓰는 경우.
+- 지적하지 않을 때: DTD를 거절하거나, `defusedxml`을 쓰거나, `fast-xml-parser`를 `processEntities: false`로 쓰는 경우.
 
 **검사 3. 크기 상한·오류 노출**
-- 지적할 때: 외부 XML을 크기 제한 없이 메모리에 올린다. 파서 오류 문장을 그대로 응답에 넣는다.
+- 지적할 때: 외부 XML을 크기 제한 없이 메모리에 올리거나, 파서 오류 문장을 그대로 응답에 넣는 경우.
+- 지적하지 않을 때: 본문 크기 상한(`limit`, 길이 인자)이 있고 오류를 일반 문구로 바꿔 내보내는 경우.
 
 **등급**
-- 위험: 외부 입력에 외부 개체 해석이 켜져 있다.
-- 주의: 외부 입력인데 엔티티 확장 한도가 있는지 알 수 없다. `fast-xml-parser`를 `processEntities` 기본값(켜짐)으로 외부 입력에 쓴다.
-- 참고: 크기 상한이 없다. 오류 원문이 응답에 나간다.
+- 위험: 외부 입력에 외부 개체 해석이 켜진 경우.
+- 주의: 외부 입력인데 엔티티 확장 한도를 알 수 없는 경우. `fast-xml-parser`를 `processEntities` 기본값(켜짐)으로 외부 입력에 쓰는 경우.
+- 참고: 크기 상한 없음, 오류 원문 노출.
 
-**보고 형식**: `[위험|주의|참고] <id> <파일:줄> — <한 줄 이유> → <고칠 방법>`
+**보고 형식**: `[위험|주의|참고] <id> <파일:줄> — <이유> → <고칠 방법>`
 
-예: `[위험] WS-XML-001 api/import.py:27 — 업로드한 XML을 resolve_entities=True 인 lxml 파서로 읽음(XXE) → defusedxml.ElementTree.fromstring(data, forbid_dtd=True) 로 바꾼다`
+예: `[위험] WS-XML-001 api/import.py:27 — 업로드한 XML을 resolve_entities=True 인 lxml 파서로 읽음(XXE) → defusedxml.ElementTree.fromstring(data, forbid_dtd=True) 로 바꿈`
 
-**고칠 때**
-- 정상 문서에 DTD가 정말 필요한지 먼저 확인한다. 대부분 필요 없으므로 DTD 거절을 기본으로 둔다.
-- 보고에는 XXE면 CWE-611, 엔티티 폭탄이면 CWE-776을 함께 적는다.
+**고칠 방법**: 정상 문서에 DTD가 정말 필요한지 먼저 확인하고(대부분 불필요) DTD 거절을 기본으로 둬야 한다. 보고에는 XXE면 CWE-611, 엔티티 폭탄이면 CWE-776을 함께 적어야 한다.
 
 ## 코드 예시
 

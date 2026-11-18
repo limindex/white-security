@@ -1,6 +1,6 @@
 ---
 id: WS-AGT-004
-title: "Confused Deputy(권한 빌려 쓰기) · 에이전트 간 통신 검증 없음"
+title: Confused Deputy (권한 빌려 쓰기·에이전트 간 통신 검증 누락)
 slug: confused-deputy-agent-comms
 group: vibe
 severity: high

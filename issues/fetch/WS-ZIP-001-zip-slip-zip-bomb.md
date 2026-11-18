@@ -1,6 +1,6 @@
 ---
 id: WS-ZIP-001
-title: "Zip Slip · 압축 폭탄(Zip Bomb)"
+title: Zip Slip · Zip Bomb (경로 탈출·압축 폭탄)
 slug: zip-slip-zip-bomb
 group: fetch
 severity: high

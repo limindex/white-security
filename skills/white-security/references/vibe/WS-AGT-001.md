@@ -1,5 +1,5 @@
 <!-- 생성 파일: issues/ 원본을 고치세요 -->
-# WS-AGT-001 Excessive Agency(과도한 권한) — 지우기·배포를 묻지 않고 실행
+# WS-AGT-001 Excessive Agency (과도한 권한 위임)
 
 위험 · LLM LLM03 · 에이전트 ASI02 · 에이전트 ASI09 · ASVS V13.2.2 · CWE-250
 

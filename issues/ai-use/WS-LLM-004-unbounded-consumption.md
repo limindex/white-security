@@ -1,6 +1,6 @@
 ---
 id: WS-LLM-004
-title: "Unbounded Consumption(토큰·비용 폭탄)"
+title: Unbounded Consumption (토큰·비용 폭탄)
 slug: unbounded-consumption
 group: ai-use
 severity: high

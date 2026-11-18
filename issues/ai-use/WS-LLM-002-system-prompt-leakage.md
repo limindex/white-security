@@ -1,6 +1,6 @@
 ---
 id: WS-LLM-002
-title: "System Prompt Leakage(시스템 프롬프트 유출)"
+title: System Prompt Leakage (시스템 프롬프트 유출)
 slug: system-prompt-leakage
 group: ai-use
 severity: medium

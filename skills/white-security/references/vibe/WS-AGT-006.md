@@ -1,5 +1,5 @@
 <!-- 생성 파일: issues/ 원본을 고치세요 -->
-# WS-AGT-006 YOLO 모드 · 과다 허용 설정(AI 코딩 도구 권한)
+# WS-AGT-006 YOLO Mode (AI 코딩 도구 과다 허용 설정)
 
 위험 · OWASP A02 · LLM LLM03 · 에이전트 ASI02 · 에이전트 ASI05 · CWE-183 · CWE-250 · 진단가이드 보안기능-3
 

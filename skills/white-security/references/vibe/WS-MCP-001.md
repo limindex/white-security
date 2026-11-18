@@ -1,5 +1,5 @@
 <!-- 생성 파일: issues/ 원본을 고치세요 -->
-# WS-MCP-001 Tool Poisoning · Rug Pull (MCP)
+# WS-MCP-001 Tool Poisoning · Rug Pull (MCP 도구 설명 오염·몰래 바꾸기)
 
 위험 · OWASP A03 · LLM LLM01 · LLM LLM04 · 에이전트 ASI04 · 에이전트 ASI02 · CWE-494 · CWE-1427 · 진단가이드 보안기능-15
 

@@ -1,5 +1,5 @@
 <!-- 생성 파일: issues/ 원본을 고치세요 -->
-# WS-BOT-001 Scraping · AI 크롤러 대량 수집(robots.txt만으로는 못 막음)
+# WS-BOT-001 Scraping · AI Crawler (AI 크롤러 대량 수집)
 
 주의 · API API4 · ASVS V2.4.1 · ASVS V15.3.4 · CWE-799 · CWE-770 · 기반시설 AU
 

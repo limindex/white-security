@@ -1,6 +1,6 @@
 ---
 id: WS-AGT-005
-title: "Cascading Failures · Rogue Agent(멈추지 않는 에이전트)"
+title: Cascading Failures · Rogue Agent (멈추지 않는 에이전트)
 slug: runaway-agent
 group: vibe
 severity: medium
