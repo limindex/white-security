@@ -48,7 +48,24 @@
         each(aside.querySelectorAll('[data-lang-panel]'), function (p) {
           p.classList.toggle('is-active', p.getAttribute('data-lang-panel') === lang);
         });
+        reveal();
       }
+
+      // 좁은 화면의 한 줄 탭: 고른 탭이 보이게 가로로만 옮기고, 끝에 닿으면 흐림 단서를 없앰
+      function reveal() {
+        var on = list.querySelector('[aria-selected="true"]');
+        if (on && list.scrollWidth > list.clientWidth) {
+          var l = on.offsetLeft - list.offsetLeft, r = l + on.offsetWidth;
+          if (l < list.scrollLeft) list.scrollLeft = l - 4;
+          else if (r > list.scrollLeft + list.clientWidth) list.scrollLeft = r - list.clientWidth + 36;
+        }
+        edge();
+      }
+      function edge() {
+        list.classList.toggle('is-end', list.scrollLeft + list.clientWidth >= list.scrollWidth - 2);
+      }
+      list.addEventListener('scroll', edge, { passive: true });
+      window.addEventListener('resize', edge);
 
       var saved = store(LANG_KEY);
       var has = tabs.some(function (t) { return t.getAttribute('data-lang') === saved; });
@@ -218,14 +235,62 @@
     });
   }
 
-  /* ---------- 좁은 화면: 메뉴 접기 ---------- */
+  /* ---------- 좁은 화면: 머리의 메뉴 단추 → 머리 아래 덮는 메뉴(포커스 가둠 · 뒤 스크롤 잠금 · Esc 닫기) ----------
+     JS 없으면 메뉴는 본문 위에 펼친 채(기존 details) 그대로. */
   function initMenu() {
     var menu = document.getElementById('ws-menu');
+    var btn = document.querySelector('.ws-menu-btn');
     if (!menu || !window.matchMedia) return;
     var narrow = window.matchMedia('(max-width: 899.98px)');
-    function apply() { menu.open = !narrow.matches; }
+    var main = document.getElementById('ws-main');
+    var root = document.documentElement;
+    var isOpen = false;
+
+    function focusables() {
+      return Array.prototype.filter.call(menu.querySelectorAll('a[href], summary'), function (el) {
+        return el.getClientRects().length > 0;
+      });
+    }
+    function setOpen(on, returnFocus) {
+      isOpen = on;
+      menu.open = on;
+      root.classList.toggle('ws-menu-open', on);
+      if (btn) btn.setAttribute('aria-expanded', on ? 'true' : 'false');
+      if (main) main.inert = on;
+      if (on) {
+        var cur = menu.querySelector('[aria-current="page"]') || focusables()[0];
+        if (cur) { cur.focus({ preventScroll: true }); cur.scrollIntoView({ block: 'center' }); }
+      } else if (returnFocus && btn) {
+        btn.focus();
+      }
+    }
+    function apply() {
+      if (narrow.matches) { if (!isOpen) menu.open = false; }
+      else { if (isOpen) setOpen(false, false); menu.open = true; }
+    }
     apply();
     if (narrow.addEventListener) narrow.addEventListener('change', apply);
+    if (!btn) return;
+
+    btn.addEventListener('click', function () { setOpen(!isOpen, false); });
+    menu.addEventListener('click', function (ev) {
+      if (isOpen && ev.target.closest('a[href]')) setOpen(false, false);
+    });
+    document.addEventListener('keydown', function (ev) {
+      if (!isOpen) return;
+      if (ev.key === 'Escape') { ev.preventDefault(); setOpen(false, true); return; }
+      if (ev.key !== 'Tab') return;
+      var list = focusables();
+      if (!list.length) return;
+      var first = list[0], last = list[list.length - 1], a = document.activeElement;
+      if (!ev.shiftKey && a === last) { ev.preventDefault(); btn.focus(); }
+      else if (ev.shiftKey && a === btn) { ev.preventDefault(); last.focus(); }
+      else if (ev.shiftKey && a === first) { ev.preventDefault(); btn.focus(); }
+      else if (a !== btn && !menu.contains(a)) { ev.preventDefault(); btn.focus(); }
+    });
+    // 검색 칸을 쓰면 메뉴는 닫음
+    var q = document.getElementById('ws-q');
+    if (q) q.addEventListener('focus', function () { if (isOpen) setOpen(false, false); });
   }
 
   /* ---------- 상단 검색: 콤보박스 ---------- */
@@ -237,6 +302,7 @@
     var pop = document.getElementById('ws-q-pop');
     var list = document.getElementById('ws-q-list');
     var none = pop.querySelector('.ws-results-none');
+    var more = pop.querySelector('.ws-results-more');
     var status = document.getElementById('ws-q-status');
     var MAX = 8;
     var rows = [];
@@ -284,6 +350,32 @@
 
     var SEV = { high: '위험', medium: '주의', low: '참고' };
 
+    function el(tag, cls, text) {
+      var n = document.createElement(tag);
+      if (cls) n.className = cls;
+      n.textContent = text;
+      return n;
+    }
+
+    // 제목 속 검색 낱말 표시(글자만 다루고 HTML 은 만들지 않음)
+    function mark(node, text, words) {
+      var low = norm(text), marks = [];
+      words.forEach(function (w) {
+        if (w.length < 2) return; // 한 글자는 표시가 너무 많아 생략
+        var i = low.indexOf(w);
+        while (i !== -1) { marks.push([i, i + w.length]); i = low.indexOf(w, i + w.length); }
+      });
+      marks.sort(function (a, b) { return a[0] - b[0]; });
+      var pos = 0;
+      marks.forEach(function (m) {
+        if (m[0] < pos) return;
+        if (m[0] > pos) node.appendChild(document.createTextNode(text.slice(pos, m[0])));
+        node.appendChild(el('mark', '', text.slice(m[0], m[1])));
+        pos = m[1];
+      });
+      if (pos < text.length) node.appendChild(document.createTextNode(text.slice(pos)));
+    }
+
     function setActive(i) {
       var opts = list.children;
       if (active >= 0 && opts[active]) { opts[active].classList.remove('is-active'); opts[active].setAttribute('aria-selected', 'false'); }
@@ -324,16 +416,20 @@
         li.className = 'ws-result';
         var t = document.createElement('span');
         t.className = 'ws-result-title';
-        t.textContent = r.title;
+        mark(t, r.title, words);
         var s = document.createElement('span');
-        s.className = 'ws-result-sub';
-        s.textContent = [r.id, r.sub, SEV[r.sev] || ''].filter(Boolean).join(' · ');
+        s.className = 'ws-result-meta';
+        if (r.id) s.appendChild(el('span', 'ws-id', r.id));
+        if (r.sub) s.appendChild(el('span', '', r.sub));
+        if (SEV[r.sev]) s.appendChild(el('span', 'ws-badge ws-badge--' + r.sev, SEV[r.sev]));
         li.appendChild(t);
         li.appendChild(s);
         li.addEventListener('mousedown', function (ev) { ev.preventDefault(); window.location.href = r.url; });
         list.appendChild(li);
       });
       none.hidden = shown.length > 0;
+      more.hidden = hits.length <= MAX;
+      more.textContent = hits.length > MAX ? hits.length + '건 중 ' + MAX + '건 표시 · 낱말을 더해 좁히기' : '';
       open(true);
       status.textContent = '검색 결과 ' + hits.length + '건' + (hits.length > MAX ? ' 중 ' + MAX + '건 표시' : '');
     }
@@ -366,7 +462,61 @@
     });
   }
 
+  /* ---------- 긴 덩어리 줄바꿈 보정 ----------
+     CSS balance 는 6줄까지만 동작함. 7줄 이상이면 pretty 로 바꾸고, 그래도 마지막 줄이 폭의 30% 미만이면
+     줄 수가 늘지 않는 범위에서 폭을 1%씩(최대 14%) 줄여 마지막 줄을 늘림. 글자는 바꾸지 않음. */
+  var LONG_SEL = '.ws-checklist label, .ws-summary p, .ws-sec p:not([class]), .ws-sec :is(ul,ol):not([class]) > li, .ws-fold-body p, .ws-fold-body li, .ws-deflist dd, .ws-step-desc, .ws-readlist-why, .ws-sevwhy dd';
+  function lines(el) {
+    var g = document.createRange(); g.selectNodeContents(el);
+    var mids = [], l = Infinity, r = -Infinity, last = null;
+    Array.prototype.forEach.call(g.getClientRects(), function (x) {
+      if (x.width < 0.5 || x.height < 4) return;
+      var m = x.top + x.height / 2;
+      if (!mids.some(function (y) { return Math.abs(y - m) < 6; })) mids.push(m);
+    });
+    if (!mids.length) return { n: 0, ratio: 1 };
+    var bottom = Math.max.apply(null, mids);
+    Array.prototype.forEach.call(g.getClientRects(), function (x) {
+      if (x.width < 0.5 || x.height < 4 || Math.abs(x.top + x.height / 2 - bottom) >= 6) return;
+      l = Math.min(l, x.left); r = Math.max(r, x.right);
+    });
+    var w = el.getBoundingClientRect().width;
+    return { n: mids.length, ratio: w ? (r - l) / w : 1 };
+  }
+  function fixLong() {
+    each(document.querySelectorAll('main ' + LONG_SEL.split(', ').join(', main ')), function (el) {
+      el.style.textWrap = ''; el.style.maxInlineSize = '';
+      if (!el.getClientRects().length || el.closest('details:not([open])')) return;
+      var a = lines(el);
+      if (a.n < 7) return;
+      el.style.textWrap = 'pretty';
+      a = lines(el);
+      if (a.ratio >= 0.3) return;
+      var best = null;
+      for (var p = 99; p >= 86; p--) {
+        el.style.maxInlineSize = p + '%';
+        var b = lines(el);
+        if (b.n !== a.n) break;
+        if (b.ratio >= 0.3) { best = p; break; }
+      }
+      el.style.maxInlineSize = best ? best + '%' : '';
+    });
+  }
+  function initWrap() {
+    if (!window.CSS || !CSS.supports('text-wrap', 'pretty')) return;
+    var run = function () { fixLong(); };
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(run); else run();
+    var t = null, w = window.innerWidth;
+    window.addEventListener('resize', function () {
+      if (window.innerWidth === w) return; // 휴대폰 주소창 높이 변화는 무시
+      w = window.innerWidth;
+      clearTimeout(t); t = setTimeout(run, 150);
+    });
+    document.addEventListener('toggle', function (ev) { if (ev.target.open) fixLong(); }, true);
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
+    initWrap();
     initMenu();
     initTabs();
     initPanelTabs();

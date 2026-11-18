@@ -35,5 +35,8 @@ $where = $page !== null ? Site::PAGES[$page]['title'] ?? '' : ($group !== null ?
 </details>
 <?php endforeach ?>
 <?= $section(Site::NAV_SECTIONS[1]) ?>
+<?php $github = $site->setting('github'); if ($github !== ''): ?>
+<p class="ws-nav-gh"><a href="<?= Site::e($github) ?>" rel="noopener noreferrer">GitHub</a></p>
+<?php endif ?>
 </nav>
 </details>

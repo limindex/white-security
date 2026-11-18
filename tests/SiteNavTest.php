@@ -32,7 +32,7 @@ test('공개 화면에 "준비 중" 없음, 심각도 기준·문서 읽는 법�
     }
     $sev = $s->route('severity')['body'];
     assert_true(!str_contains($sev, 'class="ws-pending"'), 'severity 준비 중 아님');
-    foreach (['영향', '악용 쉬움', '데이터 유출', '계정 탈취', '서비스 중단', '비용', '인증', '자동화', '판정 예'] as $w) assert_contains($w, $sev);
+    foreach (['영향', '악용 쉬움', '데이터 유출', '계정 탈취', '서비스 중단', '비용', '인증', '자동화', '판정 예'] as $w) assert_contains($w, strip_tags($sev));
     foreach (['ws-badge--high', 'ws-badge--medium', 'ws-badge--low'] as $c) assert_contains($c, $sev);
     $guide = $s->route('guide')['body'];
     assert_true(!str_contains($guide, 'class="ws-pending"'), 'guide 준비 중 아님');
