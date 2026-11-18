@@ -7,7 +7,14 @@
 
 언제 읽나: AI에게 문서·웹페이지·메일을 읽히거나 요약시킬 때
 
+- [WS-LLM-001 Improper Output Handling(AI 출력을 그대로 실행·표시)](ai-use/WS-LLM-001.md) — AI가 쓴 글·코드·SQL·명령을 확인 없이 `eval`, 셸, DB, `innerHTML`에 넘기면, AI를 속인 사람의 코드가 내 서버나 사용자 화면에서 돈다. 이것을 Improper Output Handling(부적절한 출력 처리)이라고 한다(진단가이드 이름: 코드 삽입·SQL 삽입·운영체제 명령어 삽입·크로스사이트 스크립트).
+- [WS-LLM-002 System Prompt Leakage(시스템 프롬프트 유출)](ai-use/WS-LLM-002.md) — 시스템 프롬프트(AI에게 미리 깔아 두는 기본 지시문)는 언젠가 새어 나간다고 보고 짜야 한다. 그 안에 API 키를 넣거나 "관리자에게만 알려 줘" 같은 문장으로 권한을 대신하면 그대로 뚫린다(진단가이드 이름: 하드코드된 중요정보).
+- [WS-LLM-003 Sensitive Information Disclosure — AI API로 보내는 개인정보·키](ai-use/WS-LLM-003.md) — 고객 정보나 키를 프롬프트에 통째로 넣어 외부 AI API로 보내면, 그 데이터는 내 서버 밖(AI 회사의 서버와 로그)에 남는다. OWASP는 이를 Sensitive Information Disclosure(민감 정보 노출)로 다룬다.
+- [WS-LLM-004 Unbounded Consumption(토큰·비용 폭탄)](ai-use/WS-LLM-004.md) — 로그인도 횟수 제한도 없이 AI 호출 API를 열어 두면, 누군가 긴 글을 수만 번 보내 내 돈으로 AI를 쓴다. OWASP는 이를 Unbounded Consumption(자원 소비 무제한)이라고 부른다.
+- [WS-LLM-005 RAG 권한 누락 · RAG Poisoning(벡터 DB 문서 오염)](ai-use/WS-LLM-005.md) — RAG(질문과 비슷한 문서를 먼저 찾아 AI에게 같이 넘기는 방식)에서 검색할 때 권한을 거르지 않으면 남의 문서가 답에 섞여 나온다. 아무나 문서를 넣을 수 있으면 가짜 문서 몇 개로 답을 바꿀 수 있는데, 이를 RAG Poisoning이라고 한다(진단가이드 이름: 부적절한 인가).
+- [WS-LLM-006 Misinformation · Overreliance(AI 답을 사실로 믿고 자동 처리)](ai-use/WS-LLM-006.md) — AI는 틀린 내용도 자신 있게 말한다(Hallucination, NIST 용어로는 Confabulation). 그 답을 확인 없이 환불·결제·고객 안내에 바로 쓰는 것을 Overreliance(과신)라고 하며, 틀린 결과의 책임은 서비스를 만든 쪽이 진다.
 - [WS-PI-001 간접 프롬프트 삽입](ai-use/WS-PI-001.md) — AI에게 남이 쓴 글(웹페이지·메일·PDF)을 읽히면, 글 속에 숨은 문장을 AI가 명령으로 알아듣고 엉뚱한 답을 하거나 엉뚱한 일을 할 수 있다. 이것을 간접 프롬프트 삽입(간접 프롬프트 인젝션)이라고 한다. 프롬프트는 AI에게 주는 지시문이다.
+- [WS-PI-002 데이터 엑스필트레이션(Data Exfiltration) — 마크다운 이미지로 새는 정보](ai-use/WS-PI-002.md) — AI 답 속 마크다운 이미지(`![](주소)`)를 그대로 그리면 브라우저가 그 주소로 저절로 접속하고, 주소에 붙은 대화 내용이 남의 서버로 넘어간다. 이렇게 몰래 정보를 빼내는 것을 데이터 엑스필트레이션(Data Exfiltration)이라고 한다.
 
 ## 긁어 오고 읽을 때
 

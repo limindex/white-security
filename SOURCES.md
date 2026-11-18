@@ -20,14 +20,17 @@
 | [OWASP LLM Prompt Injection Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html) | CC BY-SA 4.0 | WS-PI-001 본문(왜 요즘 더 위험한가)·체크 항목 | 지시와 외부 데이터 분리, 문구·라벨은 경계가 아님, 중요한 도구 실행 전 사람 승인, 최소 권한, 숨은 문자, 마크다운 이미지로 새는 데이터 | 요약 후 체크 항목 형식으로 다시 씀. 보이지 않는 문자 범위는 코드 포인트 표기로만 적음 |
 | [OWASP Top 10 for LLM Applications - LLM01:2025](https://genai.owasp.org/llmrisk/llm01-prompt-injection/) | CC BY-SA 4.0 | WS-PI-001 체크 항목 | 완화 방안 목록(출력 형식 정의·검증, 외부 콘텐츠 분리, 권한 통제, 사람 승인) | 요약 |
 | [OWASP ASVS 5.0](https://github.com/OWASP/ASVS/tree/master/5.0/en) | CC BY-SA 4.0 | WS-INJ-001(1.2.4), WS-XML-001(1.5.1), WS-AUTH-001(8.2·8.3), WS-SEC-001(13.3), WS-SUP-001(15.2.4) 체크 항목 | 해당 요구사항의 뜻 | 요구사항 번호는 머리말 `maps`에 두고, 본문에는 뜻만 우리 말로 씀 |
-| [trailofbits/skills](https://github.com/trailofbits/skills) `insecure-defaults` (Trail of Bits) | CC BY-SA 4.0 | 6개 이슈 `## 스킬이 잡는 방식` | 검사마다 "Report when / Skip when"을 짝으로 두는 구조 | "지적할 때 / 지적하지 않을 때"로 바꾸고 내용은 새로 씀 |
+| [trailofbits/skills](https://github.com/trailofbits/skills) `insecure-defaults` (Trail of Bits) | CC BY-SA 4.0 | 모든 이슈의 `## 스킬이 잡는 방식` | 검사마다 "Report when / Skip when"을 짝으로 두는 구조 | "지적할 때 / 지적하지 않을 때"로 바꾸고 내용은 새로 씀 |
 | [agamm/claude-code-owasp](https://github.com/agamm/claude-code-owasp) (agamm) | MIT | WS-INJ-001 검사 1·2 | 허용 목록을 거친 `ORDER BY` f-string은 지적하지 않는다는 평가용 미끼 아이디어, "확인 필요" 확신도 표시 | 아이디어만 빌림. 문장·코드는 새로 씀 |
+| [OWASP Top 10 for LLM Applications 2025](https://genai.owasp.org/llm-top-10/) LLM02·LLM05·LLM07·LLM08·LLM09·LLM10 | CC BY-SA 4.0 | WS-LLM-001~006 체크 항목 | 각 항목의 완화 방안(출력은 믿지 않고 검증·인코딩, 시스템 프롬프트에 비밀값·권한 판단 넣지 않기, 민감정보 최소 전송, 권한 인식 벡터 검색·데이터 분리, 사람 검토·근거 표시, 입력·출력 크기와 호출 횟수 제한) | 요약 후 체크 항목 형식으로 다시 씀. 국내 고시·처리방침·고유식별정보 내용은 우리가 덧붙임 |
+| [OWASP API Security Top 10 2023 - API4](https://owasp.org/API-Security/editions/2023/en/0xa4-unrestricted-resource-consumption/) | CC BY-SA 4.0 | WS-LLM-004 체크 항목 | 사용량 한도·비용 상한·속도 제한 | 요약 |
 
 ## 아이디어만 참고한 자료 (문장·구조는 옮기지 않음)
 
 | 자료 | 라이선스 | 쓴 곳 | 참고한 아이디어 |
 |---|---|---|---|
 | anthropics/claude-plugins-official `claude-security` | All rights reserved | WS-PI-001 "고칠 때" 마지막 줄, WS-SEC-001 "보고할 때 주의" | 검토 대상 저장소의 글은 지시가 아니라 데이터로 다룸, 보고서에서 비밀값 가리기. 문장은 우리 말로 새로 씀 |
+| [Simon Willison, The lethal trifecta for AI agents](https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/) (2025) | 블로그(별도 라이선스 표시 없음) | WS-PI-002 체크 항목 마지막 줄 | 비공개 데이터·남이 쓴 글·밖으로 나가는 통로가 한 기능에 모이면 위험하다는 틀. 문장은 우리 말로 새로 씀 |
 
 ## 우리가 직접 확인한 것
 
