@@ -38,8 +38,31 @@ final class Repository
         $repo->attachCoverage($root);
         $repo->settings = self::loadSettings($root . '/data/site.json', $repo->errors);
         $repo->start = self::loadStart($root . '/data/start.json', $repo, $repo->errors);
+        $repo->versions = self::loadVersions($root . '/CHANGELOG.md');
         return $repo;
     }
+
+    /** @var list<array{version:string,md:string}> */
+    private array $versions = [];
+
+    /**
+     * CHANGELOG.md 의 버전 절(`## 0.1.0` 아래 목록)을 최신이 먼저인 파일 순서 그대로 읽는다. 파일이 없거나 절이 없으면 빈 목록.
+     * @return list<array{version:string,md:string}>
+     */
+    private static function loadVersions(string $file): array
+    {
+        if (!is_file($file)) return [];
+        $parts = preg_split('/^## +(\d+\.\d+\.\d+)[^\n]*\n/m', (string)file_get_contents($file), -1, PREG_SPLIT_DELIM_CAPTURE);
+        $out = [];
+        for ($k = 1; $k + 1 < count($parts); $k += 2) {
+            $md = trim((string)preg_replace('/^## .*$.*\z/ms', '', $parts[$k + 1]));
+            if ($md !== '') $out[] = ['version' => $parts[$k], 'md' => $md];
+        }
+        return $out;
+    }
+
+    /** 스킬 버전별 변경(CHANGELOG.md) @return list<array{version:string,md:string}> */
+    public function versions(): array { return $this->versions; }
 
     /** 사이트 설정 기본값. 빈 값이면 화면에 그 자리를 그리지 않는다. */
     public const SETTINGS = ['publisher' => '', 'github' => '', 'origin' => '', 'marketplace' => '', 'plugin_id' => '', 'released' => false, 'pages' => []];

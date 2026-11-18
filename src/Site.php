@@ -11,8 +11,8 @@ final class Site
         'check' => ['title' => '내 사이트 점검', 'section' => '시작하기', 'lead' => '사용 기술과 기능에 맞춘 점검표와 AI 점검 지시문'],
         'severity' => ['title' => '심각도 기준', 'section' => '시작하기', 'lead' => '위험·주의·참고 등급의 판정 기준 · 영향과 악용 쉬움의 조합'],
         'guide' => ['title' => '문서 읽는 법', 'section' => '시작하기', 'lead' => '문서 번호 체계·절 구성·문서 정보·기준 번호의 의미'],
-        'glossary' => ['title' => '용어 사전', 'section' => '참고', 'lead' => '보안 업계 용어와 공식 용어의 쉬운 풀이·관련 이슈'],
-        'coverage' => ['title' => '점검 기준 대응표', 'section' => '참고', 'nav' => false, 'lead' => '공인 보안 기준의 항목별 대응 이슈와 빈칸'],
+        'glossary' => ['title' => '용어 사전', 'section' => '참고', 'lead' => '보안 업계 용어와 국내 기준 용어의 쉬운 풀이·관련 이슈'],
+        'coverage' => ['title' => '점검 기준 대응표', 'section' => '참고', 'nav' => false, 'lead' => '주요 보안 기준의 항목별 대응 이슈와 빈칸'],
         'changelog' => ['title' => '개정 이력', 'section' => '참고', 'lead' => '스킬과 문서의 버전별 변경 내역'],
         'sources' => ['title' => '출처·라이선스', 'section' => '참고', 'lead' => '문서·코드·글꼴의 라이선스와 인용 원칙'],
     ];

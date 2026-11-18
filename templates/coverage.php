@@ -42,7 +42,7 @@ $w = fn(int $n, int $m): string => 'ws-w-' . ($m && $n ? max(1, (int)round($n * 
 <ol class="ws-meters" aria-label="기준별 대응 막대">
 <?php foreach ($coverage as $fw): $c = $sum[$fw['id']]; $m = count($fw['items']); $name = (string)$fw['name']; ?>
 <li class="ws-meter">
-<span class="ws-meter-name"><a href="#fw-<?= Site::e($fw['id']) ?>"><?= Site::e($name) ?></a><?php if (!$fw['verified']): ?><span class="ws-cov-pending">일부 항목 출처 확인 중</span><?php endif ?></span>
+<span class="ws-meter-name"><a href="#fw-<?= Site::e($fw['id']) ?>"><?= Site::e($name) ?></a></span>
 <span class="ws-meter-bar" role="img" aria-label="<?= Site::e($name) ?>: 항목 <?= $m ?>개 중 덮음 <?= $c['covered'] ?>, 사이트 전용 <?= $c['site'] ?>, 빈칸 <?= $c['gap'] ?>"><?php if ($c['covered']): ?><span class="ws-meter-fill ws-meter-fill--covered <?= $w($c['covered'], $m) ?>"></span><?php endif ?><?php if ($c['site']): ?><span class="ws-meter-fill ws-meter-fill--site <?= $w($c['site'], $m) ?>"></span><?php endif ?></span>
 <span class="ws-meter-num"><span class="ws-cov-num"><b><?= $c['covered'] + $c['site'] ?></b> / <?= $m ?></span><span class="ws-cov-num ws-meter-pct"><?= $pct($c['covered'] + $c['site'], $m) ?>%</span></span>
 </li>
@@ -58,7 +58,7 @@ $w = fn(int $n, int $m): string => 'ws-w-' . ($m && $n ? max(1, (int)round($n * 
 <details>
 <summary><h2><?= Site::e($fw['name']) ?></h2><span class="ws-fold-count"><?= $c['covered'] + $c['site'] ?> / <?= count($fw['items']) ?></span><span class="ws-fold-hint" aria-hidden="true"><span class="ws-fold-closed">펼치기</span><span class="ws-fold-open">접기</span></span></summary>
 <div class="ws-fold-body">
-<p class="ws-cov-meta"><?= Site::e((string)$fw['year']) ?>년판 · 항목 <?= count($fw['items']) ?>개 중 덮음 <?= $c['covered'] ?> · 사이트 전용 <?= $c['site'] ?> · 빈칸 <?= $c['gap'] ?> · <a href="<?= Site::e($fw['url']) ?>" rel="noopener noreferrer">공식 출처</a><?php if (!$fw['verified']): ?> · <span class="ws-cov-pending">일부 항목 출처 확인 중</span><?php endif ?></p>
+<p class="ws-cov-meta"><?= Site::e((string)$fw['year']) ?>년판 · 항목 <?= count($fw['items']) ?>개 중 덮음 <?= $c['covered'] ?> · 사이트 전용 <?= $c['site'] ?> · 빈칸 <?= $c['gap'] ?> · <a href="<?= Site::e($fw['url']) ?>" rel="noopener noreferrer">공식 출처</a><?php if (!$fw['verified']): ?> · 원문 대조 전 항목 포함<?php endif ?></p>
 <div class="ws-table-wrap">
 <table class="ws-table ws-cov-table">
 <thead>
