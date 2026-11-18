@@ -1,0 +1,67 @@
+<!-- 생성 파일: issues/ 원본을 고치세요 -->
+# WS-AGT-001 Excessive Agency(과도한 권한) — 지우기·배포를 묻지 않고 실행
+
+위험 · LLM LLM03 · 에이전트 ASI02 · 에이전트 ASI09 · ASVS V13.2.2 · CWE-250
+
+## 체크 항목
+
+- 에이전트에게는 그 일에 꼭 필요한 도구만 준다(최소 권한: 필요한 만큼만 권한을 주는 원칙). 범용 `run_shell`·`run_sql` 대신 하는 일이 정해진 도구를 만든다.
+- 지우기·배포·결제·메일 보내기처럼 되돌리기 어려운 도구는 사람이 [확인]을 눌러야 실행된다. 확인 창에는 AI의 설명이 아니라 실제 명령·대상·금액을 보여 준다.
+- 에이전트가 쓰는 DB·클라우드 계정은 읽기 전용이나 좁은 권한으로 만든다. 개발용 에이전트가 운영 DB 접속 정보를 쓸 수 없게 한다.
+- 백업과 되돌리기 방법을 먼저 마련한다. 2025년 7월 Replit의 AI 에이전트가 "바꾸지 말라"는 지시를 어기고 운영 DB를 지운 일이 보도됐다.
+- 도구 호출(누가·무엇을·언제·결과)을 기록한다.
+
+## 스킬이 잡는 방식
+
+**찾는 곳**: 에이전트 도구 정의(`tools=`, `@tool`, `function_declarations`, MCP 서버의 도구 등록)와 도구 호출 실행부(`tool_calls`, `function_call`), 도구가 쓰는 DB·클라우드 계정 설정.
+
+**검사 1. 도구가 너무 넓다**
+- 지적할 때: 모델이 셸 명령·SQL·파일 경로·URL을 자유롭게 넘기는 범용 도구가 있다.
+- 지적하지 않을 때: 인자가 정해진 형식(ID·열거값)이고 서버가 대상 범위를 고정한다. 또는 격리된 샌드박스(운영 자원 접근 없는 컨테이너) 안에서만 돈다.
+
+**검사 2. 되돌리기 어려운 일을 확인 없이 한다**
+- 지적할 때: 지우기·배포·결제·외부 발송 도구가 사람 확인 없이 실행된다.
+- 지적하지 않을 때: 승인 대기열·확인 버튼을 거친다. 또는 시험용 데이터만 건드리는 것이 코드로 고정돼 있다.
+
+**등급**
+- 위험: 운영 자원에 닿는 셸·SQL·삭제·배포 도구가 확인 없이 실행된다.
+- 주의: 도구 계정 권한이 필요보다 넓다(관리자 DB 계정 등). 확인 창이 AI 설명만 보여 준다.
+- 참고: 도구 호출 기록이 없다.
+
+**보고 형식**: `[위험|주의|참고] <id> <파일:줄> — <이유> → <고칠 방법>`
+
+예: `[위험] WS-AGT-001 agent/tools.py:12 — run_sql 도구가 운영 관리자 계정으로 모델이 쓴 SQL 을 확인 없이 실행 → 읽기 전용 조회 도구로 좁히고, 변경 도구는 승인 대기열로`
+
+## 코드
+
+### python
+
+✗ 뚫리는 코드
+
+```python
+TOOLS = {
+    "run_shell": lambda cmd: subprocess.run(cmd, shell=True, capture_output=True, text=True).stdout,
+    "run_sql": lambda q: admin_db.execute(q).fetchall(),  # 운영 DB 관리자 계정
+}
+for call in reply.tool_calls:
+    result = TOOLS[call.name](**call.arguments)  # 무엇이든 묻지 않고 실행한다
+```
+
+✓ 막는 코드
+
+```python
+READ_ONLY = {
+    "list_orders": lambda status: readonly_db.list_orders(status=str(status)),  # 읽기 전용 계정
+    "git_status": lambda: subprocess.run(["git", "status", "--short"], capture_output=True, text=True).stdout,
+}
+NEEDS_APPROVAL = {"cancel_order", "deploy"}
+
+for call in reply.tool_calls:
+    if call.name in READ_ONLY:
+        result = READ_ONLY[call.name](**call.arguments)
+    elif call.name in NEEDS_APPROVAL:  # 사람이 실제 대상·인자를 보고 [확인]해야 실행된다
+        approvals.request(user_id=user.id, tool=call.name, args=call.arguments)
+        result = "승인 대기 중"
+    else:
+        result = "허용되지 않은 도구"
+```

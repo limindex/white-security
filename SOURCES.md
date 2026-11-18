@@ -24,6 +24,7 @@
 | [agamm/claude-code-owasp](https://github.com/agamm/claude-code-owasp) (agamm) | MIT | WS-INJ-001 검사 1·2 | 허용 목록을 거친 `ORDER BY` f-string은 지적하지 않는다는 평가용 미끼 아이디어, "확인 필요" 확신도 표시 | 아이디어만 빌림. 문장·코드는 새로 씀 |
 | [OWASP Top 10 for LLM Applications 2025](https://genai.owasp.org/llm-top-10/) LLM02·LLM05·LLM07·LLM08·LLM09·LLM10 | CC BY-SA 4.0 | WS-LLM-001~006 체크 항목 | 각 항목의 완화 방안(출력은 믿지 않고 검증·인코딩, 시스템 프롬프트에 비밀값·권한 판단 넣지 않기, 민감정보 최소 전송, 권한 인식 벡터 검색·데이터 분리, 사람 검토·근거 표시, 입력·출력 크기와 호출 횟수 제한) | 요약 후 체크 항목 형식으로 다시 씀. 국내 고시·처리방침·고유식별정보 내용은 우리가 덧붙임 |
 | [OWASP API Security Top 10 2023 - API4](https://owasp.org/API-Security/editions/2023/en/0xa4-unrestricted-resource-consumption/) | CC BY-SA 4.0 | WS-LLM-004 체크 항목 | 사용량 한도·비용 상한·속도 제한 | 요약 |
+| [OWASP AI Agent Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/AI_Agent_Security_Cheat_Sheet.html) | CC BY-SA 4.0 | WS-AGT-001·003·004·005 체크 항목 | 도구 최소 권한, 중요한 작업 전 사람 확인, 메모리 검증·사용자별 분리·만료·크기 제한, 에이전트 간 인증·받는 쪽 권한 확인·재전송 방지, 연쇄 장애를 막는 circuit breaker | 요약 후 체크 항목 형식으로 다시 씀. 코드는 새로 짬 |
 
 ## 아이디어만 참고한 자료 (문장·구조는 옮기지 않음)
 
@@ -31,6 +32,8 @@
 |---|---|---|---|
 | anthropics/claude-plugins-official `claude-security` | All rights reserved | WS-PI-001 "고칠 때" 마지막 줄, WS-SEC-001 "보고할 때 주의" | 검토 대상 저장소의 글은 지시가 아니라 데이터로 다룸, 보고서에서 비밀값 가리기. 문장은 우리 말로 새로 씀 |
 | [Simon Willison, The lethal trifecta for AI agents](https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/) (2025) | 블로그(별도 라이선스 표시 없음) | WS-PI-002 체크 항목 마지막 줄 | 비공개 데이터·남이 쓴 글·밖으로 나가는 통로가 한 기능에 모이면 위험하다는 틀. 문장은 우리 말로 새로 씀 |
+| [Invariant Labs, MCP Security Notification: Tool Poisoning Attacks](https://invariantlabs.ai/blog/mcp-security-notification-tool-poisoning-attacks) (2025) | 블로그 | WS-MCP-001 | 도구 설명 속 숨은 지시(Tool Poisoning), 승인 뒤 설명 변경(Rug Pull), 한 서버가 다른 서버 도구 동작을 바꾸는 문제. 승인한 설명의 해시 비교는 우리가 고른 대응 |
+| [Pillar Security, Rules File Backdoor](https://www.pillar.security/blog/new-vulnerability-in-github-copilot-and-cursor-how-hackers-can-weaponize-code-agents) (2025) | 블로그 | WS-AGT-002 | 규칙 파일에 보이지 않는 문자로 지시를 숨기는 수법. 검사 범위·CI 검사 코드는 새로 씀 |
 
 ## 우리가 직접 확인한 것
 
