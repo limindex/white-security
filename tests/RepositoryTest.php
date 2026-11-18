@@ -31,3 +31,32 @@ test('Repository: issues 폴더가 없어도 빈 저장소', function () {
     copy(__DIR__ . '/../data/groups.json', $root . '/data/groups.json');
     assert_same([], Repository::load($root)->all());
 });
+
+test('Repository: groups.json 없음·깨짐·항목 누락은 errors() 에 기록', function () {
+    $cases = [
+        'missing' => null,
+        'badjson' => '{깨짐',
+        'notlist' => '{"id":"web"}',
+        'noname' => '[{"id":"web","order":1}]',
+        'noorder' => '[{"id":"web","name":"웹 기본"}]',
+        'noid' => '[{"name":"웹 기본","order":1}]',
+    ];
+    foreach ($cases as $name => $json) {
+        $root = make_root();
+        if ($json === null) unlink($root . '/data/groups.json');
+        else file_put_contents($root . '/data/groups.json', $json);
+        $errs = Repository::load($root)->errors();
+        assert_true(count($errs) >= 1, "$name: 오류 없음");
+        assert_contains('groups.json', $errs[0]);
+        foreach ($errs as $e) assert_true(!str_contains($e, $root), "$name: 서버 경로 노출");
+    }
+});
+
+test('Repository: 정상 groups.json 이면 묶음 오류 없음, 틀린 항목만 빠짐', function () {
+    $root = make_root();
+    file_put_contents($root . '/data/groups.json', '[{"id":"web","name":"웹 기본","order":5},{"id":"x"}]');
+    $repo = Repository::load($root);
+    assert_same(['web'], array_column($repo->groups(), 'id'));
+    assert_same(1, count($repo->errors()));
+    assert_same(1, count($repo->all()));
+});

@@ -5,13 +5,78 @@ final class Site
     private const JSON_FLAGS = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT;
     private const PAGES = ['coverage' => '적용 범위', 'install' => '설치', 'changelog' => '변경 내역', 'about' => '소개'];
     private const ID_RE = '/^WS-[A-Z]{2,5}-\d{3}$/';
+    /** 마지막 확인일이 이 일수를 넘으면 "확인 필요" */
+    public const STALE_DAYS = 180;
+    public const SEVERITY_LABELS = ['high' => '위험', 'medium' => '주의', 'low' => '참고'];
+    /** 머리말 maps 키 → 화면 이름 (모르는 키는 키 그대로) */
+    public const MAP_LABELS = [
+        'owasp2025' => 'OWASP Top 10 2025', 'api2023' => 'OWASP API Security 2023', 'llm2026' => 'OWASP LLM',
+        'agentic2026' => 'OWASP Agentic', 'asvs5' => 'OWASP ASVS 5', 'cwe' => 'CWE', 'kr_guide' => '국내 진단가이드',
+        'kr_ciip' => '주요정보통신기반시설 가이드',
+    ];
+    public const LANG_LABELS = ['python' => 'Python', 'php' => 'PHP', 'js' => 'JavaScript', 'ts' => 'TypeScript', 'go' => 'Go', 'java' => 'Java', 'ruby' => 'Ruby', 'shell' => 'Shell', 'yaml' => 'YAML'];
 
-    public function __construct(public readonly Repository $repo, private string $baseUrl, public readonly string $mode)
+    public readonly DateTimeImmutable $today;
+
+    public function __construct(public readonly Repository $repo, private string $baseUrl, public readonly string $mode, ?DateTimeImmutable $today = null)
     {
         $this->baseUrl = rtrim($baseUrl, '/') . '/';
+        $this->today = ($today ?? new DateTimeImmutable('today'))->setTime(0, 0);
     }
 
     public function url(string $path): string { return $this->baseUrl . ltrim($path, '/'); }
+
+    /**
+     * 요청 주소(REQUEST_URI)에서 base 뒤 경로만 뽑는다. 쿼리는 버리고 퍼센트 인코딩은 한 번만 푼다.
+     * base 밖의 주소면 null.
+     */
+    public static function pathFromRequest(string $requestUri, string $base): ?string
+    {
+        $q = strpos($requestUri, '?');
+        $uri = $q === false ? $requestUri : substr($requestUri, 0, $q);
+        $base = '/' . trim($base, '/');
+        if ($uri === $base) return '';
+        if (!str_starts_with($uri, $base . '/')) return null;
+        return rawurldecode(substr($uri, strlen($base) + 1));
+    }
+
+    /** 마지막 확인일이 STALE_DAYS 를 넘었나 (주입한 오늘 기준) */
+    public function isStale(Issue $i): bool
+    {
+        return $i->checked < $this->today && $this->today->diff($i->checked)->days > self::STALE_DAYS;
+    }
+
+    public function groupName(string $id): string
+    {
+        foreach ($this->repo->groups() as $g) if ($g['id'] === $id) return $g['name'];
+        return $id;
+    }
+
+    public static function langLabel(string $lang): string { return self::LANG_LABELS[$lang] ?? $lang; }
+
+    public static function mapLabel(string $key): string { return self::MAP_LABELS[$key] ?? $key; }
+
+    /** 심각도 배지 HTML (위험 빨강 · 주의 주황 · 참고 회색) */
+    public static function severityBadge(string $severity, string $suffix = ''): string
+    {
+        $label = self::SEVERITY_LABELS[$severity] ?? $severity;
+        return '<span class="ws-badge ws-badge--' . self::e($severity) . '">' . self::e($label . $suffix) . '</span>';
+    }
+
+    /** 마지막 확인일이 오래됐을 때만 "확인 필요" 배지 */
+    public function staleBadge(Issue $i): string
+    {
+        if (!$this->isStale($i)) return '';
+        return '<span class="ws-badge ws-badge--stale" title="마지막 확인 뒤 ' . self::STALE_DAYS . '일 넘게 지남">확인 필요</span>';
+    }
+
+    /** 확인일 최신순 n건 (같은 날이면 id 순) @return list<Issue> */
+    public function recent(int $n = 5): array
+    {
+        $all = $this->repo->all();
+        usort($all, fn(Issue $a, Issue $b) => [$b->checked, $a->id] <=> [$a->checked, $b->id]);
+        return array_slice($all, 0, $n);
+    }
 
     /** 출력용 이스케이프 */
     public static function e(string $s): string { return htmlspecialchars($s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
@@ -20,14 +85,14 @@ final class Site
     public function route(string $path): array
     {
         $path = trim($path, '/');
-        if ($path === '') return $this->html(200, 'home', ['title' => '화이트 보안', 'groups' => $this->repo->groups(), 'byGroup' => $this->repo->byGroup()]);
+        if ($path === '') return $this->html(200, 'home', ['title' => '', 'groups' => $this->repo->groups(), 'byGroup' => $this->repo->byGroup()]);
         if (isset(self::PAGES[$path])) {
-            $vars = ['title' => self::PAGES[$path]];
+            $vars = ['title' => self::PAGES[$path], 'page' => $path];
             if ($path === 'coverage') $vars['coverage'] = $this->coverage();
             return $this->html(200, $path, $vars);
         }
         if (preg_match('#^issues/([^/]+)$#', $path, $m) && preg_match(self::ID_RE, $m[1]) && ($i = $this->repo->find($m[1]))) {
-            return $this->html(200, 'issue', ['title' => $i->title, 'issue' => $i]);
+            return $this->html(200, 'issue', ['title' => $i->title, 'issue' => $i, 'current' => $i->id, 'wide' => true]);
         }
         if ($path === 'api/issues.json') {
             return $this->json(array_map(fn(Issue $i) => [
@@ -52,7 +117,7 @@ final class Site
             ], $this->repo->searchIndex()));
         }
         if ($path === 'api/coverage.json') return $this->json((object)$this->coverage());
-        return $this->html(404, 'error', ['title' => '찾을 수 없음', 'message' => '찾는 페이지가 없습니다.']);
+        return $this->html(404, 'error', ['title' => '찾을 수 없음', 'message' => '주소가 바뀌었거나 없는 페이지입니다.']);
     }
 
     /** 표준 항목 → 이슈 id 목록. (상세 계산은 이후 Coverage 가 대체) @return array<string,array<string,list<string>>> */
@@ -85,7 +150,10 @@ final class Site
     {
         $content = $this->render($template, $vars);
         $errors = $this->mode === 'live' ? $this->repo->errors() : [];
-        $body = $this->render('layout', ['title' => $vars['title'] ?? '', 'content' => $content, 'errors' => $errors]);
+        $body = $this->render('layout', [
+            'title' => $vars['title'] ?? '', 'content' => $content, 'errors' => $errors,
+            'current' => $vars['current'] ?? null, 'page' => $vars['page'] ?? null, 'wide' => $vars['wide'] ?? false,
+        ]);
         return ['status' => $status, 'type' => 'html', 'body' => $body];
     }
 

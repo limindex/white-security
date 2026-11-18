@@ -8,11 +8,10 @@ final class Repository
     public static function load(string $root): Repository
     {
         $root = rtrim($root, '/');
-        $groups = [];
-        $gj = @file_get_contents($root . '/data/groups.json');
-        if ($gj !== false) $groups = json_decode($gj, true) ?: [];
+        $errors = [];
+        $groups = self::loadGroups($root . '/data/groups.json', $errors);
         $order = [];
-        foreach ($groups as $g) $order[$g['id']] = (int)$g['order'];
+        foreach ($groups as $g) $order[$g['id']] = $g['order'];
 
         $files = [];
         $dir = $root . '/issues';
@@ -22,7 +21,6 @@ final class Repository
         }
         sort($files);
         $issues = [];
-        $errors = [];
         $seen = [];
         foreach ($files as $path) {
             try {
@@ -36,6 +34,34 @@ final class Repository
         }
         usort($issues, fn(Issue $a, Issue $b) => [$order[$a->group] ?? 999, $a->id] <=> [$order[$b->group] ?? 999, $b->id]);
         return new Repository($issues, $errors, $groups);
+    }
+
+    /**
+     * 묶음 목록을 읽는다. 문제는 조용히 넘기지 않고 $errors 에 남긴다(서버 경로 없이 상대 이름만).
+     * @param list<string> $errors @return list<array{id:string,name:string,order:int,site_only:bool}>
+     */
+    private static function loadGroups(string $file, array &$errors): array
+    {
+        $name = 'data/groups.json';
+        $raw = is_file($file) ? @file_get_contents($file) : false;
+        if ($raw === false) { $errors[] = "$name: 파일을 읽을 수 없습니다"; return []; }
+        $data = json_decode($raw, true);
+        if (!is_array($data) || !array_is_list($data)) { $errors[] = "$name: 묶음 목록(JSON 배열) 형식이 아닙니다"; return []; }
+        $out = [];
+        $ids = [];
+        foreach ($data as $n => $g) {
+            $no = $n + 1;
+            $ok = is_array($g)
+                && isset($g['id'], $g['name'], $g['order'])
+                && is_string($g['id']) && preg_match('/^[a-z0-9-]+$/', $g['id'])
+                && is_string($g['name']) && trim($g['name']) !== ''
+                && is_int($g['order']);
+            if (!$ok) { $errors[] = "$name: {$no}번째 항목에 id·name·order 가 없거나 형식이 틀립니다"; continue; }
+            if (isset($ids[$g['id']])) { $errors[] = "$name: id `{$g['id']}` 가 두 번 나옵니다"; continue; }
+            $ids[$g['id']] = true;
+            $out[] = ['id' => $g['id'], 'name' => $g['name'], 'order' => $g['order'], 'site_only' => (bool)($g['site_only'] ?? false)];
+        }
+        return $out;
     }
 
     /** @return list<Issue> */

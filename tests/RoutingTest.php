@@ -72,3 +72,26 @@ test('HTML 은 이스케이프되고 인라인 script/style 없음', function ()
     assert_true(!preg_match('/<script(?![^>]*\bsrc=)/i', $b));
     assert_true(!preg_match('/\sstyle=/i', $b));
 });
+
+test('404 본문에 요청 경로가 나오지 않음', function () {
+    $s = mk_site();
+    foreach (['zz-unique-probe', 'issues/WS-ZZZ-999', 'issues/<script>zz-probe2', 'api/zz-probe3.json'] as $p) {
+        $r = $s->route($p);
+        assert_same(404, $r['status'], $p);
+        foreach (['zz-unique-probe', 'WS-ZZZ-999', 'zz-probe2', 'zz-probe3'] as $needle) assert_true(!str_contains($r['body'], $needle), "$p: $needle");
+    }
+});
+
+test('pathFromRequest: base 뒤 경로만, 쿼리 제거, 한 번만 디코딩', function () {
+    $b = '/white-security/';
+    assert_same('issues/WS-INJ-001', Site::pathFromRequest('/white-security/issues/WS-INJ-001?p=about', $b));
+    assert_same('', Site::pathFromRequest('/white-security/', $b));
+    assert_same('', Site::pathFromRequest('/white-security', $b));
+    assert_same('', Site::pathFromRequest('/white-security/?p=about', $b));
+    assert_same('api/search.json', Site::pathFromRequest('/white-security/api/search.json', $b));
+    assert_same('issues/WS-INJ-001', Site::pathFromRequest('/white-security/issues%2FWS-INJ-001', $b));
+    assert_same('issues/%2e%2e', Site::pathFromRequest('/white-security/issues/%252e%252e', $b), '두 번 디코딩 금지');
+    assert_same(null, Site::pathFromRequest('/other/issues/x', $b));
+    assert_same(null, Site::pathFromRequest('/white-securityX/about', $b));
+    assert_same(null, Site::pathFromRequest('', $b));
+});
