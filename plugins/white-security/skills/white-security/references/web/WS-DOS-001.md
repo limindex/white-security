@@ -1,17 +1,6 @@
 <!-- generated from white-security issues; do not edit -->
 # WS-DOS-001 ReDoS·Resource Exhaustion (정규식 서비스 거부·자원 고갈)
 
-심각도: 주의
-기준: OWASP API 2023 API4(자원 소비 무제한) · ASVS 5.0 V1.3.12 · ASVS 5.0 V15.2.2 · CWE-1333 · CWE-400 · CWE-770(한도 없는 자원 할당) · CWE-674 · CWE-835 · 국내 보안약점 49 시간 및 상태-2(종료되지 않는 반복문 또는 재귀 함수)
-
-## 점검 항목
-
-- 사용자 입력에 쓰는 정규식에 중첩 반복·겹치는 선택이 없어야 한다.
-- 정규식·파싱 전에 입력 길이 상한을 둬야 한다.
-- 페이지 크기·내보내기 행 수에 서버 상한을 둬야 한다.
-- 재귀는 깊이 상한을, 반복문은 횟수·전체 개수 상한을 가져야 한다.
-- 사용자가 정규식을 직접 입력하는 기능은 RE2 같은 선형 엔진을 써야 한다.
-
 ## 탐지 규칙
 
 - **찾는 곳**: `new RegExp(`, `re.compile(`, `per_page`, `paginate($request`, 그 밖에 preg_match, limit·page_size·depth 요청 값, 외부 JSON을 도는 재귀 함수, while(true).
@@ -21,4 +10,15 @@
 - **보고 예**: `[주의] WS-DOS-001 src/validate.js:3 — 이름 검사 정규식에 중첩 반복 ([a-z0-9]+\s?)* → 길이 50 상한 후 [a-z0-9]+( [a-z0-9]+)* 로 교체`
 - **고칠 방법**: 정규식을 바꾼 뒤 기존에 통과하던 값이 그대로 통과하는지 테스트하고, 긴 실패 입력의 처리 시간 테스트를 하나 추가해야 한다.
 
+## 점검 항목
+
+- 사용자 입력에 쓰는 정규식에 중첩 반복·겹치는 선택이 없어야 한다.
+- 정규식·파싱 전에 입력 길이 상한을 둬야 한다.
+- 페이지 크기·내보내기 행 수에 서버 상한을 둬야 한다.
+- 재귀는 깊이 상한을, 반복문은 횟수·전체 개수 상한을 가져야 한다.
+- 사용자가 정규식을 직접 입력하는 기능은 RE2 같은 선형 엔진을 써야 한다.
+
 Code examples (read only the file for the stack you are writing): `WS-DOS-001.code.express.md` (Express) · `WS-DOS-001.code.fastapi.md` (FastAPI) · `WS-DOS-001.code.laravel.md` (Laravel)
+
+기본 심각도: 주의
+기준: OWASP API 2023 API4(자원 소비 무제한) · ASVS 5.0 V1.3.12 · ASVS 5.0 V15.2.2 · CWE-1333 · CWE-400 · CWE-770(한도 없는 자원 할당) · CWE-674 · CWE-835 · 국내 보안약점 49 시간 및 상태-2(종료되지 않는 반복문 또는 재귀 함수)

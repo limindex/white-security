@@ -22,7 +22,12 @@ test('SkillExport: 이슈 파일 — 중립 머리 주석·기준 이름은 fram
     assert_true(str_starts_with($f, "<!-- generated from white-security issues; do not edit -->\n"), '머리 주석');
     assert_true(!str_contains($f, '고치세요') && !str_contains($f, 'issues/ 원본'), '지시처럼 읽히는 머리 없음');
     assert_contains("# WS-INJ-001 SQL 삽입\n", $f);
-    assert_contains("심각도: 위험\n", $f);
+    assert_contains("\n기본 심각도: 위험\n", $f);
+    // 순서: 제목 → 탐지 규칙 → 점검 항목 → 검토 주의 → 코드 목록 → 기본 심각도 → 기준(맨 끝 한 줄)
+    $pos = array_map(fn($k) => strpos($f, $k), ['## 탐지 규칙', '## 점검 항목', 'Code examples', '기본 심각도:', '기준: ']);
+    foreach ($pos as $n => $p) assert_true(is_int($p) && ($n === 0 || $p > $pos[$n - 1]), '절 순서 ' . json_encode($pos));
+    $lines = explode("\n", rtrim($f, "\n"));
+    assert_true(str_starts_with(end($lines), '기준: '), '기준 줄이 맨 끝');
     // 판본 연도가 붙은 이름(owasp2025 은 short 가 없어 name), 접두어 중복 없음, 번호 뒤 항목 이름
     assert_contains('OWASP Top 10:2025 A05(삽입)', $f);
     assert_contains('ASVS 5.0 V1.2', $f);
@@ -33,6 +38,15 @@ test('SkillExport: 이슈 파일 — 중립 머리 주석·기준 이름은 fram
     foreach (['## 발생 상황', '## 요약', '## 위험 배경', '## 대응 방법', '## 코드 예시', '보고 형식', '[위험|주의|참고] <id>'] as $s) assert_true(!str_contains($f, $s), $s);
     assert_contains('- **보고 예**: `[위험] WS-INJ-001', $f);
     assert_contains('- **고칠 방법**: 값만 자리표시자로 바꿔야 한다.', $f);
+    assert_true(!str_contains($f, '## 검토 주의'), '검토 주의 칸이 없으면 절도 없음');
+    // 검토 주의는 탐지 규칙 칸에서 빠져 점검 항목 뒤 별도 절로(고칠 방법은 탐지 규칙에 남음)
+    $fx = file_get_contents(__DIR__ . '/fixtures/issues/web/WS-INJ-001-sql-injection.md');
+    [$ref3] = se_write(['WS-INJ-007-x.md' => str_replace(['WS-INJ-001', "- **고칠 방법**:"], ['WS-INJ-007', "- **검토 주의**: 정수 변환 뒤 연결은 참고로만.\n- **고칠 방법**:"], $fx)]);
+    $g = file_get_contents("$ref3/web/WS-INJ-007.md");
+    assert_true(!str_contains($g, '- **검토 주의**'), '탐지 규칙 칸에 검토 주의 없음');
+    assert_contains("\n## 검토 주의\n\n정수 변환 뒤 연결은 참고로만.\n", $g);
+    assert_true(strpos($g, '## 검토 주의') > strpos($g, '## 점검 항목'), '검토 주의는 점검 항목 뒤');
+    assert_true(strpos($g, '- **고칠 방법**') < strpos($g, '## 점검 항목'), '고칠 방법은 탐지 규칙 안');
     // 코드 블록 안의 ✗ 로 시작하는 줄은 건드리지 않는다
     [$ref2] = se_write(['WS-INJ-002-x.md' => str_replace(['WS-INJ-001', '## 주석처럼 보이는 줄'], ['WS-INJ-002', '✗ 코드 속 줄'], file_get_contents(__DIR__ . '/fixtures/issues/web/WS-INJ-001-sql-injection.md'))]);
     $py = file_get_contents("$ref2/web/WS-INJ-002.code.python.md");
@@ -48,6 +62,8 @@ test('SkillExport: 전체 INDEX 없음, 묶음별 INDEX = 이름·when·코드 �
     assert_contains("# web · 웹 애플리케이션\n", $idx);
     assert_contains("When: 입력을 받아 DB·화면·파일·명령으로 넘기는 웹 기능\n", $idx);
     assert_contains('- `cursor.execute(` `db.query(` `->query(` → WS-INJ-001 SQL 삽입', $idx);
+    assert_contains('Signals are candidates, not findings', $idx); // 신호는 후보일 뿐, 이슈 파일의 검사로 판정
+    assert_contains('max 2 per task', $idx);
     assert_true(!str_contains($idx, '사용자 입력이 SQL 문장에'), '요약 문장 없음');
     // 이슈 파일은 같은 폴더에 있다
     preg_match_all('/→ (WS-[A-Z]+-\d{3})/', $idx, $m);
@@ -81,10 +97,9 @@ test('SkillExport: 라우팅 표 — 묶음당 한 줄(route → INDEX 경로), 
     }
 });
 
-test('build: SKILL.md 가 있으면 라우팅 표를 끼워 넣고, 표시가 없으면 빌드 실패', function () {
+test('build: SKILL.md 가 있으면 라우팅 표를 끼워 넣고, 표시가 없거나 SKILL.md 가 없으면 빌드 실패', function () {
     $root = make_root();
     $dir = $root . '/' . SkillExport::SKILL_DIR;
-    mkdir($dir, 0777, true);
     file_put_contents("$dir/SKILL.md", "# s\n" . SkillExport::ROUTING_START . "\n" . SkillExport::ROUTING_END . "\n");
     exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg(SE_ROOT . '/build.php') . ' --root=' . escapeshellarg($root) . ' --out=dist --today=2026-11-18 2>&1', $l, $c);
     assert_same(0, $c, implode("\n", $l));
@@ -93,6 +108,10 @@ test('build: SKILL.md 가 있으면 라우팅 표를 끼워 넣고, 표시가 �
     exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg(SE_ROOT . '/build.php') . ' --root=' . escapeshellarg($root) . ' --out=dist --today=2026-11-18 2>&1', $l2, $c2);
     assert_same(1, $c2);
     assert_contains('SKILL.md', implode("\n", $l2));
+    unlink("$dir/SKILL.md");
+    exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg(SE_ROOT . '/build.php') . ' --root=' . escapeshellarg($root) . ' --out=dist --today=2026-11-18 2>&1', $l3, $c3);
+    assert_same(1, $c3, 'SKILL.md 없으면 실패');
+    assert_contains('SKILL.md 가 없습니다', implode("\n", $l3));
 });
 
 test('저장소: 생성물이 원본과 일치(php build.php 후 커밋), 옛 skills/ 폴더 없음', function () {
@@ -102,6 +121,7 @@ test('저장소: 생성물이 원본과 일치(php build.php 후 커밋), 옛 sk
     $have = [];
     $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($ref, FilesystemIterator::SKIP_DOTS));
     foreach ($it as $f) if ($f->isFile()) $have[substr($f->getPathname(), strlen($ref) + 1)] = file_get_contents($f->getPathname());
+    foreach (SkillExport::HAND_FILES as $hand) { assert_true(isset($have[$hand]), "손으로 쓰는 $hand"); unset($have[$hand]); }
     ksort($have); ksort($want);
     assert_same(array_keys($want), array_keys($have), '파일 목록 (php build.php 실행 필요)');
     foreach ($want as $rel => $text) assert_true($have[$rel] === $text, "$rel 이 원본과 다름 (php build.php 실행 필요)");

@@ -1,8 +1,13 @@
 <!-- generated from white-security issues; do not edit -->
 # WS-SSRF-001 SSRF (서버사이드 요청 위조)
 
-심각도: 위험
-기준: OWASP Top 10:2025 A01(접근 통제 실패) · OWASP API 2023 API7(서버사이드 요청 위조) · ASVS 5.0 V1.3.6 · ASVS 5.0 V15.3.2 · ASVS 5.0 V13.2.4 · CWE-918(서버사이드 요청 위조) · 국내 보안약점 49 입력데이터 검증 및 표현-12(서버사이드 요청 위조) · 기반시설 웹 21 SF(서버사이드 요청 위조)
+## 탐지 규칙
+
+- **찾는 곳**: 외부 입력이나 LLM 출력이 들어가는 `requests.get(`, `httpx.`, `urllib.request.urlopen(`, `fetch(`, `axios(`, `file_get_contents(`, `curl_init(`, 헤드리스 브라우저의 `page.goto(`, `got(`, `http.get(`, `Guzzle`.
+- **검사 1 — 주소 검사 없음**: 지적할 때: 요청·DB·LLM 출력에서 온 URL을 검사 없이 서버가 여는 경우. / 지적하지 않을 때: URL이 코드에 고정된 경우. 서버가 정한 도메인 허용 목록에서만 고르는 경우.
+- **검사 2 — 문자열에만 머무는 검사**: 지적할 때: 호스트 이름을 문자열로만 막는 경우(`"localhost" in url`, `startswith`). IP를 검사한 뒤 라이브러리가 DNS를 다시 조회해 접속하는 경우. Node처럼 IP 주소면 `lookup`을 건너뛰는 구조에서 IP 주소를 따로 막지 않는 경우. 리다이렉트를 검사 없이 따라가는 경우. / 지적하지 않을 때: 확인한 IP로 접속을 고정하고(`CURLOPT_RESOLVE`, 사용자 정의 `lookup`, 연결 고정), 리다이렉트를 끄거나 매번 다시 검사하는 경우. 바깥 요청 전용 프록시가 내부 대역을 막는 경우.
+- **등급**: 위험: 사용자·AI가 준 URL을 검사 없이 여는 경우. 특히 응답이 사용자에게 돌아가거나 클라우드 서버에서 도는 경우. / 주의: 문자열 검사만 있거나 DNS를 두 번 조회하는 경우. 리다이렉트를 따라가는 경우. / 참고: 시간·크기 제한이 없는 경우. PHP `CURLOPT_MAXFILESIZE`에만 기대는 경우(curl 8.4 전에는 길이를 모르는 응답에 효과 없음).
+- **보고 예**: `[위험] WS-SSRF-001 api/preview.py:12 — 링크 미리보기가 받은 URL 을 requests.get 으로 그대로 열고 본문을 돌려줌 → https 기본 포트만, 내부 IP 차단, 검사한 IP 로만 접속, 리다이렉트 끔`
 
 ## 점검 항목
 
@@ -13,12 +18,7 @@
 - 가져올 도메인이 정해져 있으면 허용 목록을 써야 한다. 클라우드에서는 IMDSv2(토큰이 있어야 답하는 메타데이터 방식)를 켜고, 서버의 바깥 요청은 전용 프록시·방화벽으로 좁혀야 한다.
 - AI 에이전트의 웹 가져오기 도구도 이 함수를 거쳐야 한다.
 
-## 탐지 규칙
-
-- **찾는 곳**: 외부 입력이나 LLM 출력이 들어가는 `requests.get(`, `httpx.`, `urllib.request.urlopen(`, `fetch(`, `axios(`, `file_get_contents(`, `curl_init(`, 헤드리스 브라우저의 `page.goto(`, `got(`, `http.get(`, `Guzzle`.
-- **검사 1 — 주소 검사 없음**: 지적할 때: 요청·DB·LLM 출력에서 온 URL을 검사 없이 서버가 여는 경우. / 지적하지 않을 때: URL이 코드에 고정된 경우. 서버가 정한 도메인 허용 목록에서만 고르는 경우.
-- **검사 2 — 문자열에만 머무는 검사**: 지적할 때: 호스트 이름을 문자열로만 막는 경우(`"localhost" in url`, `startswith`). IP를 검사한 뒤 라이브러리가 DNS를 다시 조회해 접속하는 경우. Node처럼 IP 주소면 `lookup`을 건너뛰는 구조에서 IP 주소를 따로 막지 않는 경우. 리다이렉트를 검사 없이 따라가는 경우. / 지적하지 않을 때: 확인한 IP로 접속을 고정하고(`CURLOPT_RESOLVE`, 사용자 정의 `lookup`, 연결 고정), 리다이렉트를 끄거나 매번 다시 검사하는 경우. 바깥 요청 전용 프록시가 내부 대역을 막는 경우.
-- **등급**: 위험: 사용자·AI가 준 URL을 검사 없이 여는 경우. 특히 응답이 사용자에게 돌아가거나 클라우드 서버에서 도는 경우. / 주의: 문자열 검사만 있거나 DNS를 두 번 조회하는 경우. 리다이렉트를 따라가는 경우. / 참고: 시간·크기 제한이 없는 경우. PHP `CURLOPT_MAXFILESIZE`에만 기대는 경우(curl 8.4 전에는 길이를 모르는 응답에 효과 없음).
-- **보고 예**: `[위험] WS-SSRF-001 api/preview.py:12 — 링크 미리보기가 받은 URL 을 requests.get 으로 그대로 열고 본문을 돌려줌 → https 기본 포트만, 내부 IP 차단, 검사한 IP 로만 접속, 리다이렉트 끔`
-
 Code examples (read only the file for the stack you are writing): `WS-SSRF-001.code.python.md` (Python) · `WS-SSRF-001.code.js.md` (JavaScript) · `WS-SSRF-001.code.php.md` (PHP)
+
+기본 심각도: 위험
+기준: OWASP Top 10:2025 A01(접근 통제 실패) · OWASP API 2023 API7(서버사이드 요청 위조) · ASVS 5.0 V1.3.6 · ASVS 5.0 V15.3.2 · ASVS 5.0 V13.2.4 · CWE-918(서버사이드 요청 위조) · 국내 보안약점 49 입력데이터 검증 및 표현-12(서버사이드 요청 위조) · 기반시설 웹 21 SF(서버사이드 요청 위조)

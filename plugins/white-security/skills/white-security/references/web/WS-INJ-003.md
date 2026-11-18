@@ -1,17 +1,6 @@
 <!-- generated from white-security issues; do not edit -->
 # WS-INJ-003 SSTI·Code Injection (서버 템플릿 삽입·코드 삽입)
 
-심각도: 위험
-기준: OWASP Top 10:2025 A05(삽입) · ASVS 5.0 V1.3.7 · ASVS 5.0 V1.3.2 · ASVS 5.0 V1.3.10 · CWE-1336 · CWE-94(코드 삽입) · CWE-95 · CWE-134 · 국내 보안약점 49 입력데이터 검증 및 표현-2(코드 삽입) · 국내 보안약점 49 입력데이터 검증 및 표현-17(포맷 스트링 삽입) · 기반시설 웹 21 CI(코드 인젝션)
-
-## 점검 항목
-
-- 템플릿 원문은 코드·파일에 고정하고, 사용자 값은 변수로만 넘겨야 한다.
-- `eval`·`exec`·`new Function`·`vm` 실행에 외부 값을 넘기지 않아야 한다.
-- 사용자 문구 꾸미기는 정해진 자리 치환만 허용해야 한다.
-- 사용자 문자열을 `str.format`·`format_map`의 서식 문자열로 쓰지 않아야 한다.
-- 샌드박스 템플릿(`SandboxedEnvironment`)도 완전한 방어로 믿지 않아야 한다.
-
 ## 탐지 규칙
 
 - **찾는 곳**: `render_template_string(`, `Blade::render(`, `new Function(`, `ejs.render(`, 그 밖에 jinja2 Template·eval·exec·vm.runInContext·Handlebars.compile·str.format·format_map.
@@ -21,4 +10,15 @@
 - **보고 예**: `[위험] WS-INJ-003 app/views.py:12 — 이름을 f-string 으로 템플릿에 넣고 render_template_string 실행 → 고정 템플릿에 name 변수로 전달`
 - **고칠 방법**: 꾸미기 기능은 허용 키 목록과 단순 치환으로 바꿔야 하고, 이미 저장된 템플릿에 `{{`·`{%`·`@php`가 남아 있는지 확인해야 한다.
 
+## 점검 항목
+
+- 템플릿 원문은 코드·파일에 고정하고, 사용자 값은 변수로만 넘겨야 한다.
+- `eval`·`exec`·`new Function`·`vm` 실행에 외부 값을 넘기지 않아야 한다.
+- 사용자 문구 꾸미기는 정해진 자리 치환만 허용해야 한다.
+- 사용자 문자열을 `str.format`·`format_map`의 서식 문자열로 쓰지 않아야 한다.
+- 샌드박스 템플릿(`SandboxedEnvironment`)도 완전한 방어로 믿지 않아야 한다.
+
 Code examples (read only the file for the stack you are writing): `WS-INJ-003.code.flask.md` (Flask) · `WS-INJ-003.code.python.md` (Python) · `WS-INJ-003.code.express.md` (Express) · `WS-INJ-003.code.laravel.md` (Laravel)
+
+기본 심각도: 위험
+기준: OWASP Top 10:2025 A05(삽입) · ASVS 5.0 V1.3.7 · ASVS 5.0 V1.3.2 · ASVS 5.0 V1.3.10 · CWE-1336 · CWE-94(코드 삽입) · CWE-95 · CWE-134 · 국내 보안약점 49 입력데이터 검증 및 표현-2(코드 삽입) · 국내 보안약점 49 입력데이터 검증 및 표현-17(포맷 스트링 삽입) · 기반시설 웹 21 CI(코드 인젝션)

@@ -2,7 +2,7 @@
 # fetch · 외부 데이터 수집·처리
 
 When: 외부 URL·파일·XML·압축 파일을 가져와 읽거나 파싱하는 경우
-Match code signals to the lines below, then read only the matching issue file (`<ID>.md` in this folder), at most 2.
+Signals are candidates, not findings: open the matching `<ID>.md` here (max 2 per task) and decide with its checks (constant or request value?).
 Stacks: Python · JavaScript · PHP
 
 - `pickle.load(s)` `yaml.load(` `yaml.unsafe_load` `unserialize(` `node-serialize` `serialize-javascript` `joblib.load` `jsonpickle.decode` → WS-DES-001 Insecure Deserialization

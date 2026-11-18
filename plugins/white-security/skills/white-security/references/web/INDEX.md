@@ -2,7 +2,7 @@
 # web · 웹 애플리케이션
 
 When: 입력을 받아 DB·화면·파일·명령으로 넘기는 웹 기능
-Match code signals to the lines below, then read only the matching issue file (`<ID>.md` in this folder), at most 2.
+Signals are candidates, not findings: open the matching `<ID>.md` here (max 2 per task) and decide with its checks (constant or request value?).
 Stacks: Python · FastAPI · Django · Flask · JavaScript · Next.js · Express · PHP · Laravel · Nginx
 
 - `gethostbyaddr(` `dns.reverse(` `extract($_` `tempfile.mktemp(` → WS-API-001 Dangerous API Use

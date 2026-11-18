@@ -1,18 +1,6 @@
 <!-- generated from white-security issues; do not edit -->
 # WS-SMS-001 OTP Abuse (문자 인증번호 무차별 대입·발송 남용)
 
-심각도: 위험
-기준: OWASP Top 10:2025 A07(인증 실패) · OWASP API 2023 API2(인증 실패) · OWASP API 2023 API4(자원 소비 무제한) · ASVS 5.0 V6.5.1 · ASVS 5.0 V6.5.3 · ASVS 5.0 V6.5.5 · ASVS 5.0 V6.6.2 · ASVS 5.0 V6.6.3 · ASVS 5.0 V11.5.1 · CWE-307 · CWE-330 · CWE-640 · CWE-799 · 국내 보안약점 49 보안기능-16(반복된 인증시도 제한 기능 부재) · 국내 보안약점 49 보안기능-8(적절하지 않은 난수 값 사용) · 기반시설 웹 21 AU(자동화 공격) · 기반시설 웹 21 PR(비밀번호 복구 취약)
-
-## 점검 항목
-
-- 인증번호는 암호학적 난수(`random_int`·`secrets`·`crypto.randomInt`)로 6자리 이상 만들어야 한다.
-- 유효시간은 짧게(10분 이내) 두고, 성공하면 바로 지워야 한다.
-- 같은 인증 건의 오입력은 정한 횟수(예: 5회)를 넘으면 무효로 해야 한다.
-- 발송은 번호·IP·계정별 한도와 재발송 대기 시간을 두고, 쓰지 않는 국가 번호는 막아야 한다.
-- 비밀번호 찾기 문자는 요청 값이 아니라 DB에 등록된 번호로만 보내야 한다.
-- 인증번호는 응답·로그에 넣지 않고, 성공 결과는 번호·목적·세션에 묶어 서버가 관리해야 한다.
-
 ## 탐지 규칙
 
 - **찾는 곳**: `otp_code`, `verification_code`, `/sms/send`, `/otp/verify`, `/send-code`, 그 밖에 인증번호를 만드는 Math.random·random.randint·mt_rand, 문자 발송 SDK 호출, 인증번호 확인 경로, 비밀번호 찾기의 수신번호 처리.
@@ -23,4 +11,16 @@
 - **보고 예**: `[위험] WS-SMS-001 app/api/password-reset/sms/route.ts:6 — 요청 본문의 phone 으로 재설정 인증번호를 보냄(수신번호 변조) → 이메일로 사용자를 찾아 DB 에 등록된 번호로만 발송`
 - **고칠 방법**: 확인 쪽은 인증 건당 실패 횟수와 만료를, 발송 쪽은 번호·IP·계정 한도와 일별 상한을 함께 걸어야 한다.
 
+## 점검 항목
+
+- 인증번호는 암호학적 난수(`random_int`·`secrets`·`crypto.randomInt`)로 6자리 이상 만들어야 한다.
+- 유효시간은 짧게(10분 이내) 두고, 성공하면 바로 지워야 한다.
+- 같은 인증 건의 오입력은 정한 횟수(예: 5회)를 넘으면 무효로 해야 한다.
+- 발송은 번호·IP·계정별 한도와 재발송 대기 시간을 두고, 쓰지 않는 국가 번호는 막아야 한다.
+- 비밀번호 찾기 문자는 요청 값이 아니라 DB에 등록된 번호로만 보내야 한다.
+- 인증번호는 응답·로그에 넣지 않고, 성공 결과는 번호·목적·세션에 묶어 서버가 관리해야 한다.
+
 Code examples (read only the file for the stack you are writing): `WS-SMS-001.code.laravel.md` (Laravel) · `WS-SMS-001.code.nextjs.md` (Next.js) · `WS-SMS-001.code.fastapi.md` (FastAPI)
+
+기본 심각도: 위험
+기준: OWASP Top 10:2025 A07(인증 실패) · OWASP API 2023 API2(인증 실패) · OWASP API 2023 API4(자원 소비 무제한) · ASVS 5.0 V6.5.1 · ASVS 5.0 V6.5.3 · ASVS 5.0 V6.5.5 · ASVS 5.0 V6.6.2 · ASVS 5.0 V6.6.3 · ASVS 5.0 V11.5.1 · CWE-307 · CWE-330 · CWE-640 · CWE-799 · 국내 보안약점 49 보안기능-16(반복된 인증시도 제한 기능 부재) · 국내 보안약점 49 보안기능-8(적절하지 않은 난수 값 사용) · 기반시설 웹 21 AU(자동화 공격) · 기반시설 웹 21 PR(비밀번호 복구 취약)

@@ -59,7 +59,8 @@ $skillDir = $root . '/' . SkillExport::SKILL_DIR;
 $skillMdPath = $skillDir . '/SKILL.md';
 try {
     $skillFiles = SkillExport::render($repo);
-    $skillMd = is_file($skillMdPath) ? SkillExport::injectRouting((string)file_get_contents($skillMdPath), SkillExport::routing($repo)) : null;
+    if (!is_file($skillMdPath)) throw new SkillExportError(SkillExport::SKILL_DIR . '/SKILL.md 가 없습니다(스킬 본체는 손으로 쓰는 파일이고, 빌드는 그 안의 라우팅 표만 갱신합니다)');
+    $skillMd = SkillExport::injectRouting((string)file_get_contents($skillMdPath), SkillExport::routing($repo));
 } catch (SkillExportError $e) {
     bail($e->getMessage());
 }
@@ -81,7 +82,7 @@ function rrmdir(string $d): void
 }
 function put(string $path, string $body): void
 {
-    if (!is_dir(dirname($path))) mkdir(dirname($path), 0777, true);
+    if (!is_dir(dirname($path))) mkdir(dirname($path), 0755, true);
     file_put_contents($path, $body);
 }
 
@@ -120,8 +121,9 @@ sort($list);
 foreach ($list as $f) put($out . '/assets/' . substr($f, strlen($assets) + 1), (string)file_get_contents($f));
 
 $refs = SkillExport::write($repo, $skillDir . '/references', $skillFiles);
-if ($skillMd !== null) file_put_contents($skillMdPath, $skillMd);
+file_put_contents($skillMdPath, $skillMd);
 echo count($files) . "개 쪽과 API, assets " . count($list) . "개를 {$opt['out']} 에 만들었습니다.\n";
 if ($origin === '') echo "origin 이 비어 sitemap.xml 은 만들지 않았습니다 (--origin=https://도메인 또는 data/site.json).\n";
 echo "스킬 참고 파일 " . count($refs) . "개를 " . SkillExport::SKILL_DIR . "/references 에 만들었습니다.\n";
-echo $skillMd !== null ? "SKILL.md 라우팅 표를 갱신했습니다.\n" : "SKILL.md 가 없어 라우팅 표는 넣지 않았습니다.\n";
+$desc = SkillExport::description($skillMd);
+echo 'SKILL.md 라우팅 표를 갱신했습니다(추정 약 ' . SkillExport::estimateTokens($skillMd) . '토큰, description ' . mb_strlen($desc) . '자 약 ' . SkillExport::estimateTokens($desc) . "토큰).\n";

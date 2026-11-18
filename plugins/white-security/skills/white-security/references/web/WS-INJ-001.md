@@ -1,8 +1,15 @@
 <!-- generated from white-security issues; do not edit -->
 # WS-INJ-001 SQL 인젝션 (SQLi)
 
-심각도: 위험
-기준: OWASP Top 10:2025 A05(삽입) · ASVS 5.0 V1.2 · CWE-89(SQL 삽입) · 국내 보안약점 49 입력데이터 검증 및 표현-1(SQL 삽입) · 기반시설 웹 21 SI(SQL 인젝션)
+## 탐지 규칙
+
+- **찾는 곳**: 쿼리 실행부와 그 인자(`cursor.execute(`, `->query(`, `pool.query(`, `whereRaw(`, `DB::raw(`, `knex.raw(`, 그 밖에 mysqli_query·db.query·sequelize.query·executemany, Django raw, SQLAlchemy text, PDO exec·prepare, pg_query).
+- **검사 1 — 값 이어 붙이기**: 지적할 때: 요청·파일·외부 API·LLM 출력에서 온 값이 `+`, `.`, f-string, 템플릿 리터럴, `%` 포맷, `format()`, `sprintf`로 쿼리 문자열에 합쳐지는 경우(함수 몇 단계를 거쳐 와도 출처가 외부면 같음). / 지적하지 않을 때: 합치는 값이 코드 상수나 허용 목록에서 고른 식별자이거나, 자리표시자 문자열만 조립하는 경우(`", ".join(["%s"] * len(ids))`).
+- **검사 2 — 식별자 자리**: 지적할 때: `ORDER BY`, 테이블 이름, 컬럼 이름에 요청 값이 그대로 들어가는 경우. / 지적하지 않을 때: `SORT_COLUMNS[sort]`처럼 허용 목록 매핑을 거치고, 목록에 없으면 기본값을 쓰는 경우.
+- **검사 3 — 이스케이프에 기댄 코드**: 지적할 때: `addslashes`나 자체 이스케이프 뒤에 문자열을 이어 붙이는 경우(SQL 인젝션으로 보고 바인딩 권고). / 지적하지 않을 때: 이스케이프 결과가 쿼리 문자열이 아닌 곳(화면 출력, 파일 등)에만 쓰이는 경우.
+- **등급**: 위험: 외부 값이 쿼리 문자열에 그대로 들어가는 경우. / 주의: 값의 출처를 끝까지 따라가지 못한 경우("확인 필요" 표시). / 참고: 정수 변환(`int()`·`(int)`) 뒤 연결, DSN 문자셋 미지정, DB 오류 원문 노출.
+- **보고 예**: `[위험] WS-INJ-001 app/search.py:18 — 검색어를 f-string으로 SQL에 넣음 → cur.execute("... LIKE %s", (f"%{q}%",)) 로 바인딩`
+- **고칠 방법**: 쿼리 모양은 그대로 두고 값만 자리표시자로 바꿔야 하고, 기존 테스트로 결과가 같은지 확인한 뒤 따옴표가 든 입력 테스트를 하나 추가해야 한다.
 
 ## 점검 항목
 
@@ -13,15 +20,11 @@
 - DB 연결 문자셋을 DSN에 적어야 하고(`charset=utf8mb4`), PDO는 `PDO::ATTR_EMULATE_PREPARES => false`로 서버 쪽 준비문을 써야 한다.
 - 앱이 쓰는 DB 계정은 필요한 권한만 가져야 하고, DB 오류 원문을 화면에 보여 주지 않아야 한다.
 
-## 탐지 규칙
+## 검토 주의
 
-- **찾는 곳**: 쿼리 실행부와 그 인자(`cursor.execute(`, `->query(`, `pool.query(`, `whereRaw(`, `DB::raw(`, `knex.raw(`, 그 밖에 mysqli_query·db.query·sequelize.query·executemany, Django raw, SQLAlchemy text, PDO exec·prepare, pg_query).
-- **검사 1 — 값 이어 붙이기**: 지적할 때: 요청·파일·외부 API·LLM 출력에서 온 값이 `+`, `.`, f-string, 템플릿 리터럴, `%` 포맷, `format()`, `sprintf`로 쿼리 문자열에 합쳐지는 경우(함수 몇 단계를 거쳐 와도 출처가 외부면 같음). / 지적하지 않을 때: 합치는 값이 코드 상수나 허용 목록에서 고른 식별자이거나, 자리표시자 문자열만 조립하는 경우(`", ".join(["%s"] * len(ids))`).
-- **검사 2 — 식별자 자리**: 지적할 때: `ORDER BY`, 테이블 이름, 컬럼 이름에 요청 값이 그대로 들어가는 경우. / 지적하지 않을 때: `SORT_COLUMNS[sort]`처럼 허용 목록 매핑을 거치고, 목록에 없으면 기본값을 쓰는 경우.
-- **검사 3 — 이스케이프에 기댄 코드**: 지적할 때: `addslashes`나 자체 이스케이프 뒤에 문자열을 이어 붙이는 경우(SQL 인젝션으로 보고 바인딩 권고). / 지적하지 않을 때: 이스케이프 결과가 쿼리 문자열이 아닌 곳(화면 출력, 파일 등)에만 쓰이는 경우.
-- **등급**: 위험: 외부 값이 쿼리 문자열에 그대로 들어가는 경우. / 주의: 값의 출처를 끝까지 따라가지 못한 경우("확인 필요" 표시). / 참고: 정수 변환(`int()`·`(int)`) 뒤 연결, DSN 문자셋 미지정, DB 오류 원문 노출.
-- **보고 예**: `[위험] WS-INJ-001 app/search.py:18 — 검색어를 f-string으로 SQL에 넣음 → cur.execute("... LIKE %s", (f"%{q}%",)) 로 바인딩`
-- **검토 주의**: 이스케이프 코드를 지적할 때 이유로 "EUC-KR 멀티바이트 우회"를 들지 않아야 하고, 연결 문자셋이 GBK·Big5·Shift_JIS·CP932일 때만 그 우회를 근거로 함께 적어야 한다(EUC-KR이어도 이어 붙이는 쿼리 자체는 지적 대상).
-- **고칠 방법**: 쿼리 모양은 그대로 두고 값만 자리표시자로 바꿔야 하고, 기존 테스트로 결과가 같은지 확인한 뒤 따옴표가 든 입력 테스트를 하나 추가해야 한다.
+이스케이프 코드를 지적할 때 이유로 "EUC-KR 멀티바이트 우회"를 들지 않아야 하고, 연결 문자셋이 GBK·Big5·Shift_JIS·CP932일 때만 그 우회를 근거로 함께 적어야 한다(EUC-KR이어도 이어 붙이는 쿼리 자체는 지적 대상).
 
 Code examples (read only the file for the stack you are writing): `WS-INJ-001.code.python.md` (Python) · `WS-INJ-001.code.js.md` (JavaScript) · `WS-INJ-001.code.php.md` (PHP)
+
+기본 심각도: 위험
+기준: OWASP Top 10:2025 A05(삽입) · ASVS 5.0 V1.2 · CWE-89(SQL 삽입) · 국내 보안약점 49 입력데이터 검증 및 표현-1(SQL 삽입) · 기반시설 웹 21 SI(SQL 인젝션)

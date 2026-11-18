@@ -2,7 +2,7 @@
 # mobile · 모바일 앱
 
 When: React Native·Expo·Flutter 등 모바일 앱의 키·저장·딥링크·WebView·결제 확인·통신
-Match code signals to the lines below, then read only the matching issue file (`<ID>.md` in this folder), at most 2.
+Signals are candidates, not findings: open the matching `<ID>.md` here (max 2 per task) and decide with its checks (constant or request value?).
 Stacks: Next.js · Express · React Native · Expo · Flutter · Kotlin
 
 - `EXPO_PUBLIC_` `sk-proj-` `api.openai.com` `api.anthropic.com` `String.fromEnvironment(` `--dart-define` `react-native-config` `buildConfigField` → WS-MOB-001 Hardcoded Secrets in App Bundle

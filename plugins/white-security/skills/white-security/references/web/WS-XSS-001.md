@@ -1,17 +1,6 @@
 <!-- generated from white-security issues; do not edit -->
 # WS-XSS-001 XSS (크로스사이트 스크립팅)
 
-심각도: 위험
-기준: OWASP Top 10:2025 A05(삽입) · ASVS 5.0 V1.2.1 · ASVS 5.0 V1.2.2 · ASVS 5.0 V1.3.1 · ASVS 5.0 V3.2.2 · CWE-79(크로스사이트 스크립팅) · 국내 보안약점 49 입력데이터 검증 및 표현-4(크로스사이트 스크립트) · 기반시설 웹 21 XS(크로스사이트 스크립트)
-
-## 점검 항목
-
-- 화면 출력은 기본 출력(`{{ }}`, JSX `{}`)으로 하고 이스케이프를 끄지 않아야 한다.
-- HTML을 받아야 하면 허용 태그만 남기는 새니타이저를 거쳐야 한다.
-- 사용자 링크의 `href`·`src`는 `http:`·`https:`만 허용해야 한다.
-- `<script>` 안의 데이터는 `@json`·`json_script`처럼 이스케이프해 주는 기능으로 넣어야 한다.
-- CSP로 인라인 스크립트를 막아 두 번째 방어선을 둬야 한다.
-
 ## 탐지 규칙
 
 - **찾는 곳**: `{!! $`, `dangerouslySetInnerHTML`, `mark_safe(`, `|safe`, `.innerHTML =`, 그 밖에 v-html, document.write, 사용자 값이 들어가는 href·src.
@@ -22,4 +11,15 @@
 - **보고 예**: `[위험] WS-XSS-001 resources/views/posts/show.blade.php:14 — 댓글 본문을 {!! !!} 로 출력 → {{ }} 로 바꾸고 줄바꿈은 CSS 로 처리`
 - **고칠 방법**: 이스케이프를 다시 켜야 하고, 줄바꿈 같은 서식이 필요하면 CSS(`white-space: pre-line`)나 이스케이프 다음 단계의 서식 함수로 처리해야 한다.
 
+## 점검 항목
+
+- 화면 출력은 기본 출력(`{{ }}`, JSX `{}`)으로 하고 이스케이프를 끄지 않아야 한다.
+- HTML을 받아야 하면 허용 태그만 남기는 새니타이저를 거쳐야 한다.
+- 사용자 링크의 `href`·`src`는 `http:`·`https:`만 허용해야 한다.
+- `<script>` 안의 데이터는 `@json`·`json_script`처럼 이스케이프해 주는 기능으로 넣어야 한다.
+- CSP로 인라인 스크립트를 막아 두 번째 방어선을 둬야 한다.
+
 Code examples (read only the file for the stack you are writing): `WS-XSS-001.code.laravel.md` (Laravel) · `WS-XSS-001.code.nextjs.md` (Next.js) · `WS-XSS-001.code.django.md` (Django)
+
+기본 심각도: 위험
+기준: OWASP Top 10:2025 A05(삽입) · ASVS 5.0 V1.2.1 · ASVS 5.0 V1.2.2 · ASVS 5.0 V1.3.1 · ASVS 5.0 V3.2.2 · CWE-79(크로스사이트 스크립팅) · 국내 보안약점 49 입력데이터 검증 및 표현-4(크로스사이트 스크립트) · 기반시설 웹 21 XS(크로스사이트 스크립트)
