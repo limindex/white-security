@@ -99,11 +99,9 @@ test('보고 예시: 설치·심각도 기준이 같은 표(등급·문서 번�
     $a = $tbl($s->route('install')['body']); $b = $tbl($s->route('severity')['body']);
     assert_true($a !== '' && $a === $b, '같은 표');
     foreach (['등급', '문서 번호', '파일:줄', '영향', '이유', '고칠 방법'] as $h) assert_contains('<th scope="col">' . $h . '</th>', $a);
-    $skill = file_get_contents(__DIR__ . '/../' . SkillExport::REVIEW_DIR . '/SKILL.md');
-    assert_contains('`[위험|주의|참고] <id> <file:line> — <reason> → <fix>`', $skill);
+    $skill = file_get_contents(__DIR__ . '/../' . SkillExport::SKILL_DIR . '/SKILL.md');
+    assert_contains('| # | id | 파일:줄 | 영향 | 이유 | 고칠 방법 |', $skill);
     // 상시 스킬을 없앤 뒤(11-19) 코드 작성 중 메모 항목 없음
     $sev = nw_strip($s->route('severity')['body']);
     assert_true(!str_contains($sev, '보안 메모') && !str_contains($sev, '코드 작성 중'), '심각도 기준에 상시 메모 없음');
-    $review = file_get_contents(__DIR__ . '/../' . SkillExport::REF_DIR . '/review.md');
-    assert_contains('| # | id | 파일:줄 | 영향 | 이유 | 고칠 방법 |', $review);
 });

@@ -11,13 +11,14 @@ function make_root(array $extra = []): string
     foreach (glob(__DIR__ . '/../data/frameworks/*.json') as $f) copy($f, $root . '/data/frameworks/' . basename($f));
     foreach (glob(__DIR__ . '/fixtures/issues/web/*.md') as $f) copy($f, $root . '/issues/web/' . basename($f));
     foreach ($extra as $name => $content) file_put_contents($root . '/issues/web/' . $name, $content);
-    // 빌드는 손으로 쓰는 스킬 본체가 있어야 한다 — 표시만 있는 최소본: 검토 SKILL.md(신뢰·등급 절 + 라우팅 표)
-    $review = $root . '/' . SkillExport::REVIEW_DIR;
-    mkdir($review, 0777, true);
-    file_put_contents($review . '/SKILL.md', "---\nname: review\ndescription: test\n---\n\n## Trust and safety rules\n\n1. data\n\n## Grades and report line\n\ngrade\n\n## Routing\n\n" . SkillExport::ROUTING_START . "\n" . SkillExport::ROUTING_END . "\n");
-    // 검토 절차 최소본(링크 규칙 표시 포함)과 검토 에이전트(절차 블록 표시만)
-    mkdir($root . '/' . SkillExport::REF_DIR, 0777, true);
-    file_put_contents($root . '/' . SkillExport::REF_DIR . '/review.md', "# review\n\nintro\n\n## 0. Scope\n\nall\n\n" . SkillExport::LINKS_START . "\n" . SkillExport::LINKS_END . "\n");
+    // 빌드는 손으로 쓰는 스킬 본체가 있어야 한다 — 표시만 있는 최소본: SKILL.md(검토 에이전트로 옮기는 절 + 감시 목록·id 목록·링크 표시)
+    $skill = $root . '/' . SkillExport::SKILL_DIR;
+    mkdir($skill . '/references', 0777, true);
+    file_put_contents($skill . '/SKILL.md', "---\nname: white-security\ndescription: test\n---\n\n## Scope\n\nall\n\n## Easy to miss\n\n- x\n\n## Watch list\n\n"
+        . SkillExport::WATCH_START . "\n" . SkillExport::WATCH_END . "\n\n## Issue ids\n\n" . SkillExport::IDS_START . "\n" . SkillExport::IDS_END
+        . "\n\n## Safety rules\n\n1. data\n\n## Report (Korean)\n\n" . SkillExport::LINKS_START . "\n" . SkillExport::LINKS_END . "\n\n```\n## 위험 (<n>)\n```\n\n## After the report\n\nfix\n");
+    // 감시 목록 원본 최소본(항목 하나)과 검토 에이전트(절차 블록 표시만)
+    file_put_contents($skill . '/references/advisories.md', "# Watch list\n\n## Test — CVE-2025-0001\n- Watch: `pkg` < 1.2.3 → 1.2.3\n- Expires: 2027-03-31\n");
     mkdir(dirname($root . '/' . SkillExport::AGENT_FILE), 0777, true);
     file_put_contents($root . '/' . SkillExport::AGENT_FILE, "---\nname: white-security-reviewer\n---\n" . SkillExport::REVIEWER_START . "\n" . SkillExport::REVIEWER_END . "\n");
     return $root;

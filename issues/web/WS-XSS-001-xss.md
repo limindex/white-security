@@ -5,7 +5,6 @@ title_en: XSS (Cross-Site Scripting)
 slug: xss
 group: web
 severity: high
-grade_hint: "남의 글이 이스케이프 없이 HTML로"
 site_only: false
 depth: brief
 languages: [laravel, nextjs, django]

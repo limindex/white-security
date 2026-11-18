@@ -4,7 +4,6 @@ title: Mass Assignment (대량 할당·속성 수준 권한)
 slug: mass-assignment
 group: auth
 severity: high
-grade_hint: "요청으로 역할·잔액·소유자 변경 가능"
 site_only: false
 depth: brief
 languages: [laravel, nextjs, django]

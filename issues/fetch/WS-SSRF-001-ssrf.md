@@ -5,7 +5,6 @@ title_en: SSRF (Server-Side Request Forgery)
 slug: ssrf
 group: fetch
 severity: high
-grade_hint: "사용자·AI가 준 URL을 검사 없이 서버가 엶"
 site_only: false
 depth: brief
 languages: [python, js, php]

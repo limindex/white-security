@@ -4,7 +4,6 @@ title: Debug Mode in Production (디버그 모드 켠 채 배포)
 slug: debug-mode-production
 group: deploy
 severity: high
-grade_hint: "운영에서 디버그 켜짐"
 site_only: false
 depth: brief
 languages: [laravel, django, flask]

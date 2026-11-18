@@ -4,7 +4,6 @@ title: Rules File Backdoor (규칙 파일 속 숨은 지시)
 slug: rules-file-backdoor
 group: vibe
 severity: high
-grade_hint: "규칙 파일 속 숨은 문자 지시·외부 전송·보안 끄기"
 site_only: false
 depth: brief
 languages: [shell, python]

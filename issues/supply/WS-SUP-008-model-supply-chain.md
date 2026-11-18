@@ -4,7 +4,6 @@ title: Model Supply Chain (AI 모델·데이터셋 공급망)
 slug: model-supply-chain
 group: supply
 severity: high
-grade_hint: "외부 모델을 pickle·weights_only=False로 열기"
 site_only: false
 depth: brief
 languages: [python, dockerfile]

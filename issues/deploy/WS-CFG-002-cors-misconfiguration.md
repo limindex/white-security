@@ -4,7 +4,6 @@ title: CORS Misconfiguration (CORS 설정 오류)
 slug: cors-misconfiguration
 group: deploy
 severity: high
-grade_hint: "credentials 허용과 아무 출처 허용이 함께"
 site_only: false
 depth: brief
 languages: [laravel, nextjs, fastapi]

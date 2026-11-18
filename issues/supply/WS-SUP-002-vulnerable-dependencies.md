@@ -4,7 +4,6 @@ title: Vulnerable Dependencies (알려진 취약점이 있는 패키지)
 slug: vulnerable-dependencies
 group: supply
 severity: high
-grade_hint: "KEV·원격 코드 실행·인증 우회 취약 버전"
 site_only: false
 depth: brief
 languages: [yaml, shell]

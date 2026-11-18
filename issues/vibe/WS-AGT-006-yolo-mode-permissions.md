@@ -4,7 +4,6 @@ title: YOLO Mode (AI 코딩 도구 과다 허용 설정)
 slug: yolo-mode-permissions
 group: vibe
 severity: high
-grade_hint: "커밋된 설정의 전체 허용·확인 건너뛰기"
 site_only: false
 depth: brief
 languages: [json]

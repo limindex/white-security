@@ -4,7 +4,6 @@ title: Exposed .git · .env · Backup Files (.git·.env·백업 파일 웹 노�
 slug: exposed-dotfiles-backups
 group: deploy
 severity: high
-grade_hint: ".git·.env·DB 덤프가 웹에서 열림"
 site_only: false
 depth: brief
 languages: [nginx, nextjs]

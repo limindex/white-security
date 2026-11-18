@@ -94,12 +94,11 @@ test('maps: owasp_mobile2024 키와 기준 파일 — M1~M10, 공식 출처 주�
     assert_same('OWASP Mobile 2024', Site::mapLabel('owasp_mobile2024'));
 });
 
-test('mobile 묶음: groups.json 에 있고(이슈 0개) 메뉴·홈·스킬 라우팅에는 안 보인다', function () {
+test('mobile 묶음: groups.json 에 있고(이슈 0개) 메뉴·홈·스킬 id 목록에는 안 보인다', function () {
     $groups = array_column(json_decode(file_get_contents(__DIR__ . '/../data/groups.json'), true), null, 'id');
     $m = $groups['mobile'];
     assert_same(false, $m['site_only']);
     assert_contains('React Native·Expo·Flutter', $m['when']);
-    assert_true(preg_match('/^[\x20-\x7E]+$/', $m['route']) === 1, 'route 는 영문');
     assert_true($m['order'] > $groups['supply']['order'] && $m['order'] < $groups['people']['order'], '순서');
     $orders = array_column($groups, 'order');
     assert_same(count($orders), count(array_unique($orders)), '순서 중복 없음');
@@ -108,7 +107,8 @@ test('mobile 묶음: groups.json 에 있고(이슈 0개) 메뉴·홈·스킬 라
     assert_same([], $repo->errors());
     $s = new Site($repo, '/white-security/', 'live', new DateTimeImmutable('2026-11-18'));
     assert_true(!str_contains($s->route('')['body'], '모바일 앱'), '홈·메뉴에 안 보임');
-    assert_true(!isset(SkillExport::render($repo)['mobile/INDEX.md']), '스킬에 안 들어감');
+    assert_true(!preg_match('/^mobile:/m', SkillExport::catalogue($repo)), '스킬 id 목록에 안 들어감');
+    assert_true(!array_filter(array_keys(SkillExport::render($repo)), fn($k) => str_starts_with($k, 'mobile/')), '스킬 파일 없음');
 });
 
 test('이슈 화면: 코드 탭 이름은 label(Laravel·Next.js), 탭 7개도 모두 탭·패널로 나온다', function () {
@@ -124,7 +124,7 @@ test('이슈 화면: 코드 탭 이름은 label(Laravel·Next.js), 탭 7개도 �
     assert_contains('class="lang-php"', $b);
 });
 
-test('SkillExport: 코드 파일 <ID>.code.<key>.md(하이픈 키 포함), 코드 목록 줄에 label(INDEX 에는 스택 줄 없음 — 코드 목록은 이슈 파일에)', function () {
+test('SkillExport: 코드 파일 <ID>.code.<key>.md(하이픈 키 포함), 코드 목록 줄에 label(코드 목록은 이슈 파일에)', function () {
     $keys = ['python', 'react-native', 'laravel'];
     $root = make_root(['WS-INJ-009-stack-fixture.md' => st_issue($keys)]);
     $files = SkillExport::render(Repository::load($root));
@@ -132,9 +132,6 @@ test('SkillExport: 코드 파일 <ID>.code.<key>.md(하이픈 키 포함), 코�
     $main = $files['web/WS-INJ-009.md'];
     assert_contains('`WS-INJ-009.code.laravel.md` (Laravel)', $main);
     assert_contains('`WS-INJ-009.code.react-native.md` (React Native)', $main);
-    $idx = $files['web/INDEX.md'];
-    assert_true(!str_contains($idx, 'Stacks:'), 'INDEX 스택 줄 없음');
-    assert_true(SkillExport::estimateTokens($idx) <= SkillExport::INDEX_MAX_TOKENS);
     assert_contains('# WS-INJ-009 코드 예시 — Laravel', $files['web/WS-INJ-009.code.laravel.md']);
 });
 

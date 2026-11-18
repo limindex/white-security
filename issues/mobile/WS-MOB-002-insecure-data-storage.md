@@ -4,7 +4,6 @@ title: Insecure Data Storage (토큰·개인정보 저장 위치)
 slug: insecure-data-storage
 group: mobile
 severity: high
-grade_hint: "토큰·비밀번호를 평문 저장소에 저장"
 site_only: false
 depth: brief
 languages: [expo, flutter, kotlin]

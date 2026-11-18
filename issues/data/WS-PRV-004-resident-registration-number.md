@@ -5,7 +5,6 @@ title_en: RRN (Korean Resident Registration Number) Processing
 slug: resident-registration-number
 group: data
 severity: high
-grade_hint: "근거 없는 주민번호 수집, 평문 저장·표시·로그"
 site_only: false
 depth: brief
 languages: [laravel, nextjs]

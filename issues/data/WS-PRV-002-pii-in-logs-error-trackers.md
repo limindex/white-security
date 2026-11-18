@@ -4,7 +4,6 @@ title: Sensitive Data in Logs · Error Trackers (로그·오류 추적 도구에
 slug: pii-in-logs-error-trackers
 group: data
 severity: medium
-grade_hint: "주민번호·카드번호·토큰이 로그·외부 도구로 감"
 site_only: false
 depth: brief
 languages: [fastapi, nextjs]

@@ -4,7 +4,6 @@ title: SQL 인젝션 (SQLi)
 slug: sql-injection
 group: web
 severity: high
-grade_hint: "외부 값이 SQL 문자열에"
 site_only: false
 depth: full
 languages: [python, js, php]

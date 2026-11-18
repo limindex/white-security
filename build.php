@@ -1,5 +1,5 @@
 <?php
-// 정적 사이트(dist/)와 스킬 파일(plugins/white-security/skills/review/references, 검토 SKILL.md 라우팅 표, 검토 에이전트 절차)을 만든다. 사용: php build.php [--out=dist] [--base=/white-security/] [--today=YYYY-MM-DD] [--origin=https://도메인]
+// 정적 사이트(dist/)와 스킬 파일(plugins/white-security/skills/white-security/references, SKILL.md 의 감시 목록·이슈 id 목록·링크 규칙, 검토 에이전트 절차)을 만든다. 사용: php build.php [--out=dist] [--base=/white-security/] [--today=YYYY-MM-DD] [--origin=https://도메인]
 // --origin 이 없으면 data/site.json 의 origin 을 쓰고, 둘 다 비어 있으면 sitemap.xml·canonical 을 만들지 않는다.
 // .well-known/security.txt 는 data/site.json 의 github·security_expires 로 만들고(origin 이 있으면 Canonical 포함), 만료가 지났으면 빌드하지 않는다.
 // --root 는 테스트용(원본 폴더 지정). 같은 입력이면 같은 출력이 나온다.
@@ -56,22 +56,21 @@ if ($repo->errors()) {
     exit(1);
 }
 // 스킬 파일도 먼저 만들어 본다(실패하면 dist·references 를 건드리지 않는다).
-// 검토 스킬(REVIEW_DIR): 라우팅 표, references/review.md: 문서 링크 규칙.
-$reviewSkillPath = $root . '/' . SkillExport::REVIEW_DIR . '/SKILL.md';
+// SKILL.md(손으로 씀): 감시 목록(references/advisories.md)·이슈 id 목록·링크 규칙 표시 사이만 채운다. 검토 에이전트 본문은 SKILL.md 검토 절에서.
+$skillPath = $root . '/' . SkillExport::SKILL_DIR . '/SKILL.md';
 $refDir = $root . '/' . SkillExport::REF_DIR;
 $agentPath = $root . '/' . SkillExport::AGENT_FILE;
-$reviewPath = $refDir . '/review.md';
+$advisoriesPath = $refDir . '/advisories.md';
 try {
     $skillFiles = SkillExport::render($repo);
-    foreach ([$reviewSkillPath, $agentPath, $reviewPath] as $need) {
+    foreach ([$skillPath, $agentPath, $advisoriesPath] as $need) {
         if (!is_file($need)) throw new SkillExportError(substr($need, strlen($root) + 1) . ' 가 없습니다(손으로 쓰는 파일이고, 빌드는 그 안의 표시 사이만 갱신합니다)');
     }
-    $reviewSkillMd = SkillExport::injectRouting((string)file_get_contents($reviewSkillPath), SkillExport::routing($repo));
     // 보고서의 이슈 링크는 data/site.json 의 origin(공개 주소)으로만 만든다(--origin 미리보기 빌드가 플러그인을 바꾸지 않게)
     $siteJson = is_file($root . '/data/site.json') ? json_decode((string)file_get_contents($root . '/data/site.json'), true) : [];
-    $reviewMd = SkillExport::injectLinks((string)file_get_contents($reviewPath), SkillExport::links((string)($siteJson['origin'] ?? '')));
-    // 검토 에이전트: 신뢰·등급 규칙·라우팅 표·검토 절차를 본문에 넣는다(작업 폴더 밖 SKILL.md·review.md 를 읽지 않아도 되게)
-    $agentMd = SkillExport::injectReviewer((string)file_get_contents($agentPath), SkillExport::reviewerBlock($reviewSkillMd, $reviewMd, $repo));
+    $skillMd = SkillExport::buildSkill((string)file_get_contents($skillPath), $repo, (string)file_get_contents($advisoriesPath), (string)($siteJson['origin'] ?? ''));
+    // 검토 에이전트(큰 프로젝트 전용): SKILL.md 의 검토 절을 그대로 넣는다(두 곳이 어긋나지 않게, 에이전트가 SKILL.md 를 읽지 않아도 되게)
+    $agentMd = SkillExport::injectReviewer((string)file_get_contents($agentPath), SkillExport::reviewerBlock($skillMd));
 } catch (SkillExportError $e) {
     bail($e->getMessage());
 }
@@ -142,13 +141,12 @@ sort($list);
 foreach ($list as $f) put($out . '/assets/' . substr($f, strlen($assets) + 1), (string)file_get_contents($f));
 
 $refs = SkillExport::write($repo, $refDir, $skillFiles);
-file_put_contents($reviewSkillPath, $reviewSkillMd);
-file_put_contents($reviewPath, $reviewMd);
+file_put_contents($skillPath, $skillMd);
 file_put_contents($agentPath, $agentMd);
 echo count($files) . "개 쪽과 API, assets " . count($list) . "개를 {$opt['out']} 에 만들었습니다.\n";
 if ($origin === '') echo "origin 이 비어 sitemap.xml 은 만들지 않았습니다 (--origin=https://도메인 또는 data/site.json).\n";
 if ($securityTxt === null) echo "data/site.json 에 github·security_expires 가 없어 .well-known/security.txt 는 만들지 않았습니다.\n";
 echo "스킬 참고 파일 " . count($refs) . "개를 " . SkillExport::REF_DIR . " 에 만들었습니다.\n";
-$rdesc = SkillExport::description($reviewSkillMd);
-echo '검토 SKILL.md 라우팅 표를 갱신했습니다(추정 약 ' . SkillExport::estimateTokens($reviewSkillMd) . '토큰, description ' . mb_strlen($rdesc) . '자 약 ' . SkillExport::estimateTokens($rdesc) . "토큰).\n";
+$rdesc = SkillExport::description($skillMd);
+echo 'SKILL.md 감시 목록·이슈 id 목록·링크 규칙을 갱신했습니다(추정 약 ' . SkillExport::estimateTokens($skillMd) . '토큰, 상한 ' . SkillExport::SKILL_MAX_TOKENS . ', description ' . mb_strlen($rdesc) . '자 약 ' . SkillExport::estimateTokens($rdesc) . "토큰).\n";
 echo '검토 에이전트 절차 블록을 갱신했습니다(추정 약 ' . SkillExport::estimateTokens($agentMd) . "토큰).\n";

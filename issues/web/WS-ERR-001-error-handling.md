@@ -4,7 +4,6 @@ title: Improper Error Handling (오류 메시지 노출·부적절한 예외 처
 slug: error-handling
 group: web
 severity: medium
-grade_hint: "인증·권한·결제 검사 fail-open"
 site_only: false
 depth: brief
 languages: [laravel, express, fastapi]

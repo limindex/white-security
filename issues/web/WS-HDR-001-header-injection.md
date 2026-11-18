@@ -4,7 +4,6 @@ title: HTTP Response Splitting · Header Injection (HTTP 응답 분할·헤더 �
 slug: header-injection
 group: web
 severity: medium
-grade_hint: "메일 헤더에 요청 값"
 site_only: false
 depth: brief
 languages: [php, python, express]

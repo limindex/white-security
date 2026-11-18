@@ -146,7 +146,7 @@ test('문서 메타: 형식 오류', function () {
     assert_contains('severity_reason', ws_issue_error(ws_mut('severity_reason: 데이터베이스 전체 유출·변조로 이어지는 영향, 입력 한 줄로 악용 가능', 'severity_reason: 3')));
 });
 
-// ── 탐지 규칙 칸 구조 (모든 이슈 같은 형식, 스킬 INDEX 의 코드 신호 원천) ──
+// ── 탐지 규칙 칸 구조 (모든 이슈 같은 형식, 고칠 때 여는 스킬 이슈 파일에 그대로 실림) ──
 test('탐지 규칙: 정상 형식을 칸별로 읽고 찾는 곳의 백틱 코드를 신호로 뽑는다', function () {
     $i = Issue::fromFile(__DIR__ . '/fixtures/issues/web/WS-INJ-001-sql-injection.md', ws_groups());
     $d = $i->detection;
@@ -230,16 +230,13 @@ test('title_en: 선택, 한 줄 문자열', function () {
     assert_contains('title_en', ws_issue_error(ws_mut("title: SQL 삽입\n", "title: SQL 삽입\ntitle_en: 3\n")));
 });
 
-test('grade_hint: 선택, 한 줄 문자열, 40자 이하, site_only 이슈엔 금지', function () {
-    $i = Issue::fromFile(ws_tmp(ws_mut("severity: high\n", "severity: high\ngrade_hint: \"검색어가 SQL 문자열에\"\n")), ws_groups());
-    assert_same('검색어가 SQL 문자열에', $i->gradeHint);
-    assert_same(null, Issue::fromFile(__DIR__ . '/fixtures/issues/web/WS-INJ-001-sql-injection.md', ws_groups())->gradeHint);
-    assert_contains('grade_hint', ws_issue_error(ws_mut("severity: high\n", "severity: high\ngrade_hint: 3\n")));
-    $long = ws_issue_error(ws_mut("severity: high\n", "severity: high\ngrade_hint: \"" . str_repeat('가', Issue::GRADE_HINT_MAX + 1) . "\"\n"));
-    assert_contains('grade_hint', $long);
-    assert_contains((string)Issue::GRADE_HINT_MAX, $long);
+test('grade_hint: 묶음 INDEX 를 없앤 뒤(11-19) 쓰지 않는 칸 — 남아 있으면 빌드 실패, 실제 이슈에도 없음', function () {
+    assert_true(!property_exists(Issue::class, 'gradeHint') && !defined('Issue::GRADE_HINT_MAX'), '등급 조건 칸 없음');
+    $e = ws_issue_error(ws_mut("severity: high\n", "severity: high\ngrade_hint: \"검색어가 SQL 문자열에\"\n"));
+    assert_contains('grade_hint', $e);
+    assert_contains('지워야', $e);
+    foreach (glob(__DIR__ . '/../issues/*/*.md') as $f) assert_true(!preg_match('/^grade_hint:/m', file_get_contents($f)), basename($f));
 });
-
 test('always_on: 상시 스킬을 없앤 뒤(11-19) 쓰지 않는 칸 — 남아 있으면 빌드 실패', function () {
     assert_true(!property_exists(Issue::class, 'alwaysOn') && !defined('Issue::ALWAYS_ON_MAX'), '상시 칸 없음');
     $e = ws_issue_error(ws_mut("severity: high\n", "severity: high\nalways_on: \"`cursor.execute(` → 값은 자리표시자로 넘겨야 한다.\"\n"));

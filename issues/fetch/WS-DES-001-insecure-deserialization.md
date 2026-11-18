@@ -4,7 +4,6 @@ title: Insecure Deserialization (안전하지 않은 역직렬화)
 slug: insecure-deserialization
 group: fetch
 severity: high
-grade_hint: "요청 데이터를 pickle·unserialize·unsafe YAML로"
 site_only: false
 depth: brief
 languages: [python, js, php]

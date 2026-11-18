@@ -4,7 +4,6 @@ title: Lockfile Integrity (잠금 파일·무결성 해시 없음)
 slug: lockfile-integrity
 group: supply
 severity: medium
-grade_hint: "잠금 파일 주소가 낯선 서버·http로 바뀜"
 site_only: false
 depth: brief
 languages: [yaml, dockerfile]

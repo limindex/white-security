@@ -4,7 +4,6 @@ title: Authentication Bypass (본인확인 결과·클라이언트 판단 신뢰
 slug: client-side-verification-trust
 group: auth
 severity: high
-grade_hint: "값 하나 바꿔 본인확인·재설정 건너뜀"
 site_only: false
 depth: brief
 languages: [laravel, nextjs, fastapi]

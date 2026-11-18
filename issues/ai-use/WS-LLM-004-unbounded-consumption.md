@@ -4,7 +4,6 @@ title: Unbounded Consumption (토큰·비용 폭탄)
 slug: unbounded-consumption
 group: ai-use
 severity: high
-grade_hint: "로그인·횟수 제한 없는 AI 호출, 브라우저에 AI 키"
 site_only: false
 depth: brief
 languages: [python, js]

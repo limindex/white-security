@@ -12,14 +12,13 @@ function se_write(array $extra = []): array
     return [$ref, $root];
 }
 
-test('SkillExport: 스킬은 검토 스킬 …/skills/review 하나, 규칙 파일도 그 한 곳에만(상시 스킬 없음, 11-19)', function () {
-    assert_same('plugins/white-security/skills/review', SkillExport::REVIEW_DIR);
-    assert_same('plugins/white-security/skills/review/references', SkillExport::REF_DIR);
-    assert_true(!defined('SkillExport::SKILL_DIR') && !defined('SkillExport::RULES_START'), '상시 스킬 상수 없음');
-    assert_true(!method_exists(SkillExport::class, 'rules') && !method_exists(SkillExport::class, 'checkAlwaysOn'), '상시 규칙 생성기 없음');
-    assert_true(!is_dir(SE_ROOT . '/plugins/white-security/skills/white-security'), '상시 스킬 폴더 없음');
+test('SkillExport: 스킬은 …/skills/white-security 하나, 규칙 파일도 그 한 곳에만(옛 review 이름·상시 스킬 없음, 11-19)', function () {
+    assert_same('plugins/white-security/skills/white-security', SkillExport::SKILL_DIR);
+    assert_same('plugins/white-security/skills/white-security/references', SkillExport::REF_DIR);
+    assert_true(!defined('SkillExport::REVIEW_DIR') && !defined('SkillExport::RULES_START') && !defined('SkillExport::ROUTING_START'), '옛 상수 없음');
+    foreach (['rules', 'checkAlwaysOn', 'routing', 'routingTable', 'injectRouting', 'gradeHint', 'topSignals', 'injectLinks'] as $m) assert_true(!method_exists(SkillExport::class, $m), "옛 생성기 $m 없음");
+    assert_true(!is_dir(SE_ROOT . '/plugins/white-security/skills/review'), '옛 review 폴더 없음');
 });
-
 test('SkillExport: 이슈 파일 — 중립 머리 주석·기준은 CWE 번호만(맨 끝 기본 심각도 줄)·보고 형식 줄 없음·영문 병기 표지', function () {
     [$ref] = se_write();
     $f = file_get_contents("$ref/web/WS-INJ-001.md");
@@ -53,83 +52,122 @@ test('SkillExport: 이슈 파일 — 중립 머리 주석·기준은 CWE 번호�
     assert_true(!str_contains($py, '✗ 코드 속 줄 (vulnerable'), '코드 블록 안 표지 불변');
 });
 
-test('SkillExport: 전체 INDEX 없음, 묶음별 INDEX = 이름 + "코드 신호 → 이슈 id: 위험 조건" (요약 문장·제목·when 없음)', function () {
+test('SkillExport: INDEX 파일 없음(11-19 가벼운 안내) — references 는 이슈 파일과 코드 파일뿐, site_only·이슈 없는 묶음 없음', function () {
     [$ref] = se_write();
-    assert_true(!is_file("$ref/INDEX.md"), '전체 INDEX 없음');
-    $idx = file_get_contents("$ref/web/INDEX.md");
-    assert_true(str_starts_with($idx, "<!-- generated from white-security issues; do not edit -->\n"), '머리');
-    assert_contains("# web · 웹 애플리케이션\n", $idx);
-    assert_true(!str_contains($idx, 'When:'), 'when 줄 없음(라우팅 표에 목적이 있음)');
-    // grade_hint 가 없으면 등급 첫 단계(위험) 문장의 첫 문장, 위험이면 단계 이름은 붙이지 않는다
-    assert_true((bool)preg_match('/^- `cursor\.execute\(` `db\.query\(` `->query\(` → WS-INJ-001: \S[^\n]*$/mu', $idx), $idx);
-    assert_true(!str_contains($idx, 'SQL 삽입'), '제목 없음(등급 조건이 대신 말함)');
-    assert_true(!str_contains($idx, '사용자 입력이 SQL 문장에'), '요약 문장 없음');
-    // 이슈 파일은 같은 폴더에 있다
-    preg_match_all('/→ (WS-[A-Z]+-\d{3})/', $idx, $m);
-    foreach ($m[1] as $id) assert_true(is_file("$ref/web/$id.md"), $id);
+    assert_true(!is_file("$ref/INDEX.md") && !is_file("$ref/web/INDEX.md"), 'INDEX 없음');
+    $files = SkillExport::render(Repository::load(make_root()));
+    foreach (array_keys($files) as $rel) assert_true((bool)preg_match('#^[a-z0-9-]+/WS-[A-Z]+-\d{3}(\.code\.[a-z0-9-]+)?\.md$#', $rel), $rel);
     assert_true(!is_dir("$ref/people"), 'site_only 묶음 없음');
-    assert_true(!is_dir("$ref/auth"), '이슈 없는 묶음은 INDEX 도 없음');
+    assert_true(!is_dir("$ref/auth"), '이슈 없는 묶음 폴더 없음');
 });
-
-test('SkillExport: 묶음에 route 가 없으면 render 실패(묶음 이름과 이유)', function () {
-    $root = make_root();
-    file_put_contents($root . '/data/groups.json', '[{"id":"web","name":"웹 기본","order":5}]');
-    try { SkillExport::render(Repository::load($root)); }
-    catch (SkillExportError $e) { assert_contains('web', $e->getMessage()); assert_contains('route', $e->getMessage()); return; }
-    throw new Exception('SkillExportError 가 나야 함');
-});
-
-test('SkillExport: 라우팅 표 — 묶음당 한 줄(route → INDEX 경로), SKILL.md 표시 사이만 바꾼다', function () {
+test('SkillExport: 이슈 id 목록 — 묶음마다 한 줄 `<group>: <WS- 뺀 id> <짧은 제목>; …`, 짧은 제목은 한국어 풀이', function () {
     $repo = Repository::load(make_root());
-    $block = SkillExport::routing($repo);
-    assert_true(str_starts_with($block, SkillExport::ROUTING_START . "\n"), '시작 표시');
-    assert_true(str_ends_with($block, SkillExport::ROUTING_END), '끝 표시');
-    assert_contains("\n| web | ", $block);
-    assert_true(!preg_match('/^\| (people|auth) \|/m', $block), '이슈 있는 묶음만');
-    $md = "---\nname: x\n---\n# 위\n\n" . SkillExport::ROUTING_START . "\n옛 표\n" . SkillExport::ROUTING_END . "\n\n# 아래\n";
-    $out = SkillExport::injectRouting($md, $block);
-    assert_same("---\nname: x\n---\n# 위\n\n" . $block . "\n\n# 아래\n", $out);
-    assert_same($out, SkillExport::injectRouting($out, $block), '두 번 넣어도 같음');
-    foreach (["# 표시 없음\n", SkillExport::ROUTING_END . "\n" . SkillExport::ROUTING_START . "\n", SkillExport::ROUTING_START . SkillExport::ROUTING_START . SkillExport::ROUTING_END] as $bad) {
-        try { SkillExport::injectRouting($bad, $block); throw new Exception('거절해야 함'); }
+    $block = SkillExport::catalogue($repo);
+    assert_true(str_starts_with($block, SkillExport::IDS_START . "\n") && str_ends_with($block, SkillExport::IDS_END), '표시');
+    assert_true((bool)preg_match('/^web: INJ-001 /m', $block), $block);
+    assert_true(!preg_match('/^(people|auth):/m', $block), '이슈 있는 묶음만');
+    assert_true(!str_contains($block, 'WS-'), 'WS- 접두어 뺌');
+    // 짧은 제목: "용어 (한국어 풀이)" → 풀이, "한국어 (약어)" → 괄호 앞, 괄호 없으면 그대로
+    $fx = file_get_contents(__DIR__ . '/fixtures/issues/web/WS-INJ-001-sql-injection.md');
+    $mk = fn(string $id, string $title) => Repository::load(make_root(["$id-x.md" => preg_replace('/^title: .*$/m', "title: $title", str_replace('WS-INJ-001', $id, $fx), 1)]));
+    $pick = fn(Repository $r, string $id) => SkillExport::shortTitle(array_values(array_filter($r->all(), fn($i) => $i->id === $id))[0]);
+    assert_same('경로 조작', $pick($mk('WS-INJ-005', 'Path Traversal (경로 조작)'), 'WS-INJ-005'));
+    assert_same('SQL 인젝션', $pick($mk('WS-INJ-006', 'SQL 인젝션 (SQLi)'), 'WS-INJ-006'));
+    assert_same('XXE · Billion Laughs', $pick($mk('WS-INJ-007', 'XXE · Billion Laughs'), 'WS-INJ-007'));
+});
+test('SkillExport: 감시 목록 — advisories.md 항목마다 Watch 줄 + CVE + 만료일, 줄·항목 수 규칙 어기면 실패', function () {
+    $md = "# W\n\nintro `- Watch:` not an entry\n\n## A — CVE-2025-1111 (x)\n- Published: 2025-01-01\n- Watch: `a` < 2 → 2.\n- Expires: 2027-01-31\n\n## B — CVE-2026-22222\n- Watch: `b` < 3 → 3\n- Expires: 2027-02-28\n";
+    $b = SkillExport::watchList($md);
+    assert_same(SkillExport::WATCH_START . "\n- `a` < 2 → 2 (CVE-2025-1111, until 2027-01-31)\n- `b` < 3 → 3 (CVE-2026-22222, until 2027-02-28)\n" . SkillExport::WATCH_END, $b);
+    $bad = [
+        str_replace("- Watch: `b` < 3 → 3\n", '', $md) => 'Watch',
+        str_replace("- Expires: 2027-02-28\n", '', $md) => 'Expires',
+        str_replace('— CVE-2026-22222', '', $md) => 'CVE',
+        "# empty\n" => '항목',
+        str_repeat("## X — CVE-2025-0001\n- Watch: x\n- Expires: 2027-01-01\n", SkillExport::WATCH_MAX + 1) => '상한',
+    ];
+    foreach ($bad as $in => $why) {
+        try { SkillExport::watchList($in); throw new Exception("실패해야 함: $why"); }
+        catch (SkillExportError $e) { assert_contains('advisories.md', $e->getMessage()); }
+    }
+    // 실제 감시 목록은 상한 안이고 항목마다 Watch 줄이 있다
+    assert_true(substr_count(SkillExport::watchList(file_get_contents(SE_ROOT . '/' . SkillExport::REF_DIR . '/advisories.md')), "\n- ") >= 1);
+});
+
+test('SkillExport: SKILL.md 생성 — 세 표시 사이만 바꾸고(두 번 넣어도 같음), 표시가 틀리거나 상한을 넘으면 실패', function () {
+    $root = make_root();
+    $repo = Repository::load($root);
+    $skill = file_get_contents($root . '/' . SkillExport::SKILL_DIR . '/SKILL.md');
+    $adv = file_get_contents($root . '/' . SkillExport::REF_DIR . '/advisories.md');
+    $out = SkillExport::buildSkill($skill, $repo, $adv, '');
+    assert_contains("\nweb: INJ-001 ", $out);
+    assert_contains('(CVE-2025-0001, until 2027-03-31)', $out);
+    assert_contains(SkillExport::TEXT['links_plain'], $out);
+    assert_same($out, SkillExport::buildSkill($out, $repo, $adv, ''), '두 번 넣어도 같음');
+    foreach ([SkillExport::IDS_START, SkillExport::WATCH_END, SkillExport::LINKS_START] as $marker) {
+        try { SkillExport::buildSkill(str_replace($marker, '', $skill), $repo, $adv, ''); throw new Exception('거절해야 함'); }
         catch (SkillExportError $e) { assert_contains('SKILL.md', $e->getMessage()); }
     }
+    try { SkillExport::buildSkill($skill . str_repeat('x', 4 * SkillExport::SKILL_MAX_TOKENS), $repo, $adv, ''); throw new Exception('상한'); }
+    catch (SkillExportError $e) { assert_contains((string)SkillExport::SKILL_MAX_TOKENS, $e->getMessage()); }
 });
 
-test('build: 검토 SKILL.md 에 라우팅 표, review.md 에 링크 규칙, 에이전트에 절차를 끼워 넣고, 표시가 없거나 파일이 없으면 빌드 실패', function () {
+test('SkillExport: 검토 에이전트 블록 — SKILL.md 의 검토 절만 그대로, 보고 틀 코드 블록 안의 ## 는 절로 보지 않음, 절이 없으면 실패', function () {
     $root = make_root();
-    $dir = $root . '/' . SkillExport::REVIEW_DIR;
-    exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg(SE_ROOT . '/build.php') . ' --root=' . escapeshellarg($root) . ' --out=dist --today=2026-11-18 2>&1', $l, $c);
-    assert_same(0, $c, implode("\n", $l));
-    assert_contains("\n| web | ", file_get_contents("$dir/SKILL.md"));
-    assert_contains(SkillExport::TEXT['links_plain'], file_get_contents($root . '/' . SkillExport::REF_DIR . '/review.md')); // site.json 없음 → id 만
+    $skill = SkillExport::buildSkill(file_get_contents($root . '/' . SkillExport::SKILL_DIR . '/SKILL.md'), Repository::load($root), file_get_contents($root . '/' . SkillExport::REF_DIR . '/advisories.md'), '');
+    $b = SkillExport::reviewerBlock($skill);
+    foreach (SkillExport::REVIEWER_SECTIONS as $h) assert_contains("## $h", $b);
+    assert_contains("```\n## 위험 (<n>)\n```", $b);
+    assert_true(!str_contains($b, '## After the report'), '보고 뒤 단계는 메인 몫');
+    assert_true(strpos($b, '## Scope') < strpos($b, '## Report (Korean)'), '순서');
+    try { SkillExport::reviewerBlock(str_replace('## Safety rules', '## Safety', $skill)); throw new Exception('실패해야 함'); }
+    catch (SkillExportError $e) { assert_contains('Safety rules', $e->getMessage()); }
+});
+test('build: SKILL.md 에 감시 목록·id 목록·링크 규칙, 에이전트에 검토 절을 끼워 넣고, 표시가 없거나 파일이 없으면 빌드 실패', function () {
+    $root = make_root();
+    $dir = $root . '/' . SkillExport::SKILL_DIR;
+    $run = function (string $extra = '') use ($root): array {
+        exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg(SE_ROOT . '/build.php') . ' --root=' . escapeshellarg($root) . ' --out=dist --today=2026-11-18' . $extra . ' 2>&1', $l, $c);
+        return [$c, implode("\n", $l)];
+    };
+    [$c, $o] = $run();
+    assert_same(0, $c, $o);
+    $skill = file_get_contents("$dir/SKILL.md");
+    foreach (["\nweb: INJ-001 ", '(CVE-2025-0001, until 2027-03-31)', SkillExport::TEXT['links_plain']] as $x) assert_contains($x, $skill); // site.json 없음 → id 만
     $agent = file_get_contents($root . '/' . SkillExport::AGENT_FILE);
-    foreach (['## Trust and safety rules', '## Routing table', '| web | ', '## 0. Scope', SkillExport::TEXT['links_plain']] as $x) assert_contains($x, $agent);
+    foreach (['## Scope', '## Issue ids', "\nweb: INJ-001 ", '## Report (Korean)', SkillExport::TEXT['links_plain']] as $x) assert_contains($x, $agent);
     // site.json origin 이 있으면 보고서 id 가 문서 사이트 이슈 주소로 링크된다(--origin 미리보기 값은 쓰지 않음)
     file_put_contents($root . '/data/site.json', json_encode(['origin' => 'https://docs.example.org']));
-    exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg(SE_ROOT . '/build.php') . ' --root=' . escapeshellarg($root) . ' --out=dist --today=2026-11-18 --origin=https://preview.example.com 2>&1', $lo, $co);
-    assert_same(0, $co, implode("\n", $lo));
+    [$co, $oo] = $run(' --origin=https://preview.example.com');
+    assert_same(0, $co, $oo);
     assert_contains('https://docs.example.org/white-security/issues/WS-INJ-001', file_get_contents($root . '/' . SkillExport::AGENT_FILE));
-    assert_true(!str_contains(file_get_contents($root . '/' . SkillExport::REF_DIR . '/review.md'), 'preview.example.com'), '--origin 은 플러그인에 쓰지 않음');
+    assert_true(!str_contains(file_get_contents("$dir/SKILL.md"), 'preview.example.com'), '--origin 은 플러그인에 쓰지 않음');
     unlink($root . '/data/site.json');
     // 에이전트 표시가 없으면 실패
     file_put_contents($root . '/' . SkillExport::AGENT_FILE, "---\nname: r\n---\n표시 없음\n");
-    exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg(SE_ROOT . '/build.php') . ' --root=' . escapeshellarg($root) . ' --out=dist --today=2026-11-18 2>&1', $la, $ca);
+    [$ca, $la] = $run();
     assert_same(1, $ca, '에이전트 표시 없으면 실패');
-    assert_contains('검토 에이전트', implode("\n", $la));
+    assert_contains('검토 에이전트', $la);
     file_put_contents($root . '/' . SkillExport::AGENT_FILE, SkillExport::REVIEWER_START . "\n" . SkillExport::REVIEWER_END . "\n");
-    $keepReview = file_get_contents("$dir/SKILL.md");
+    // advisories.md 가 없으면 실패
+    $adv = $root . '/' . SkillExport::REF_DIR . '/advisories.md';
+    $keepAdv = file_get_contents($adv);
+    unlink($adv);
+    [$cv, $lv] = $run();
+    assert_same(1, $cv);
+    assert_contains('advisories.md 가 없습니다', $lv);
+    file_put_contents($adv, $keepAdv);
+    $keep = file_get_contents("$dir/SKILL.md");
     file_put_contents("$dir/SKILL.md", "# 표시 없음\n");
-    exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg(SE_ROOT . '/build.php') . ' --root=' . escapeshellarg($root) . ' --out=dist --today=2026-11-18 2>&1', $l2, $c2);
+    [$c2, $l2] = $run();
     assert_same(1, $c2);
-    assert_contains('SKILL.md', implode("\n", $l2));
-    file_put_contents("$dir/SKILL.md", $keepReview);
+    assert_contains('SKILL.md', $l2);
+    file_put_contents("$dir/SKILL.md", $keep);
     unlink("$dir/SKILL.md");
-    exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg(SE_ROOT . '/build.php') . ' --root=' . escapeshellarg($root) . ' --out=dist --today=2026-11-18 2>&1', $l3, $c3);
+    [$c3, $l3] = $run();
     assert_same(1, $c3, 'SKILL.md 없으면 실패');
-    assert_contains('SKILL.md 가 없습니다', implode("\n", $l3));
+    assert_contains('SKILL.md 가 없습니다', $l3);
 });
-
 test('저장소: 생성물이 원본과 일치(php build.php 후 커밋), 옛 skills/ 폴더 없음', function () {
     assert_true(!is_dir(SE_ROOT . '/skills'), '옛 skills/ 폴더');
     $ref = SE_ROOT . '/' . SkillExport::REF_DIR;
@@ -141,12 +179,10 @@ test('저장소: 생성물이 원본과 일치(php build.php 후 커밋), 옛 sk
     ksort($have); ksort($want);
     assert_same(array_keys($want), array_keys($have), '파일 목록 (php build.php 실행 필요)');
     foreach ($want as $rel => $text) assert_true($have[$rel] === $text, "$rel 이 원본과 다름 (php build.php 실행 필요)");
-    assert_true(!isset($have['INDEX.md']), '전체 INDEX 없음');
 });
-
-test('저장소: 검토 스킬 폴더의 LICENSE.txt — 본문 CC BY-SA 4.0 · 코드 블록 MIT · 저작권자 · 원본 저장소 · 각색 내용은 CC BY-SA', function () {
+test('저장소: 스킬 폴더의 LICENSE.txt — 본문 CC BY-SA 4.0 · 코드 블록 MIT · 저작권자 · 원본 저장소 · 각색 내용은 CC BY-SA', function () {
     $site = json_decode(file_get_contents(SE_ROOT . '/data/site.json'), true);
-    foreach ([SkillExport::REVIEW_DIR] as $dir) {
+    foreach ([SkillExport::SKILL_DIR] as $dir) {
         $f = SE_ROOT . '/' . $dir . '/LICENSE.txt';
         assert_true(is_file($f), "$dir/LICENSE.txt");
         $t = file_get_contents($f);
@@ -180,53 +216,6 @@ test('SkillExport: 코드 예시는 언어별 파일로 분리, 이슈 파일에
     assert_contains('$st = $db->prepare', file_get_contents("$ref/web/WS-INJ-001.code.php.md"));
 });
 
-test('SkillExport: INDEX 는 이슈당 신호를 찾는 곳 순서대로 앞 INDEX_MAX_SIGNALS 개만(작성자가 핵심 신호를 앞에), 600토큰 넘으면 실패', function () {
-    $n = SkillExport::INDEX_MAX_SIGNALS;
-    assert_same(4, SkillExport::INDEX_MIN_SIGNALS, '줄여도 신호 4개 이상');
-    assert_same(600, SkillExport::INDEX_MAX_TOKENS, '묶음 INDEX 상한 600토큰 유지');
-    $sigs = ['abcd', 'x.y', 'longer_name_1', 'aaaa', 'bbbbbbbb', 'c.c(', 'dddd', 'eeee', 'ffff', 'g-g', 'hhhhhhhhhhhh'];
-    $where = '- **찾는 곳**: ' . implode(', ', array_map(fn($s) => "`$s`", $sigs));
-    [$ref] = se_write(['WS-INJ-005-x.md' => str_replace(['WS-INJ-001', '- **찾는 곳**: 쿼리 조립 지점(`cursor.execute(`, `db.query(`, `->query(`)'], ['WS-INJ-005', $where], file_get_contents(__DIR__ . '/fixtures/issues/web/WS-INJ-001-sql-injection.md'))]);
-    $idx = file_get_contents("$ref/web/INDEX.md");
-    preg_match('/^- (.*) → WS-INJ-005/m', $idx, $m);
-    preg_match_all('/`([^`]+)`/', $m[1], $got);
-    assert_same(array_slice($sigs, 0, $n), $got[1], "원래 순서 앞 {$n}개");
-    assert_same(array_slice($sigs, 0, $n), SkillExport::topSignals($sigs));
-    assert_same(['a.b', 'c.d'], SkillExport::topSignals(['a.b', 'c.d']));
-    // 앞서 실은 신호를 품은 신호는 같은 곳에 걸리므로 건너뛰고 뒤 신호가 자리를 얻는다
-    assert_same(['yaml.load(', 'x.y'], SkillExport::topSignals(['yaml.load(', 'yaml.load(s)', 'x.y']));
-    $many = ['aaaa', 'aaaa.1', 'aaaa.2', 'b.b', 'c.c', 'd.d', 'e.e', 'f.f', 'g.g', 'h.h', 'i.i'];
-    assert_same(array_slice(['aaaa', 'b.b', 'c.c', 'd.d', 'e.e', 'f.f', 'g.g', 'h.h'], 0, $n), SkillExport::topSignals($many));
-    // 이슈가 많아 600토큰을 넘는 묶음은 신호 수를 줄여(최소 INDEX_MIN_SIGNALS) 상한 안에 넣는다
-    $extra = [];
-    foreach (range(10, 18) as $k) {
-        $w = '- **찾는 곳**: ' . implode(', ', array_map(fn($j) => "`signal_name_{$k}_{$j}(`", range(1, 8)));
-        $extra["WS-INJ-1{$k}-x.md"] = str_replace(['WS-INJ-001', '- **찾는 곳**: 쿼리 조립 지점(`cursor.execute(`, `db.query(`, `->query(`)'], ["WS-INJ-1{$k}", $w], file_get_contents(__DIR__ . '/fixtures/issues/web/WS-INJ-001-sql-injection.md'));
-    }
-    $big = SkillExport::render(Repository::load(make_root($extra)))['web/INDEX.md'];
-    assert_true(SkillExport::estimateTokens($big) <= SkillExport::INDEX_MAX_TOKENS, '상한 안');
-    preg_match('/^- (.*) → WS-INJ-110:/m', $big, $bm);
-    $cnt = preg_match_all('/`[^`]+`/', $bm[1]);
-    assert_true($cnt < 8 && $cnt >= SkillExport::INDEX_MIN_SIGNALS, "줄인 신호 수 $cnt");
-    // 상한 초과(최소 신호 수로도 넘음)
-    $root = make_root();
-    file_put_contents($root . '/data/groups.json', json_encode([['id' => 'web', 'name' => str_repeat('아주 긴 이름 ', 300), 'order' => 5, 'route' => 'sql']], JSON_UNESCAPED_UNICODE));
-    try { SkillExport::render(Repository::load($root)); throw new Exception('실패해야 함'); }
-    catch (SkillExportError $e) { assert_contains('web/INDEX.md', $e->getMessage()); assert_contains('600', $e->getMessage()); }
-});
-
-test('SkillExport: INDEX 등급 조건 — grade_hint 우선, 없으면 등급 첫 단계 첫 문장(괄호 뺌), 첫 단계가 위험이 아니면 단계 이름', function () {
-    $fx = file_get_contents(__DIR__ . '/fixtures/issues/web/WS-INJ-001-sql-injection.md');
-    $hint = str_replace(['WS-INJ-001', "severity: high\n"], ['WS-INJ-006', "severity: high\ngrade_hint: \"검색어가 SQL 문자열에\"\n"], $fx);
-    $idx = SkillExport::render(Repository::load(make_root(['WS-INJ-006-x.md' => $hint])))['web/INDEX.md'];
-    assert_true((bool)preg_match('/→ WS-INJ-006: 검색어가 SQL 문자열에$/mu', $idx), $idx);
-    // 위험 단계가 없으면 `주의: ` 를 붙이고, 자동 문장은 괄호 풀이·끝 마침표를 뺀다
-    $warn = (string)preg_replace('/^- \*\*등급\*\*: .*$/mu', '- **등급**: 주의: 쿼리에 값을 붙임(예: f-string). 둘째 문장. / 참고: 기타.', str_replace('WS-INJ-001', 'WS-INJ-007', $fx));
-    $repo = Repository::load(make_root(['WS-INJ-007-x.md' => $warn]));
-    $i = array_values(array_filter($repo->byGroup()['web'], fn($x) => $x->id === 'WS-INJ-007'))[0];
-    assert_same('주의: 쿼리에 값을 붙임', SkillExport::gradeHint($i));
-});
-
 test('SkillExport: 보고서 링크 규칙 — origin 없으면 id 만, 있으면 문서 사이트 이슈 주소, 그 밖의 링크·이미지 금지', function () {
     assert_contains(SkillExport::TEXT['links_plain'], SkillExport::links(''));
     $b = SkillExport::links('https://limindex.github.io');
@@ -234,21 +223,6 @@ test('SkillExport: 보고서 링크 규칙 — origin 없으면 id 만, 있으�
     assert_contains('No other links or images', $b);
     assert_same('', SkillExport::issueUrlBase(''));
     try { SkillExport::links('http://bad'); throw new Exception('실패해야 함'); } catch (SkillExportError $e) { assert_contains('origin', $e->getMessage()); }
-});
-
-test('저장소: 바이브 스택 핵심 신호가 묶음 INDEX 에 실린다(검토가 grep 으로 찾게)', function () {
-    $ref = SE_ROOT . '/' . SkillExport::REF_DIR;
-    $need = [
-        'auth' => ['use server', 'function POST(', 'middleware.ts'],
-        'deploy' => ['sk-', 'AKIA', 'ghp_', 'xoxb-', '-----BEGIN', '.env*', 'NEXT_PUBLIC_'],
-        'vibe' => ['extraKnownMarketplaces', 'enabledPlugins', '.claude/skills/', '.mcp.json'],
-        'supply' => ['yarnPath', '_authToken=${', 'postinstall'],
-        'data' => ['service_role'],
-    ];
-    foreach ($need as $g => $sigs) {
-        $idx = file_get_contents("$ref/$g/INDEX.md");
-        foreach ($sigs as $sig) assert_contains('`' . $sig . '`', $idx);
-    }
 });
 
 test('저장소: 예시 도메인은 예약 이름만(RFC 2606 — example.com·example.org·example.net·*.example)', function () {

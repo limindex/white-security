@@ -5,7 +5,6 @@ title_en: Missing RLS · service_role Key Exposure (Supabase)
 slug: supabase-rls
 group: data
 severity: high
-grade_hint: "비밀 키가 클라이언트에, RLS 없음·using (true)"
 site_only: false
 depth: brief
 languages: [supabase, sql, nextjs]

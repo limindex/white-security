@@ -4,7 +4,6 @@ title: Misinformation · Overreliance (AI 답을 사실로 믿고 자동 처리)
 slug: misinformation-overreliance
 group: ai-use
 severity: medium
-grade_hint: "AI 답만으로 환불·결제·권한 변경"
 site_only: false
 depth: brief
 languages: [python]

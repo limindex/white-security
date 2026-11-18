@@ -4,7 +4,6 @@ title: Path Traversal (경로 조작)
 slug: path-traversal
 group: web
 severity: high
-grade_hint: "요청 값 경로, 범위 확인 없음"
 site_only: false
 depth: brief
 languages: [express, fastapi, laravel]

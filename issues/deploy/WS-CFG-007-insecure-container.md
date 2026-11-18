@@ -4,7 +4,6 @@ title: Insecure Container (root 실행 컨테이너·이미지 속 비밀값)
 slug: insecure-container
 group: deploy
 severity: high
-grade_hint: "이미지 속 비밀값, docker.sock·privileged"
 site_only: false
 depth: brief
 languages: [dockerfile, yaml]

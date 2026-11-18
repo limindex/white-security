@@ -5,7 +5,6 @@ title_en: CI/CD Integrity · Unverified Downloads (GitHub Actions, curl | sh)
 slug: cicd-integrity-unverified-downloads
 group: supply
 severity: high
-grade_hint: "pull_request_target에서 PR 코드 실행, run:에 입력"
 site_only: false
 depth: brief
 languages: [yaml, dockerfile]

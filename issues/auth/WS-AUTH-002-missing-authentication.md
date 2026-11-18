@@ -4,7 +4,6 @@ title: Missing Authentication (중요 기능 인증 누락)
 slug: missing-authentication
 group: auth
 severity: high
-grade_hint: "로그인 없이 개인정보 조회·변경·결제·발송"
 site_only: false
 depth: brief
 languages: [laravel, nextjs, fastapi]

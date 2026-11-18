@@ -4,7 +4,6 @@ title: Brute Force · Credential Stuffing (무차별 대입·인증 시도 제�
 slug: brute-force-credential-stuffing
 group: auth
 severity: high
-grade_hint: "로그인·2차 인증 시도 제한 전혀 없음"
 site_only: false
 depth: brief
 languages: [laravel, nextjs, django]

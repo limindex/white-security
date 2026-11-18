@@ -4,7 +4,6 @@ title: Missing Security Headers (CSP·HSTS 등 보안 헤더 누락)
 slug: missing-security-headers
 group: deploy
 severity: medium
-grade_hint: "HTML 앱에 CSP·HSTS 둘 다 없음"
 site_only: false
 depth: brief
 languages: [nextjs, django, nginx]

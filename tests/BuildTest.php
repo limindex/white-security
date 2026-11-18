@@ -59,7 +59,7 @@ test('build: dist 안 링크가 전부 dist 안 파일로 풀린다', function (
     assert_true($n > 20, "링크 $n 개");
 });
 
-test('build: 스킬 references — 플러그인 폴더에 묶음별 INDEX·이슈 파일, site_only 제외, 전체 INDEX 없음', function () {
+test('build: 스킬 references — 플러그인 폴더에 묶음별 이슈 파일·코드 파일, site_only 제외, INDEX 없음', function () {
     [$code, $out, $root] = bt_build();
     assert_same(0, $code, $out);
     $ref = "$root/" . SkillExport::REF_DIR;
@@ -70,9 +70,10 @@ test('build: 스킬 references — 플러그인 폴더에 묶음별 INDEX·이�
     foreach (['## 발생 상황', '## 요약', '## 위험 배경', '## 대응 방법', '## 코드 예시'] as $s) assert_true(!str_contains($f, $s), $s);
     assert_contains('cur.execute("SELECT * FROM u WHERE id=%s", (uid,))', file_get_contents("$ref/web/WS-INJ-001.code.python.md"));
     assert_true(!is_file("$ref/people/WS-PPL-001.md") && !is_dir("$ref/people"), 'site_only 제외');
-    assert_true(is_file("$ref/web/INDEX.md") && !is_file("$ref/INDEX.md"), '묶음 INDEX 만');
-    assert_contains('plugins/white-security/skills/review/references', $out);
-    assert_contains('SKILL.md 라우팅 표를 갱신했습니다', $out);
+    assert_true(!is_file("$ref/web/INDEX.md") && !is_file("$ref/INDEX.md"), 'INDEX 없음(11-19)');
+    assert_contains('plugins/white-security/skills/white-security/references', $out);
+    assert_contains('SKILL.md 감시 목록·이슈 id 목록·링크 규칙을 갱신했습니다', $out);
+    assert_contains('상한 ' . SkillExport::SKILL_MAX_TOKENS, $out);
     assert_contains('description', $out); // 항상 로드되는 설명의 길이·토큰 추정을 알린다
 });
 
@@ -166,20 +167,16 @@ test('SkillExport: 사라진 이슈의 생성 파일만 지우고 직접 둔 파
     assert_true(!is_file("$ref/web/WS-INJ-001.md"), '사라진 이슈 파일');
     assert_true(!is_dir("$ref/old"), '빈 폴더');
     assert_true(is_file("$ref/web/NOTES.md"), '직접 쓴 파일');
-    assert_true(!is_file("$ref/web/INDEX.md"), '이슈가 없어진 묶음의 INDEX');
 });
 
-test('SkillExport: INDEX 에는 when 을 싣지 않는다(묶음 목적은 라우팅 표), 빈 when 은 null', function () {
+test('groups.json: when 은 선택(빈 값은 null), route 칸은 쓰지 않는다(라우팅 표 없음, 11-19)', function () {
     $root = make_root();
-    file_put_contents($root . '/data/groups.json', '[{"id":"web","name":"웹 기본","order":5,"route":"sql"},{"id":"auth","name":"로그인·권한","order":6,"when":"  "}]');
-    $ref = "$root/" . SkillExport::REF_DIR;
-    SkillExport::write(Repository::load($root), $ref);
-    $idx = file_get_contents("$ref/web/INDEX.md");
-    assert_true(!str_contains($idx, 'When:') && !str_contains($idx, '상황에서'), 'when 줄 없음');
-    assert_contains("# web · 웹 기본\n", $idx);
-    assert_same(null, Repository::load($root)->groups()[1]['when']);
+    file_put_contents($root . '/data/groups.json', '[{"id":"web","name":"웹 기본","order":5},{"id":"auth","name":"로그인·권한","order":6,"when":"  "}]');
+    $g = Repository::load($root)->groups();
+    assert_same(null, $g[1]['when']);
+    assert_true(!array_key_exists('route', $g[0]), 'route 없음');
+    foreach (json_decode(file_get_contents(__DIR__ . '/../data/groups.json'), true) as $row) assert_true(!isset($row['route']), "data/groups.json {$row['id']} 에 route");
 });
-
 test('build: origin 이 있으면 sitemap.xml(절대 주소, 쪽만), 없으면 만들지 않음', function () {
     [$code, $out, $root] = bt_build();
     assert_same(0, $code, $out);

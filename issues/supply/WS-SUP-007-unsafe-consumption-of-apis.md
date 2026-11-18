@@ -4,7 +4,6 @@ title: Unsafe Consumption of APIs (외부 API 응답 무조건 신뢰)
 slug: unsafe-consumption-of-apis
 group: supply
 severity: medium
-grade_hint: "외부 응답이 SQL·HTML·명령으로, 실패 때 허용"
 site_only: false
 depth: brief
 languages: [fastapi, nextjs]

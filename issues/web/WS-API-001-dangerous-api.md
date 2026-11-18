@@ -4,7 +4,6 @@ title: Dangerous API Use (위험한 API 사용·DNS 기반 보안 결정)
 slug: dangerous-api
 group: web
 severity: medium
-grade_hint: "역DNS로 관리 허용, extract($_)"
 site_only: false
 depth: brief
 languages: [express, python, php]

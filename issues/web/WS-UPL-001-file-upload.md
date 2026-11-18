@@ -4,7 +4,6 @@ title: Unrestricted File Upload (위험한 형식 파일 업로드)
 slug: file-upload
 group: web
 severity: high
-grade_hint: "형식 검사 없이 웹 공개 경로에 저장"
 site_only: false
 depth: brief
 languages: [laravel, express, fastapi]

@@ -4,7 +4,6 @@ title: Cleartext Traffic · Certificate Validation Bypass (평문 통신·인증
 slug: cleartext-certificate-validation
 group: mobile
 severity: high
-grade_hint: "인증서 검증 끔, 로그인·토큰이 http로"
 site_only: false
 depth: brief
 languages: [expo, flutter, kotlin]

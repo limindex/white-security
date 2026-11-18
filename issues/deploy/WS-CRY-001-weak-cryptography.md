@@ -4,7 +4,6 @@ title: Weak Cryptography (취약한 암호 알고리즘·난수·인증서 검�
 slug: weak-cryptography
 group: deploy
 severity: high
-grade_hint: "인증서 검증 끔, 예측 가능한 토큰 난수, ECB·고정 IV"
 site_only: false
 depth: brief
 languages: [python, nextjs, laravel]

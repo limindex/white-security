@@ -4,7 +4,6 @@ title: Race Condition (경쟁 조건)
 slug: race-condition
 group: web
 severity: high
-grade_hint: "돈·쿠폰·재고 확인 뒤 변경"
 site_only: false
 depth: brief
 languages: [laravel, django, nextjs]

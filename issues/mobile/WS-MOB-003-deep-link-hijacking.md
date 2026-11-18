@@ -4,7 +4,6 @@ title: Deep Link Hijacking · Unvalidated Deep Links (딥링크 가로채기·�
 slug: deep-link-hijacking
 group: mobile
 severity: high
-grade_hint: "링크로 토큰 전달, 링크만으로 송금·삭제"
 site_only: false
 depth: brief
 languages: [expo, flutter, express]

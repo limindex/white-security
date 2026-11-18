@@ -4,7 +4,6 @@ title: Confused Deputy (권한 빌려 쓰기·에이전트 간 통신 검증 누
 slug: confused-deputy-agent-comms
 group: vibe
 severity: high
-grade_hint: "에이전트로 남의 데이터 접근, 인증 없는 쓰기"
 site_only: false
 depth: brief
 languages: [python, js]

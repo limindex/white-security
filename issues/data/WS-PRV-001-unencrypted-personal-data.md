@@ -4,7 +4,6 @@ title: Unencrypted Sensitive Data at Rest (개인정보 암호화 저장 누락)
 slug: unencrypted-personal-data
 group: data
 severity: high
-grade_hint: "고유식별정보·카드·계좌를 평문 저장, 키가 소스에"
 site_only: false
 depth: brief
 languages: [laravel, django, nextjs]

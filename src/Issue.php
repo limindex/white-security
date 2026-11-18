@@ -23,10 +23,8 @@ final class Issue
      */
     public const DETECTION_FIELDS = ['찾는 곳', '검사', '등급', '보고 형식', '보고 예', '검토 주의', '고칠 방법'];
     public const GRADE_LEVELS = ['위험', '주의', '참고'];
-    /** 머리말 `grade_hint`(선택): 스킬 INDEX 줄 끝에 붙는 짧은 등급 조건(위험 조건, 없으면 주의 조건). 글자 수 상한 */
-    public const GRADE_HINT_MAX = 40;
     /**
-     * `찾는 곳` 백틱 신호로 쓰면 안 되는 흔한 낱말(스킬 INDEX 에서 아무 코드에나 걸린다). 이 목록이 유일한 원본.
+     * `찾는 곳` 백틱 신호로 쓰면 안 되는 흔한 낱말(아무 코드에나 걸려 신호 구실을 못 한다). 이 목록이 유일한 원본.
      * 이 밖에도 신호는 4자 이상이거나 ( . : / = - _ 중 하나를 품어야 하고, 이 목록 낱말의 일부(`dd(` ⊂ `.add(`)이거나
      * 이름 2자 이하의 호출 조각(`dd(`)이면 안 된다(Issue::signalProblem).
      */
@@ -66,10 +64,8 @@ final class Issue
         public readonly ?string $severityReason,
         /** @var array{where:string,signals:list<string>,checks:list<array{name:string,flag:string,skip:string}>,grade:array<string,string>,fields:array<string,string>}|null site_only 이슈는 null */
         public readonly ?array $detection = null,
-        /** 스킬 INDEX 에 쓰는 영어 제목(선택). 제목이 약어뿐일 때 풀어 쓴 이름 */
+        /** 영어 제목(선택). 제목이 약어뿐일 때 풀어 쓴 이름(기록용, 11-19 INDEX 를 없앤 뒤 생성물에는 쓰지 않음) */
         public readonly ?string $titleEn = null,
-        /** 스킬 INDEX 줄 끝의 짧은 등급 조건(선택). 없으면 SkillExport 가 `등급` 첫 문장에서 만든다 */
-        public readonly ?string $gradeHint = null,
     ) {}
 
     /** @param array<int,array{id:string}> $groups data/groups.json 내용 */
@@ -208,20 +204,12 @@ final class Issue
         $a = $languages; $b = $found; sort($a); sort($b);
         if ($a !== $b) throw $fail('languages [' . implode(', ', $languages) . '] 와 `## 코드 예시` 의 ### 소제목 [' . implode(', ', $found) . '] 이(가) 다릅니다');
 
-        $line = function (string $key, int $max) use ($fm, $fail): ?string {
-            $v = $fm[$key] ?? null;
-            if ($v === null) return null;
-            if (!is_string($v) || trim($v) === '' || preg_match('/[\r\n]/', $v)) throw $fail("$key 는 한 줄 문자열이어야 합니다");
-            $v = trim($v);
-            if (mb_strlen($v) > $max) throw $fail("$key 가 " . mb_strlen($v) . "자로 상한 {$max}자를 넘습니다(스킬 예산)");
-            return $v;
-        };
-        $gradeHint = $line('grade_hint', self::GRADE_HINT_MAX);
-        if ($gradeHint !== null && $siteOnly) throw $fail('grade_hint 는 스킬에 들어가는 이슈(site_only: false)에만 쓸 수 있습니다');
+        // 가벼운 안내 스킬로 바꾼 뒤(11-19) 묶음 INDEX 가 없어 등급 조건 칸도 쓰지 않는다
+        if (array_key_exists('grade_hint', $fm)) throw $fail('grade_hint 칸은 쓰지 않습니다(묶음 INDEX 없음, 11-19) — 줄을 지워야 합니다');
         // 상시 스킬을 없앤 뒤(11-19) 남은 칸이 다시 들어오지 않게 막는다
         if (array_key_exists('always_on', $fm)) throw $fail('always_on 칸은 쓰지 않습니다(상시 스킬 없음, 11-19) — 줄을 지워야 합니다');
 
-        return new Issue($id, $title, $slug, $group, $severity, $siteOnly, $depth, $languages, $maps, $checked, $sources, $body, $sections, $code, $path, $published, $revisions, array_values($appliesTo), $severityReason, $detection, $titleEn, $gradeHint);
+        return new Issue($id, $title, $slug, $group, $severity, $siteOnly, $depth, $languages, $maps, $checked, $sources, $body, $sections, $code, $path, $published, $revisions, array_values($appliesTo), $severityReason, $detection, $titleEn);
     }
 
     /**

@@ -4,7 +4,6 @@ title: Missing Rate Limiting (요청 횟수·크기 제한 없음)
 slug: missing-rate-limiting
 group: deploy
 severity: medium
-grade_hint: "요금 드는 호출·무거운 작업에 제한 없음"
 site_only: false
 depth: brief
 languages: [laravel, fastapi, nginx]

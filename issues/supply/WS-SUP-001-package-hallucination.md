@@ -4,7 +4,6 @@ title: Slopsquatting (패키지 환각)
 slug: package-hallucination
 group: supply
 severity: high
-grade_hint: "레지스트리에 없는 이름 설치"
 site_only: false
 depth: full
 languages: [python, js, php]

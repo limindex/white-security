@@ -4,7 +4,6 @@ title: Business Flow Abuse (가입·쿠폰·예약 자동화 남용)
 slug: business-flow-abuse
 group: auth
 severity: medium
-grade_hint: "계정만 바꿔 혜택 반복, 앞 단계 건너뛰기"
 site_only: false
 depth: brief
 languages: [laravel, nextjs, django]

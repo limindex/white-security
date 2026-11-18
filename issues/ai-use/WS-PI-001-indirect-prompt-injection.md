@@ -5,7 +5,6 @@ title_en: IPI (Indirect Prompt Injection)
 slug: indirect-prompt-injection
 group: ai-use
 severity: high
-grade_hint: "외부 글과 부작용 도구 자동 실행이 한 흐름"
 site_only: false
 depth: full
 languages: [python, js, php]

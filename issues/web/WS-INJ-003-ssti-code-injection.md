@@ -4,7 +4,6 @@ title: SSTI · Code Injection (서버 템플릿 인젝션·코드 인젝션)
 slug: ssti-code-injection
 group: web
 severity: high
-grade_hint: "외부 값이 템플릿 원문·eval에"
 site_only: false
 depth: brief
 languages: [flask, python, express, laravel]

@@ -4,7 +4,6 @@ title: Weak Password Storage · Policy (비밀번호 저장·작성 규칙)
 slug: password-storage-policy
 group: auth
 severity: high
-grade_hint: "평문·복호화 가능·MD5·SHA-1·솔트 없는 저장"
 site_only: false
 depth: brief
 languages: [laravel, nextjs, django]

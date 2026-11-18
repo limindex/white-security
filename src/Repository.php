@@ -168,7 +168,7 @@ final class Repository
 
     /**
      * 묶음 목록을 읽는다. 문제는 조용히 넘기지 않고 $errors 에 남긴다(서버 경로 없이 상대 이름만).
-     * @param list<string> $errors @return list<array{id:string,name:string,order:int,site_only:bool,when:?string,route:?string}>
+     * @param list<string> $errors @return list<array{id:string,name:string,order:int,site_only:bool,when:?string}>
      */
     private static function loadGroups(string $file, array &$errors): array
     {
@@ -190,9 +190,7 @@ final class Repository
             if (isset($ids[$g['id']])) { $errors[] = "$name: id `{$g['id']}` 가 두 번 나옵니다"; continue; }
             $ids[$g['id']] = true;
             $when = isset($g['when']) && is_string($g['when']) && trim($g['when']) !== '' ? trim($g['when']) : null;
-            // route: 스킬 SKILL.md 라우팅 표에 들어가는 영문 코드 신호 키워드 한 줄(스킬에 들어가는 묶음은 필수 — SkillExport 가 확인)
-            $route = isset($g['route']) && is_string($g['route']) && trim($g['route']) !== '' ? trim(preg_replace('/\s+/u', ' ', $g['route'])) : null;
-            $out[] = ['id' => $g['id'], 'name' => $g['name'], 'order' => $g['order'], 'site_only' => (bool)($g['site_only'] ?? false), 'when' => $when, 'route' => $route];
+            $out[] = ['id' => $g['id'], 'name' => $g['name'], 'order' => $g['order'], 'site_only' => (bool)($g['site_only'] ?? false), 'when' => $when];
         }
         return $out;
     }

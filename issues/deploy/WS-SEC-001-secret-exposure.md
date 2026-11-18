@@ -4,7 +4,6 @@ title: Hardcoded Secrets (하드코딩된 비밀값 노출)
 slug: secret-exposure
 group: deploy
 severity: high
-grade_hint: "실제 비밀값이 저장소·브라우저 번들에 있음"
 site_only: false
 depth: full
 languages: [python, js, php]

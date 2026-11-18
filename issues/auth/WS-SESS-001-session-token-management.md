@@ -4,7 +4,6 @@ title: Broken Session Management (세션·토큰 관리 미흡)
 slug: session-token-management
 group: auth
 severity: high
-grade_hint: "서명 확인 없는 토큰, none·알고리즘 혼용, 세션 고정"
 site_only: false
 depth: brief
 languages: [laravel, nextjs, fastapi]

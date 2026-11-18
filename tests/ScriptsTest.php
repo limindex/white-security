@@ -83,7 +83,7 @@ test('버전 검사(판정): 플러그인이 바뀌면 version 을 올리고 CHA
 test('버전 검사(git): 기준 이후 플러그인 변경에 버전·CHANGELOG 를 요구, 첫 push·모르는 기준은 건너뜀', function () {
     $root = sc_repo();
     sc_put($root, 'plugins/white-security/.claude-plugin/plugin.json', '{"name": "white-security", "version": "0.1.0"}');
-    sc_put($root, 'plugins/white-security/skills/review/SKILL.md', "v1\n");
+    sc_put($root, 'plugins/white-security/skills/white-security/SKILL.md', "v1\n");
     sc_put($root, 'CHANGELOG.md', "## 0.1.0\n");
     $base = sc_commit($root, 'v0.1.0');
 
@@ -93,7 +93,7 @@ test('버전 검사(git): 기준 이후 플러그인 변경에 버전·CHANGELOG
     assert_same(0, $code, $out);
     assert_contains('플러그인 변경 없음', $out);
 
-    sc_put($root, 'plugins/white-security/skills/review/SKILL.md', "v2\n");
+    sc_put($root, 'plugins/white-security/skills/white-security/SKILL.md', "v2\n");
     sc_commit($root, 'skill');
     [$code, $out] = sc_run($root, 'check-version-bump.php', $base);
     assert_same(1, $code, $out);

@@ -4,7 +4,6 @@ title: Tool Poisoning · Rug Pull (MCP 도구 설명 오염·몰래 바꾸기)
 slug: mcp-tool-poisoning-rug-pull
 group: vibe
 severity: high
-grade_hint: "도구 설명 속 숨은 지시, 키 받는 서버 버전 미고정"
 site_only: false
 depth: brief
 languages: [json, python]
