@@ -1,6 +1,6 @@
 <?php
 /** @var Site $site @var array $groups @var array $byGroup */
-$install = $site->setting('plugin_id') !== '' ? '/plugin install ' . $site->setting('plugin_id') : '';
+$first = array_slice($site->repo->start(), 0, 3);
 ?>
 <div class="ws-home">
 <section class="ws-home-intro" aria-labelledby="ws-home-h">
@@ -12,16 +12,19 @@ $install = $site->setting('plugin_id') !== '' ? '/plugin install ' . $site->sett
 
 <section class="ws-paths" aria-labelledby="ws-paths-h">
 <h2 class="ws-sr" id="ws-paths-h">시작점</h2>
-<a class="ws-path ws-path--lead" href="<?= Site::e($site->url('start')) ?>">
+<section class="ws-path ws-path--lead" aria-labelledby="ws-lead-h">
 <span class="ws-path-k">공부하기</span>
-<h3>처음이라면</h3>
-<p>보안 용어 없이 읽는 순서 · 가장 흔한 사고부터</p>
+<h3 id="ws-lead-h">처음이라면</h3>
+<p>흔하고 피해가 큰 보안 이슈 10건 · 읽는 순서</p>
+<?php if ($first): ?>
 <ol class="ws-path-steps">
-<li>문서 번호와 절 구성</li>
-<li>위험·주의·참고 판정 기준</li>
-<li>가장 흔한 사고 10건</li>
+<?php foreach ($first as $row): ?>
+<li><a href="<?= Site::e($site->url('issues/' . $row['issue']->id)) ?>"><?= Site::t($row['issue']->title) ?></a></li>
+<?php endforeach ?>
 </ol>
-</a>
+<?php endif ?>
+<a class="ws-path-go" href="<?= Site::e($site->url('start')) ?>">10건 모두 보기</a>
+</section>
 <?php if ($site->pageOn('check')): ?>
 <a class="ws-path" href="<?= Site::e($site->url('check')) ?>">
 <span class="ws-path-k">점검하기</span>
@@ -39,7 +42,7 @@ $install = $site->setting('plugin_id') !== '' ? '/plugin install ' . $site->sett
 <span class="ws-path-k">자동화하기</span>
 <h3>스킬 설치</h3>
 <p>설치 뒤 대화창에 “보안 점검해 줘” 한마디. 코드 작성 중 위험한 코드는 자동 점검.</p>
-<?php if ($install !== ''): ?><code class="ws-path-cmd"><?= Site::e($install) ?></code><?php endif ?>
+<span class="ws-path-go">설치 안내 4단계</span>
 </a>
 </section>
 

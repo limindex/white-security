@@ -19,8 +19,7 @@
 <ol class="ws-readlist">
 <?php foreach ($start as $row): $i = $row['issue']; ?>
 <li><a href="<?= Site::e($site->url('issues/' . $i->id)) ?>">
-<span class="ws-readlist-main"><span class="ws-readlist-title"><?= Site::t($i->title) ?></span><span class="ws-readlist-why"><?= Site::t($row['reason']) ?></span></span>
-<span class="ws-id"><?= Site::e($i->id) ?></span>
+<span class="ws-readlist-main"><span class="ws-readlist-title"><?= Site::t($i->title) ?></span><span class="ws-readlist-why"><?= Site::t($row['reason']) ?></span><span class="ws-id"><?= Site::e($i->id) ?></span></span>
 <?= Site::severityBadge($i->severity) ?>
 </a></li>
 <?php endforeach ?>

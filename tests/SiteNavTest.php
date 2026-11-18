@@ -1,4 +1,5 @@
 <?php
+const INST_JSON_8U = '{"publisher": "LimIndex", "github": "https://github.com/limindex/white-security", "marketplace": "limindex/skills", "plugin_id": "white-security@limindex", "released": false}';
 require_once __DIR__ . '/support.php';
 
 /** 정보 구조: 왼쪽 메뉴 3구역 · 경로 표시 · 새 페이지 · 설정(site.json) · 공유 메타 */
@@ -135,7 +136,7 @@ test('홈: 한 줄 소개 → 시작점 3갈래 → 최근 개정 → 묶음 색
     }
     assert_true($pos['class="ws-home-intro"'] < $pos['class="ws-paths"'] && $pos['class="ws-paths"'] < $pos['class="ws-recent"'] && $pos['class="ws-recent"'] < $pos['class="ws-grp-index"'], '순서');
     assert_true(!str_contains($b, 'ws-cov-line') && !str_contains($b, 'href="/white-security/coverage"'), '홈에 점검 기준 대응 줄 없음');
-    preg_match('#class="ws-paths"(.*?)</section>#s', $b, $m);
+    preg_match('#class="ws-paths"(.*?)</section>\s*<section class="ws-home-sec"#s', $b, $m);
     foreach (['/white-security/start', '/white-security/guide', '/white-security/install'] as $h) assert_contains('href="' . $h . '"', $m[1]);
     assert_true(!str_contains($m[1], '/white-security/check'), 'check 꺼짐: 시작점에 없음');
     assert_same(3, preg_match_all('#<h3[^>]*>#', $m[1]), '시작점 3개');
@@ -240,4 +241,28 @@ test('홈 스킬 설치 카드: 한마디 안내 · 자동 점검 한 줄', func
     $b = nav_site()->route('')['body'];
     assert_contains('“보안 점검해 줘” 한마디', $b);
     assert_contains('코드 작성 중 위험한 코드는 자동 점검', $b);
+});
+
+test('홈 시작점: 처음이라면 카드는 start.json 앞 3건 제목 링크 + 10건 모두 보기, 스킬 설치 카드에 부분 command 없음, 카드 안 링크 중첩 없음', function () {
+    $rows = [];
+    foreach (['WS-INJ-001'] as $id) $rows[] = '{"id": "' . $id . '", "reason": "검색어가 SQL 로 실행되는 문제"}';
+    $root = make_root();
+    file_put_contents($root . '/data/start.json', '[' . implode(',', $rows) . ']');
+    file_put_contents($root . '/data/site.json', INST_JSON_8U);
+    $s = new Site(Repository::load($root), '/white-security/', 'live', new DateTimeImmutable('2026-11-18'));
+    $b = $s->route('')['body'];
+    preg_match('#class="ws-paths"(.*?)</section>\s*<section class="ws-home-sec"#s', $b, $m);
+    $p = $m[1];
+    assert_true((bool)preg_match('#ws-path--lead.*?<ol class="ws-path-steps">\s*<li><a href="/white-security/issues/WS-INJ-001">SQL 삽입.*?href="/white-security/start">10건 모두 보기#su', $p), '앞 3건 + 모두 보기');
+    assert_true(!str_contains($p, '문서 번호와 절 구성'), '문서 읽는 법 카드와 겹치는 단계 없음');
+    assert_true(!str_contains($p, '/plugin install') && !str_contains($p, 'ws-path-cmd'), '부분 command 없음');
+    assert_contains('설치 안내 4단계', $p);
+    assert_same(0, preg_match('#<a[^>]*>(?:(?!</a>).)*<a[ >]#s', $p), '링크 중첩 없음');
+});
+
+test('처음이라면 목록: 문서 번호는 제목 블록 안(이유 아래 작은 글씨), 별도 칸 없음', function () {
+    $root = make_root();
+    file_put_contents($root . '/data/start.json', '[{"id": "WS-INJ-001", "reason": "x"}]');
+    $b = (new Site(Repository::load($root), '/white-security/', 'live'))->route('start')['body'];
+    assert_true((bool)preg_match('#<span class="ws-readlist-main"><span class="ws-readlist-title">.*?</span><span class="ws-readlist-why">x</span><span class="ws-id">WS-INJ-001</span></span>#su', $b), '제목 블록 안 id');
 });

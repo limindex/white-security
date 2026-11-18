@@ -3,7 +3,7 @@
   "name": "OWASP API Security Top 10:2023",
   "short": "OWASP API 2023",
   "year": 2023,
-  "about": "OWASP API Security Top 10:2023 — OWASP가 정리한 API(앱·화면과 서버가 데이터를 주고받는 창구)의 가장 흔한 보안 문제 10가지",
+  "about": "OWASP API Security Top 10:2023 — OWASP가 꼽은 API(앱·화면과 서버가 데이터를 주고받는 창구)의 가장 흔한 보안 문제 10가지",
   "url": "https://api-security.owasp.org/editions/2023/en/0x11-t10",
   "items": [
     {

@@ -3,7 +3,7 @@
   "name": "OWASP ASVS 5.0",
   "short": "ASVS 5.0",
   "year": 2025,
-  "about": "OWASP ASVS 5.0 — OWASP가 만든 웹 앱 보안 요구 사항 점검 목록(Application Security Verification Standard)",
+  "about": "OWASP ASVS 5.0 — 웹 앱이 갖춰야 할 보안 요구 사항을 모은 OWASP의 점검 목록(Application Security Verification Standard)",
   "url": "https://github.com/OWASP/ASVS/tree/master/5.0/en",
   "rollup": ".",
   "items": [
