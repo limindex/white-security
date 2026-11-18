@@ -63,7 +63,7 @@ LDAP 은 escape_filter_chars 같은 이스케이프, XPath 는 변수 바인딩�
 
 ## 탐지 규칙
 
-- **찾는 곳**: `findOne(`, `$where`, `sanitizeFilter`, `ldap_search(`, `xpath(`, 그 밖에 ldap3 의 search 필터, req.body·req.query를 받는 find·updateOne·aggregate, 문자열로 만든 LDAP 필터.
+- **찾는 곳**: `findOne(req.body`, `find(req.query`, `$where`, `ldap_search(`, `xpath(`, 그 밖에 req.body·req.query 를 받는 findOne·updateOne·aggregate, ldap3 search 필터, 문자열로 만든 LDAP 필터.
 - **검사 1 — 요청 객체가 조건**: 지적할 때: `req.body`·`req.query`·JSON 값이 형 확인 없이 `find`·`findOne`·`updateOne` 조건에 들어가는 경우(Express 4의 기본 쿼리 파서는 대괄호 이름도 객체로 만듦). / 지적하지 않을 때: `String()`·`Number()` 변환이나 zod·Pydantic 스키마로 형을 확인한 경우, Mongoose `sanitizeFilter`가 켜진 경우.
 - **검사 2 — 서버 JS 실행 연산자**: 지적할 때: `$where`·`$function`·`$accumulator`·`mapReduce`에 외부 값이 들어가는 경우. / 지적하지 않을 때: 코드에 고정된 식만 쓰는 경우.
 - **검사 3 — LDAP·XPath 문자열**: 지적할 때: LDAP 필터(`(uid=...)`)나 XPath 식에 입력을 이어 붙이는 경우. / 지적하지 않을 때: `escape_filter_chars`·`ldap_escape()` 같은 이스케이프나 XPath 변수 바인딩을 거친 경우.

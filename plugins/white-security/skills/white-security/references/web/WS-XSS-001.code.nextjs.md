@@ -8,7 +8,7 @@ export function Comment({ body, website }: { body: string; website: string }) {
   return (
     <div>
       <p dangerouslySetInnerHTML={{ __html: body }} />  {/* 남이 쓴 HTML 을 그대로 */}
-      <a href={website}>홈페이지</a>                       {/* 주소 스킴 검사 없음 */}
+      <a href={website}>홈페이지</a>                       {/* React 18 이하는 javascript: 주소가 실행된다(19+는 React 가 차단) */}
     </div>
   );
 }

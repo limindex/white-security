@@ -29,7 +29,8 @@ def count_nodes(tree: dict, max_nodes: int = 1000, max_depth: int = 20) -> int:
         if seen > max_nodes or depth > max_depth:
             raise HTTPException(400, "구조가 너무 큽니다")
         kids = node.get("children", [])
-        if isinstance(kids, list):
-            stack.extend((c, depth + 1) for c in kids if isinstance(c, dict))
+        if not isinstance(kids, list) or len(kids) > max_nodes:   # 넣기 전에 개수 확인
+            raise HTTPException(400, "구조가 너무 큽니다")
+        stack.extend((c, depth + 1) for c in kids if isinstance(c, dict))
     return seen
 ```

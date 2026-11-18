@@ -17,5 +17,6 @@
 @if (in_array(parse_url((string) $comment->website, PHP_URL_SCHEME), ['http', 'https'], true))
   <a href="{{ $comment->website }}" rel="nofollow noopener">홈페이지</a>
 @endif
-<script>window.post = @json($post->only(['id', 'title']));</script>  {{-- 스크립트 안 데이터 --}}
+<script type="application/json" id="post-data">@json($post->only(['id', 'title']))</script>
+{{-- JS 에서 JSON.parse(document.getElementById('post-data').textContent) 로 읽는다(실행되지 않는 데이터 블록) --}}
 ```

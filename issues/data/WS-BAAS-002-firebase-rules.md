@@ -57,7 +57,7 @@ firestore.rules·storage.rules·database.rules.json에서 if true, request.time 
 ## 점검 항목
 
 - Firestore·Realtime Database·Storage 규칙 어디에도 `if true`가 없어야 한다.
-- 테스트 모드 규칙(`request.time <` 기한)은 출시 전에 실제 규칙으로 바꿔야 한다.
+- 테스트 모드 규칙(`request.time <`·`now <` 기한)은 출시 전에 실제 규칙으로 바꿔야 한다.
 - `request.auth != null`만 보지 말고 `request.auth.uid`를 소유자 필드와 비교해야 한다.
 - 쓰기 규칙은 소유자·역할 필드를 바꾸지 못하게 `request.resource.data`를 검사해야 한다.
 - Realtime Database는 상위 경로에 `.read: true`를 주지 않아야 한다(하위 규칙으로 못 막음).
@@ -65,8 +65,8 @@ firestore.rules·storage.rules·database.rules.json에서 if true, request.time 
 
 ## 탐지 규칙
 
-- **찾는 곳**: `firestore.rules`, `storage.rules`, `database.rules.json`, `if true`, `request.time <`, `firebase-admin`, `service-account`·`serviceAccountKey` JSON 파일, `cert(`, `".read": true`.
-- **검사 1 — 열린 규칙**: 지적할 때: `allow read, write: if true`, `match /{document=**}`에 넓은 허용, `request.time <` 기한부 허용, Realtime Database 루트의 `".read": true`·`".write": true`가 있는 경우. / 지적하지 않을 때: 공지·상품 목록처럼 공개용 컬렉션의 `read`만 `true`이고 쓰기는 막힌 경우.
+- **찾는 곳**: `firestore.rules`, `storage.rules`, `database.rules.json`, `if true`, `request.time <`, `now <`, `firebase-admin`, `serviceAccountKey`, 그 밖에 service-account JSON 파일, credential.cert, `".read": true`.
+- **검사 1 — 열린 규칙**: 지적할 때: `allow read, write: if true`, `match /{document=**}`에 넓은 허용, `request.time <`·`now <` 기한부 허용, Realtime Database 루트의 `".read": true`·`".write": true`가 있는 경우. / 지적하지 않을 때: 공지·상품 목록처럼 공개용 컬렉션의 `read`만 `true`이고 쓰기는 막힌 경우.
 - **검사 2 — 로그인만 확인**: 지적할 때: 개인 데이터에 `request.auth != null`만 확인해 로그인한 누구나 남의 문서를 읽고 쓰는 경우. 쓰기 규칙이 소유자·역할 필드 변경을 막지 않는 경우. / 지적하지 않을 때: `request.auth.uid == resource.data.ownerId`처럼 소유자와 비교하고, 쓰기에서 `request.resource.data`의 소유자 필드를 고정하는 경우.
 - **검사 3 — Admin SDK 키·우회**: 지적할 때: 서비스 계정 JSON이 저장소·클라이언트 번들에 있는 경우. Admin SDK로 요청 id만 보고 읽고 쓰며 ID 토큰 확인이 없는 경우. / 지적하지 않을 때: `apiKey` 등 `firebaseConfig` 값이 클라이언트에 있는 경우(공개 값). Admin SDK가 서버에서 `verifyIdToken` 뒤 소유자를 확인하는 경우.
 - **등급**: 위험: 쓰기를 여는 `if true`·기한부 규칙, 서비스 계정 키 노출. / 주의: 로그인만 확인하는 규칙, 소유자 필드를 바꿀 수 있는 쓰기 규칙. / 참고: 규칙 파일이 저장소에 없어 콘솔 확인이 필요한 경우.

@@ -22,6 +22,7 @@ def comment(request, pk):
     return render(request, "comment.html", {
         "body": c.body,                                                   # 템플릿이 자동 이스케이프
         "rich": nh3.clean(c.html, tags={"b", "i", "p", "ul", "li", "a"}),  # HTML 이 필요하면 허용 태그만
+        "meta": {"id": c.pk, "author": c.author_name},                   # 스크립트에서 읽을 데이터
     })
 # comment.html: <div>{{ body|linebreaksbr }}</div> <div>{{ rich|safe }}</div> {{ meta|json_script:"meta" }}
 ```

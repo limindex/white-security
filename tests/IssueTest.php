@@ -218,6 +218,9 @@ test('탐지 규칙 신호: 너무 짧거나 흔한 낱말은 파일:줄과 함�
     // 4자 이상이거나 ( . : / = - _ 중 하나가 있으면 통과
     foreach (['`zipfile`', '`a.b`', '`x=`', '`gs -`'] as $ok) Issue::fromFile(ws_tmp(ws_mut('`db.query(`', "`db.query(`, $ok")), ws_groups());
     assert_true(Issue::signalProblem('gs') !== null && Issue::signalProblem('gs -') === null && Issue::signalProblem('Wand(') === null);
+    // 금지 낱말의 일부·2자 이하 호출 조각은 거절, 더 긴 패턴은 통과
+    assert_true(Issue::signalProblem('dd(') !== null && Issue::signalProblem('ad(') !== null && Issue::signalProblem('earch(') !== null);
+    assert_true(Issue::signalProblem('var_dump(') === null && Issue::signalProblem('{!! $') === null && Issue::signalProblem('findOne(req.body') === null);
 });
 
 test('title_en: 선택, 한 줄 문자열', function () {

@@ -7,18 +7,18 @@ Stacks: Python · FastAPI · Django · Flask · JavaScript · Next.js · Express
 
 - `gethostbyaddr(` `dns.reverse(` `extract($_` `tempfile.mktemp(` → WS-API-001 Dangerous API Use
 - `csrf_exempt` `validateCsrfTokens(` `VerifyCsrfToken` `allowedOrigins` → WS-CSRF-001 CSRF (Cross-Site Request Forgery)
-- `new RegExp(` `re.compile(` `preg_match(` `per_page` → WS-DOS-001 ReDoS·Resource Exhaustion
-- `phpinfo(` `dd(` `response_model` `$hidden` → WS-ENC-001 Leftover Debug Code·Data Exposure
-- `except Exception` `catch (e)` `getMessage()` `err.stack` → WS-ERR-001 Improper Error Handling
-- `pool.connect(` `client.release(` `parseFloat(` `fopen(` → WS-ERR-002 Code Errors
-- `mail(` `Content-Disposition` `smtplib` `setHeader(` → WS-HDR-001 HTTP Response Splitting·Header Injection
+- `new RegExp(` `re.compile(` `per_page` `paginate($request` → WS-DOS-001 ReDoS·Resource Exhaustion
+- `phpinfo(` `var_dump(` `response_model` `$hidden` `/debug` → WS-ENC-001 Leftover Debug Code·Data Exposure
+- `except Exception` `getMessage()` `err.stack` `getTraceAsString(` `traceback.format_exc(` → WS-ERR-001 Improper Error Handling
+- `pool.connect(` `client.release(` `getConnection(` `(int) $request->input(` → WS-ERR-002 Code Errors
+- `Content-Disposition` `smtplib` `setHeader(` `From: $` `From: {` → WS-HDR-001 HTTP Response Splitting·Header Injection
 - `cursor.execute(` `->query(` `pool.query(` `whereRaw(` `DB::raw(` `knex.raw(` → WS-INJ-001 SQL 인젝션 (SQLi)
 - `shell=True` `os.system(` `child_process` `shell_exec(` `Process::run` → WS-INJ-002 OS Command Injection
 - `render_template_string(` `Blade::render(` `new Function(` `ejs.render(` → WS-INJ-003 SSTI·Code Injection
-- `findOne(` `$where` `sanitizeFilter` `ldap_search(` `xpath(` → WS-INJ-004 NoSQL·LDAP·XPath Injection
-- `res.sendFile(` `FileResponse(` `send_file(` `->download(` `path.join(` → WS-PATH-001 Path Traversal
-- `lockForUpdate(` `select_for_update(` `$transaction(` `increment(` → WS-RACE-001 Race Condition
-- `redirect(` `->away(` `window.location` `next=` → WS-RED-001 Open Redirect
+- `findOne(req.body` `find(req.query` `$where` `ldap_search(` `xpath(` → WS-INJ-004 NoSQL·LDAP·XPath Injection
+- `res.sendFile(` `FileResponse(` `send_file(` `->download(` → WS-PATH-001 Path Traversal
+- `lockForUpdate(` `select_for_update(` `$transaction(` → WS-RACE-001 Race Condition
+- `->input('next'` `request.GET.get("next"` `searchParams.get("next"` `formData.get("next"` `window.location` → WS-RED-001 Open Redirect
 - `move_uploaded_file(` `getClientOriginalName(` `public_path(` `location ~ \.php$` `.htaccess` → WS-SHELL-001 Web Shell
 - `multer(` `UploadFile` `->store(` `request.FILES` → WS-UPL-001 Unrestricted File Upload
 - `{!! $` `dangerouslySetInnerHTML` `mark_safe(` `|safe` `.innerHTML =` → WS-XSS-001 XSS (Cross-Site Scripting)

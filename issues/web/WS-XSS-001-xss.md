@@ -55,7 +55,7 @@ sources:
 ```
 
 - 댓글에 `<b>바나나</b>`를 쓰면 태그 글자가 그대로 보여야 한다.
-- 홈페이지 칸에 `javascript:`로 시작하는 주소를 넣으면 링크가 만들어지지 않아야 한다.
+- 홈페이지 칸에 `javascript:`로 시작하는 주소를 넣으면 링크가 만들어지지 않거나 눌러도 실행되지 않아야 한다.
 
 ## 점검 항목
 
@@ -69,7 +69,7 @@ sources:
 
 - **찾는 곳**: `{!! $`, `dangerouslySetInnerHTML`, `mark_safe(`, `|safe`, `.innerHTML =`, 그 밖에 v-html, document.write, 사용자 값이 들어가는 href·src.
 - **검사 1 — 이스케이프 끔**: 지적할 때: 요청·DB·외부 API·AI 출력 값이 `{!! !!}`, `dangerouslySetInnerHTML`, `|safe`, `mark_safe`, `innerHTML`로 새니타이저 없이 들어가는 경우. / 지적하지 않을 때: 코드에 고정된 HTML이거나 DOMPurify·nh3·HTMLPurifier를 거친 값인 경우.
-- **검사 2 — 위험한 주소**: 지적할 때: 사용자 값이 `href`·`src`·`location`에 스킴 검사 없이 들어가는 경우. / 지적하지 않을 때: `new URL()`·`parse_url()`로 파싱해 `http`·`https`만 허용하는 경우.
+- **검사 2 — 위험한 주소**: 지적할 때: 사용자 값이 스킴 검사 없이 `window.location`·`location.href =`, Blade·Django 템플릿의 `href`, React 18 이하 JSX의 `href`·`src`에 들어가는 경우. / 지적하지 않을 때: `new URL()`·`parse_url()`로 해석해 `http`·`https`만 허용하는 경우. React 19+ JSX의 `href`(`javascript:`는 React가 차단).
 - **검사 3 — 스크립트 안 데이터**: 지적할 때: `<script>` 블록 안에 서버 값을 문자열로 직접 끼우는 경우. / 지적하지 않을 때: `@json`·`json_script`, 또는 `<`를 이스케이프한 JSON을 쓰는 경우.
 - **등급**: 위험: 남이 쓴 글이 이스케이프 없이 HTML로 그려지는 경우. / 주의: 본인만 보는 값의 이스케이프 끔, `javascript:` 링크 가능, `<script>` 안에 값 직접 끼움. / 참고: CSP 없음, 세션 쿠키에 `HttpOnly` 없음.
 - **보고 형식**: `[위험|주의|참고] <id> <파일:줄> — <이유> → <고칠 방법>`
@@ -96,7 +96,8 @@ sources:
 @if (in_array(parse_url((string) $comment->website, PHP_URL_SCHEME), ['http', 'https'], true))
   <a href="{{ $comment->website }}" rel="nofollow noopener">홈페이지</a>
 @endif
-<script>window.post = @json($post->only(['id', 'title']));</script>  {{-- 스크립트 안 데이터 --}}
+<script type="application/json" id="post-data">@json($post->only(['id', 'title']))</script>
+{{-- JS 에서 JSON.parse(document.getElementById('post-data').textContent) 로 읽는다(실행되지 않는 데이터 블록) --}}
 ```
 
 ### nextjs
@@ -108,7 +109,7 @@ export function Comment({ body, website }: { body: string; website: string }) {
   return (
     <div>
       <p dangerouslySetInnerHTML={{ __html: body }} />  {/* 남이 쓴 HTML 을 그대로 */}
-      <a href={website}>홈페이지</a>                       {/* 주소 스킴 검사 없음 */}
+      <a href={website}>홈페이지</a>                       {/* React 18 이하는 javascript: 주소가 실행된다(19+는 React 가 차단) */}
     </div>
   );
 }
@@ -159,6 +160,7 @@ def comment(request, pk):
     return render(request, "comment.html", {
         "body": c.body,                                                   # 템플릿이 자동 이스케이프
         "rich": nh3.clean(c.html, tags={"b", "i", "p", "ul", "li", "a"}),  # HTML 이 필요하면 허용 태그만
+        "meta": {"id": c.pk, "author": c.author_name},                   # 스크립트에서 읽을 데이터
     })
 # comment.html: <div>{{ body|linebreaksbr }}</div> <div>{{ rich|safe }}</div> {{ meta|json_script:"meta" }}
 ```

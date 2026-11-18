@@ -14,7 +14,7 @@
 
 ## 탐지 규칙
 
-- **찾는 곳**: `mail(`, `Content-Disposition`, `smtplib`, `setHeader(`, 그 밖에 PHP header()·Location·Set-Cookie 에 요청 값을 넣는 코드.
+- **찾는 곳**: `Content-Disposition`, `smtplib`, `setHeader(`, `From: $`, `From: {`, 그 밖에 PHP mail() 의 추가 헤더, header()·Location·Set-Cookie 에 요청 값을 넣는 코드.
 - **검사 1 — 메일 헤더 직접 조립**: 지적할 때: 요청 값이 PHP `mail()`의 추가 헤더 문자열이나 `smtplib`로 보내는 원문 메시지 헤더에 들어가는 경우. / 지적하지 않을 때: Symfony Mailer·Laravel Mail·`EmailMessage`·nodemailer처럼 헤더를 따로 다루는 라이브러리를 쓰고 값의 줄바꿈을 거절하는 경우.
 - **검사 2 — 응답 헤더에 입력**: 지적할 때: 요청 값을 `header()`·`setHeader()`·`Content-Disposition` 문자열에 직접 넣는 경우. / 지적하지 않을 때: `res.attachment()`·`res.download()`·Laravel `download()`처럼 인코딩해 주는 함수를 쓰는 경우. 값이 코드 상수인 경우.
 - **등급**: 위험: 메일 헤더에 검사 없는 요청 값(스팸 발송 통로). / 주의: `Content-Disposition`·`Location`·`Set-Cookie`에 요청 값 직접 연결. / 참고: 줄바꿈을 막는 런타임이라도 따옴표·세미콜론으로 헤더 값이 바뀌는 경우.

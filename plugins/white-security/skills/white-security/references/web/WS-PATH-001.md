@@ -10,11 +10,11 @@
 - 이름을 받아야 하면 허용 문자(`^[A-Za-z0-9._-]+$`)만 받고 `.`으로 시작하는 이름을 막아야 한다.
 - 경로는 정규화(`realpath`·`resolve`)한 뒤 기준 폴더 안인지 다시 확인해야 한다.
 - 검사는 URL 디코딩·유니코드 정규화를 모두 끝낸 값에 해야 한다.
-- 한국어 Windows 서버는 `₩`가 `\`로 바뀌므로 차단 목록이 아닌 허용 문자로 검사해야 한다.
+- ANSI(CP949) 변환을 거치면 `₩`가 `\`로 바뀌므로 차단 목록이 아닌 허용 문자로 검사해야 한다.
 
 ## 탐지 규칙
 
-- **찾는 곳**: `res.sendFile(`, `FileResponse(`, `send_file(`, `->download(`, `path.join(`, 그 밖에 요청 값이 들어가는 open·readFile·file_get_contents·fopen·include.
+- **찾는 곳**: `res.sendFile(`, `FileResponse(`, `send_file(`, `->download(`, 그 밖에 요청 값이 들어가는 path.join·open·readFile·file_get_contents·fopen·include.
 - **검사 1 — 입력으로 경로 만들기**: 지적할 때: 요청·DB·압축 속 이름 값이 경로에 이어지고 기준 폴더 안인지 확인이 없는 경우. / 지적하지 않을 때: DB id로 찾은 서버 경로를 쓰는 경우. `realpath`·`resolve` 뒤 기준 폴더(구분자 포함)로 시작하는지 확인하는 경우. 허용 문자 정규식을 통과한 이름만 쓰는 경우.
 - **검사 2 — 허술한 확인**: 지적할 때: `../`를 한 번만 지우는 치환, 정규화 전에 하는 검사, 구분자 없이 `startsWith(base)`로 비교하는 경우(`/data/files2`도 통과). / 지적하지 않을 때: 정규화한 경로가 `base + 구분자`로 시작하는지 비교하는 경우.
 - **검사 3 — include·템플릿 경로**: 지적할 때: 요청 값으로 `include`·`require`·템플릿·언어 파일 경로를 고르는 경우. / 지적하지 않을 때: 허용 목록 매핑으로만 고르는 경우.

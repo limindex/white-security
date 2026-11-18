@@ -62,7 +62,7 @@ sources:
 
 ## 탐지 규칙
 
-- **찾는 곳**: `new RegExp(`, `re.compile(`, `preg_match(`, `per_page`, 그 밖에 limit·page_size·depth 요청 값, 외부 JSON을 도는 재귀 함수, while(true).
+- **찾는 곳**: `new RegExp(`, `re.compile(`, `per_page`, `paginate($request`, 그 밖에 preg_match, limit·page_size·depth 요청 값, 외부 JSON을 도는 재귀 함수, while(true).
 - **검사 1 — 위험한 정규식**: 지적할 때: 외부 입력에 쓰는 정규식에 중첩 반복(`(x+)+`, `(x*)*`, `(\w+\s?)*`)이나 겹치는 선택이 있는 경우. 사용자 입력으로 `new RegExp()`를 만드는 경우. / 지적하지 않을 때: 반복이 한 겹이거나 반복 사이에 구분 글자가 꼭 있고 입력 길이 상한이 앞에 있는 경우. RE2·`re2` 패키지를 쓰는 경우.
 - **검사 2 — 상한 없는 크기·반복**: 지적할 때: `limit`·`per_page`·`page_size`·`depth`를 요청에서 받아 상한 없이 쓰는 경우. 외부 데이터 구조를 깊이·개수 제한 없이 재귀로 도는 경우. 외부 응답에 따라서만 끝나는 `while (true)`. / 지적하지 않을 때: 검증 규칙(`max:100`, `le=100`)이나 `min(값, 상한)`으로 자르는 경우.
 - **등급**: 위험: 로그인·검색처럼 인증 없이 열린 곳의 위험한 정규식, 사용자 입력으로 만든 정규식. / 주의: 상한 없는 페이지 크기·재귀 깊이. / 참고: 입력 길이 상한만 없는 단순 정규식.
@@ -125,8 +125,9 @@ def count_nodes(tree: dict, max_nodes: int = 1000, max_depth: int = 20) -> int:
         if seen > max_nodes or depth > max_depth:
             raise HTTPException(400, "구조가 너무 큽니다")
         kids = node.get("children", [])
-        if isinstance(kids, list):
-            stack.extend((c, depth + 1) for c in kids if isinstance(c, dict))
+        if not isinstance(kids, list) or len(kids) > max_nodes:   # 넣기 전에 개수 확인
+            raise HTTPException(400, "구조가 너무 큽니다")
+        stack.extend((c, depth + 1) for c in kids if isinstance(c, dict))
     return seen
 ```
 

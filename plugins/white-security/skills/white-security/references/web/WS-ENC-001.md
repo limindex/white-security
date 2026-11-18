@@ -14,7 +14,7 @@
 
 ## 탐지 규칙
 
-- **찾는 곳**: `phpinfo(`, `dd(`, `response_model`, `$hidden`, 그 밖에 /debug·/test 라우트, var_dump·console.log 로 찍는 토큰, 모듈 전역 currentUser.
+- **찾는 곳**: `phpinfo(`, `var_dump(`, `response_model`, `$hidden`, `/debug`, 그 밖에 /test 라우트, dd()·dump(), console.log 로 찍는 토큰, 모듈 전역 currentUser.
 - **검사 1 — 남은 디버그 코드**: 지적할 때: 운영 라우트에 `/debug`·`/test`·`phpinfo()`·`dd()`·`dump()`가 있거나, 토큰·비밀번호·개인정보를 `console.log`·`print`로 찍는 경우. / 지적하지 않을 때: 개발 환경에서만 켜지는 코드(`app()->isLocal()`, `NODE_ENV !== "production"`)이고 운영 설정에서 꺼진 것이 확인되는 경우.
 - **검사 2 — 요청 사이 공유 상태**: 지적할 때: 모듈 전역·클래스 정적 변수·싱글턴에 현재 사용자·장바구니·토큰을 넣어 다른 요청이 읽을 수 있는 경우(Node·FastAPI·Laravel Octane처럼 프로세스가 오래 사는 서버). / 지적하지 않을 때: `req`·`request.state`·세션·`AsyncLocalStorage`·`contextvars`에 두는 경우.
 - **검사 3 — 모델 통째 응답**: 지적할 때: ORM 모델·DB 행을 그대로 JSON으로 돌려줘 비밀번호 해시·토큰·내부 필드가 나가는 경우. / 지적하지 않을 때: `response_model`·API Resource·`$hidden`·필드 선택으로 보낼 값을 고른 경우.

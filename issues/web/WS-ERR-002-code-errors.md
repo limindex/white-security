@@ -63,7 +63,7 @@ DB 연결·파일·스트림을 직접 빌리고 닫는 곳에서 오류가 나�
 
 ## 탐지 규칙
 
-- **찾는 곳**: `pool.connect(`, `client.release(`, `parseFloat(`, `fopen(`, 그 밖에 getConnection·open·findOne·first()·get() 결과 바로 쓰기, 요청의 수량·금액 계산.
+- **찾는 곳**: `pool.connect(`, `client.release(`, `getConnection(`, `(int) $request->input(`, 그 밖에 open·fopen, findOne·first()·get() 결과 바로 쓰기, parseFloat 로 한 금액 계산.
 - **검사 1 — 자원 반납**: 지적할 때: `pool.connect()`·`getConnection()`·`open()`·`fopen()`으로 빌린 자원을 오류 경로에서 반납하지 않는 경우(`finally`·`with` 없음). 반납 뒤 같은 객체를 다시 쓰는 경우. / 지적하지 않을 때: `pool.query()`처럼 라이브러리가 빌리고 돌려주는 API를 쓰는 경우, `with`·`finally`로 닫는 경우.
 - **검사 2 — 없는 값 접근**: 지적할 때: `findOne`·`get`·`first()` 결과를 확인 없이 속성에 접근해 500이 나는 경우. / 지적하지 않을 때: `findOrFail`·`get_object_or_404`나 명시적 None·null 확인을 쓰는 경우.
 - **검사 3 — 숫자 범위**: 지적할 때: 요청의 수량·금액을 범위 검사 없이 곱하거나 저장하는 경우, 금액을 `parseFloat`·float로 계산하는 경우. / 지적하지 않을 때: 정수·최소·최대 검증 뒤 정수 원 단위나 Decimal로 계산하는 경우.

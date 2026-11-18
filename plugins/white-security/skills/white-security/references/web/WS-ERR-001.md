@@ -15,7 +15,7 @@
 
 ## 탐지 규칙
 
-- **찾는 곳**: `except Exception`, `catch (e)`, `getMessage()`, `err.stack`, 그 밖에 except: pass·빈 catch·getTraceAsString·traceback·str(e)를 응답에 넣는 코드.
+- **찾는 곳**: `except Exception`, `getMessage()`, `err.stack`, `getTraceAsString(`, `traceback.format_exc(`, 그 밖에 except: pass·빈 catch, str(e)를 응답에 넣는 코드.
 - **검사 1 — 오류 원문 노출**: 지적할 때: 예외 메시지·스택(`e.message`, `err.stack`, `getMessage()`, `str(e)`, `traceback`)을 응답 본문에 넣는 경우. / 지적하지 않을 때: 사용자가 고칠 수 있는 검증 오류(필드 이름·형식 안내)만 돌려주는 경우. 원문은 로그에만 쓰는 경우.
 - **검사 2 — 실패를 통과로 처리(fail-open)**: 지적할 때: 토큰 검증·권한 확인·결제 검증·서명 검사를 감싼 `try`에서 예외를 무시하고 다음 처리로 넘어가는 경우. 실패 반환값(`false`, `null`)을 확인하지 않는 경우. / 지적하지 않을 때: 예외에서 401·403·400을 돌려주거나 다시 던지는 경우.
 - **검사 3 — 삼킨 예외**: 지적할 때: 빈 `catch`·`except: pass`로 오류를 버려 저장 실패·부분 처리를 성공으로 알리는 경우. / 지적하지 않을 때: 정리 작업처럼 실패해도 되는 곳에서 이유를 주석·로그로 남긴 경우.

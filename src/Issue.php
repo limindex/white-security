@@ -25,13 +25,15 @@ final class Issue
     public const GRADE_LEVELS = ['위험', '주의', '참고'];
     /**
      * `찾는 곳` 백틱 신호로 쓰면 안 되는 흔한 낱말(스킬 INDEX 에서 아무 코드에나 걸린다). 이 목록이 유일한 원본.
-     * 이 밖에도 신호는 4자 이상이거나 ( . : / = - _ 중 하나를 품어야 한다(Issue::signalProblem).
+     * 이 밖에도 신호는 4자 이상이거나 ( . : / = - _ 중 하나를 품어야 하고, 이 목록 낱말의 일부(`dd(` ⊂ `.add(`)이거나
+     * 이름 2자 이하의 호출 조각(`dd(`)이면 안 된다(Issue::signalProblem).
      */
     public const SIGNAL_STOPLIST = [
         'for', 'use', 'tar', 'gs', 'wand', 'echo', 'eval', 'exec', 'output', 'content', 'system', 'reply', 'prompt',
         'messages', 'completion', 'completions', 'chat(', 'generate(', 'invoke(', 'update(', 'send(', 'query(', 'execute(',
         '.search(', '.add(', '.query(', 'text(', 'raw(', 'fill(', 'get(id)', 'innerHTML', 'subprocess', 'convert', 'sharp',
         'timeout', 'limit', 'size', 'role', 'level', 'grade', 'price', 'amount', 'discount', 'import', 'require', 'user_id',
+        'redirect(', 'mail(', 'cert(', 'path.join(', 'increment(', 'parseFloat(', 'fopen(', 'catch (e)', 'findOne(', 'dd(',
     ];
 
     /**
@@ -264,6 +266,10 @@ final class Issue
     {
         if (in_array($sig, self::SIGNAL_STOPLIST, true)) return '흔한 낱말이라 신호로 쓸 수 없습니다(Issue::SIGNAL_STOPLIST). 구체적인 API·패키지·파일 패턴으로 쓰고, 낱말은 백틱 없이 설명에 남겨야 합니다';
         if (mb_strlen($sig) < 4 && strpbrk($sig, '(.:/=-_') === false) return '4자 미만이고 ( . : / = - _ 가 없어 너무 흔합니다';
+        foreach (self::SIGNAL_STOPLIST as $w) {
+            if (str_contains($w, $sig)) return "흔한 낱말 `$w` 의 일부라 그 낱말에도 걸립니다(Issue::SIGNAL_STOPLIST). 더 긴 패턴으로 써야 합니다";
+        }
+        if (preg_match('/^[A-Za-z0-9_$]{1,2}\($/', $sig)) return '이름이 2자 이하인 호출 조각이라 다른 이름 속에서도 걸립니다(예: `dd(` → `->add(`). 더 긴 패턴으로 써야 합니다';
         return null;
     }
 
