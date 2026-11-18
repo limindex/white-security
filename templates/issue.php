@@ -22,6 +22,7 @@ foreach ($issue->sections as $heading => $md) {
     $id = IssueView::sectionId($heading, $n);
     $toc[] = [$id, $heading];
     $html = Markdown::render($heading === '탐지 규칙' && $issue->detection !== null ? IssueView::detectionMarkdown($issue->detection) : $md);
+    if ($heading === '탐지 규칙') $html = IssueView::reportLines($html);
     $html = IssueView::blocks($html, $heading === '대응 방법' ? '프롬프트' : '예시');
     if (in_array($heading, IssueView::FOLDED, true)) { $body .= $fold($id, $heading, $html); continue; }
     $extra = '';
@@ -49,14 +50,17 @@ if ($issue->revisions) $toc[] = ['revisions', '개정 이력'];
 <div><dt>게시</dt><dd><time datetime="<?= Site::e($published) ?>"><?= Site::e($published) ?></time></dd></div>
 <div><dt>최종 확인</dt><dd><time datetime="<?= Site::e($checked) ?>"><?= Site::e($checked) ?></time></dd></div>
 <?php if ($issue->appliesTo): ?>
-<div class="ws-docinfo-wide"><dt>적용 대상</dt><dd><?= Site::e(implode(' · ', $issue->appliesTo)) ?></dd></div>
+<div class="ws-docinfo-wide"><dt>적용 대상</dt><dd><?= Site::t(implode(' · ', $issue->appliesTo)) ?></dd></div>
 <?php endif ?>
 </dl>
-<?php if ($maps): ?>
+<?php if ($maps): $nMaps = array_sum(array_map('count', $maps)); ?>
+<details class="ws-maps-fold" open data-maps-fold>
+<summary><span class="ws-tx">기준 번호 <?= $nMaps ?>개</span><span class="ws-fold-hint" aria-hidden="true"><span class="ws-fold-closed">펼치기</span><span class="ws-fold-open">접기</span></span></summary>
 <ul class="ws-maps" aria-label="기준 번호">
 <?php foreach ($maps as $key => $codes): foreach ($codes as $c): ?><?= Site::mapChip($key, $c) ?>
 <?php endforeach; endforeach ?>
 </ul>
+</details>
 <?php endif ?>
 <?php if ($issue->code): ?>
 <p class="ws-jump"><a href="#code">코드 예시로 이동</a></p>
@@ -74,11 +78,11 @@ if ($issue->revisions) $toc[] = ['revisions', '개정 이력'];
 
 <?php
 $src = '<ol class="ws-sources">';
-foreach ($issue->sources as $s) $src .= '<li><a href="' . Site::e($s['url']) . '" rel="noopener noreferrer">' . Site::e($s['title']) . '</a><span class="ws-year">' . Site::e((string)$s['year']) . '</span></li>';
+foreach ($issue->sources as $s) $src .= '<li><a href="' . Site::e($s['url']) . '" rel="noopener noreferrer">' . Site::t($s['title']) . '</a><span class="ws-year">' . Site::e((string)$s['year']) . '</span></li>';
 echo $fold('sources', '출처', $src . '</ol>', count($issue->sources) . '건');
 if ($issue->revisions) {
     $rev = '<ol class="ws-revlist">';
-    foreach ($issue->revisions as $r) $rev .= '<li><time datetime="' . Site::e($r['date']) . '">' . Site::e($r['date']) . '</time><span>' . Site::e($r['note']) . '</span></li>';
+    foreach ($issue->revisions as $r) $rev .= '<li><time datetime="' . Site::e($r['date']) . '">' . Site::e($r['date']) . '</time><span>' . Site::t($r['note']) . '</span></li>';
     echo $fold('revisions', '개정 이력', $rev . '</ol>', count($issue->revisions) . '건');
 }
 ?>

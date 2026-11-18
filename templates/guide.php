@@ -63,7 +63,7 @@ $chips = [['owasp2025', 'A05'], ['asvs5', 'V1.2'], ['cwe', 'CWE-89']];
 
 <section class="ws-sec" aria-labelledby="g-sec">
 <h2 id="g-sec">절 구성</h2>
-<p>깊은 문서의 고정 순서. 간단한 문서는 요약 · 점검 항목 · 코드 예시 중심.</p>
+<p>상세 문서의 고정 순서. 간략 문서는 요약·대응 방법·점검 항목·탐지 규칙·코드 예시만.</p>
 <ol class="ws-seclist">
 <?php foreach ($sections as [$name, $desc, $note]): ?>
 <li><span class="ws-seclist-name"><?= Site::e($name) ?></span><span class="ws-seclist-desc"><?= Site::e($desc) ?><?php if ($note !== ''): ?><span class="ws-seclist-note"><?= Site::e($note) ?></span><?php endif ?></span></li>
@@ -74,7 +74,7 @@ $chips = [['owasp2025', 'A05'], ['asvs5', 'V1.2'], ['cwe', 'CWE-89']];
 
 <section class="ws-sec" aria-labelledby="g-chip">
 <h2 id="g-chip">기준 번호</h2>
-<p>이슈가 대응하는 공인 보안 기준의 항목 번호. 문서 제목 아래에 칩으로 표시.</p>
+<p>이슈가 대응하는 주요 보안 기준의 항목 번호. 문서 제목 아래에 칩으로 표시.</p>
 <figure class="ws-example">
 <figcaption>예시</figcaption>
 <ul class="ws-maps" aria-label="기준 번호 예">

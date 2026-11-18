@@ -116,16 +116,12 @@ a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset:
 a:hover { text-decoration-thickness: 2px; }
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 h1, h2, h3 { color: var(--ink); font-family: var(--font-display); font-style: normal; word-break: keep-all; overflow-wrap: anywhere; min-width: 0; text-wrap: balance; }
-/* 줄바꿈: 긴 본문은 pretty, 6줄 이하 덩어리(목록·점검 항목·정의·메뉴·짧은 문단)는 balance 로 마지막 줄을 고르게 */
+/* 줄바꿈: 본문(문단·목록·정의·점검 항목)은 pretty, 제목·리드·짧은 이름 줄만 balance. 외톨이 줄은 site.js fixLong 이 보정 */
 p, li, dd, td, label { text-wrap: pretty; }
-.ws-page-lead, .ws-home-lead, .ws-path p, .ws-grp-when, .ws-cov-note, .ws-summary p,
-.ws-sec li, .ws-fold-body li, .ws-checklist label, .ws-deflist dd, .ws-page-note, .ws-recent-title, .ws-recent-note, .ws-nav a,
-.ws-sec p:not([class]), .ws-fold-body p, .ws-grades dd > span, .ws-examples-why dd, .ws-seclist-desc, .ws-pending li, .ws-meter-name a { text-wrap: balance; }
+.ws-page-lead, .ws-home-lead, .ws-path p, .ws-grp-when, .ws-cov-note, .ws-recent-title, .ws-recent-note, .ws-nav a, .ws-meter-name a { text-wrap: balance; }
 code { font-family: var(--font-mono); }
 [hidden] { display: none !important; }
 .ws-nw { white-space: nowrap; }
-/* 코드+조사 묶음: 조사는 코드에 붙여 두되 긴 코드 안에서는 줄바꿈 허용 */
-.ws-nw > code { white-space: normal; }
 .ws-sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* 한 줄 글자 상자: 세로 가운데 (flex 상자 안 글자는 .ws-tx·span 으로 감쌈) */
@@ -394,6 +390,7 @@ html:not(.js) .ws-search { display: none; }
 .ws-badge--covered { color: var(--paper); background: var(--cov-covered); }
 .ws-badge--site { color: var(--ink); background: var(--accent-bg); }
 .ws-badge--gap { color: var(--ink-2); background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-strong); }
+.ws-badge--oos { color: var(--ink-3); background: var(--sunken); }
 
 .ws-id { font: 700 .8rem var(--font-display); letter-spacing: 0; color: var(--ink-3); font-variant-numeric: lining-nums tabular-nums; white-space: nowrap; }
 
@@ -441,6 +438,9 @@ a.ws-chip-v:hover > span { text-decoration: underline; text-underline-offset: 3p
 .ws-ext { flex: none; color: var(--ink-3); }
 .ws-chip:has(a.ws-chip-v:hover) { box-shadow: inset 0 0 0 1px var(--line-strong); }
 .ws-maps { position: relative; list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 0; padding: 0; }
+/* 이슈 머리 기준 번호: 넓은 화면은 늘 펼침(요약 줄 숨김), 좁은 화면은 site.js 가 접어 요약이 첫 화면에 오게 */
+.ws-maps-fold > summary { display: none; }
+.ws-maps-fold > summary::-webkit-details-marker { display: none; }
 /* 기준 번호 칩 풀이: 올리거나 포커스하면 칩 줄 아래에 나타남(JS·title 없음, aria-describedby 로 읽힘) */
 .ws-chip:focus-visible { outline-offset: 2px; }
 .ws-tip {
@@ -627,7 +627,19 @@ html:not(.js) .ws-copy, html:not(.js) .ws-tabs, html:not(.js) .ws-check-status {
   background: var(--sunken);
   box-shadow: inset 0 0 0 1px var(--line);
   font: 500 .86em var(--font-mono);
+  white-space: nowrap;
 }
+/* 긴 인라인 코드(Site::CODE_LONG 초과): 중간에서 끊지 않고 칩 안에서 가로 스크롤. 뒤에 붙은 조사 자리만큼 줄임 */
+.ws-doc :not(pre) > code.ws-code-long, .ws-page :not(pre) > code.ws-code-long {
+  display: inline-block;
+  max-width: 100%;
+  overflow-x: auto;
+  vertical-align: bottom;
+  scrollbar-width: thin;
+}
+.ws-nw > code.ws-code-long { max-width: calc(100% - 2.6em); }
+/* 형식 한 줄(보고 줄 등): 블록 칩, 공백에서만 줄바꿈 */
+.ws-page code.ws-code-line, .ws-doc code.ws-code-line { display: block; width: fit-content; max-width: 100%; margin-top: 8px; padding: 4px 8px; white-space: normal; word-break: keep-all; overflow-wrap: anywhere; line-height: 1.7; }
 
 .ws-pending { margin-top: 40px; padding: 24px 24px 20px; border-radius: var(--r-lg); background: var(--sunken); box-shadow: inset 0 0 0 1px var(--line); }
 .ws-pending h2 { display: inline-block; margin: 0 0 8px; padding: 4px 8px; border-radius: var(--r-pill); background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-strong); font-size: .78rem; letter-spacing: -0.01em; line-height: 1.2; text-box: trim-both cap alphabetic; color: var(--ink-2); }
@@ -672,6 +684,9 @@ button:disabled, button[aria-disabled="true"] { opacity: .45; cursor: not-allowe
 .ws-page--error .ws-page-note { margin-top: 32px; }
 
 /* 빈 상태 · 절 메모(개정 이력·출처) */
+/* 개정 이력: 스킬 버전(CHANGELOG.md) */
+.ws-ver-h { margin: 0; font-size: 1rem; font-variant-numeric: lining-nums tabular-nums; }
+.ws-ver > ul { margin: 8px 0 0; }
 .ws-emptybox { padding: 20px 24px; border-radius: var(--r-lg); background: var(--sunken); box-shadow: inset 0 0 0 1px var(--line); color: var(--ink-3); font-size: .92rem; line-height: 1.2; text-box: trim-both cap alphabetic; }
 .ws-sec-head .ws-fold-count { margin-left: 8px; }
 .ws-sec .ws-sec-note, .ws-fold-body .ws-sec-note { margin-top: 8px; font-size: .86rem; line-height: 1.6; color: var(--ink-3); text-wrap: balance; }
@@ -732,6 +747,7 @@ button:disabled, button[aria-disabled="true"] { opacity: .45; cursor: not-allowe
 .ws-examples-why dt { color: var(--ink-3); font-weight: 600; }
 .ws-examples-why dd { margin: 0; color: var(--ink-2); }
 .ws-table--report code { white-space: nowrap; }
+.ws-table--report td:nth-child(-n+3) { white-space: nowrap; }
 
 /* 문서 읽는 법 */
 .ws-idform { margin: 0 0 16px; }
@@ -824,11 +840,10 @@ button:disabled, button[aria-disabled="true"] { opacity: .45; cursor: not-allowe
 .ws-block { margin: 4px 0 16px; border-radius: var(--r-lg); background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-strong); }
 .ws-block figcaption { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 8px 0 16px; }
 .ws-block-label { font: 700 .76rem var(--font-display); color: var(--ink-3); letter-spacing: -0.01em; }
-.ws-block--prompt .ws-block-label { color: var(--accent); }
 .ws-block pre { margin: 0; padding: 8px 16px 16px; font: 500 .86rem/1.75 var(--font-mono); white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink); }
 .ws-block pre code { font: inherit; }
 .ws-block--prompt pre { font: 500 .94rem/1.75 var(--font-text); letter-spacing: -0.005em; white-space: normal; }
-.ws-pl { display: block; text-wrap: balance; }
+.ws-pl { display: block; text-wrap: pretty; }
 .ws-pl + .ws-pl { margin-top: 4px; }
 .ws-pl--gap { height: 12px; }
 .ws-block pre:focus-visible { outline-offset: -2px; border-radius: var(--r-lg); }
@@ -929,7 +944,6 @@ button:disabled, button[aria-disabled="true"] { opacity: .45; cursor: not-allowe
   white-space: nowrap;
 }
 .ws-toc a:hover { color: var(--accent); box-shadow: inset 0 0 0 1px var(--line-strong); }
-.ws-issue--nocode .ws-toc ol { flex-direction: column; flex-wrap: nowrap; align-items: flex-start; }
 
 .ws-code {
   flex: 0 1 auto;
@@ -1028,7 +1042,9 @@ html:not(.js) .ws-itabs-list { display: none; }
 .ws-step-sub .ws-block { margin-bottom: 8px; }
 .ws-step-sub .ws-block pre { font-size: .8rem; }
 .ws-step-sub .ws-block--prompt pre { font-size: .86rem; }
-.ws-step-desc { color: var(--ink-2); font-size: .94rem; line-height: 1.65; text-wrap: balance; }
+.ws-step-desc { color: var(--ink-2); font-size: .94rem; line-height: 1.65; text-wrap: pretty; }
+.ws-step-note { margin: 0; color: var(--ink-3); font-size: .86rem; line-height: 1.6; }
+.ws-step .ws-table-wrap { margin-top: 4px; }
 .ws-step .ws-block { margin: 0; }
 .ws-block--cmd pre { font: 500 .9rem/1.6 var(--font-mono); white-space: pre; overflow-x: auto; overflow-wrap: normal; }
 .ws-out { margin: 0; border-radius: var(--r-md); background: var(--code-bg); color: var(--code-ink); }
@@ -1062,8 +1078,7 @@ html:not(.js) .ws-itabs-list { display: none; }
   grid-template-areas: "name bar num";
   align-items: center;
   gap: 8px 24px;
-  margin-inline: -8px;
-  padding: 12px 8px;
+  padding: 12px 0;
   box-shadow: inset 0 -1px 0 var(--line);
 }
 .ws-meter:hover { background: var(--sunken); }
@@ -1075,10 +1090,11 @@ html:not(.js) .ws-itabs-list { display: none; }
 .ws-meter-fill:last-child { border-radius: 0 var(--r-pill) var(--r-pill) 0; }
 .ws-meter-fill--covered { background: var(--cov-covered); }
 .ws-meter-fill--site { background: var(--cov-site); }
+.ws-meter-fill--oos { margin-left: auto; background: repeating-linear-gradient(135deg, var(--line-strong) 0 2px, transparent 2px 4px); }
+.ws-legend-key.ws-meter-fill--oos { margin-left: 0; box-shadow: inset 0 0 0 1px var(--line-strong); }
 .ws-meter-num { grid-area: num; display: flex; align-items: baseline; justify-content: flex-end; gap: 12px; font: 600 .86rem var(--font-display); color: var(--ink-2); font-variant-numeric: lining-nums tabular-nums; white-space: nowrap; }
 .ws-meter-num b { font-size: 1rem; font-weight: 800; color: var(--ink); }
 .ws-meter-pct { min-width: 3.2em; text-align: right; color: var(--ink-3); }
-.ws-cov-pending { font-size: .78rem; font-weight: 500; color: var(--medium-ink); }
 .ws-cov-meta { margin: 0 0 12px; font-size: .86rem; color: var(--ink-3); line-height: 1.6; }
 .ws-cov-en { display: block; margin-top: 2px; font-size: .8rem; color: var(--ink-3); }
 .ws-cov-none { color: var(--ink-3); }
@@ -1209,13 +1225,28 @@ html:not(.js) .ws-itabs-list { display: none; }
   .ws-stack-list li { row-gap: 2px; }
   .ws-deflist > div { row-gap: 4px; }
   .ws-foot { margin-top: 64px; }
-  .ws-meter { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "name num" "bar bar"; gap: 12px 16px; padding: 16px 8px; }
+  .ws-meter { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "name num" "bar bar"; gap: 12px 16px; padding: 16px 0; }
   .ws-anchor.is-done::after { margin-left: 0; margin-top: 52px; }
   .ws-sec.ws-fold > .ws-anchor { top: 8px; }
   /* 바닥글 범위 문구: 줄이 꺾이면 구분선이 줄 끝에 매달리므로 두 줄로 */
   .ws-foot .ws-foot-scope { flex-direction: column; align-items: flex-start; }
   .ws-foot-scope i { display: none; }
   .ws-block--cmd pre { font-size: .8rem; }
+  .ws-maps-fold { margin-top: 16px; }
+  .ws-maps-fold > summary { display: flex; align-items: center; gap: 12px; min-height: 45px; padding: 0 12px; border-radius: var(--r-md); box-shadow: inset 0 0 0 1px var(--line); list-style: none; cursor: pointer; font: 700 .86rem var(--font-display); color: var(--ink-2); }
+  .ws-maps-fold > summary:hover, .ws-maps-fold > summary:hover .ws-fold-hint { color: var(--accent); }
+  .ws-maps-fold[open] .ws-fold-hint::after { transform: rotate(-135deg); margin-top: 3px; }
+  .ws-maps-fold[open] .ws-fold-open { display: inline; }
+  .ws-maps-fold[open] .ws-fold-closed { display: none; }
+  .ws-maps-fold .ws-maps { margin-top: 12px; }
+  /* 보고 예시 표: 좁은 화면은 행마다 쌓음(등급·문서 번호·위치 한 줄 → 이유 → 고칠 방법) */
+  .ws-table--report, .ws-table--report tbody, .ws-table--report caption { display: block; }
+  .ws-table--report thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .ws-table--report tr { display: grid; grid-template-columns: auto auto minmax(0, 1fr); align-items: center; gap: 12px; padding: 16px 0; box-shadow: inset 0 -1px 0 var(--line); }
+  .ws-table--report tbody tr:first-child { box-shadow: inset 0 1px 0 var(--line-strong), inset 0 -1px 0 var(--line); }
+  .ws-table--report td { display: block; padding: 0; box-shadow: none; }
+  .ws-table--report td[data-label] { grid-column: 1 / -1; }
+  .ws-table--report td[data-label]::before { content: attr(data-label); display: block; margin-bottom: 2px; font: 700 .76rem/1.4 var(--font-display); color: var(--ink-3); }
 }
 @media (max-width: 399.98px) {
   .ws-main, .ws-shell--wide .ws-main { padding-inline: 16px; }

@@ -223,6 +223,16 @@
   }
 
   /* ---------- 인쇄: 접힌 구역을 모두 펼쳤다가 되돌림 ---------- */
+  /* ---------- 이슈 머리 기준 번호: 좁은 화면(760 미만)은 접어서 요약을 첫 화면에, 넓어지면 다시 펼침 ---------- */
+  function initMapsFold() {
+    var folds = document.querySelectorAll('[data-maps-fold]');
+    if (!folds.length || !window.matchMedia) return;
+    var mq = window.matchMedia('(max-width: 759.98px)');
+    var apply = function () { each(folds, function (d) { d.open = !mq.matches; }); };
+    apply();
+    if (mq.addEventListener) mq.addEventListener('change', apply);
+  }
+
   function initPrint() {
     var closed = [];
     window.addEventListener('beforeprint', function () {
@@ -490,43 +500,57 @@
     });
   }
 
-  /* ---------- 긴 덩어리 줄바꿈 보정 ----------
-     CSS balance 는 6줄까지만 동작함. 7줄 이상이면 pretty 로 바꾸고, 그래도 마지막 줄이 폭의 30% 미만이면
-     줄 수가 늘지 않는 범위에서 폭을 1%씩(최대 14%) 줄여 마지막 줄을 늘림. 글자는 바꾸지 않음. */
-  var LONG_SEL = '.ws-checklist label, .ws-summary p, .ws-sec p:not([class]), .ws-sec :is(ul,ol):not([class]) > li, .ws-fold-body p, .ws-fold-body li, .ws-deflist dd, .ws-step-desc, .ws-readlist-why, .ws-sevwhy dd';
+  /* ---------- 본문 외톨이 줄 보정 ----------
+     본문은 CSS pretty. 2줄 이상인데 마지막 줄이 폭의 30% 미만이거나 한 어절뿐이면, 줄 수가 늘지 않는 범위에서
+     폭을 1%씩(최대 28%) 줄여 마지막 줄을 늘림. 글자는 바꾸지 않음. */
+  var LONG_SEL = '.ws-checklist label, .ws-summary p, .ws-sec p:not([class]), .ws-sec :is(ul,ol):not([class]) > li, .ws-fold-body p, .ws-fold-body li, .ws-deflist dd, .ws-step-desc, .ws-step-note, .ws-readlist-why, .ws-sevwhy dd, .ws-pl, .ws-page-note, .ws-examples-why dd, .ws-seclist-desc, .ws-grades dd > span';
   function lines(el) {
     var g = document.createRange(); g.selectNodeContents(el);
-    var mids = [], l = Infinity, r = -Infinity, last = null;
+    var mids = [], l = Infinity, r = -Infinity;
     Array.prototype.forEach.call(g.getClientRects(), function (x) {
       if (x.width < 0.5 || x.height < 4) return;
       var m = x.top + x.height / 2;
       if (!mids.some(function (y) { return Math.abs(y - m) < 6; })) mids.push(m);
     });
-    if (!mids.length) return { n: 0, ratio: 1 };
+    if (!mids.length) return { n: 0, ratio: 1, words: 2 };
     var bottom = Math.max.apply(null, mids);
     Array.prototype.forEach.call(g.getClientRects(), function (x) {
       if (x.width < 0.5 || x.height < 4 || Math.abs(x.top + x.height / 2 - bottom) >= 6) return;
       l = Math.min(l, x.left); r = Math.max(r, x.right);
     });
     var w = el.getBoundingClientRect().width;
-    return { n: mids.length, ratio: w ? (r - l) / w : 1 };
+    return { n: mids.length, ratio: w ? (r - l) / w : 1, words: lastWords(el, bottom) };
   }
+  /* 마지막 줄의 어절 수: 끝 글자부터 같은 줄인 동안 거꾸로 모음 */
+  function lastWords(el, bottom) {
+    var w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), nodes = [], n, txt = '';
+    while ((n = w.nextNode())) nodes.push(n);
+    for (var k = nodes.length - 1; k >= 0; k--) {
+      var t = nodes[k];
+      for (var c = t.length - 1; c >= 0; c--) {
+        var rg = document.createRange(); rg.setStart(t, c); rg.setEnd(t, c + 1);
+        var b = rg.getBoundingClientRect();
+        if (!b.height) { txt = t.data[c] + txt; continue; }
+        if (Math.abs(b.top + b.height / 2 - bottom) > 6) return txt.trim().split(/\s+/).filter(Boolean).length;
+        txt = t.data[c] + txt;
+      }
+    }
+    return txt.trim().split(/\s+/).filter(Boolean).length;
+  }
+  var ok = function (a) { return a.ratio >= 0.3 && a.words >= 2; };
   function fixLong(scope) {
     var list = scope ? scope.querySelectorAll(LONG_SEL) : document.querySelectorAll('main ' + LONG_SEL.split(', ').join(', main '));
     each(list, function (el) {
-      el.style.textWrap = ''; el.style.maxInlineSize = '';
+      el.style.maxInlineSize = '';
       if (!el.getClientRects().length || el.closest('details:not([open])')) return;
       var a = lines(el);
-      if (a.n < 7) return;
-      el.style.textWrap = 'pretty';
-      a = lines(el);
-      if (a.ratio >= 0.3) return;
+      if (a.n < 2 || ok(a)) return;
       var best = null;
-      for (var p = 99; p >= 86; p--) {
+      for (var p = 99; p >= 72; p--) {
         el.style.maxInlineSize = p + '%';
         var b = lines(el);
         if (b.n !== a.n) break;
-        if (b.ratio >= 0.3) { best = p; break; }
+        if (ok(b)) { best = p; break; }
       }
       el.style.maxInlineSize = best ? best + '%' : '';
     });
@@ -549,6 +573,7 @@
   }
 
   document.addEventListener('DOMContentLoaded', function () {
+    initMapsFold();
     initWrap();
     initMenu();
     initTabs();

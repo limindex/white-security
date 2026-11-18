@@ -29,7 +29,7 @@ test('대응표: 기준별 표는 기본 접힘 details, 원문 대조를 마친
     $b = cp_body();
     assert_true((bool)preg_match('#<section class="ws-sec ws-fold" id="fw-owasp2025">\s*<details>\s*<summary>#', $b), '접힘 표');
     assert_true(!str_contains($b, '<details open>'), '기본 접힘');
-    assert_true(!str_contains($b, '일부 항목 출처 확인 중'), '확인 중 표시 없음(미확인 표시는 BuildTest 에서 임시 사본으로 시험)');
+    assert_true(!str_contains($b, '일부 항목 출처 확인 중') && !str_contains($b, '원문 대조 전 항목 포함'), '모든 기준 원문 대조 완료 → 확인 중 표시 없음(미확인 표시는 BuildTest 에서 임시 사본으로 시험)');
     assert_true(substr_count($b, '<table') >= 8, '표 8개');
 });
 

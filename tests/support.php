@@ -22,3 +22,10 @@ function make_root(array $extra = []): string
     file_put_contents($root . '/' . SkillExport::AGENT_FILE, "---\nname: white-security-reviewer\n---\n" . SkillExport::REVIEWER_START . "\n" . SkillExport::REVIEWER_END . "\n");
     return $root;
 }
+
+/** 줄머리 금칙 묶음(<span class="ws-nw">…</span>)을 걷어 낸 HTML: 문구 비교용 */
+function nw_strip(string $html): string
+{
+    do { $html = (string)preg_replace('#<span class="ws-nw">((?:(?!<span class="ws-nw">).)*?)</span>#su', '$1', $html, -1, $n); } while ($n > 0);
+    return $html;
+}

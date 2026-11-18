@@ -106,18 +106,11 @@ $examples = [
 <section class="ws-sec" aria-labelledby="sev-skill">
 <h2 id="sev-skill">문서·스킬 보고 표기</h2>
 <dl class="ws-deflist">
-<div><dt>이슈 문서</dt><dd>제목 아래 심각도 배지와 심각도 근거(영향 · 악용 두 줄)</dd></div>
-<div><dt>스킬 검토 보고</dt><dd>같은 세 등급으로 묶은 표 · 행마다 위치(파일:줄) · 이유 · 고친 코드 · 문서 번호</dd></div>
-<div><dt>환경에 따른 차이</dt><dd>실제 환경에 따라 보고 등급과 문서 등급이 다를 수 있음 · 관리자 로그인 뒤에만 있는 기능은 악용 쉬움 한 단계 하향</dd></div>
+<div><dt>이슈 문서</dt><dd>제목 아래 심각도 배지와 심각도 근거(영향·악용 두 줄)</dd></div>
+<div><dt>검토 요청 보고</dt><dd>같은 세 등급으로 묶은 표. 행마다 문서 번호·파일:줄·이유·고칠 방법.</dd></div>
+<div><dt>코드 작성 중 메모</dt><dd>같은 칸을 한 줄로 씀.<code class="ws-code-line"><?= implode(' ', array_map(fn(string $t): string => '<span class="ws-nw">' . Site::e($t) . '</span>', ['[위험|주의|참고]', '<문서 번호>', '<파일:줄>', '— <이유>', '→ <고칠 방법>'])) ?></code></dd></div>
+<div><dt>환경에 따른 차이</dt><dd>실제 환경에 따라 보고 등급과 문서 등급이 다를 수 있음. 관리자 로그인 뒤에만 있는 기능은 악용 쉬움 한 단계 하향.</dd></div>
 </dl>
-<div class="ws-table-wrap">
-<table class="ws-table ws-table--report">
-<caption>보고 예시</caption>
-<thead><tr><th scope="col">등급</th><th scope="col">위치</th><th scope="col">이유</th><th scope="col">문서 번호</th></tr></thead>
-<tbody>
-<tr><td><?= Site::severityBadge('high') ?></td><td><code>app/search.py:42</code></td><td>검색어가 SQL 문장에 그대로 연결</td><td><span class="ws-id">WS-INJ-001</span></td></tr>
-</tbody>
-</table>
-</div>
+<?= $site->render('_report', []) ?>
 </section>
 </div>

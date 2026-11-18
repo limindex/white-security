@@ -11,8 +11,8 @@ final class Site
         'check' => ['title' => '내 사이트 점검', 'section' => '시작하기', 'lead' => '사용 기술과 기능에 맞춘 점검표와 AI 점검 지시문'],
         'severity' => ['title' => '심각도 기준', 'section' => '시작하기', 'lead' => '위험·주의·참고 등급의 판정 기준 · 영향과 악용 쉬움의 조합'],
         'guide' => ['title' => '문서 읽는 법', 'section' => '시작하기', 'lead' => '문서 번호 체계·절 구성·문서 정보·기준 번호의 의미'],
-        'glossary' => ['title' => '용어 사전', 'section' => '참고', 'lead' => '보안 업계 용어와 공식 용어의 쉬운 풀이·관련 이슈'],
-        'coverage' => ['title' => '점검 기준 대응표', 'section' => '참고', 'nav' => false, 'lead' => '공인 보안 기준의 항목별 대응 이슈와 빈칸'],
+        'glossary' => ['title' => '용어 사전', 'section' => '참고', 'lead' => '보안 업계 용어와 국내 기준 용어의 쉬운 풀이·관련 이슈'],
+        'coverage' => ['title' => '점검 기준 대응표', 'section' => '참고', 'nav' => false, 'lead' => '주요 보안 기준의 항목별 대응 이슈와 빈칸'],
         'changelog' => ['title' => '개정 이력', 'section' => '참고', 'lead' => '스킬과 문서의 버전별 변경 내역'],
         'sources' => ['title' => '출처·라이선스', 'section' => '참고', 'lead' => '문서·코드·글꼴의 라이선스와 인용 원칙'],
     ];
@@ -23,6 +23,12 @@ final class Site
     public const BRAND_DESC = '바이브 코딩 보안 가이드';
     private const ID_RE = '/^WS-[A-Z]{2,5}-\d{3}$/';
     public const SEVERITY_LABELS = ['high' => '위험', 'medium' => '주의', 'low' => '참고'];
+    /**
+     * 콘텐츠 보안 정책(CSP). 인라인 script·style 없이 같은 출처 파일만. 서버 헤더(index.php)용.
+     * 정적판(GitHub Pages)은 헤더를 못 붙이므로 같은 정책을 <meta> 로 넣는다(CSP_META). meta 는 frame-ancestors 를 지원하지 않아 뺀다.
+     */
+    public const CSP_META = "default-src 'self'; base-uri 'none'; form-action 'self'; object-src 'none'";
+    public const CSP = self::CSP_META . "; frame-ancestors 'none'";
 
     public readonly DateTimeImmutable $today;
 
@@ -76,8 +82,9 @@ final class Site
     public static function langLabel(string $lang): string { return Stacks::label($lang); }
 
     /**
-     * 지원 스택: 이슈에 코드 예시가 하나라도 있는 스택만 묶음별로(이슈 0개는 적지 않는다). 기타(설정·파일 형식) 묶음은 뺀다.
-     * items 는 묶음 이름에 이미 들어 있는 이름(Python·JavaScript·TypeScript·PHP)을 뺀 나머지 label.
+     * 지원 스택: 코드 예시가 있는 스택을 묶음별로(예시 0개인 스택·기타 묶음은 뺀다).
+     * items 는 화면 이름: item(예: 순수 PHP)이 있으면 그것을 맨 뒤에, 없으면 label(묶음 이름에 이미 든 Python·PHP 등은 뺌).
+     * 예시가 없어도 via 스택 예시가 덮으면 "label(via 이름 예시)"로 넣는다(React ← Next.js).
      * @return list<array{name:string,items:list<string>}>
      */
     public function supportedStacks(): array
@@ -90,13 +97,19 @@ final class Site
             if ($g['id'] === 'other') continue;
             $own = preg_split('/·/u', $g['name']);
             $items = [];
+            $plain = [];
             $any = false;
             foreach ($by as $s) {
-                if ($s['stack'] !== $g['id'] || !isset($used[$s['key']])) continue;
-                $any = true;
-                if (!in_array($s['label'], $own, true)) $items[] = $s['label'];
+                if ($s['stack'] !== $g['id']) continue;
+                if (isset($used[$s['key']])) {
+                    $any = true;
+                    if (isset($s['item'])) $plain[] = $s['item'];
+                    elseif (!in_array($s['label'], $own, true)) $items[] = $s['label'];
+                } elseif (isset($s['via'], $used[$s['via']])) {
+                    $items[] = $s['label'] . '(' . Stacks::label($s['via']) . ' 예시)';
+                }
             }
-            if ($any) $out[] = ['name' => $g['name'], 'items' => $items];
+            if ($any) $out[] = ['name' => $g['name'], 'items' => [...$items, ...$plain]];
         }
         return $out;
     }
@@ -154,30 +167,71 @@ final class Site
         return preg_match('#^https://github\.com/([A-Za-z0-9._-]+/[A-Za-z0-9._-]+)/?$#', $this->setting('github'), $m) ? $m[1] : '';
     }
 
-    /** 본문 HTML 줄머리 금칙: 닫는 괄호·코드 뒤 조사, 가운뎃점이 줄 맨 앞에 오지 않게 nowrap 묶음(보이지 않는 문자 없음) */
+    /** 가운뎃점으로 이은 짧은 낱말 묶음(위험·주의·참고)은 이 글자 수 이하면 통째로 한 줄에 둔다. */
+    public const KEEP_CHAIN = 10;
+    /** 인라인 코드 폭(ASCII 1, 한글 등 넓은 글자 1.7)이 이 값을 넘으면 긴 코드(가로 스크롤 칩)로 둔다. */
+    public const CODE_LONG = 28;
+
+    /**
+     * 본문 HTML 줄머리 금칙(보이지 않는 문자 없이 nowrap 묶음만 씀). pre 안은 건드리지 않는다.
+     * - 인라인 코드 + 바로 뒤 닫는 괄호·문장부호·조사(1–2자)·가운뎃점: 코드 뒤 글자가 줄 맨 앞에 오지 않게
+     * - 닫는 괄호 + 조사: `인젝션)는`
+     * - 가운뎃점: 짧은 묶음(KEEP_CHAIN 자 이하)은 통째로, 긴 묶음은 낱말마다 앞 낱말에 붙여 줄 끝에 둠
+     * - 마지막으로 긴 인라인 코드에 ws-code-long(가로 스크롤 칩)
+     */
     public static function keep(string $html): string
     {
         $parts = preg_split('#(<pre\b.*?</pre>)#s', $html, -1, PREG_SPLIT_DELIM_CAPTURE);
         foreach ($parts as $i => $p) {
             if ($i % 2) continue;
-            $p = (string)preg_replace('#(<code>[^<]*</code>)([가-힣]{1,2})#u', '<span class="ws-nw">$1$2</span>', $p);
-            $p = (string)preg_replace('#(<code>[^<]*</code>)( ?·)#u', '<span class="ws-nw">$1$2</span>', $p);
-            $p = self::inText($p, '#(\S*\))([가-힣]{1,2})#u', '<span class="ws-nw">$1$2</span>');
-            $p = self::inText($p, '#(\S+ ?·)#u', '<span class="ws-nw">$1</span>');
+            $p = (string)preg_replace('#(?<!<span class="ws-nw">)(<code>[^<]*</code>)([)\]」,.:;]*(?:[가-힣]{1,2}| ?·)|[)\]」,.:;]+)#u', '<span class="ws-nw">$1$2</span>', $p);
+            // 짧은 인라인 요소(강조·링크) 바로 뒤 가운뎃점: 요소와 묶음
+            $p = (string)preg_replace('#(?<!<span class="ws-nw">)(<(em|strong|a)\b[^>]*>[^<]{1,24}</\2>)( ?·)#u', '<span class="ws-nw">$1$3</span>', $p);
+            $p = self::inText($p, '#([^\s·<>]+(?:·[^\s·<>]+)+(?:·| ·)?)|([^\s·]+ ?·)|([^\s·]*[)\]」][가-힣]{1,2})#u', fn(array $m): string => self::keepText($m));
+            $p = (string)preg_replace_callback('#<code>([^<]*)</code>#u', fn(array $m): string => self::codeWidth(html_entity_decode($m[1], ENT_QUOTES | ENT_HTML5, 'UTF-8')) > self::CODE_LONG ? '<code class="ws-code-long">' . $m[1] . '</code>' : $m[0], $p);
             $parts[$i] = $p;
         }
         return implode('', $parts);
     }
 
+    /** keep() 의 글자 조각 규칙 하나: [1] 가운뎃점 묶음 [2] `낱말 ·` [3] 닫는 괄호+조사 */
+    private static function keepText(array $m): string
+    {
+        $nw = fn(string $s): string => '<span class="ws-nw">' . $s . '</span>';
+        if (($m[1] ?? '') !== '') {
+            $chain = $m[1];
+            if (mb_strlen(html_entity_decode((string)preg_replace('/ ?·$/u', '', $chain), ENT_QUOTES | ENT_HTML5, 'UTF-8')) <= self::KEEP_CHAIN) return $nw($chain);
+            $pieces = explode('·', $chain);
+            $last = array_pop($pieces);
+            $out = implode('', array_map(fn(string $w): string => $nw($w . '·'), $pieces));
+            return $out . ($last !== '' && preg_match('#[)\]」][가-힣]{1,2}$#u', $last) ? $nw($last) : $last);
+        }
+        if (($m[2] ?? '') !== '') return $nw($m[2]);
+        return $nw($m[3]);
+    }
+
+    /** 고정폭 글꼴에서의 대략 폭: ASCII 1, 그 밖(한글 등) 1.7 */
+    public static function codeWidth(string $s): float
+    {
+        $ascii = strlen((string)preg_replace('/[^\x00-\x7F]/u', '', $s));
+        return $ascii + 1.7 * (mb_strlen($s) - $ascii);
+    }
+
     /** 태그 밖·코드 밖 글자 조각에만 정규식 치환(앞 규칙이 넣은 태그는 건드리지 않음) */
-    private static function inText(string $html, string $re, string $to): string
+    private static function inText(string $html, string $re, callable $to): string
     {
         $seg = preg_split('#(<[^>]+>)#', $html, -1, PREG_SPLIT_DELIM_CAPTURE);
         $code = 0;
+        $nw = 0;
         foreach ($seg as $j => $s) {
-            if ($j % 2) { if (preg_match('#^<code\b#', $s)) $code++; elseif ($s === '</code>') $code--; continue; }
-            if ($code > 0 || $s === '') continue;
-            $seg[$j] = (string)preg_replace($re, $to, $s);
+            if ($j % 2) {
+                if (preg_match('#^<code\b#', $s)) $code++; elseif ($s === '</code>') $code--;
+                // 이미 묶인 조각(코드+조사) 안은 다시 묶지 않는다
+                if ($s === '<span class="ws-nw">') $nw++; elseif ($nw > 0 && $s === '</span>') $nw--;
+                continue;
+            }
+            if ($code > 0 || $nw > 0 || $s === '') continue;
+            $seg[$j] = (string)preg_replace_callback($re, $to, $s);
         }
         return implode('', $seg);
     }
@@ -305,7 +359,7 @@ final class Site
         foreach ($this->repo->frameworks() as $fw) {
             $items = [];
             foreach ($built[$fw['id']] ?? [] as $row) {
-                $items[] = ['id' => $row['item'], 'title' => $row['title'], 'title_ko' => $row['title_ko'], 'issues' => $row['issues'], 'site_only' => $row['site_only'], 'verified' => $row['verified']];
+                $items[] = ['id' => $row['item'], 'title' => $row['title'], 'title_ko' => $row['title_ko'], 'issues' => $row['issues'], 'site_only' => $row['site_only'], 'verified' => $row['verified'], 'out_of_scope' => $row['out_of_scope']];
             }
             $out[] = ['id' => $fw['id'], 'name' => $fw['name'], 'year' => $fw['year'], 'url' => $fw['url'], 'verified' => !in_array(false, array_column($items, 'verified'), true), 'items' => $items];
         }
@@ -330,7 +384,8 @@ final class Site
     /** @param array<string,mixed> $vars @return array{status:int,type:string,body:string} */
     private function html(int $status, string $template, array $vars): array
     {
-        $content = $this->render($template, $vars);
+        // 줄머리 금칙은 화면 본문 전체에 한 번 더(템플릿에 직접 쓴 문장도 빠지지 않게, 이미 묶인 곳은 그대로)
+        $content = self::keep($this->render($template, $vars));
         $errors = $this->mode === 'live' ? $this->repo->errors() : [];
         $body = $this->render('layout', [
             'title' => $vars['title'] ?? '', 'content' => $content, 'errors' => $errors,

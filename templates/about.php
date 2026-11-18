@@ -9,7 +9,7 @@
 <h2>사용 방법</h2>
 <ul>
 <li>설치 뒤 대화창에 <code>보안 점검해 줘</code> 한마디면 충분.</li>
-<li>확실하게 실행하려면 <code>/white-security:review</code>. Codex·Cursor는 <code>white-security 스킬로 보안 점검해 줘</code>.</li>
+<li>확실하게 실행하려면 <code>/white-security:review</code>.</li>
 <li>코드 작성 중 위험한 코드는 별도 요청 없이 자동 점검.</li>
 </ul>
 <p>설치 방법은 <a href="<?= Site::e($site->url('install')) ?>">스킬 설치</a>.</p>

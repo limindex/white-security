@@ -19,8 +19,8 @@ test('켜진 새 페이지 4개: 200 html · 제목 · 한 줄 설명', function
         assert_same(200, $r['status'], $p);
         assert_same('html', $r['type'], $p);
         $meta = Site::PAGES[$p];
-        assert_contains('<h1>' . $meta['title'] . '</h1>', $r['body']);
-        assert_contains('<p class="ws-page-lead">' . Site::e($meta['lead']) . '</p>', $r['body']);
+        assert_contains('<h1>' . $meta['title'] . '</h1>', nw_strip($r['body']));
+        assert_contains('<p class="ws-page-lead">' . Site::e($meta['lead']) . '</p>', nw_strip($r['body']));
     }
 });
 
@@ -96,7 +96,7 @@ test('상단: 브랜드·검색(단축키 /)·발행 주체와 GitHub 는 설정
     assert_contains('<span class="ws-publisher">by 테스트 발행처</span>', $b);
     assert_contains('<span>테스트 발행처 발행</span>', $b);
     assert_true((bool)preg_match('#<a class="ws-gh" href="https://github.com/example/repo"#', $b), 'GitHub 링크');
-    assert_contains('npx skills add example/repo', $s->route('install')['body']);
+    assert_contains('git clone https://github.com/example/repo.git', $s->route('install')['body']);
 });
 
 test('site.json: 형식 오류는 오류 띠로, 기본값으로 계속', function () {
@@ -199,7 +199,7 @@ test('처음이라면: start.json 의 없는 id·빈 이유·겹침은 오류', 
 test('실제 data/start.json: 이슈 10건, 모두 존재, 이유는 한 줄', function () {
     $repo = Repository::load(__DIR__ . '/..');
     $ids = array_map(fn($r) => $r['issue']->id, $repo->start());
-    assert_same(['WS-SEC-001', 'WS-AUTH-001', 'WS-INJ-001', 'WS-SUP-001', 'WS-AGT-006', 'WS-AGT-001', 'WS-PI-001', 'WS-LLM-001', 'WS-SSRF-001', 'WS-LLM-004'], $ids);
+    assert_same(['WS-SEC-001', 'WS-AUTH-001', 'WS-INJ-001', 'WS-XSS-001', 'WS-UPL-001', 'WS-SUP-001', 'WS-AGT-006', 'WS-AGT-001', 'WS-PI-001', 'WS-LLM-004'], $ids);
     assert_same([], array_filter($repo->errors(), fn($e) => str_contains($e, 'start.json')));
     foreach ($repo->start() as $r) assert_true(mb_strlen($r['reason']) <= 60 && !str_contains($r['reason'], "\n"), $r['issue']->id);
 });
@@ -231,7 +231,7 @@ test('data/frameworks: 기준 파일 모두 about 한 줄 풀이', function () {
 });
 
 test('소개: 점검 기준 대응표 링크 한 줄과 사용 방법(한마디 → 확실하게 → 자동 점검)', function () {
-    $b = nav_site()->route('about')['body'];
+    $b = nw_strip(nav_site()->route('about')['body']);
     assert_true((bool)preg_match('#9개 기준에 맞춰 작성.*href="/white-security/coverage"[^>]*>점검 기준 대응표#su', $b), '대응표 링크');
     $p1 = strpos($b, '보안 점검해 줘</code> 한마디'); $p2 = strpos($b, '확실하게 실행하려면'); $p3 = strpos($b, '별도 요청 없이 자동 점검');
     assert_true($p1 !== false && $p2 > $p1 && $p3 > $p2, '사용법 순서');

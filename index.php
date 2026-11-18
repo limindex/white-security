@@ -5,6 +5,15 @@ ini_set('display_errors', '0');
 
 const WS_BASE = '/white-security/';
 
+/** 보안 헤더: 모든 응답(오류 화면 포함)에. CSP 값은 Site::CSP 와 같다(오류 전에 Site 를 못 읽을 때를 대비해 여기 고정값도 둠). */
+function ws_security_headers(): void
+{
+    header("Content-Security-Policy: default-src 'self'; base-uri 'none'; form-action 'self'; object-src 'none'; frame-ancestors 'none'");
+    header('X-Content-Type-Options: nosniff');
+    header('Referrer-Policy: no-referrer');
+}
+ws_security_headers();
+
 try {
     require __DIR__ . '/src/bootstrap.php';
 
@@ -25,6 +34,7 @@ try {
     while (ob_get_level() > 0) ob_end_clean();
     if (!headers_sent()) {
         http_response_code(500);
+        ws_security_headers();
         header('Content-Type: text/html; charset=utf-8');
     }
     $home = htmlspecialchars(WS_BASE, ENT_QUOTES, 'UTF-8');

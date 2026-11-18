@@ -121,7 +121,7 @@ test('build: 확인 안 된 표준 항목은 적용 범위에 안내가 나오�
     exec(escapeshellarg(BT_PHP) . ' ' . escapeshellarg(__DIR__ . '/../build.php') . ' --root=' . escapeshellarg($root) . ' --out=dist --today=2026-11-18 2>&1', $lines, $code);
     assert_same(0, $code, implode("\n", $lines));
     $cov = file_get_contents("$root/dist/coverage/index.html");
-    assert_contains('일부 항목 출처 확인 중', $cov);
+    assert_contains('원문 대조 전 항목 포함', $cov);
     $j = json_decode(file_get_contents("$root/dist/api/coverage.json"), true);
     $by = [];
     foreach ($j['frameworks'] as $fw) {

@@ -30,8 +30,21 @@ test('개정 이력: 모든 문서 개정을 날짜별로 묶고 최신 날짜�
     assert_true(strpos($b, 'datetime="2026-11-18"') < strpos($b, 'datetime="2026-10-05"'), '최신 날짜 먼저');
     assert_contains('첫 작성 WS-ZZZ-001', $b);
     assert_contains('<span class="ws-fold-count">3건</span>', $b);
-    assert_contains('기록 없음 · 첫 버전 공개 후 표시', strip_tags($b));
+    assert_true(!str_contains($b, '기록 없음') && !str_contains($b, '스킬 버전'), 'CHANGELOG.md 가 없으면 버전 절 없음(자리표시 없음)');
     assert_true(!str_contains($b, '준비 중'), '준비 중 없음');
+});
+
+test('개정 이력: CHANGELOG.md 의 버전 절을 스킬 버전으로 보여 줌', function () {
+    $root = make_root();
+    file_put_contents($root . '/CHANGELOG.md', "# Changelog\n\n설명\n\n## 0.2.0\n\n- 둘째 판 `x`를 고침\n\n## 0.1.0\n\n- 첫 판\n");
+    $s = new Site(Repository::load($root), '/white-security/', 'live', new DateTimeImmutable('2026-11-18'));
+    assert_same(['0.2.0', '0.1.0'], array_column($s->repo->versions(), 'version'));
+    $b = nw_strip($s->route('changelog')['body']);
+    assert_contains('<h2 id="ws-ver-h">스킬 버전</h2>', $b);
+    assert_true(strpos($b, '>0.2.0</h3>') < strpos($b, '>0.1.0</h3>'), '최신 버전 먼저');
+    assert_contains('<li>첫 판</li>', $b);
+    $real = Repository::load(dirname(__DIR__))->versions();
+    assert_same('0.1.0', end($real)['version'], '실제 CHANGELOG 0.1.0');
 });
 
 test('출처·라이선스: 라이선스 공식 링크 · 인용 원칙 · 인용 자료는 주소 기준 한 번만', function () {

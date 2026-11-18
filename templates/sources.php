@@ -38,7 +38,7 @@ $refs = $site->sourceIndex();
 <p class="ws-sec-note"><?= Site::t('모든 이슈 문서의 출처 · 같은 주소는 한 번만 · 기관 주소순') ?></p>
 <ol class="ws-reflist">
 <?php foreach ($refs as $r): ?>
-<li><a class="ws-ref-title" href="<?= Site::e($r['url']) ?>" rel="noopener noreferrer"><?= Site::e($r['title']) ?></a>
+<li><a class="ws-ref-title" href="<?= Site::e($r['url']) ?>" rel="noopener noreferrer"><?= Site::t($r['title']) ?></a>
 <span class="ws-ref-meta"><span class="ws-ref-host"><?= Site::e($r['host']) ?></span><span class="ws-ref-year"><?= Site::e((string)$r['year']) ?></span><?php foreach ($r['ids'] as $id): ?><a class="ws-ref-id" href="<?= Site::e($site->url('issues/' . $id)) ?>"><?= Site::e($id) ?></a><?php endforeach ?></span></li>
 <?php endforeach ?>
 </ol>

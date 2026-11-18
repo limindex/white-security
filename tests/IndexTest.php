@@ -52,3 +52,14 @@ test('index.php: 예외는 고정 500 페이지, 경로·메시지 노출 없음
     assert_true(!str_contains($out, 'Fatal'), 'PHP 오류 출력');
     assert_contains('zz-secret-message', (string)@file_get_contents($root . '/error.log'));
 });
+
+test('보안 헤더: index.php 는 Site::CSP(frame-ancestors·base-uri·form-action 포함)를 보내고, 화면에는 meta CSP(frame-ancestors 제외)', function () {
+    $src = file_get_contents(__DIR__ . '/../index.php');
+    assert_contains('header("Content-Security-Policy: ' . Site::CSP . '")', $src);
+    foreach (["frame-ancestors 'none'", "base-uri 'none'", "form-action 'self'"] as $d) assert_contains($d, Site::CSP);
+    assert_true(!str_contains(Site::CSP_META, 'frame-ancestors'), 'meta 에는 frame-ancestors 없음(브라우저가 무시하고 경고)');
+    $root = idx_copy();
+    $out = idx_run($root, '/white-security/about');
+    assert_contains('<meta http-equiv="Content-Security-Policy" content="' . Site::e(Site::CSP_META) . '">', $out);
+    assert_true(strpos($out, 'Content-Security-Policy') < strpos($out, '<link rel="stylesheet"'), 'meta CSP 가 자원보다 먼저');
+});

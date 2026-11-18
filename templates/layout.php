@@ -11,6 +11,7 @@ $github = $site->setting('github');
 <html lang="ko">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="<?= Site::e(Site::CSP_META) ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?= Site::e($full) ?></title>
 <meta name="description" content="<?= Site::e($desc) ?>">
@@ -76,8 +77,8 @@ $github = $site->setting('github');
 <?php endif ?>
 <?= $content ?>
 <footer class="ws-foot">
-<p class="ws-foot-scope"><span>흔한 실수를 크게 줄이는 용도</span><i></i><span>보안 감사·침투 테스트를 대신하지 않음</span></p>
-<p class="ws-foot-links"><?php if ($publisher !== ''): ?><span><?= Site::e($publisher) ?> 발행</span><i></i><?php endif ?><?php if ($site->pageOn('sources')): ?><a href="<?= Site::e($site->url('sources')) ?>">출처·라이선스</a><?php endif ?></p>
+<p class="ws-foot-scope"><span>흔한 실수를 크게 줄이는 용도</span><i></i><span><?= Site::t('보안 감사·침투 테스트를 대신하지 않음') ?></span></p>
+<p class="ws-foot-links"><?php if ($publisher !== ''): ?><span><?= Site::e($publisher) ?> 발행</span><i></i><?php endif ?><?php if ($site->pageOn('sources')): ?><a href="<?= Site::e($site->url('sources')) ?>"><?= Site::t('출처·라이선스') ?></a><?php endif ?></p>
 <p class="ws-foot-license"><span>문서 CC BY-SA 4.0</span><i></i><span>예시 코드 MIT</span></p>
 </footer>
 </main>
