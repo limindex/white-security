@@ -41,7 +41,7 @@ $install = 'npx skills add ' . $site->repoSlug();
 <section class="ws-home-sec" aria-labelledby="ws-recent-h">
 <div class="ws-home-sec-head">
 <h2 id="ws-recent-h">최근 개정</h2>
-<a class="ws-more" href="<?= Site::e($site->url('changelog')) ?>">개정 이력</a>
+<a class="ws-more" href="<?= Site::e($site->url('changelog')) ?>"><span class="ws-tx">개정 이력</span></a>
 </div>
 <?php $recent = $site->recentRevisions(5); if ($recent): ?>
 <ol class="ws-recent">
@@ -62,7 +62,7 @@ $install = 'npx skills add ' . $site->repoSlug();
 <section class="ws-home-sec" aria-labelledby="ws-cov-h">
 <div class="ws-home-sec-head">
 <h2 id="ws-cov-h">점검 기준 대응</h2>
-<a class="ws-more" href="<?= Site::e($site->url('coverage')) ?>">점검 기준 대응표</a>
+<a class="ws-more" href="<?= Site::e($site->url('coverage')) ?>"><span class="ws-tx">점검 기준 대응표</span></a>
 </div>
 <p class="ws-cov-line"><span>기준 <b><?= count($coverage) ?></b>종</span><i></i><span>항목 <b><?= $items ?></b>개 중 대응 <b><?= $covered ?></b>개</span><i></i><span>보안 이슈 <b><?= count($all) ?></b>건</span></p>
 </section>

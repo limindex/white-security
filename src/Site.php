@@ -116,14 +116,6 @@ final class Site
         return '<span class="ws-badge ws-badge--stale" title="마지막 확인 뒤 ' . self::STALE_DAYS . '일 넘게 지남">확인 필요</span>';
     }
 
-    /** 확인일 최신순 n건 (같은 날이면 id 순) @return list<Issue> */
-    public function recent(int $n = 5): array
-    {
-        $all = $this->repo->all();
-        usort($all, fn(Issue $a, Issue $b) => [$b->checked, $a->id] <=> [$a->checked, $b->id]);
-        return array_slice($all, 0, $n);
-    }
-
     public const DEFAULT_DESC = 'AI 코딩 도구가 자주 만드는 보안 실수를 정리한 보안 이슈 문서와 AI 코딩 도구용 점검 스킬';
 
     /** data/site.json 설정값 (없으면 빈 문자열) */
