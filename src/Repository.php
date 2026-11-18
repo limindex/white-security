@@ -65,7 +65,7 @@ final class Repository
     public function versions(): array { return $this->versions; }
 
     /** 사이트 설정 기본값. 빈 값이면 화면에 그 자리를 그리지 않는다. */
-    public const SETTINGS = ['publisher' => '', 'github' => '', 'origin' => '', 'marketplace' => '', 'plugin_id' => '', 'released' => false, 'pages' => []];
+    public const SETTINGS = ['publisher' => '', 'github' => '', 'origin' => '', 'marketplace' => '', 'plugin_id' => '', 'released' => false, 'pages' => [], 'security_expires' => ''];
 
     /** 페이지 스위치 기본값: 내용이 아직 없는 페이지(check·glossary)는 꺼 둠. data/site.json 의 pages 로 바꾼다. */
     public const PAGE_DEFAULTS = ['check' => false, 'glossary' => false];
@@ -77,7 +77,8 @@ final class Repository
 
     /**
      * data/site.json(선택): publisher(발행 주체 표기) · github(https 주소) · origin(공개 주소 앞부분, 예: https://example.org)
-     * · marketplace(owner/repo) · plugin_id(plugin@marketplace) · released(repository 공개 여부, true|false).
+     * · marketplace(owner/repo) · plugin_id(plugin@marketplace) · released(repository 공개 여부, true|false)
+     * · security_expires(security.txt 만료 시각, YYYY-MM-DDTHH:MM:SSZ).
      * 파일이 없으면 기본값. 틀린 값은 오류 띠에 남기고 그 값만 기본값으로 둔다.
      * @param list<string> $errors @return array<string,string|bool>
      */
@@ -106,6 +107,7 @@ final class Repository
             if ($k === 'github' && $v !== '' && !preg_match('#^https://github\.com/[A-Za-z0-9._-]+(/[A-Za-z0-9._-]+)?/?$#', $v)) { $errors[] = "$name: github 는 https://github.com/… 주소여야 합니다"; continue; }
             if ($k === 'marketplace' && $v !== '' && !preg_match('#^[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$#', $v)) { $errors[] = "$name: marketplace 는 owner/repo 형식이어야 합니다"; continue; }
             if ($k === 'plugin_id' && $v !== '' && !preg_match('#^[a-z0-9-]+@[A-Za-z0-9._-]+$#', $v)) { $errors[] = "$name: plugin_id 는 plugin@marketplace 형식이어야 합니다"; continue; }
+            if ($k === 'security_expires' && $v !== '' && Site::securityExpires($v) === null) { $errors[] = "$name: security_expires 는 YYYY-MM-DDTHH:MM:SSZ(UTC) 형식이어야 합니다"; continue; }
             if ($k === 'origin' && $v !== '' && !Site::validOrigin($v)) { $errors[] = "$name: origin 은 https://도메인 형식(끝 / 없이)이어야 합니다"; continue; }
             $out[$k] = $v;
         }

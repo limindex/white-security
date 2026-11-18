@@ -1,6 +1,7 @@
 <?php
 // 정적 사이트(dist/)와 스킬 파일(plugins/white-security/skills/review/references, 검토 SKILL.md 라우팅 표, 검토 에이전트 절차)을 만든다. 사용: php build.php [--out=dist] [--base=/white-security/] [--today=YYYY-MM-DD] [--origin=https://도메인]
 // --origin 이 없으면 data/site.json 의 origin 을 쓰고, 둘 다 비어 있으면 sitemap.xml·canonical 을 만들지 않는다.
+// .well-known/security.txt 는 data/site.json 의 github·security_expires 로 만들고(origin 이 있으면 Canonical 포함), 만료가 지났으면 빌드하지 않는다.
 // --root 는 테스트용(원본 폴더 지정). 같은 입력이면 같은 출력이 나온다.
 declare(strict_types=1);
 if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
@@ -118,6 +119,16 @@ if ($origin !== '') {
     $files['sitemap.xml'] = $xml . "</urlset>\n";
 }
 
+// /.well-known/security.txt (RFC 9116): github·security_expires 가 있을 때만. 만료가 지났으면 빌드하지 않는다(1년마다 data/site.json 갱신).
+$securityTxt = $site->securityTxt();
+if ($securityTxt !== null) {
+    // 날짜(UTC)로 비교: 만료일 당일 빌드도 막는다
+    if (Site::securityExpires($site->setting('security_expires'))->format('Y-m-d') <= $opt['today']) {
+        bail('data/site.json 의 security_expires 가 빌드 날짜 이전이거나 같습니다(만료). 1년 뒤로 갱신하세요');
+    }
+    $files[Site::SECURITY_TXT] = $securityTxt;
+}
+
 rrmdir($out);
 foreach ($files as $rel => $body) put($out . '/' . $rel, $body);
 // GitHub Pages 가 _ 로 시작하는 파일을 처리하지 않게 한다
@@ -136,6 +147,7 @@ file_put_contents($reviewPath, $reviewMd);
 file_put_contents($agentPath, $agentMd);
 echo count($files) . "개 쪽과 API, assets " . count($list) . "개를 {$opt['out']} 에 만들었습니다.\n";
 if ($origin === '') echo "origin 이 비어 sitemap.xml 은 만들지 않았습니다 (--origin=https://도메인 또는 data/site.json).\n";
+if ($securityTxt === null) echo "data/site.json 에 github·security_expires 가 없어 .well-known/security.txt 는 만들지 않았습니다.\n";
 echo "스킬 참고 파일 " . count($refs) . "개를 " . SkillExport::REF_DIR . " 에 만들었습니다.\n";
 $rdesc = SkillExport::description($reviewSkillMd);
 echo '검토 SKILL.md 라우팅 표를 갱신했습니다(추정 약 ' . SkillExport::estimateTokens($reviewSkillMd) . '토큰, description ' . mb_strlen($rdesc) . '자 약 ' . SkillExport::estimateTokens($rdesc) . "토큰).\n";

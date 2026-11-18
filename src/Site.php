@@ -242,6 +242,33 @@ final class Site
     /** origin 형식: https://도메인[:포트], 끝 / 없음 */
     public static function validOrigin(string $o): bool { return (bool)preg_match('#^https://[A-Za-z0-9.-]+(:\d+)?$#', $o); }
 
+    /** security.txt 만료 시각(UTC, 초 단위 Z 형식)을 읽는다. 형식이 틀리면 null. */
+    public static function securityExpires(string $v): ?DateTimeImmutable
+    {
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/', $v)) return null;
+        $d = DateTimeImmutable::createFromFormat('!Y-m-d\TH:i:s\Z', $v, new DateTimeZone('UTC'));
+        return $d && $d->format('Y-m-d\TH:i:s\Z') === $v ? $d : null;
+    }
+
+    /**
+     * /.well-known/security.txt (RFC 9116). 제보 창구는 GitHub 비공개 취약점 제보(Security Advisories) 하나.
+     * data/site.json 의 github(owner/repo)와 security_expires 가 둘 다 있어야 만든다(없으면 null).
+     * Canonical 은 공개 주소(origin)가 있을 때만 넣는다. 만료 확인은 build.php 가 한다.
+     */
+    public function securityTxt(): ?string
+    {
+        $slug = $this->repoSlug();
+        $expires = $this->setting('security_expires');
+        if ($slug === '' || $expires === '') return null;
+        $gh = 'https://github.com/' . $slug;
+        $lines = ['Contact: ' . $gh . '/security/advisories/new', 'Expires: ' . $expires, 'Preferred-Languages: ko, en'];
+        if ($this->setting('origin') !== '') $lines[] = 'Canonical: ' . $this->setting('origin') . $this->url(self::SECURITY_TXT);
+        $lines[] = 'Policy: ' . $gh . '/security/policy';
+        return implode("\n", $lines) . "\n";
+    }
+
+    public const SECURITY_TXT = '.well-known/security.txt';
+
     /** 마크다운 한 덩어리 → 한 줄 평문 (설명 메타용) */
     public static function plain(string $md, int $max): string
     {
@@ -347,6 +374,7 @@ final class Site
                 'url' => $this->url('issues/' . $r['id']), 'text' => $r['text'],
             ], $this->repo->searchIndex()));
         }
+        if ($path === self::SECURITY_TXT && ($txt = $this->securityTxt()) !== null) return ['status' => 200, 'type' => 'text', 'body' => $txt];
         if ($path === 'api/coverage.json') return $this->json(['frameworks' => $this->coverage(), 'gaps' => Coverage::gaps($this->repo->coverage())]);
         return $this->html(404, 'error', ['title' => '찾을 수 없음', 'message' => '주소 변경 또는 삭제된 페이지']);
     }

@@ -26,7 +26,7 @@ try {
     $site = new Site(Repository::load(__DIR__), WS_BASE, 'live');
     $r = $site->route($path);
     http_response_code($r['status']);
-    header($r['type'] === 'json' ? 'Content-Type: application/json; charset=utf-8' : 'Content-Type: text/html; charset=utf-8');
+    header('Content-Type: ' . match ($r['type']) { 'json' => 'application/json', 'text' => 'text/plain', default => 'text/html' } . '; charset=utf-8');
     echo $r['body'];
 } catch (Throwable $e) {
     // 원인은 서버 로그에만 남기고, 화면에는 고정 문구만 보낸다.

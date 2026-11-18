@@ -5,6 +5,7 @@
   "marketplace": "limindex/skills",
   "plugin_id": "white-security@limindex",
   "released": false,
+  "security_expires": "2027-11-19T00:00:00Z",
   "pages": {
     "start": true,
     "check": false,
