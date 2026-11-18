@@ -46,7 +46,7 @@ class HelpActivity : AppCompatActivity() {
             WebViewCompat.addWebMessageListener(webView, "appBridge", setOf(ORIGIN)) { _, message, _, isMainFrame, _ ->
                 if (isMainFrame && message.data == "close") finish()          // 정해 둔 메시지만
             }
-        }
+        } // 지원하지 않는 오래된 WebView 에서는 브리지를 열지 않음(addJavascriptInterface 로 대체하지 않음)
         webView.loadUrl("$ORIGIN/faq")
     }
 }

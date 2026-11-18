@@ -33,9 +33,6 @@ sources:
   - title: "Chrome Enterprise and Education Help - Set Chrome app and extension policies (Windows)"
     url: https://support.google.com/chrome/a/answer/7532015
     year: 2026
-  - title: "FBI IC3 PSA I-120324-PSA - Criminals Use Generative Artificial Intelligence to Facilitate Financial Fraud"
-    url: https://www.ic3.gov/PSA/2024/PSA241203
-    year: 2024
 ---
 
 ## 요약

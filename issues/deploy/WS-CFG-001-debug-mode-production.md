@@ -51,9 +51,9 @@ sources:
 ## 대응 방법
 
 ```text
-운영 배포에 쓰는 설정·.env·Dockerfile·배포 스크립트에서 디버그 모드(APP_DEBUG·DEBUG·FLASK_DEBUG·debug=True)가 켜질 수 있는 곳을 모두 찾아 줘.
-디버그 값은 환경 변수에서 읽고 값이 없으면 꺼지게 바꾸고, 운영 .env 는 APP_ENV=production·APP_DEBUG=false 로 맞춰 줘.
-Flask·Django 개발 서버(flask run --debug, manage.py runserver)로 운영을 띄우는 곳은 gunicorn 같은 운영 서버로 바꿔 줘.
+운영 배포에 쓰는 설정, .env, Dockerfile, 배포 스크립트에서 디버그 모드(APP_DEBUG, DEBUG, FLASK_DEBUG, debug=True)가 켜질 수 있는 곳을 모두 찾아 줘.
+디버그 값은 환경 변수에서 읽고 값이 없으면 꺼지게 바꾸고, 운영 .env 는 APP_ENV=production, APP_DEBUG=false 로 맞춰 줘.
+Flask, Django 개발 서버(flask run --debug, manage.py runserver)로 운영을 띄우는 곳은 gunicorn 같은 운영 서버로 바꿔 줘.
 ```
 
 - 운영 주소에서 없는 경로를 열거나 오류를 일으켜도 스택 트레이스·설정값 없이 짧은 오류 화면만 나와야 한다.

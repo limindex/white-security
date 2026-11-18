@@ -36,7 +36,8 @@ webView.webViewClient = object : WebViewClient() {
 AndroidManifest.xml: <application android:networkSecurityConfig="@xml/network_security_config" …> */
 
 val client = OkHttpClient()   // 기본값: 시스템 CA 로 인증서·호스트 이름 확인
-// 인증서 고정이 필요하면 network_security_config 의 <pin-set> 에 예비 키를 함께 넣음(Android 문서)
+// 인증서 고정은 기본 권장이 아님. 꼭 필요하면 <pin-set> 에 예비 키를 함께 넣음(Android 문서)
+// expiration 을 걸면 업데이트 안 된 앱도 연결은 유지되지만 그 날짜 뒤로는 고정이 풀림
 
 webView.webViewClient = object : WebViewClient() {
     override fun onReceivedSslError(view: WebView, handler: SslErrorHandler, error: SslError) {

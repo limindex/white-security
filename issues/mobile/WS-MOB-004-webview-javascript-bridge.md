@@ -81,7 +81,7 @@ WebView 는 우리 도메인 https 페이지만 열게 하고, 다른 주소는 
 - **등급**: 위험: 임의 주소를 여는 WebView에 토큰·결제를 다루는 브리지, file URL 교차 출처 접근. / 주의: 출처 확인 없는 브리지, `originWhitelist={['*']}`, targetSdk 29 이하에서 file 접근 기본값 방치. / 참고: 브리지 페이지에 CSP 없음.
 - **보고 형식**: `[위험|주의|참고] <id> <파일:줄> — <이유> → <고칠 방법>`
 - **보고 예**: `[위험] WS-MOB-004 src/screens/Web.tsx:22 — route.params.url 을 그대로 열고 onMessage 가 출처 확인 없이 pay 를 실행 → 우리 도메인만 열고 nativeEvent.url 로 출처 확인, 결제는 앱 화면에서`
-- **검토 주의**: Android WebView는 JavaScript가 기본 꺼져 있지만 `react-native-webview`는 기본 켜져 있고 `originWhitelist` 기본값이 http·https 전체다(라이브러리 문서). `setAllowFileAccess`는 targetSdk 29 이하에서 기본 true, 30 이상에서 기본 false다(Android 문서). Flutter `JavaScriptMessage`에는 보낸 쪽 출처가 없으므로 이동 제한과 `currentUrl()` 확인을 함께 써야 한다. 페이지 자체의 XSS는 WS-XSS-001, 인증서 오류 무시(`onReceivedSslError`)는 WS-MOB-006에서 다룬다.
+- **검토 주의**: Android WebView는 JavaScript가 기본 꺼져 있지만 `react-native-webview`는 기본 켜져 있고 `originWhitelist` 기본값이 http·https 전체다(라이브러리 문서). `setAllowFileAccess`는 targetSdk 29 이하에서 기본 true, 30 이상에서 기본 false다(Android 문서). Flutter `JavaScriptMessage`에는 보낸 쪽 출처가 없고 `currentUrl()`은 메인 프레임 주소라 iframe이 보낸 메시지와 구별하지 못하므로, 이동 제한과 함께 브리지 페이지에 외부 iframe을 넣지 않고 CSP `frame-src`로 막아야 한다. `react-native-webview`도 Android에서 `WEB_MESSAGE_LISTENER`를 지원하지 않는 오래된 WebView에서는 `addJavascriptInterface`로 대체하고 `nativeEvent.url`이 최상위 페이지 주소가 된다(라이브러리 소스). 페이지 자체의 XSS는 WS-XSS-001, 인증서 오류 무시(`onReceivedSslError`)는 WS-MOB-006에서 다룬다.
 - **고칠 방법**: WebView를 우리 https 도메인으로 묶고, 브리지는 출처 확인과 허용 메시지만 처리하게 하며, file 접근을 꺼야 한다.
 
 ## 코드 예시
@@ -132,7 +132,8 @@ export function HelpScreen({ onClose }: { onClose: () => void }) {
         return false;
       }}
       onMessage={(e) => {
-        if (!isOurs(e.nativeEvent.url)) return;           // 우리 페이지가 보낸 것만
+        // Android 최신 WebView 는 보낸 프레임의 출처, 오래된 WebView(WEB_MESSAGE_LISTENER 없음)는 최상위 주소라 iframe 구별 불가
+        if (!isOurs(e.nativeEvent.url)) return;           // 우리 페이지가 보낸 것만 — 그래서 이 페이지엔 외부 iframe 금지(CSP frame-src)
         if (e.nativeEvent.data === "close") onClose();    // 정해 둔 메시지만, 토큰·결제는 브리지로 처리하지 않음
       }}
     />
@@ -176,7 +177,9 @@ void setup(VoidCallback onClose) {
       },
     ))
     ..addJavaScriptChannel('AppBridge', onMessageReceived: (m) async {
-      if (!isOurs(await controller.currentUrl())) return;          // 메시지에 출처가 없어 현재 주소로 확인
+      // 메시지에 출처가 없어 현재 주소로 확인 — currentUrl()은 메인 프레임 주소라 iframe 이 보낸 것과 구별 못 함
+      // → 브리지 페이지는 CSP frame-src 'none' 등으로 외부 iframe 을 넣지 않음
+      if (!isOurs(await controller.currentUrl())) return;
       if (m.message == 'close') onClose();                          // 정해 둔 메시지만
     })
     ..loadRequest(Uri.parse('$origin/faq'));
@@ -230,7 +233,7 @@ class HelpActivity : AppCompatActivity() {
             WebViewCompat.addWebMessageListener(webView, "appBridge", setOf(ORIGIN)) { _, message, _, isMainFrame, _ ->
                 if (isMainFrame && message.data == "close") finish()          // 정해 둔 메시지만
             }
-        }
+        } // 지원하지 않는 오래된 WebView 에서는 브리지를 열지 않음(addJavascriptInterface 로 대체하지 않음)
         webView.loadUrl("$ORIGIN/faq")
     }
 }

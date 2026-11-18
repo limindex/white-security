@@ -37,6 +37,15 @@ sources:
   - title: "Apple Developer - App Store Server API: Get Transaction Info"
     url: https://developer.apple.com/documentation/appstoreserverapi/get-transaction-info
     year: 2026
+  - title: "Apple Developer - appAccountToken (UUID로 구매와 계정 연결)"
+    url: https://developer.apple.com/documentation/appstoreserverapi/appaccounttoken
+    year: 2026
+  - title: "Apple Developer - App Store Server Notifications"
+    url: https://developer.apple.com/documentation/appstoreservernotifications
+    year: 2026
+  - title: "Android Developers - Real-time developer notifications reference"
+    url: https://developer.android.com/google/play/billing/rtdn-reference
+    year: 2026
   - title: "Apple App Store Server Library (Node.js) 3.1"
     url: https://github.com/apple/app-store-server-library-node
     year: 2026
@@ -63,9 +72,9 @@ sources:
 ## 점검 항목
 
 - 유료 기능·구독 여부는 서버가 스토어 API로 확인한 구매 기록으로만 정해야 한다.
-- 구매 토큰은 한 번만 쓰이고, 구매한 계정과 요청한 계정이 같은지 확인해야 한다.
+- 구매(Android purchaseToken·iOS originalTransactionId)는 한 계정에만 묶고, 다른 계정이 같은 구매를 보내면 거절해야 한다.
 - 유료 콘텐츠·관리 기능 API는 요청마다 서버가 권한을 확인해야 한다.
-- 환불·취소·만료 알림(Play 실시간 알림·App Store 서버 알림)을 받아 권한을 거둬야 한다.
+- 갱신·환불·만료 알림(Play 실시간 개발자 알림·App Store Server Notifications V2)을 받아 만료 시각을 갱신하거나 권한을 거둬야 한다.
 - 루팅·탈옥 검사·앱 변조 탐지는 보조 수단으로만 쓰고, 이것만으로 보안 판단을 하지 않아야 한다.
 - 앱에 숨긴 관리자 메뉴·디버그 스위치도 서버 권한 확인 없이는 동작하지 않아야 한다.
 
@@ -73,12 +82,12 @@ sources:
 
 - **찾는 곳**: `PurchaseStatus.purchased`, `requestPurchase(`, `isJailBroken(`, `jail-monkey`, `serverVerificationData`, `purchaseToken`, `subscriptionsv2`, `getTransactionInfo(`, 그 밖에 isPremium·isPro·isAdmin을 AsyncStorage·SharedPreferences에 두는 코드, 영수증 검증 API, 유료 콘텐츠 API, 루팅·탈옥 검사 패키지.
 - **검사 1 — 앱 안의 결제 판단**: 지적할 때: 결제 라이브러리의 성공 콜백만 보고 기기 저장값으로 잠금을 푸는 경우, 앱이 `isPremium: true`를 서버에 보내 저장하게 하는 경우, 서버가 영수증·토큰을 스토어 API로 확인하지 않는 경우. / 지적하지 않을 때: 서버가 Google Play Developer API·App Store Server API로 확인하고 권한을 저장하는 경우.
-- **검사 2 — 서버의 권한 확인**: 지적할 때: 유료 콘텐츠·관리 기능 API가 로그인만 보고 구독·역할을 확인하지 않는 경우, 구매 토큰 재사용·다른 계정 사용을 막지 않는 경우, 환불·만료 뒤에도 권한이 남는 경우. / 지적하지 않을 때: 요청마다 서버 저장 권한을 확인하고 토큰을 계정에 묶는 경우.
+- **검사 2 — 서버의 권한 확인**: 지적할 때: 유료 콘텐츠·관리 기능 API가 로그인만 보고 구독·역할을 확인하지 않는 경우, 같은 구매를 다른 계정이 쓰는 것을 막지 않는 경우, 첫 구매 때 만료 시각을 굳혀 갱신·환불·만료를 반영하지 않는 경우, iOS 운영 환경만 조회해 심사용 샌드박스 구매가 실패하는 경우. / 지적하지 않을 때: 요청마다 서버 저장 권한을 확인하고, 구매를 계정에 묶되 같은 계정의 갱신·복원은 다시 확인해 받아들이는 경우.
 - **검사 3 — 기기 검사만 믿기**: 지적할 때: 루팅·탈옥 검사나 앱 변조 탐지를 통과하면 서버 확인을 건너뛰는 경우, 숨긴 메뉴로만 관리자 기능을 막는 경우. / 지적하지 않을 때: 기기 검사·Play Integrity·App Attest 결과를 서버가 확인해 위험 신호로만 쓰는 경우.
-- **등급**: 위험: 서버 확인 없이 유료·관리 기능 제공, 앱이 보낸 결제 결과를 그대로 저장. / 주의: 구매 토큰 재사용·계정 불일치 확인 없음, 환불·만료 미반영. / 참고: 루팅·탈옥 검사를 보안 판단의 중심으로 씀.
+- **등급**: 위험: 서버 확인 없이 유료·관리 기능 제공, 앱이 보낸 결제 결과를 그대로 저장. / 주의: 다른 계정의 구매 재사용·계정 불일치 확인 없음, 갱신·환불·만료 알림 미반영. / 참고: 루팅·탈옥 검사를 보안 판단의 중심으로 씀.
 - **보고 형식**: `[위험|주의|참고] <id> <파일:줄> — <이유> → <고칠 방법>`
 - **보고 예**: `[위험] WS-MOB-005 src/paywall.tsx:40 — 결제 성공 콜백에서 AsyncStorage isPremium=true 로 잠금 해제, 서버 /lessons/premium 은 구독 확인 없음 → 서버가 subscriptionsv2.get 으로 확인 후 권한 저장, API 에서 권한 확인`
-- **검토 주의**: Google은 구매 토큰을 백엔드로 보내 Play Developer API로 확인하고, 이전 토큰과 겹치지 않는지 본 뒤 권한을 주라고 안내한다(Play Billing 문서). 루팅·탈옥 검사는 기기를 가진 사람이 우회할 수 있다. 웹 쪽의 클라이언트 판단 신뢰는 WS-AUTH-005, 결제 금액 변조·웹훅은 WS-PAY-001, 역할 필드 덮어쓰기는 WS-AUTH-006에서 다룬다.
+- **검토 주의**: Google은 구매 토큰을 백엔드로 보내 Play Developer API로 확인하고, 이전 토큰과 겹치지 않는지 본 뒤 권한을 주라고 안내한다(Play Billing 문서). 다만 구독 갱신·복원은 같은 purchaseToken(iOS는 같은 originalTransactionId)으로 다시 오므로, 같은 계정이면 다시 확인해 만료 시각을 갱신하고 다른 계정일 때만 거절해야 한다. App Store 심사는 샌드박스에서 구매하므로 운영 조회가 `TransactionIdNotFound`면 샌드박스로 다시 조회한다. 루팅·탈옥 검사는 기기를 가진 사람이 우회할 수 있다. 웹 쪽의 클라이언트 판단 신뢰는 WS-AUTH-005, 결제 금액 변조·웹훅은 WS-PAY-001, 역할 필드 덮어쓰기는 WS-AUTH-006에서 다룬다.
 - **고칠 방법**: 구매는 서버가 스토어 API로 확인해 계정에 묶어 저장하고, 유료·관리 API는 요청마다 서버 권한을 확인해야 한다.
 
 ## 코드 예시
@@ -180,36 +189,59 @@ app.get("/lessons/premium/:id", requireLogin, async (req, res) => {
 
 ```js
 import { google } from "googleapis";
-import { AppStoreServerAPIClient, SignedDataVerifier, Environment } from "@apple/app-store-server-library";
+import { APIError, APIException, AppStoreServerAPIClient, Environment, SignedDataVerifier } from "@apple/app-store-server-library";
 
 const play = google.androidpublisher({ version: "v3",
   auth: new google.auth.GoogleAuth({ scopes: ["https://www.googleapis.com/auth/androidpublisher"] }) });
-const apple = new AppStoreServerAPIClient(APPLE_KEY, APPLE_KEY_ID, APPLE_ISSUER_ID, BUNDLE_ID, Environment.PRODUCTION);
-const verifier = new SignedDataVerifier(APPLE_ROOT_CAS, true, Environment.PRODUCTION, BUNDLE_ID, APP_APPLE_ID);
+// 운영 → 샌드박스 순서로 조회(App Store 심사는 샌드박스 구매로 함)
+const apple = [Environment.PRODUCTION, Environment.SANDBOX].map((env) => ({
+  api: new AppStoreServerAPIClient(APPLE_KEY, APPLE_KEY_ID, APPLE_ISSUER_ID, BUNDLE_ID, env),
+  verifier: new SignedDataVerifier(APPLE_ROOT_CAS, true, env, BUNDLE_ID, APP_APPLE_ID),
+}));
 
-app.post("/iap/verify", requireLogin, async (req, res) => {
-  const { platform, productId, token } = req.body;
-  if (productId !== "pro_monthly" || typeof token !== "string") return res.sendStatus(400);
-  if (await db.purchases.findByToken(token)) return res.sendStatus(409);          // 같은 구매 재사용 막기
-  let expiresAt = 0;
+async function appleTransaction(transactionId) {
+  for (const { api, verifier } of apple) {
+    try {
+      const { signedTransactionInfo } = await api.getTransactionInfo(transactionId);
+      return await verifier.verifyAndDecodeTransaction(signedTransactionInfo);        // Apple 서명 확인
+    } catch (e) {
+      if (e instanceof APIException && e.apiError === APIError.TRANSACTION_ID_NOT_FOUND) continue;
+      throw e;
+    }
+  }
+  return null;
+}
+
+// 스토어에 확인한 구매 → { key, expiresAt } (key: Android purchaseToken · iOS originalTransactionId)
+async function verifyStore(platform, productId, token, user) {
   if (platform === "android") {
     const { data } = await play.purchases.subscriptionsv2.get({ packageName: PACKAGE, token });
     const item = data.lineItems?.find((l) => l.productId === productId);
     const active = ["SUBSCRIPTION_STATE_ACTIVE", "SUBSCRIPTION_STATE_IN_GRACE_PERIOD"].includes(data.subscriptionState);
-    if (item && active && data.externalAccountIdentifiers?.obfuscatedExternalAccountId === req.user.billingId) {
-      expiresAt = Date.parse(item.expiryTime);
-      if (data.acknowledgementState !== "ACKNOWLEDGEMENT_STATE_ACKNOWLEDGED")
-        await play.purchases.subscriptions.acknowledge({ packageName: PACKAGE, subscriptionId: productId, token });
-    }
-  } else if (platform === "ios") {
-    const { signedTransactionInfo } = await apple.getTransactionInfo(token);
-    const tx = await verifier.verifyAndDecodeTransaction(signedTransactionInfo);   // Apple 서명 확인
-    if (tx.productId === productId && !tx.revocationDate && tx.appAccountToken === req.user.billingId) expiresAt = tx.expiresDate ?? 0;
+    if (!item || !active || data.externalAccountIdentifiers?.obfuscatedExternalAccountId !== user.billingId) return null;
+    if (data.acknowledgementState !== "ACKNOWLEDGEMENT_STATE_ACKNOWLEDGED")
+      await play.purchases.subscriptions.acknowledge({ packageName: PACKAGE, subscriptionId: productId, token });
+    return { key: `android:${token}`, expiresAt: Date.parse(item.expiryTime) };
   }
-  if (expiresAt <= Date.now()) return res.sendStatus(402);
-  await db.purchases.insert({ token, userId: req.user.id, productId, expiresAt });  // token 열은 UNIQUE
-  res.json({ pro: true, expiresAt });
+  const tx = await appleTransaction(token);
+  // appAccountToken 은 UUID 여야 함: 결제 요청 때 앱이 서버가 준 user.billingId(UUID)를 넘김
+  if (!tx || tx.productId !== productId || tx.revocationDate || tx.appAccountToken !== user.billingId) return null;
+  return { key: `ios:${tx.originalTransactionId}`, expiresAt: tx.expiresDate ?? 0 };
+}
+
+app.post("/iap/verify", requireLogin, async (req, res) => {
+  const { platform, productId, token } = req.body;
+  if (!["android", "ios"].includes(platform) || productId !== "pro_monthly" || typeof token !== "string") return res.sendStatus(400);
+  const v = await verifyStore(platform, productId, token, req.user);
+  if (!v || v.expiresAt <= Date.now()) return res.sendStatus(402);
+  const owner = await db.purchases.ownerOf(v.key);                                    // key 열은 UNIQUE
+  if (owner && owner !== req.user.id) return res.sendStatus(409);                    // 다른 계정이 쓰던 구매
+  // 같은 계정의 갱신·복원은 같은 key 로 다시 와도 스토어 확인 뒤 만료 시각만 갱신
+  await db.purchases.upsert({ key: v.key, userId: req.user.id, productId, expiresAt: v.expiresAt });
+  res.json({ pro: true, expiresAt: v.expiresAt });
 });
+// 갱신·환불·만료는 Play 실시간 개발자 알림(RTDN)·App Store Server Notifications V2 처리기에서
+// 같은 key 로 expiresAt 을 갱신하거나 권한을 거둠(여기서는 생략) — 첫 구매 때 값으로 굳히지 않음
 
 app.get("/lessons/premium/:id", requireLogin, async (req, res) => {
   if (!(await db.purchases.activeFor(req.user.id, "pro_monthly"))) return res.sendStatus(403); // 요청마다 서버 확인

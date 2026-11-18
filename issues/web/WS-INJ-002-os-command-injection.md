@@ -45,7 +45,7 @@ sources:
 ## 대응 방법
 
 ```text
-셸 명령을 실행하는 코드(subprocess·os.system·exec·shell_exec·Process)를 모두 찾아 입력값이 들어가는 곳을 알려 줘.
+셸 명령을 실행하는 코드(subprocess, os.system, exec, shell_exec, Process)를 모두 찾아 입력값이 들어가는 곳을 알려 줘.
 가능하면 언어 라이브러리로 바꾸고, 꼭 실행해야 하면 셸 없이 프로그램 이름과 인자를 목록으로 넘기게 바꿔 줘.
 인자 값은 허용 목록이나 형식 검사를 거치게 하고, 파일은 서버가 만든 이름의 절대 경로로 넘겨 줘.
 ```

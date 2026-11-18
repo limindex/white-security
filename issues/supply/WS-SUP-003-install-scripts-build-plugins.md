@@ -51,7 +51,7 @@ npm의 `preinstall`·`postinstall` 같은 설치 스크립트, Composer 플러�
 ## 대응 방법
 
 ```text
-package.json·composer.json·pnpm-workspace.yaml·.npmrc·CI 설치 단계를 보고, 설치 중 스크립트·플러그인이 실행되는 의존성을 표로 보여 줘.
+package.json, composer.json, pnpm-workspace.yaml, .npmrc, CI 설치 단계를 보고, 설치 중 스크립트·플러그인이 실행되는 의존성을 표로 보여 줘.
 CI와 처음 받는 설치는 스크립트 없이 하고(npm ci --ignore-scripts), 빌드가 꼭 필요한 패키지만 허용 목록으로 다시 빌드하게 고쳐 줘.
 Composer allow-plugins 는 쓰는 플러그인만 true 로 적고, 새 버전은 공개 후 며칠 지나 받도록 설정해 줘.
 ```

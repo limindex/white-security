@@ -35,7 +35,9 @@ void setup(VoidCallback onClose) {
       },
     ))
     ..addJavaScriptChannel('AppBridge', onMessageReceived: (m) async {
-      if (!isOurs(await controller.currentUrl())) return;          // 메시지에 출처가 없어 현재 주소로 확인
+      // 메시지에 출처가 없어 현재 주소로 확인 — currentUrl()은 메인 프레임 주소라 iframe 이 보낸 것과 구별 못 함
+      // → 브리지 페이지는 CSP frame-src 'none' 등으로 외부 iframe 을 넣지 않음
+      if (!isOurs(await controller.currentUrl())) return;
       if (m.message == 'close') onClose();                          // 정해 둔 메시지만
     })
     ..loadRequest(Uri.parse('$origin/faq'));

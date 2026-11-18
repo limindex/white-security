@@ -45,7 +45,8 @@ export function HelpScreen({ onClose }: { onClose: () => void }) {
         return false;
       }}
       onMessage={(e) => {
-        if (!isOurs(e.nativeEvent.url)) return;           // 우리 페이지가 보낸 것만
+        // Android 최신 WebView 는 보낸 프레임의 출처, 오래된 WebView(WEB_MESSAGE_LISTENER 없음)는 최상위 주소라 iframe 구별 불가
+        if (!isOurs(e.nativeEvent.url)) return;           // 우리 페이지가 보낸 것만 — 그래서 이 페이지엔 외부 iframe 금지(CSP frame-src)
         if (e.nativeEvent.data === "close") onClose();    // 정해 둔 메시지만, 토큰·결제는 브리지로 처리하지 않음
       }}
     />

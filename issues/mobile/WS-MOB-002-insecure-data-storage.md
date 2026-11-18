@@ -55,7 +55,7 @@ sources:
 ## 대응 방법
 
 ```text
-AsyncStorage, SharedPreferences, UserDefaults, MMKV, SQLite·파일에 저장하는 값을 찾아, 토큰·비밀번호·개인정보가 있는지 표로 보여 줘.
+AsyncStorage, SharedPreferences, UserDefaults, MMKV, SQLite, 파일에 저장하는 값을 찾아, 토큰·비밀번호·개인정보가 있는지 표로 보여 줘.
 토큰·비밀값은 expo-secure-store(또는 react-native-keychain), flutter_secure_storage, Android Keystore 로 옮기고, 기존 평문 값은 앱 업데이트 때 지워 줘.
 개인정보는 꼭 필요한 것만 기기에 남기고, 로그·백업 대상에서 빼 줘.
 ```

@@ -20,8 +20,6 @@ published: 2026-11-18
 checked: 2026-11-18
 revisions:
   - date: 2026-11-18
-    note: 탐지 신호에 torch 버전 고정(torch==2.·torch<2.6) 추가
-  - date: 2026-11-18
     note: 최초 작성
 applies_to: [PyTorch, Hugging Face transformers·huggingface_hub·datasets, 공개 모델을 받아 서버에서 돌리는 AI 기능, 사용자가 모델 파일을 올리는 기능]
 severity_reason: "영향: 모델 파일을 여는 순간 서버에서 남의 코드 실행, 오염된 가중치·데이터로 잘못된 답 · 악용: 공개 저장소에 그럴듯한 모델을 올리거나 기존 저장소 파일을 바꿔치기"
@@ -53,7 +51,7 @@ sources:
 ## 대응 방법
 
 ```text
-torch.load, joblib, from_pretrained, hf_hub_download, snapshot_download, load_dataset 로 모델·데이터를 불러오는 곳을 찾아, 파일 형식·trust_remote_code, revision 고정 여부를 표로 보여 줘.
+torch.load, joblib, from_pretrained, hf_hub_download, snapshot_download, load_dataset 로 모델·데이터를 불러오는 곳을 찾아, 파일 형식, trust_remote_code, revision 고정 여부를 표로 보여 줘.
 가중치는 safetensors 로만 받게(use_safetensors=True) 하고, torch 는 2.6 이상으로 올려 torch.load 는 weights_only=True 로, trust_remote_code 는 끄게 고쳐 줘.
 모델·데이터셋은 검토한 커밋 해시(revision)로 고정하고, 이미지 빌드 때 받아 두고 실행 중에는 새로 받지 않게 해 줘.
 ```
@@ -72,8 +70,8 @@ torch.load, joblib, from_pretrained, hf_hub_download, snapshot_download, load_da
 
 ## 탐지 규칙
 
-- **찾는 곳**: `torch.load(`, `torch==2.`, `weights_only=False`, `trust_remote_code=True`, `from_pretrained(`, `hf_hub_download(`, `snapshot_download(`, `load_dataset(`, `torch<2.6`, `.safetensors`, 그 밖에 requirements·pyproject·잠금 파일의 torch 버전, joblib·pickle로 여는 모델 파일, 모델·체크포인트 업로드 기능, 모델을 받는 Dockerfile 단계, HF_HUB_OFFLINE 설정.
-- **검사 1 — 여는 순간 코드가 실행되는 형식**: 지적할 때: `torch.load(..., weights_only=False)`, PyTorch 2.6 미만에서 쓰는 `torch.load`(`weights_only=True`여도 우회되는 취약점 CVE-2025-32434, requirements·잠금 파일의 `torch==2.5.1`·`torch<2.6` 같은 고정 포함), 밖에서 받은 `.pkl`·`.joblib`·`.bin` 모델을 pickle 계열로 여는 경우, `trust_remote_code=True`. / 지적하지 않을 때: `safetensors`·`use_safetensors=True`, PyTorch 2.6 이상에서 `weights_only=True`, 내 파이프라인이 만든 파일을 내 저장소에서만 읽는 경우.
+- **찾는 곳**: `torch.load(`, `torch==2.`, `weights_only=False`, `trust_remote_code=True`, `from_pretrained(`, `hf_hub_download(`, `snapshot_download(`, `load_dataset(`, `torch<2.6`, `torch~=2.5.0`, `.safetensors`, 그 밖에 requirements·pyproject·잠금 파일의 torch 버전, joblib·pickle로 여는 모델 파일, 모델·체크포인트 업로드 기능, 모델을 받는 Dockerfile 단계, HF_HUB_OFFLINE 설정.
+- **검사 1 — 여는 순간 코드가 실행되는 형식**: 지적할 때: `torch.load(..., weights_only=False)`, PyTorch 2.6 미만에서 쓰는 `torch.load`(`weights_only=True`여도 우회되는 취약점 CVE-2025-32434, requirements·pyproject의 `torch==2.5.1`, `torch<2.6`, `torch<=2.5.1`, `torch~=2.5.0`처럼 2.6 미만으로 묶는 범위와 `poetry.lock`·`uv.lock`·`requirements.txt` 해시 목록에 잠긴 2.6 미만 버전 포함), 밖에서 받은 `.pkl`·`.joblib`·`.bin` 모델을 pickle 계열로 여는 경우, `trust_remote_code=True`. / 지적하지 않을 때: `safetensors`·`use_safetensors=True`, PyTorch 2.6 이상에서 `weights_only=True`(`torch>=2.6`, 또는 `~=2.5`처럼 2.6 이상을 허용하는 범위인데 잠금 파일이 2.6 이상인 경우), 내 파이프라인이 만든 파일을 내 저장소에서만 읽는 경우.
 - **검사 2 — 버전 고정**: 지적할 때: `from_pretrained`·`hf_hub_download`·`load_dataset`이 `revision` 없이 기본 브랜치를 받는 경우, 출처를 모르는 개인 저장소 모델, 서버가 실행 중에 새 버전을 받아 오는 경우. / 지적하지 않을 때: 40자리 커밋 해시 `revision`, 사내 미러나 빌드 때 받아 둔 파일만 쓰는 경우.
 - **검사 3 — 업로드된 모델**: 지적할 때: 사용자가 올린 모델·체크포인트 파일을 서버 프로세스에서 바로 여는 경우. / 지적하지 않을 때: safetensors만 받거나, 네트워크·비밀값이 없는 격리 환경에서 여는 경우.
 - **등급**: 위험: 외부·사용자 모델을 `weights_only=False`나 pickle로 열기, PyTorch 2.6 미만에서 외부 파일을 `torch.load`로 열기, 검토하지 않은 저장소에 `trust_remote_code=True`. / 주의: `revision` 고정 없음, safetensors가 있는데 `.bin`을 받음, 실행 중 자동 다운로드. / 참고: 출처·라이선스 기록 없음.
