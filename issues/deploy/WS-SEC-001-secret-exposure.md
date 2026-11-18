@@ -22,7 +22,7 @@ revisions:
   - date: 2026-11-18
     note: 최초 작성
 applies_to: [Python, Node.js, PHP, 모든 애플리케이션·저장소·배포 환경]
-severity_reason: "영향: 남이 내 키로 과금·데이터 접근 · 악용: 공개 저장소·화면 소스에서 자동 수집 도구가 수 분 안에 찾아냄"
+severity_reason: "영향: 남이 내 키로 과금·데이터 접근 · 악용: 공개 저장소·화면 소스에서 자동 수집 도구로 빠르게 수집"
 sources:
   - title: OWASP Secrets Management Cheat Sheet
     url: https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html
