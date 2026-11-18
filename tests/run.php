@@ -15,7 +15,12 @@ function assert_contains(string $needle, string $haystack): void {
 }
 
 $target = $argv[1] ?? __DIR__;
-$files = is_file($target) ? [$target] : glob(rtrim($target, '/') . '/*Test.php');
+$files = is_file($target) ? [$target] : (is_dir($target) ? glob(rtrim($target, '/') . '/*Test.php') : []);
+if (!$files) {
+    fwrite(STDERR, "테스트 파일이 없습니다: $target\n");
+    echo "0 passed, 0 failed (테스트 파일이 없습니다: $target)\n";
+    exit(1);
+}
 foreach ($files as $f) require $f;
 
 $pass = 0; $fail = 0;

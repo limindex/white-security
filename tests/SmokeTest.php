@@ -24,3 +24,15 @@ test('통과하는 테스트만 있으면 종료코드 0이다', function () {
     assert_same(0, $code, '종료코드');
     assert_contains('1 passed', implode("\n", $out));
 });
+
+test('대상에 Test 파일이 없거나 경로가 없으면 종료코드 1이다', function () {
+    $dir = sys_get_temp_dir() . '/ws-runner-' . bin2hex(random_bytes(4));
+    mkdir($dir);
+    foreach ([$dir, $dir . '/none'] as $target) {
+        $out = [];
+        exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg(__DIR__ . '/run.php') . ' ' . escapeshellarg($target) . ' 2>&1', $out, $code);
+        assert_same(1, $code, '종료코드');
+        assert_contains('테스트 파일이 없습니다', implode("\n", $out));
+    }
+    rmdir($dir);
+});

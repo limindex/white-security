@@ -1,0 +1,12 @@
+[
+  {"id": "ai-use", "name": "AI를 쓸 때", "order": 1, "site_only": false},
+  {"id": "vibe", "name": "바이브 코딩할 때", "order": 2, "site_only": false},
+  {"id": "fetch", "name": "긁어 오고 읽을 때", "order": 3, "site_only": false},
+  {"id": "scraped", "name": "긁힐 때", "order": 4, "site_only": false},
+  {"id": "web", "name": "웹 기본", "order": 5, "site_only": false},
+  {"id": "auth", "name": "로그인·권한", "order": 6, "site_only": false},
+  {"id": "deploy", "name": "설정·배포", "order": 7, "site_only": false},
+  {"id": "data", "name": "데이터·개인정보", "order": 8, "site_only": false},
+  {"id": "supply", "name": "의존성·공급망", "order": 9, "site_only": false},
+  {"id": "people", "name": "사람", "order": 10, "site_only": true}
+]
