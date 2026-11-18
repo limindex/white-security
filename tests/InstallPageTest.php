@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/support.php';
 
-/** 설치 페이지: Claude Code 하나(확인한 도구만, 직접 복사·Codex·Cursor 는 실측 뒤) · 번호 단계 · command 한 상자 하나 · 예시 출력 · 보고 예시 표 · Troubleshooting */
+/** 설치 페이지: Claude Code·Codex(확인한 도구만, 직접 복사·Cursor 는 실측 뒤) · 번호 단계 · command 한 상자 하나 · 예시 출력 · 보고 예시 표 · Troubleshooting */
 const INST_JSON = '{"publisher": "LimIndex", "github": "https://github.com/limindex/white-security", "marketplace": "limindex/skills", "plugin_id": "white-security@limindex", "released": false}';
 
 function inst_body(?string $json = INST_JSON): string
@@ -11,14 +11,37 @@ function inst_body(?string $json = INST_JSON): string
     return (new Site(Repository::load($root), '/white-security/', 'live', new DateTimeImmutable('2026-11-18')))->route('install')['body'];
 }
 
-test('설치: 확인한 도구만 — Claude Code 판 하나(탭 줄 없음), 직접 복사·Codex·Cursor 없음', function () {
+test('설치: 확인한 도구만 — Claude Code·Codex 두 판(탭), 직접 복사·Cursor 없음', function () {
     $b = nw_strip(inst_body());
-    assert_true(!str_contains($b, 'role="tab"'), '판이 하나면 탭 줄 없음');
+    assert_contains('data-tabs', $b);
+    assert_same(2, substr_count($b, 'role="tab"'), '탭 두 개');
+    assert_same(2, substr_count($b, 'role="tabpanel"'), '판 두 개');
     assert_contains('id="inst-claude"', $b);
-    assert_true(!str_contains($b, 'inst-copy') && !str_contains($b, 'git clone'), '직접 복사 숨김(다른 에이전트·직접 복사는 실제 시험 통과 뒤)');
+    assert_contains('id="inst-codex"', $b);
+    assert_true(!str_contains($b, 'ws-ipanel--solo'), '판이 여럿이면 solo 아님');
+    assert_true(!str_contains($b, 'inst-copy') && !str_contains($b, '~/.claude/skills'), 'Claude Code 직접 복사 숨김(실제 시험 통과 뒤)');
     assert_true(!str_contains($b, 'inst-cli') && !str_contains($b, 'npx skills'), '확인 전 도구 탭 없음');
-    assert_true((bool)preg_match('#<div class="ws-itabs">#', $b) && !str_contains($b, 'data-tabs') && !str_contains($b, 'role="tabpanel"'), '판 하나: 탭 역할 없음');
-    assert_contains('ws-ipanel--solo', $b);
+    assert_same(2, substr_count($b, '<details class="ws-trouble">'), '판마다 Troubleshooting');
+});
+
+test('설치(Codex): 번호 단계 4개, 프로젝트 .agents/skills 복사, $white-security, 읽기 전용 안내, 개인 폴더는 문서 기준', function () {
+    $b = inst_body();
+    assert_true((bool)preg_match('#<section[^>]*id="inst-codex"[^>]*>(.*?)</section>#s', $b, $m), 'Codex 판');
+    $p = $m[1];
+    assert_same(4, preg_match_all('#<li class="ws-step">#', $p), '단계 4개');
+    preg_match_all('#<pre tabindex="0"><code>([^<]*)</code></pre>#', $p, $cmds);
+    $cmds = array_map('html_entity_decode', $cmds[1]);
+    foreach ($cmds as $c) assert_true(!str_contains($c, "\n"), "한 상자에 command 하나: $c");
+    foreach (['codex', 'git clone https://github.com/limindex/white-security.git ~/white-security',
+              'mkdir -p .agents/skills && cp -r ~/white-security/plugins/white-security/skills/white-security .agents/skills/',
+              '보안 점검해 줘', '$white-security 보안 점검해 줘'] as $c) assert_true(in_array($c, $cmds, true), "command $c");
+    assert_contains('href="https://developers.openai.com/codex/cli"', $p);
+    assert_contains('<code>codex --sandbox read-only</code>', $p);
+    assert_contains('class="ws-table ws-table--report"', $p);
+    $t = nw_strip($p);
+    assert_contains('Codex 문서 기준', $t);
+    assert_contains('/skills', $t);
+    assert_true(!str_contains($t, '/plugin install') && !str_contains($t, '/plugin marketplace') && !str_contains($t, ':review'), 'Claude Code 명령 섞이지 않음');
 });
 
 test('설치(Claude Code): 번호 단계 4개, command 는 한 상자에 하나, 순서·조건 표시', function () {
@@ -73,8 +96,8 @@ test('용어: 화면 라벨·고유명사는 원문, 설명 문장은 한국어(
 
 test('설치: 사용법 안내 순서 — 큰 줄 "보안 점검해 줘", 작은 줄 확실하게 실행(/white-security:review)', function () {
     $b = nw_strip(inst_body());
-    preg_match_all('#<section[^>]*id="inst-(claude|copy)"[^>]*>(.*?)</section>#s', $b, $m, PREG_SET_ORDER);
-    assert_same(1, count($m));
+    preg_match_all('#<section[^>]*id="inst-(claude|codex|copy)"[^>]*>(.*?)</section>#s', $b, $m, PREG_SET_ORDER);
+    assert_same(2, count($m));
     foreach ($m as [, $id, $p]) {
         $main = strpos($p, '<code>보안 점검해 줘</code>');
         $sub = strpos($p, 'ws-step-sub');
@@ -85,6 +108,7 @@ test('설치: 사용법 안내 순서 — 큰 줄 "보안 점검해 줘", 작은
     }
     assert_true((bool)preg_match('#ws-step-sub.*<code>/white-security:review</code>#s', $m[0][2]), 'Claude Code: command');
     assert_true(!str_contains($m[0][2], 'white-security 스킬로 보안 점검해 줘'), 'Claude Code 탭엔 스킬 이름 문구 없음');
+    assert_true((bool)preg_match('#ws-step-sub.*<code>\$white-security 보안 점검해 줘</code>#s', $m[1][2]), 'Codex: $스킬 이름');
     // 요청할 때만(11-19): 배포 전 한마디, 배포 이야기에는 먼저 질문, 코드 작성 중 자동 점검 주장 없음
     assert_contains('특히 배포 전에', $b);
     assert_contains('요청할 때만 실행', $b);
