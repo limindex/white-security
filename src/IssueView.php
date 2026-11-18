@@ -31,6 +31,13 @@ final class IssueView
         return implode("\n", $out) . "\n";
     }
 
+    /** 탐지 규칙의 보고 형식·보고 예(한 줄 코드)는 긴 칩 대신 블록 줄로(공백에서 줄바꿈) */
+    public static function reportLines(string $html): string
+    {
+        return (string)preg_replace_callback('#(<strong>보고 (?:형식|예)</strong>:) <code(?: class="ws-code-long")?>(.*?)</code>(?=</li>)#u',
+            fn(array $m): string => $m[1] . '<code class="ws-code-line">' . preg_replace('#(\[[^\]<]*\]|&lt;.*?&gt;)#u', '<span class="ws-nw">$1</span>', $m[2]) . '</code>', $html);
+    }
+
     /**
      * 점검 항목 목록(<ul><li>)을 체크 상자 목록으로. 체크 상태는 브라우저가 data-check 키로 저장한다.
      * @return array{0:string,1:int} [HTML, 항목 수]

@@ -634,6 +634,8 @@ html:not(.js) .ws-copy, html:not(.js) .ws-tabs, html:not(.js) .ws-check-status {
   scrollbar-width: thin;
 }
 .ws-nw > code.ws-code-long { max-width: calc(100% - 2.6em); }
+/* 형식 한 줄(보고 줄 등): 블록 칩, 공백에서만 줄바꿈 */
+.ws-page code.ws-code-line, .ws-doc code.ws-code-line { display: block; width: fit-content; max-width: 100%; margin-top: 8px; padding: 4px 8px; white-space: normal; word-break: keep-all; overflow-wrap: anywhere; line-height: 1.7; }
 
 .ws-pending { margin-top: 40px; padding: 24px 24px 20px; border-radius: var(--r-lg); background: var(--sunken); box-shadow: inset 0 0 0 1px var(--line); }
 .ws-pending h2 { display: inline-block; margin: 0 0 8px; padding: 4px 8px; border-radius: var(--r-pill); background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-strong); font-size: .78rem; letter-spacing: -0.01em; line-height: 1.2; text-box: trim-both cap alphabetic; color: var(--ink-2); }
@@ -741,6 +743,7 @@ button:disabled, button[aria-disabled="true"] { opacity: .45; cursor: not-allowe
 .ws-examples-why dt { color: var(--ink-3); font-weight: 600; }
 .ws-examples-why dd { margin: 0; color: var(--ink-2); }
 .ws-table--report code { white-space: nowrap; }
+.ws-table--report td:nth-child(-n+3) { white-space: nowrap; }
 
 /* 문서 읽는 법 */
 .ws-idform { margin: 0 0 16px; }
@@ -833,7 +836,6 @@ button:disabled, button[aria-disabled="true"] { opacity: .45; cursor: not-allowe
 .ws-block { margin: 4px 0 16px; border-radius: var(--r-lg); background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-strong); }
 .ws-block figcaption { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 8px 0 16px; }
 .ws-block-label { font: 700 .76rem var(--font-display); color: var(--ink-3); letter-spacing: -0.01em; }
-.ws-block--prompt .ws-block-label { color: var(--accent); }
 .ws-block pre { margin: 0; padding: 8px 16px 16px; font: 500 .86rem/1.75 var(--font-mono); white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink); }
 .ws-block pre code { font: inherit; }
 .ws-block--prompt pre { font: 500 .94rem/1.75 var(--font-text); letter-spacing: -0.005em; white-space: normal; }
@@ -1038,6 +1040,8 @@ html:not(.js) .ws-itabs-list { display: none; }
 .ws-step-sub .ws-block pre { font-size: .8rem; }
 .ws-step-sub .ws-block--prompt pre { font-size: .86rem; }
 .ws-step-desc { color: var(--ink-2); font-size: .94rem; line-height: 1.65; text-wrap: pretty; }
+.ws-step-note { margin: 0; color: var(--ink-3); font-size: .86rem; line-height: 1.6; }
+.ws-step .ws-table-wrap { margin-top: 4px; }
 .ws-step .ws-block { margin: 0; }
 .ws-block--cmd pre { font: 500 .9rem/1.6 var(--font-mono); white-space: pre; overflow-x: auto; overflow-wrap: normal; }
 .ws-out { margin: 0; border-radius: var(--r-md); background: var(--code-bg); color: var(--code-ink); }
@@ -1224,6 +1228,14 @@ html:not(.js) .ws-itabs-list { display: none; }
   .ws-foot .ws-foot-scope { flex-direction: column; align-items: flex-start; }
   .ws-foot-scope i { display: none; }
   .ws-block--cmd pre { font-size: .8rem; }
+  /* 보고 예시 표: 좁은 화면은 행마다 쌓음(등급·문서 번호·위치 한 줄 → 이유 → 고칠 방법) */
+  .ws-table--report, .ws-table--report tbody, .ws-table--report caption { display: block; }
+  .ws-table--report thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .ws-table--report tr { display: grid; grid-template-columns: auto auto minmax(0, 1fr); align-items: center; gap: 12px; padding: 16px 0; box-shadow: inset 0 -1px 0 var(--line); }
+  .ws-table--report tbody tr:first-child { box-shadow: inset 0 1px 0 var(--line-strong), inset 0 -1px 0 var(--line); }
+  .ws-table--report td { display: block; padding: 0; box-shadow: none; }
+  .ws-table--report td[data-label] { grid-column: 1 / -1; }
+  .ws-table--report td[data-label]::before { content: attr(data-label); display: block; margin-bottom: 2px; font: 700 .76rem/1.4 var(--font-display); color: var(--ink-3); }
 }
 @media (max-width: 399.98px) {
   .ws-main, .ws-shell--wide .ws-main { padding-inline: 16px; }

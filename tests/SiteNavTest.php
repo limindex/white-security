@@ -96,7 +96,7 @@ test('상단: 브랜드·검색(단축키 /)·발행 주체와 GitHub 는 설정
     assert_contains('<span class="ws-publisher">by 테스트 발행처</span>', $b);
     assert_contains('<span>테스트 발행처 발행</span>', $b);
     assert_true((bool)preg_match('#<a class="ws-gh" href="https://github.com/example/repo"#', $b), 'GitHub 링크');
-    assert_contains('npx skills add example/repo', $s->route('install')['body']);
+    assert_contains('git clone https://github.com/example/repo.git', $s->route('install')['body']);
 });
 
 test('site.json: 형식 오류는 오류 띠로, 기본값으로 계속', function () {
