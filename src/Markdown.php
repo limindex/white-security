@@ -9,6 +9,6 @@ final class Markdown
         $p->setMarkupEscaped(true);
         $html = $p->text($md);
         // 코드 블록 언어 클래스는 lang-<x> 로 쓴다 (코드 내용은 이미 이스케이프됨).
-        return str_replace('<code class="language-', '<code class="lang-', $html);
+        return Site::keep(str_replace('<code class="language-', '<code class="lang-', $html));
     }
 }

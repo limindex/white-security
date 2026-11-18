@@ -3,7 +3,7 @@
 $all = $site->repo->all();
 $items = 0; $covered = 0;
 foreach ($coverage as $fw) foreach ($fw['items'] as $it) { $items++; if ($it['issues']) $covered++; }
-$install = 'npx skills add ' . $site->repoSlug();
+$install = $site->setting('plugin_id') !== '' ? '/plugin install ' . $site->setting('plugin_id') : '';
 ?>
 <div class="ws-home">
 <section class="ws-home-intro" aria-labelledby="ws-home-h">
@@ -34,7 +34,7 @@ $install = 'npx skills add ' . $site->repoSlug();
 <span class="ws-path-k">자동화하기</span>
 <h3>스킬 설치</h3>
 <p>코딩 도구가 코드를 쓸 때마다 같은 기준으로 점검</p>
-<code class="ws-path-cmd"><?= Site::e($install) ?></code>
+<?php if ($install !== ''): ?><code class="ws-path-cmd"><?= Site::e($install) ?></code><?php endif ?>
 </a>
 </section>
 
@@ -48,7 +48,7 @@ $install = 'npx skills add ' . $site->repoSlug();
 <?php foreach ($recent as $r): $i = $r['issue']; ?>
 <li><a href="<?= Site::e($site->url('issues/' . $i->id)) ?>">
 <time class="ws-recent-date" datetime="<?= Site::e($r['date']) ?>"><?= Site::e($r['date']) ?></time>
-<span class="ws-recent-main"><span class="ws-recent-title"><?= Site::e($i->title) ?></span><span class="ws-recent-note"><?= Site::e($r['note']) ?></span></span>
+<span class="ws-recent-main"><span class="ws-recent-title"><?= Site::t($i->title) ?></span><span class="ws-recent-note"><?= Site::t($r['note']) ?></span></span>
 <span class="ws-id"><?= Site::e($i->id) ?></span>
 <span class="ws-recent-badges"><?= Site::severityBadge($i->severity) ?><?= $site->staleBadge($i) ?></span>
 </a></li>
@@ -78,11 +78,11 @@ $install = 'npx skills add ' . $site->repoSlug();
 <h3><?= Site::e($g['name']) ?></h3>
 <span class="ws-grp-n"><?= count($list) ?>건</span>
 </div>
-<?php if ($g['when'] !== null): ?><p class="ws-grp-when"><?= Site::e($g['when']) ?></p><?php endif ?>
+<?php if ($g['when'] !== null): ?><p class="ws-grp-when"><?= Site::t($g['when']) ?></p><?php endif ?>
 <?php if ($list): ?>
 <ul class="ws-grp-issues">
 <?php foreach ($list as $i): ?>
-<li><a href="<?= Site::e($site->url('issues/' . $i->id)) ?>"><?= Site::e($i->title) ?></a></li>
+<li><a href="<?= Site::e($site->url('issues/' . $i->id)) ?>"><?= Site::t($i->title) ?></a></li>
 <?php endforeach ?>
 </ul>
 <?php endif ?>

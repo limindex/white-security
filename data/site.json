@@ -1,5 +1,8 @@
 {
   "publisher": "LimIndex",
   "github": "https://github.com/limindex/white-security",
-  "origin": ""
+  "origin": "",
+  "marketplace": "limindex/skills",
+  "plugin_id": "white-security@limindex",
+  "released": false
 }

@@ -17,8 +17,8 @@
 **찾는 곳**: `.mcp.json`, `.cursor/mcp.json`, `.vscode/mcp.json`, `claude_desktop_config.json`, `~/.claude.json`의 `mcpServers`, 코드 속 MCP 클라이언트(`list_tools`, `listTools`, `ClientSession`).
 
 **검사 1. 고정되지 않은 버전·출처**
-- 지적할 때: `npx -y 이름`, `uvx 이름`, `@latest`, 버전 없는 Docker 이미지 태그로 서버를 띄우는 경우. 출처를 알 수 없는 개인 저장소 서버인 경우.
-- 지적하지 않을 때: 정확한 버전(또는 이미지 다이제스트)으로 고정된 경우. 저장소 안의 로컬 서버(`node ./mcp/server.js`)인 경우.
+- 지적할 때: `npx -y 이름`, `uvx 이름`, `@latest`, 버전 없는 Docker 이미지 태그로 서버를 띄우는 경우. 출처를 알 수 없는 개인 repository 서버인 경우.
+- 지적하지 않을 때: 정확한 버전(또는 이미지 다이제스트)으로 고정된 경우. repository 안의 로컬 서버(`node ./mcp/server.js`)인 경우.
 
 **검사 2. 수상한 도구 설명**
 - 지적할 때: 도구 설명에 보이지 않는 문자, 다른 도구·민감 파일(`~/.ssh`, `.env`) 언급, 특정 주소로 데이터를 보내라는 지시, "사용자에게 말하지 마라" 같은 문장이 있는 경우. 클라이언트 코드가 바뀐 도구 설명을 확인 없이 모델에 넘기는 경우.

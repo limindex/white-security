@@ -18,7 +18,7 @@
 
 **검사 1. 외부 개체를 따라가는 설정**
 - 지적할 때: 외부 입력 XML을 외부 개체 해석이 켜진 설정으로 파싱하는 경우(lxml `resolve_entities=True`나 `no_network=False`와 `load_dtd=True`의 조합, PHP `LIBXML_NOENT`·`LIBXML_DTDLOAD`, libxmljs `noent: true`, `xml.sax`의 `feature_external_ges` 켬).
-- 지적하지 않을 때: 입력이 저장소 안 고정 파일이나 빌드 산출물이라 외부에서 바꿀 수 없는 경우. 외부 개체가 기본으로 꺼진 라이브러리를 기본 설정 그대로 쓰는 경우.
+- 지적하지 않을 때: 입력이 repository 안 고정 파일이나 빌드 산출물이라 외부에서 바꿀 수 없는 경우. 외부 개체가 기본으로 꺼진 라이브러리를 기본 설정 그대로 쓰는 경우.
 
 **검사 2. 엔티티 폭탄**
 - 지적할 때: 외부 입력을 Python 표준 `xml.*`로 파싱하면서 `defusedxml`도 Expat 버전 확인도 없는 경우(Expat 버전에 따라 달라 주의 + "확인 필요"). PHP `LIBXML_PARSEHUGE`를 외부 입력에 쓰는 경우.

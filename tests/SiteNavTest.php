@@ -86,7 +86,7 @@ test('상단: 브랜드·검색(단축키 /)·발행 주체와 GitHub 는 설정
     assert_true((bool)preg_match('#<kbd[^>]*>/</kbd>#', $b), '단축키 표시');
     assert_true(!str_contains($b, 'ws-publisher'), '발행 주체 기본 빈 값');
     assert_true(!str_contains($b, 'ws-gh'), 'GitHub 기본 없음');
-    $s = nav_site([], '{"publisher": "테스트 발행처", "github": "https://github.com/example/repo"}');
+    $s = nav_site([], '{"publisher": "테스트 발행처", "github": "https://github.com/example/repo", "marketplace": "example/skills", "plugin_id": "repo@example"}');
     $b = $s->route('')['body'];
     assert_contains('<span class="ws-publisher">by 테스트 발행처</span>', $b);
     assert_contains('<span>테스트 발행처 발행</span>', $b);

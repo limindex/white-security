@@ -122,14 +122,49 @@ final class Site
     public function setting(string $key): string
     {
         if ($key === 'origin' && $this->origin !== null) return $this->origin;
-        return $this->repo->settings()[$key] ?? '';
+        $v = $this->repo->settings()[$key] ?? '';
+        return is_string($v) ? $v : '';
     }
 
-    /** 설치 명령에 쓰는 GitHub 저장소 이름(소유자/저장소): data/site.json 의 github 에서, 없으면 기본값 */
+    /** repository 공개 여부(data/site.json released) */
+    public function released(): bool { return ($this->repo->settings()['released'] ?? false) === true; }
+
+    /** 설치 command 에 쓰는 repository 이름(owner/repo): data/site.json 의 github 에서만. 없으면 빈 문자열(설치 command 숨김) */
     public function repoSlug(): string
     {
-        return preg_match('#^https://github\.com/([A-Za-z0-9._-]+/[A-Za-z0-9._-]+)/?$#', $this->setting('github'), $m) ? $m[1] : 'juslim-afk/white-security';
+        return preg_match('#^https://github\.com/([A-Za-z0-9._-]+/[A-Za-z0-9._-]+)/?$#', $this->setting('github'), $m) ? $m[1] : '';
     }
+
+    /** 본문 HTML 줄머리 금칙: 닫는 괄호·코드 뒤 조사, 가운뎃점이 줄 맨 앞에 오지 않게 nowrap 묶음(보이지 않는 문자 없음) */
+    public static function keep(string $html): string
+    {
+        $parts = preg_split('#(<pre\b.*?</pre>)#s', $html, -1, PREG_SPLIT_DELIM_CAPTURE);
+        foreach ($parts as $i => $p) {
+            if ($i % 2) continue;
+            $p = (string)preg_replace('#(<code>[^<]*</code>)([가-힣]{1,2})#u', '<span class="ws-nw">$1$2</span>', $p);
+            $p = (string)preg_replace('#(<code>[^<]*</code>)( ?·)#u', '<span class="ws-nw">$1$2</span>', $p);
+            $p = self::inText($p, '#(\S*\))([가-힣]{1,2})#u', '<span class="ws-nw">$1$2</span>');
+            $p = self::inText($p, '#(\S+ ?·)#u', '<span class="ws-nw">$1</span>');
+            $parts[$i] = $p;
+        }
+        return implode('', $parts);
+    }
+
+    /** 태그 밖·코드 밖 글자 조각에만 정규식 치환(앞 규칙이 넣은 태그는 건드리지 않음) */
+    private static function inText(string $html, string $re, string $to): string
+    {
+        $seg = preg_split('#(<[^>]+>)#', $html, -1, PREG_SPLIT_DELIM_CAPTURE);
+        $code = 0;
+        foreach ($seg as $j => $s) {
+            if ($j % 2) { if (preg_match('#^<code\b#', $s)) $code++; elseif ($s === '</code>') $code--; continue; }
+            if ($code > 0 || $s === '') continue;
+            $seg[$j] = (string)preg_replace($re, $to, $s);
+        }
+        return implode('', $seg);
+    }
+
+    /** 글자 출력 + 줄머리 금칙 */
+    public static function t(string $s): string { return self::keep(self::e($s)); }
 
     /** origin 형식: https://도메인[:포트], 끝 / 없음 */
     public static function validOrigin(string $o): bool { return (bool)preg_match('#^https://[A-Za-z0-9.-]+(:\d+)?$#', $o); }

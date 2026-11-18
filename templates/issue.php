@@ -44,8 +44,8 @@ if ($issue->revisions) $toc[] = ['revisions', '개정 이력'];
 <p class="ws-print-meta"><span><?= Site::e($issue->id) ?></span><span>최종 확인 <?= Site::e($checked) ?></span><span><?= Site::e($addr) ?></span></p>
 <header class="ws-doc-head">
 <p class="ws-docid"><span class="ws-id"><?= Site::e($issue->id) ?></span><i></i><span><?= Site::e($site->groupName($issue->group)) ?></span><i></i><span><?= $issue->depth === 'full' ? '상세 문서' : '간략 문서' ?></span></p>
-<h1><?= Site::e($issue->title) ?></h1>
-<p class="ws-sevline"><span class="ws-sevline-badges"><?= Site::severityBadge($issue->severity) ?><?= $site->staleBadge($issue) ?></span><?php if ($issue->severityReason !== null): ?><span class="ws-sevline-why"><span class="ws-sr">심각도 근거: </span><?= Site::e($issue->severityReason) ?></span><?php endif ?></p>
+<h1><?= Site::t($issue->title) ?></h1>
+<div class="ws-sevline"><span class="ws-sevline-badges"><?= Site::severityBadge($issue->severity) ?><?= $site->staleBadge($issue) ?></span><?php if ($issue->severityReason !== null): ?><span class="ws-sr">심각도 근거</span><?php if (preg_match('/^영향:\s*(.+?)\s+·\s+악용:\s*(.+)$/u', $issue->severityReason, $why)): ?><dl class="ws-sevwhy"><div><dt>영향</dt><dd><?= Site::t($why[1]) ?></dd></div><div><dt>악용</dt><dd><?= Site::t($why[2]) ?></dd></div></dl><?php else: ?><p class="ws-sevwhy-text"><?= Site::t($issue->severityReason) ?></p><?php endif ?><?php endif ?></div>
 <dl class="ws-docinfo">
 <div><dt>게시</dt><dd><time datetime="<?= Site::e($published) ?>"><?= Site::e($published) ?></time></dd></div>
 <div><dt>최종 확인</dt><dd><time datetime="<?= Site::e($checked) ?>"><?= Site::e($checked) ?></time></dd></div>

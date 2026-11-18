@@ -6,7 +6,7 @@
 ## 점검 항목
 
 - 소스·설정 파일·테스트 데이터·주석에 비밀값 리터럴(키 접두어가 붙은 문자열, `password=`, `secret`, `token`, 비밀번호가 든 접속 문자열, `-----BEGIN ... PRIVATE KEY-----`)이 없어야 한다. 비밀값은 실행 환경(환경 변수, 시크릿 매니저, KMS)에서 읽고, 값이 없으면 기본값으로 대신하지 않고 시작을 멈춰야 한다.
-- `.env`, `*.pem`, `*.key`, 서비스 계정 JSON은 `.gitignore`에 넣고 저장소에는 값을 비운 `.env.example`만 둬야 하며, 비밀값 검사(pre-commit 훅, 푸시 보호, CI 스캔)를 둬야 한다.
+- `.env`, `*.pem`, `*.key`, 서비스 계정 JSON은 `.gitignore`에 넣고 repository에는 값을 비운 `.env.example`만 둬야 하며, 비밀값 검사(pre-commit 훅, 푸시 보호, CI 스캔)를 둬야 한다.
 - 브라우저로 나가는 코드에는 공개용 키만 둬야 한다. `VITE_`, `NEXT_PUBLIC_`, `REACT_APP_`, `EXPO_PUBLIC_` 접두어 변수에 비밀키를 넣지 않고, 비밀키가 필요한 호출은 서버가 대신해야 한다.
 - 로그, 오류 응답, 디버그 출력에 비밀값과 `Authorization` 헤더를 찍지 않아야 한다.
 - 이미 커밋되거나 밖에 보인 비밀값은 교체가 먼저이고 기록 지우기는 그다음이어야 한다. 키는 필요한 권한만 주고 만료·교체 주기를 정해야 한다.
@@ -29,7 +29,7 @@
 - 지적하지 않을 때: 기본값이 개발 전용 분기에만 있고 운영 설정에서는 값이 없으면 멈추는 경우.
 
 **등급**
-- 위험: 실제 값으로 보이는 비밀값이 저장소나 브라우저 번들에 있는 경우.
+- 위험: 실제 값으로 보이는 비밀값이 repository나 브라우저 번들에 있는 경우.
 - 주의: 없으면 고정값으로 도는 코드, `.gitignore` 누락, 로그 출력.
 - 참고: 비밀값 검사 도구 없음, 키 교체 주기 미정.
 
@@ -46,7 +46,7 @@
 ✗ 취약 코드
 
 ```python
-# settings.py (저장소에 커밋됨)
+# settings.py (repository에 커밋됨)
 import os
 
 DATABASE_URL = "postgresql://app:Winter2026!@db.internal:5432/shop"
@@ -70,7 +70,7 @@ DATABASE_URL = required("DATABASE_URL")
 PAYMENT_SECRET_KEY = required("PAYMENT_SECRET_KEY")
 JWT_SECRET = required("JWT_SECRET")
 
-# .gitignore 에 .env 를 넣고, 저장소에는 값을 비운 .env.example 만 둔다.
+# .gitignore 에 .env 를 넣고, repository에는 값을 비운 .env.example 만 둔다.
 # 이미 커밋된 값은 지금 서비스 관리 화면에서 새로 발급하고 옛 값은 폐기한다.
 ```
 
@@ -119,7 +119,7 @@ app.post("/api/chat", requireLogin, async (req, res) => { // requireLogin: 앱�
 
 ```php
 <?php
-// config.php (저장소에 커밋됨)
+// config.php (repository에 커밋됨)
 $pdo = new PDO('mysql:host=db;dbname=shop;charset=utf8mb4', 'shop', 'Winter2026!');
 define('SMS_API_SECRET', 'b1946ac92492d2347c6235b4d2611184');
 ```

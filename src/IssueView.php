@@ -36,6 +36,17 @@ final class IssueView
         $kind = $label === '프롬프트' ? 'prompt' : 'example';
         $head = '<figure class="ws-block ws-block--' . $kind . '"><figcaption><span class="ws-block-label">' . Site::e($label) . '</span>'
             . '<button type="button" class="ws-copy" data-copy aria-label="' . Site::e($label) . ' 복사"><span class="ws-tx">복사</span></button></figcaption><pre tabindex="0">';
+        if ($kind === 'prompt') $html = (string)preg_replace_callback('#<pre><code([^>]*)>(.*?)</code></pre>#s', fn(array $m) => '<pre><code' . $m[1] . '>' . self::promptLines($m[2]) . '</code></pre>', $html);
         return str_replace(['<pre>', '</pre>'], [$head, '</pre></figure>'], $html);
+    }
+
+    /**
+     * 프롬프트(한국어 문장) 줄마다 블록 span: 줄마다 고르게 접히고 줄머리 금칙 적용.
+     * 줄 사이 "\n" 은 그대로 두어 복사하면 원래 줄바꿈이 남는다.
+     */
+    public static function promptLines(string $escaped): string
+    {
+        $lines = explode("\n", rtrim($escaped, "\n"));
+        return implode("\n", array_map(fn(string $l) => trim($l) === '' ? '<span class="ws-pl ws-pl--gap"></span>' : '<span class="ws-pl">' . Site::keep($l) . '</span>', $lines));
     }
 }

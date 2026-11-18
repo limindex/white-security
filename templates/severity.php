@@ -106,7 +106,7 @@ $examples = [
 <section class="ws-sec" aria-labelledby="sev-skill">
 <h2 id="sev-skill">문서·스킬 보고 표기</h2>
 <dl class="ws-deflist">
-<div><dt>이슈 문서</dt><dd>제목 아래 심각도 배지와 심각도 근거 한 줄(영향 · 악용)</dd></div>
+<div><dt>이슈 문서</dt><dd>제목 아래 심각도 배지와 심각도 근거(영향 · 악용 두 줄)</dd></div>
 <div><dt>스킬 검토 보고</dt><dd>같은 세 등급으로 묶은 표 · 행마다 위치(파일:줄) · 이유 · 고친 코드 · 문서 번호</dd></div>
 <div><dt>환경에 따른 차이</dt><dd>실제 환경에 따라 보고 등급과 문서 등급이 다를 수 있음 · 관리자 로그인 뒤에만 있는 기능은 악용 쉬움 한 단계 하향</dd></div>
 </dl>

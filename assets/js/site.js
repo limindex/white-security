@@ -1,4 +1,4 @@
-/* 화이트 보안 — 언어 탭 · 복사 · 상단 검색(단축키 /) · 절 주소 복사 · 점검 항목 저장 · 접힘 열기 · 인쇄 · 좁은 화면 메뉴
+/* White Security — 언어 탭 · 복사 · 상단 검색(단축키 /) · 절 주소 복사 · 점검 항목 저장 · 접힘 열기 · 인쇄 · 좁은 화면 메뉴
    외부 요청 없음. 브라우저에 저장하는 것은 언어 탭 선택과 점검 항목 체크 상태(localStorage)뿐. */
 (function () {
   'use strict';
@@ -72,6 +72,41 @@
         ev.preventDefault();
         select(next.getAttribute('data-lang'), true);
         store(LANG_KEY, next.getAttribute('data-lang'));
+      });
+    });
+  }
+
+  /* ---------- 범용 탭 (설치 페이지 등): [data-tabs] 안 role=tab ↔ role=tabpanel ---------- */
+  function initPanelTabs() {
+    each(document.querySelectorAll('[data-tabs]'), function (box) {
+      var tabs = Array.prototype.slice.call(box.querySelectorAll('[role="tab"]'));
+      if (!tabs.length) return;
+      function select(t, focus) {
+        tabs.forEach(function (x) {
+          var on = x === t;
+          x.setAttribute('aria-selected', on ? 'true' : 'false');
+          x.tabIndex = on ? 0 : -1;
+          var panel = document.getElementById(x.getAttribute('aria-controls'));
+          if (panel) panel.hidden = !on;
+        });
+        if (focus) t.focus();
+      }
+      select(tabs[0], false);
+      box.addEventListener('click', function (ev) {
+        var t = ev.target.closest('[role="tab"]');
+        if (t && tabs.indexOf(t) !== -1) select(t, false);
+      });
+      box.addEventListener('keydown', function (ev) {
+        var i = tabs.indexOf(document.activeElement);
+        if (i < 0) return;
+        var next = null;
+        if (ev.key === 'ArrowRight') next = tabs[(i + 1) % tabs.length];
+        else if (ev.key === 'ArrowLeft') next = tabs[(i - 1 + tabs.length) % tabs.length];
+        else if (ev.key === 'Home') next = tabs[0];
+        else if (ev.key === 'End') next = tabs[tabs.length - 1];
+        if (!next) return;
+        ev.preventDefault();
+        select(next, true);
       });
     });
   }
@@ -161,7 +196,8 @@
 
   /* ---------- 접힌 절: 주소의 #절 이 가리키면 펼침 ---------- */
   function openTarget() {
-    var id = decodeURIComponent(window.location.hash.slice(1));
+    var id = '';
+    try { id = decodeURIComponent(window.location.hash.slice(1)); } catch (e) { return; }
     if (!id) return;
     var el = document.getElementById(id);
     if (!el) return;
@@ -250,10 +286,11 @@
 
     function setActive(i) {
       var opts = list.children;
-      if (active >= 0 && opts[active]) opts[active].classList.remove('is-active');
+      if (active >= 0 && opts[active]) { opts[active].classList.remove('is-active'); opts[active].setAttribute('aria-selected', 'false'); }
       active = i;
       if (i >= 0 && opts[i]) {
         opts[i].classList.add('is-active');
+        opts[i].setAttribute('aria-selected', 'true');
         input.setAttribute('aria-activedescendant', opts[i].id);
         opts[i].scrollIntoView({ block: 'nearest' });
       } else {
@@ -269,8 +306,8 @@
 
     function run() {
       var words = norm(input.value).split(/\s+/).filter(Boolean);
+      setActive(-1);
       list.textContent = '';
-      active = -1;
       if (!words.length) { open(false); status.textContent = ''; return; }
       var hits = rows.filter(function (r) { return words.every(function (w) { return r.hay.indexOf(w) !== -1; }); });
       hits.sort(function (a, b) {
@@ -283,6 +320,7 @@
         var li = document.createElement('li');
         li.id = 'ws-opt-' + i;
         li.setAttribute('role', 'option');
+        li.setAttribute('aria-selected', 'false');
         li.className = 'ws-result';
         var t = document.createElement('span');
         t.className = 'ws-result-title';
@@ -331,6 +369,7 @@
   document.addEventListener('DOMContentLoaded', function () {
     initMenu();
     initTabs();
+    initPanelTabs();
     initCopy();
     initAnchors();
     initChecklists();

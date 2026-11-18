@@ -41,15 +41,16 @@ final class Repository
     }
 
     /** 사이트 설정 기본값. 빈 값이면 화면에 그 자리를 그리지 않는다. */
-    public const SETTINGS = ['publisher' => '', 'github' => '', 'origin' => ''];
+    public const SETTINGS = ['publisher' => '', 'github' => '', 'origin' => '', 'marketplace' => '', 'plugin_id' => '', 'released' => false];
 
-    /** @var array{publisher:string,github:string,origin:string} */
+    /** @var array<string,string|bool> */
     private array $settings = self::SETTINGS;
 
     /**
-     * data/site.json(선택): publisher(발행 주체 표기) · github(https 주소) · origin(공개 주소 앞부분, 예: https://example.org).
+     * data/site.json(선택): publisher(발행 주체 표기) · github(https 주소) · origin(공개 주소 앞부분, 예: https://example.org)
+     * · marketplace(owner/repo) · plugin_id(plugin@marketplace) · released(repository 공개 여부, true|false).
      * 파일이 없으면 기본값. 틀린 값은 오류 띠에 남기고 그 값만 기본값으로 둔다.
-     * @param list<string> $errors @return array{publisher:string,github:string,origin:string}
+     * @param list<string> $errors @return array<string,string|bool>
      */
     private static function loadSettings(string $file, array &$errors): array
     {
@@ -60,17 +61,20 @@ final class Repository
         if (!is_array($data) || array_is_list($data)) { $errors[] = "$name: 설정(JSON 객체) 형식이 아닙니다"; return $out; }
         foreach ($data as $k => $v) {
             if (!array_key_exists($k, self::SETTINGS)) { $errors[] = "$name: 모르는 키 `$k`"; continue; }
+            if ($k === 'released') { if (!is_bool($v)) $errors[] = "$name: released 는 true|false 여야 합니다"; else $out[$k] = $v; continue; }
             if (!is_string($v)) { $errors[] = "$name: `$k` 는 문자열이어야 합니다"; continue; }
             $v = trim($v);
             if ($k === 'publisher' && preg_match('/[\r\n]/', $v)) { $errors[] = "$name: publisher 는 한 줄이어야 합니다"; continue; }
             if ($k === 'github' && $v !== '' && !preg_match('#^https://github\.com/[A-Za-z0-9._-]+(/[A-Za-z0-9._-]+)?/?$#', $v)) { $errors[] = "$name: github 는 https://github.com/… 주소여야 합니다"; continue; }
+            if ($k === 'marketplace' && $v !== '' && !preg_match('#^[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$#', $v)) { $errors[] = "$name: marketplace 는 owner/repo 형식이어야 합니다"; continue; }
+            if ($k === 'plugin_id' && $v !== '' && !preg_match('#^[a-z0-9-]+@[A-Za-z0-9._-]+$#', $v)) { $errors[] = "$name: plugin_id 는 plugin@marketplace 형식이어야 합니다"; continue; }
             if ($k === 'origin' && $v !== '' && !Site::validOrigin($v)) { $errors[] = "$name: origin 은 https://도메인 형식(끝 / 없이)이어야 합니다"; continue; }
             $out[$k] = $v;
         }
         return $out;
     }
 
-    /** @return array{publisher:string,github:string,origin:string} */
+    /** @return array<string,string|bool> */
     public function settings(): array { return $this->settings; }
 
     /** 표준 항목 파일을 읽고 대응표를 만든다. 없는 항목은 오류 띠 목록에 넣고, 표는 있는 항목만으로 그린다. */

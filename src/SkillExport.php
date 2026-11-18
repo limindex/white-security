@@ -26,7 +26,7 @@ final class SkillExport
         $keep = [];
         foreach ($repo->groups() as $g) if ($g['site_only']) $siteOnlyGroups[$g['id']] = true;
 
-        $index = self::HEADER . "# 화이트 보안 — 이슈 목록\n\n"
+        $index = self::HEADER . "# White Security — 이슈 목록\n\n"
             . "아래에서 지금 하는 일과 맞는 묶음을 고르고, 해당 이슈 파일만 읽는다.\n";
         $by = $repo->byGroup();
         foreach ($repo->groups() as $g) {

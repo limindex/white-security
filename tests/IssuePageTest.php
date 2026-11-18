@@ -80,3 +80,33 @@ test('brief 이슈(탐지 규칙 없음)도 깨지지 않고 목차는 있는 �
     assert_true(!str_contains($m[1], '#detection') && !str_contains($m[1], '#revisions'), '없는 절 제외');
     assert_contains('href="#checklist"', $m[1]);
 });
+
+test('심각도 근거: "영향: … · 악용: …" 은 영향/악용 두 줄 정의, 형식이 다르면 문장 그대로', function () {
+    $raw = file_get_contents(__DIR__ . '/fixtures/issues/web/WS-INJ-001-sql-injection.md');
+    $raw = str_replace(['WS-INJ-001', 'severity_reason: 데이터베이스 전체 유출·변조로 이어지는 영향, 입력 한 줄로 악용 가능'], ['WS-INJ-003', 'severity_reason: "영향: DB 전체 조회·변조 · 악용: 입력 칸 하나로 가능"'], $raw);
+    $s = new Site(Repository::load(make_root(['WS-INJ-003-x.md' => $raw])), '/white-security/', 'live', new DateTimeImmutable('2026-11-18'));
+    $b = $s->route('issues/WS-INJ-003')['body'];
+    assert_true((bool)preg_match('#<dl class="ws-sevwhy"><div><dt>영향</dt><dd>DB 전체 <span class="ws-nw">조회·</span>변조</dd></div><div><dt>악용</dt><dd>입력 칸 하나로 가능</dd></div></dl>#su', $b), '두 줄 정의');
+    assert_true(!str_contains($b, '영향: DB'), '콜론 라벨 문장 없음');
+    $plain = ip_body();
+    assert_true((bool)preg_match('#<p class="ws-sevwhy-text">데이터베이스 전체 #u', $plain), '형식 밖은 문장');
+});
+
+test('줄머리 금칙: 괄호·코드 뒤 조사와 가운뎃점을 nowrap 으로 묶고 pre 안은 건드리지 않음', function () {
+    $h = Site::keep('<p>인젝션)는 AI · 보내기·파일 <code>x</code>를 쓴다</p><pre><code>a)는 b·c</code></pre>');
+    assert_contains('<span class="ws-nw">인젝션)는</span>', $h);
+    assert_contains('<span class="ws-nw">보내기·</span>', $h);
+    assert_contains('<span class="ws-nw">AI ·</span>', $h);
+    assert_contains('<span class="ws-nw"><code>x</code>를</span>', $h);
+    assert_contains('<span class="ws-nw"><code>a</code>·</span><code>b</code>', Site::keep('<p><code>a</code>·<code>b</code></p>'));
+    assert_contains('<pre><code>a)는 b·c</code></pre>', $h);
+    assert_same('<span class="ws-nw"><span class="ws-nw">글(웹·</span>메일)을</span>', Site::keep('글(웹·메일)을'), '두 규칙이 겹쳐도 태그가 깨지지 않음(겹친 span)');
+    assert_true(!preg_match('/[\x{200B}-\x{200F}\x{2060}\x{FEFF}]/u', $h), '보이지 않는 문자 없음');
+});
+
+test('프롬프트 카드: 줄마다 블록 span, 줄바꿈 문자 유지(복사 때 원래 줄)', function () {
+    $b = ip_body();
+    assert_true((bool)preg_match('#ws-block--prompt.*?<pre tabindex="0"><code class="lang-text"><span class="ws-pl">쿼리에 &lt;값&gt;을 이어 붙인 곳을 찾아 줘.</span></code></pre>#s', $b), '줄 span');
+    $h = IssueView::promptLines("a줄\nb줄)은 끝\n");
+    assert_same("<span class=\"ws-pl\">a줄</span>\n<span class=\"ws-pl\"><span class=\"ws-nw\">b줄)은</span> 끝</span>", $h);
+});
