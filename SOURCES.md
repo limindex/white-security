@@ -27,7 +27,10 @@
 | [OWASP AI Agent Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/AI_Agent_Security_Cheat_Sheet.html) | CC BY-SA 4.0 | WS-AGT-001·003·004·005 점검 항목 | 도구 최소 권한, 중요한 작업 전 사람 확인, 메모리 검증·사용자별 분리·만료·크기 제한, 에이전트 간 인증·받는 쪽 권한 확인·재전송 방지, 연쇄 장애를 막는 circuit breaker | 요약 후 점검 항목 형식으로 다시 씀. 코드는 새로 짬 |
 | [OWASP Server Side Request Forgery Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html) | CC BY-SA 4.0 | WS-SSRF-001 점검 항목 | 허용 목록 우선, 스킴·포트 제한, 내부 대역 차단, DNS 재바인딩 주의, 리다이렉트 끄기, 응답을 그대로 돌려주지 않기 | 요약. 클라우드 IMDSv2·AI 웹 도구 항목은 우리가 덧붙임 |
 | [OWASP Deserialization Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Deserialization_Cheat_Sheet.html) | CC BY-SA 4.0 | WS-DES-001 점검 항목 | 믿을 수 없는 데이터는 네이티브 역직렬화 대신 JSON 같은 데이터 형식, 서명으로 무결성 확인 | 요약. 언어별 함수 목록은 우리가 정리 |
-| [OWASP File Upload Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html) | CC BY-SA 4.0 | WS-FILE-001 점검 항목 | 이미지는 다시 인코딩해 불필요한 메타데이터 제거, 샌드박스 처리 | 요약 |
+| [OWASP File Upload Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html) | CC BY-SA 4.0 | WS-FILE-001·WS-SHELL-001 점검 항목 | 이미지는 다시 인코딩해 불필요한 메타데이터 제거, 샌드박스 처리, 업로드 파일은 웹 루트 밖·서버가 만든 이름으로 저장, 업로드 폴더 실행 권한 제거 | 요약 |
+| [Supabase Docs - Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security)·[Understanding API keys](https://supabase.com/docs/guides/api/api-keys) (Supabase) | Apache-2.0 (supabase/supabase 저장소) | WS-BAAS-001 점검 항목·탐지 규칙 | 노출 스키마 테이블은 RLS 필수, `(select auth.uid())` 정책 모양, `user_metadata`로 권한 판단 금지, 뷰는 `security_invoker`, publishable·secret 키 구분 | 요약 후 점검 항목 형식으로 다시 씀. `with check`·서버 라우트 예시는 우리가 짬 |
+| [Firebase Docs - Avoid insecure rules](https://firebase.google.com/docs/rules/insecure-rules) (Google) | CC BY 4.0 | WS-BAAS-002 점검 항목·탐지 규칙 | 열린 규칙(`if true`)·로그인만 보는 규칙의 위험, 소유자만 허용하는 규칙 모양 | 요약. Admin SDK 키·`verifyIdToken` 예시와 Realtime Database 상위 경로 주의는 우리가 덧붙임 |
+| [NSA·ASD, Detect and Prevent Web Shell Malware](https://github.com/nsacyber/Mitigating-Web-Shells) | 미국 정부 저작물(퍼블릭 도메인) | WS-SHELL-001 점검 항목 | 웹 루트 쓰기 권한 최소화, 파일 무결성 감시, 발견 시 증거 보존 | 요약 |
 
 ## 아이디어만 참고한 자료 (문장·구조는 옮기지 않음)
 
