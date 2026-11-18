@@ -5,7 +5,6 @@ slug: file-upload
 group: web
 severity: high
 grade_hint: "형식 검사 없이 웹 공개 경로에 저장"
-always_on: "`multer(` `UploadFile` → 업로드는 확장자·형식을 허용 목록으로 검사하고 크기를 제한해야 한다."
 site_only: false
 depth: brief
 languages: [laravel, express, fastapi]

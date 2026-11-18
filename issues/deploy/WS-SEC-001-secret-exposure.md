@@ -5,7 +5,6 @@ slug: secret-exposure
 group: deploy
 severity: high
 grade_hint: "실제 비밀값이 저장소·브라우저 번들에 있음"
-always_on: "`sk-` `AKIA` `NEXT_PUBLIC_` → 비밀값은 코드·설정 파일·`NEXT_PUBLIC_` 변수에 쓰지 않고 서버 환경 변수에서 읽어야 한다."
 site_only: false
 depth: full
 languages: [python, js, php]

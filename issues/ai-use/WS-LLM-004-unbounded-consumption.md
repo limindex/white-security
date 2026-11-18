@@ -5,7 +5,6 @@ slug: unbounded-consumption
 group: ai-use
 severity: high
 grade_hint: "로그인·횟수 제한 없는 AI 호출, 브라우저에 AI 키"
-always_on: "`chat.completions.create(` `dangerouslyAllowBrowser` → AI 호출은 서버에서 로그인 사용자만, 횟수 제한을 두고 해야 하며 키는 서버에만 두어야 한다."
 site_only: false
 depth: brief
 languages: [python, js]

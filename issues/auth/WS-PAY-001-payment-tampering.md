@@ -5,7 +5,6 @@ slug: payment-tampering
 group: auth
 severity: high
 grade_hint: "요청 값 금액, 확인 없이 믿는 결제 결과·웹훅"
-always_on: "`constructEvent(` `/payments/confirm` → 웹훅은 서명을 검증하고, 결제 금액은 요청 값이 아니라 서버 주문 데이터와 대조해야 한다."
 site_only: false
 depth: brief
 languages: [laravel, nextjs, fastapi]

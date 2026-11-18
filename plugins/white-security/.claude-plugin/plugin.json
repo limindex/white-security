@@ -1,7 +1,7 @@
 {
   "name": "white-security",
   "version": "0.1.0",
-  "description": "Security checks for AI-assisted coding: safe code while you write, read-only review on request. 바이브 코딩 보안 점검 — 코드를 쓸 때 흔한 보안 실수를 막고, 요청하면 읽기 전용으로 검토합니다.",
+  "description": "Security review for AI-assisted coding: read-only, on request, typically before deploy. 바이브 코딩 보안 점검 — 필요할 때, 특히 배포 전에 프로젝트 전체를 읽기 전용으로 검토합니다.",
   "author": {
     "name": "LimIndex (Lim Ho Jae)",
     "url": "https://github.com/limindex"

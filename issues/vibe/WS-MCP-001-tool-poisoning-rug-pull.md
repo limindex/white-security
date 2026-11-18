@@ -5,7 +5,6 @@ slug: mcp-tool-poisoning-rug-pull
 group: vibe
 severity: high
 grade_hint: "도구 설명 속 숨은 지시, 키 받는 서버 버전 미고정"
-always_on: "`.mcp.json` `.cursor/mcp.json` → MCP 서버는 출처가 분명한 것만 쓰고, `@latest` 없이 버전을 고정해야 한다."
 site_only: false
 depth: brief
 languages: [json, python]

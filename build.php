@@ -1,5 +1,5 @@
 <?php
-// 정적 사이트(dist/)와 스킬 파일(plugins/white-security/skills/review/references, 상시 SKILL.md 규칙 요약, 검토 SKILL.md 라우팅 표, 검토 에이전트 절차)을 만든다. 사용: php build.php [--out=dist] [--base=/white-security/] [--today=YYYY-MM-DD] [--origin=https://도메인]
+// 정적 사이트(dist/)와 스킬 파일(plugins/white-security/skills/review/references, 검토 SKILL.md 라우팅 표, 검토 에이전트 절차)을 만든다. 사용: php build.php [--out=dist] [--base=/white-security/] [--today=YYYY-MM-DD] [--origin=https://도메인]
 // --origin 이 없으면 data/site.json 의 origin 을 쓰고, 둘 다 비어 있으면 sitemap.xml·canonical 을 만들지 않는다.
 // --root 는 테스트용(원본 폴더 지정). 같은 입력이면 같은 출력이 나온다.
 declare(strict_types=1);
@@ -55,19 +55,16 @@ if ($repo->errors()) {
     exit(1);
 }
 // 스킬 파일도 먼저 만들어 본다(실패하면 dist·references 를 건드리지 않는다).
-// 상시 스킬(SKILL_DIR): 위험 이슈 요약을 넣고 예산(토큰·줄)을 확인한다. 검토 스킬(REVIEW_DIR): 라우팅 표, references/review.md: 문서 링크 규칙.
-$alwaysPath = $root . '/' . SkillExport::SKILL_DIR . '/SKILL.md';
+// 검토 스킬(REVIEW_DIR): 라우팅 표, references/review.md: 문서 링크 규칙.
 $reviewSkillPath = $root . '/' . SkillExport::REVIEW_DIR . '/SKILL.md';
 $refDir = $root . '/' . SkillExport::REF_DIR;
 $agentPath = $root . '/' . SkillExport::AGENT_FILE;
 $reviewPath = $refDir . '/review.md';
 try {
     $skillFiles = SkillExport::render($repo);
-    foreach ([$alwaysPath, $reviewSkillPath, $agentPath, $reviewPath] as $need) {
+    foreach ([$reviewSkillPath, $agentPath, $reviewPath] as $need) {
         if (!is_file($need)) throw new SkillExportError(substr($need, strlen($root) + 1) . ' 가 없습니다(손으로 쓰는 파일이고, 빌드는 그 안의 표시 사이만 갱신합니다)');
     }
-    $alwaysMd = SkillExport::injectRules((string)file_get_contents($alwaysPath), SkillExport::rules($repo));
-    $alwaysBudget = SkillExport::checkAlwaysOn($alwaysMd);
     $reviewSkillMd = SkillExport::injectRouting((string)file_get_contents($reviewSkillPath), SkillExport::routing($repo));
     // 보고서의 이슈 링크는 data/site.json 의 origin(공개 주소)으로만 만든다(--origin 미리보기 빌드가 플러그인을 바꾸지 않게)
     $siteJson = is_file($root . '/data/site.json') ? json_decode((string)file_get_contents($root . '/data/site.json'), true) : [];
@@ -134,15 +131,12 @@ sort($list);
 foreach ($list as $f) put($out . '/assets/' . substr($f, strlen($assets) + 1), (string)file_get_contents($f));
 
 $refs = SkillExport::write($repo, $refDir, $skillFiles);
-file_put_contents($alwaysPath, $alwaysMd);
 file_put_contents($reviewSkillPath, $reviewSkillMd);
 file_put_contents($reviewPath, $reviewMd);
 file_put_contents($agentPath, $agentMd);
 echo count($files) . "개 쪽과 API, assets " . count($list) . "개를 {$opt['out']} 에 만들었습니다.\n";
 if ($origin === '') echo "origin 이 비어 sitemap.xml 은 만들지 않았습니다 (--origin=https://도메인 또는 data/site.json).\n";
 echo "스킬 참고 파일 " . count($refs) . "개를 " . SkillExport::REF_DIR . " 에 만들었습니다.\n";
-$desc = SkillExport::description($alwaysMd);
 $rdesc = SkillExport::description($reviewSkillMd);
-echo '상시 SKILL.md 규칙 요약을 갱신했습니다(추정 약 ' . $alwaysBudget['tokens'] . '토큰 · ' . $alwaysBudget['lines'] . '줄, description ' . mb_strlen($desc) . '자 약 ' . SkillExport::estimateTokens($desc) . "토큰).\n";
-echo '검토 SKILL.md 라우팅 표를 갱신했습니다(추정 약 ' . SkillExport::estimateTokens($reviewSkillMd) . '토큰, description 약 ' . SkillExport::estimateTokens($rdesc) . "토큰).\n";
+echo '검토 SKILL.md 라우팅 표를 갱신했습니다(추정 약 ' . SkillExport::estimateTokens($reviewSkillMd) . '토큰, description ' . mb_strlen($rdesc) . '자 약 ' . SkillExport::estimateTokens($rdesc) . "토큰).\n";
 echo '검토 에이전트 절차 블록을 갱신했습니다(추정 약 ' . SkillExport::estimateTokens($agentMd) . "토큰).\n";

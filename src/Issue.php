@@ -25,8 +25,6 @@ final class Issue
     public const GRADE_LEVELS = ['위험', '주의', '참고'];
     /** 머리말 `grade_hint`(선택): 스킬 INDEX 줄 끝에 붙는 짧은 등급 조건(위험 조건, 없으면 주의 조건). 글자 수 상한 */
     public const GRADE_HINT_MAX = 40;
-    /** 머리말 `always_on`(선택, severity high 만): 상시 스킬 규칙 한 줄 "`신호` … → 안전한 행동". 글자 수 상한 */
-    public const ALWAYS_ON_MAX = 120;
     /**
      * `찾는 곳` 백틱 신호로 쓰면 안 되는 흔한 낱말(스킬 INDEX 에서 아무 코드에나 걸린다). 이 목록이 유일한 원본.
      * 이 밖에도 신호는 4자 이상이거나 ( . : / = - _ 중 하나를 품어야 하고, 이 목록 낱말의 일부(`dd(` ⊂ `.add(`)이거나
@@ -72,8 +70,6 @@ final class Issue
         public readonly ?string $titleEn = null,
         /** 스킬 INDEX 줄 끝의 짧은 등급 조건(선택). 없으면 SkillExport 가 `등급` 첫 문장에서 만든다 */
         public readonly ?string $gradeHint = null,
-        /** 상시 스킬 규칙 한 줄(선택): `신호` → 행동. 없으면 SkillExport 가 신호 2개 + 점검 항목 첫 문장으로 만든다 */
-        public readonly ?string $alwaysOn = null,
     ) {}
 
     /** @param array<int,array{id:string}> $groups data/groups.json 내용 */
@@ -221,33 +217,11 @@ final class Issue
             return $v;
         };
         $gradeHint = $line('grade_hint', self::GRADE_HINT_MAX);
-        $alwaysOn = $line('always_on', self::ALWAYS_ON_MAX);
-        if (($gradeHint !== null || $alwaysOn !== null) && $siteOnly) throw $fail('grade_hint·always_on 은 스킬에 들어가는 이슈(site_only: false)에만 쓸 수 있습니다');
-        if ($alwaysOn !== null) {
-            if ($severity !== 'high') throw $fail('always_on 은 severity: high 이슈에만 씁니다(상시 규칙 요약은 high 만 싣습니다)');
-            $why = self::alwaysOnProblem($alwaysOn, $detection['signals'] ?? []);
-            if ($why !== null) throw $fail("always_on - $why");
-        }
+        if ($gradeHint !== null && $siteOnly) throw $fail('grade_hint 는 스킬에 들어가는 이슈(site_only: false)에만 쓸 수 있습니다');
+        // 상시 스킬을 없앤 뒤(11-19) 남은 칸이 다시 들어오지 않게 막는다
+        if (array_key_exists('always_on', $fm)) throw $fail('always_on 칸은 쓰지 않습니다(상시 스킬 없음, 11-19) — 줄을 지워야 합니다');
 
-        return new Issue($id, $title, $slug, $group, $severity, $siteOnly, $depth, $languages, $maps, $checked, $sources, $body, $sections, $code, $path, $published, $revisions, array_values($appliesTo), $severityReason, $detection, $titleEn, $gradeHint, $alwaysOn);
-    }
-
-    /**
-     * always_on 형식: "`신호` [`신호` …] → 행동". 화살표 앞은 백틱 신호만(1~3개), 모두 그 이슈 `찾는 곳` 신호여야 한다
-     * (신호와 행동이 어긋나지 않게, INDEX 와 같은 낱말). 행동은 비어 있으면 안 되고 마침표로 끝난다. 괜찮으면 null.
-     * @param list<string> $signals
-     */
-    public static function alwaysOnProblem(string $line, array $signals): ?string
-    {
-        $parts = explode(' → ', $line, 2);
-        if (count($parts) !== 2 || trim($parts[1]) === '') return '`신호` → 행동 형식이어야 합니다(화살표 앞뒤 공백 한 칸)';
-        $head = self::codeSpans($parts[0]);
-        $rest = trim(preg_replace('/(?<!`)(`+)(?!`)(.+?)(?<!`)\1(?!`)/u', '', $parts[0]));
-        if (!$head || $rest !== '') return '화살표 앞에는 백틱으로 감싼 신호만 있어야 합니다';
-        if (count($head) > 3) return '화살표 앞 신호는 3개까지입니다';
-        foreach ($head as $sig) if (!in_array($sig, $signals, true)) return "신호 `$sig` 가 탐지 규칙 `찾는 곳` 신호에 없습니다";
-        if (!str_ends_with(trim($parts[1]), '.')) return '행동 문장은 마침표로 끝나야 합니다';
-        return null;
+        return new Issue($id, $title, $slug, $group, $severity, $siteOnly, $depth, $languages, $maps, $checked, $sources, $body, $sections, $code, $path, $published, $revisions, array_values($appliesTo), $severityReason, $detection, $titleEn, $gradeHint);
     }
 
     /**

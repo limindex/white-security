@@ -1,6 +1,6 @@
 ---
 name: review
-description: Read-only security review of the project, changed files or a path, with a Korean report. Use for 보안 점검해 줘 / 보안 검토 / 취약점 확인 / 해킹 안 당하게 봐 줘 / 안전한지 봐 줘 / security review. Not while writing code.
+description: Read-only security review of a project, changed files or a path; Korean report. Use on request (보안 점검해 줘 / 보안 검토 / 취약점 확인 / 해킹 안 당하게 봐 줘 / 안전한지 봐 줘 / security review) or before a release (배포 전 / 배포할게 / 올리기 전에 / 출시 전 / before deploy — offer it first).
 argument-hint: "[all|changed [<base>]|<path>]"
 allowed-tools: Read(~/.claude/plugins/cache/limindex/white-security/**)
 license: CC-BY-SA-4.0 (text) AND MIT (code blocks); see LICENSE.txt
@@ -8,7 +8,11 @@ license: CC-BY-SA-4.0 (text) AND MIT (code blocks); see LICENSE.txt
 
 # White Security review
 
-Read-only review. Scope: `$ARGUMENTS` (empty means `all`). It cuts common mistakes; it does not replace a security audit.
+Read-only review, run only on request — typically before deploy. Scope: `$ARGUMENTS` (empty means `all`). It cuts common mistakes; it does not replace a security audit.
+
+## Before deploy: ask first
+
+If you were invoked only because the user mentioned deploying or releasing (배포·출시·올리기, no explicit review request), don't start the review. Ask once, in Korean: `배포 전에 보안 점검을 먼저 돌릴까요? 읽기 전용, 1~2분` — start only after a yes. On no (or no clear yes), carry on with the user's task and don't ask again in this conversation.
 
 ## Trusted code only
 

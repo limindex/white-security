@@ -5,7 +5,6 @@ slug: race-condition
 group: web
 severity: high
 grade_hint: "돈·쿠폰·재고 확인 뒤 변경"
-always_on: "`$transaction(` `select_for_update(` → 돈·포인트·쿠폰·재고는 확인과 변경을 조건부 `UPDATE … WHERE` 한 문장이나 행 잠금으로 묶어야 한다."
 site_only: false
 depth: brief
 languages: [laravel, django, nextjs]

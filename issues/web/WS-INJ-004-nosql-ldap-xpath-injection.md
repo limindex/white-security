@@ -5,7 +5,6 @@ slug: nosql-ldap-xpath-injection
 group: web
 severity: high
 grade_hint: "로그인 조회에 객체 값, $where"
-always_on: "`findOne(req.body` `$where` → 조회 조건 값은 기대한 형(문자열 등)인지 확인하고, `$where`에 입력을 넣지 않아야 한다."
 site_only: false
 depth: brief
 languages: [express, fastapi, python]

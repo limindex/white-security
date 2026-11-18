@@ -5,7 +5,6 @@ slug: improper-output-handling
 group: ai-use
 severity: high
 grade_hint: "AI 출력이 eval·셸·SQL·HTML로 바로 들어감"
-always_on: "`eval(` `exec(` → AI 출력은 실행·SQL·HTML에 그대로 넣지 않고 형식 검사·이스케이프 뒤 써야 한다."
 site_only: false
 depth: brief
 languages: [python, js, php]

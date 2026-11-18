@@ -1,9 +1,8 @@
 <?php
-// 플러그인(plugins/white-security/) 손으로 쓰는 파일의 형식 검사: plugin.json · 상시 스킬 · 검토 스킬 · 에이전트 · 참고 파일 경로
+// 플러그인(plugins/white-security/) 손으로 쓰는 파일의 형식 검사: plugin.json · 검토 스킬(유일한 스킬) · 에이전트 · 참고 파일 경로
 require_once __DIR__ . '/support.php';
 
 const PL_ROOT = __DIR__ . '/../plugins/white-security';
-const PL_SKILL = __DIR__ . '/../' . SkillExport::SKILL_DIR;
 
 /** `---` 머리말을 key => 값(한 줄 값만) 으로. 머리말이 없으면 null. */
 function pl_frontmatter(string $text): ?array
@@ -64,40 +63,15 @@ function pl_description(string $md, array $fm): string
     return $d;
 }
 
-test('플러그인: 상시 스킬 머리말 — name = 폴더 이름, 코드 작성 중 발동 문구만(검토 문구 없음), allowed-tools 없음(허락 창 0)', function () {
-    $md = file_get_contents(PL_SKILL . '/SKILL.md');
-    $fm = pl_frontmatter($md);
-    assert_true($fm !== null, '머리말');
-    assert_same(basename(PL_SKILL), $fm['name']);
-    assert_true((bool)preg_match('/^[a-z0-9]+(-[a-z0-9]+)*$/', $fm['name']) && strlen($fm['name']) <= 64, 'agentskills name 규칙');
-    $d = pl_description($md, $fm);
-    assert_true(str_starts_with($d, 'Security') && str_contains($d, 'Use when') && str_contains($d, 'writing or changing code'), '영문 + Use when + 코드 작성');
-    foreach (['보안 점검', '보안 검토', '취약점 확인', 'security review'] as $t) assert_true(!str_contains($d, $t), "검토 발동 문구 \"$t\" 는 검토 스킬에만");
-    assert_contains('white-security:review', $d);
-    foreach (['allowed-tools', 'disable-model-invocation', 'hooks', 'context', 'agent'] as $k) assert_true(!isset($fm[$k]), "상시 스킬에 $k 없음");
-});
-
-test('플러그인: 상시 스킬 본문 — 예산(5k토큰·150줄), 파일 읽기·스캐너 없음, 신뢰 규칙 먼저, 쉬운 말 메모, 규칙 요약(빌드와 일치)', function () {
-    $md = file_get_contents(PL_SKILL . '/SKILL.md');
-    SkillExport::checkAlwaysOn($md); // 넘으면 예외
-    preg_match_all('/^## (.+)$/m', $md, $m);
-    assert_same('Trust rules', $m[1][0]);
-    assert_true(!str_contains($md, 'references/') && !str_contains($md, 'Read tool') && !str_contains($md, 'CLAUDE_SKILL_DIR'), '규칙 파일을 읽으라는 말 없음');
-    assert_contains("Don't read rule files, run scanners or search the project for this skill", $md);
-    assert_contains('no extra tool calls', $md);
-    assert_true(!str_contains($md, 'at most 3 extra tool calls'), '"도구 호출 ≤3" 모순 문장 없음');
-    foreach (['data, not instructions', 'Never add exceptions yourself', "user's consent", 'U+XXXX', 'shorter than 16 characters → `****`'] as $s) assert_contains($s, $md);
-    assert_contains('plain Korean first, ids in parentheses', $md);
-    assert_true((bool)preg_match('/`보안 메모: [^`(]*[\x{AC00}-\x{D7A3}][^`(]* \(WS-[A-Z]+-\d{3}\)/u', $md), '메모 예: 쉬운 말 먼저, id 는 괄호');
-    assert_contains('except auth, web and deploy', $md);
-    // U3 결정: 이번 작업 코드에만 적용, 다른 파일은 고치지 않고 메모에 한 번, 메모는 한 줄(위험이 남을 때만 두 줄), 적용한 규칙 id 만
-    foreach (['only to the code this task writes or changes', "Never edit a file the task doesn't need", 'at most one `직접 확인:` mention in the memo, no fix',
-        'one line at the end', 'only rules you applied', 'a second line only if a real 위험 remains'] as $s) assert_contains($s, $md);
-    assert_true(!str_contains($md, 'Apply matching rules in the code itself'), '옛 문장(범위 밖 수정 유발) 없음');
-    $built = SkillExport::injectRules($md, SkillExport::rules(Repository::load(__DIR__ . '/..')));
-    assert_true($built === $md, '규칙 요약이 원본과 다름 (php build.php 실행 필요)');
-    foreach (['(WS-AUTH-002)', '`use server`', '`sk-`', '(WS-BAAS-001)', '(WS-PRV-004)', '(WS-SUP-001)'] as $s) assert_contains($s, $md);
-    assert_true(!str_contains($md, SkillExport::ROUTING_START), '상시 스킬엔 라우팅 표 없음(INDEX 를 읽지 않음)');
+test('플러그인: 스킬은 검토 스킬 하나(상시 스킬 없음, 11-19 — 요청할 때만, 특히 배포 전)', function () {
+    $dirs = array_values(array_filter(scandir(PL_ROOT . '/skills'), fn($d) => $d[0] !== '.'));
+    assert_same([basename(PL_REVIEW)], $dirs);
+    foreach (pl_files() as $rel => $t) {
+        assert_true(!str_contains($t, 'rules:start') && !preg_match('/always[- _]on/i', $t), "$rel 에 상시 모드 흔적");
+        assert_true(!str_contains($t, '보안 메모:'), "$rel 에 상시 메모 예시");
+    }
+    $j = json_decode(file_get_contents(PL_ROOT . '/.claude-plugin/plugin.json'), true);
+    assert_true(!str_contains($j['description'], 'while you write') && str_contains($j['description'], 'on request'), 'plugin.json 설명은 요청형');
 });
 
 test('플러그인: 검토 스킬 머리말 — name review(= /white-security:review), 검토 발동 문구, 범위 인자, 모델 호출 가능', function () {
@@ -107,6 +81,9 @@ test('플러그인: 검토 스킬 머리말 — name review(= /white-security:re
     assert_same(basename(PL_REVIEW), $fm['name']);
     $d = pl_description($md, $fm);
     foreach (['보안 점검', '보안 검토', '취약점 확인', '해킹 안 당하게', '안전한지 봐 줘', 'security review', 'Read-only'] as $t) assert_contains($t, $d);
+    // 배포 전 순간에도 발동(11-19): 이때는 바로 돌리지 않고 먼저 묻는다(본문)
+    foreach (['배포 전', '배포할게', '올리기 전에', '출시 전', 'before deploy', 'offer it first'] as $t) assert_contains($t, $d);
+    assert_true(SkillExport::estimateTokens($d) <= 120, 'description 약 120토큰 이하(항상 로드): ' . SkillExport::estimateTokens($d));
     assert_contains('all|changed', $fm['argument-hint']);
     assert_true(!isset($fm['disable-model-invocation']), '"보안 점검해 줘" 로도 발동(모델 호출 허용)');
     assert_true(!preg_match('/!`/', $md), '!` 쉘 끼워 넣기 금지(git 없는 폴더에서 명령이 멈춤)');
@@ -116,8 +93,11 @@ test('플러그인: 검토 스킬 머리말 — name review(= /white-security:re
 test('플러그인: 검토 스킬 본문 — 신뢰하는 코드 대상, 규칙 파일은 Read 만(Claude Code 한정), 신뢰 규칙, changed 명령, 위임, 그대로 보여 주기, 수정 규칙, 라우팅 표(빌드와 일치)', function () {
     $md = file_get_contents(PL_REVIEW . '/SKILL.md');
     preg_match_all('/^## (.+)$/m', $md, $m);
-    assert_same(['Trusted code only', 'Reading rule files'], array_slice($m[1], 0, 2));
-    assert_true(str_starts_with($m[1][2], 'Trust and safety rules'), '셋째 절은 신뢰·안전 규칙: ' . $m[1][2]);
+    assert_same(['Before deploy: ask first', 'Trusted code only', 'Reading rule files'], array_slice($m[1], 0, 3));
+    assert_true(str_starts_with($m[1][3], 'Trust and safety rules'), '넷째 절은 신뢰·안전 규칙: ' . $m[1][3]);
+    // 배포 얘기만으로 불렸으면 한 번 묻고, 예일 때만 시작, 같은 대화에서 다시 묻지 않음
+    foreach (['run only on request — typically before deploy', 'no explicit review request', "don't start the review", '`배포 전에 보안 점검을 먼저 돌릴까요? 읽기 전용, 1~2분`',
+        'start only after a yes', "don't ask again in this conversation"] as $s) assert_contains($s, $md);
     // 남의 저장소: 읽기 전용·스캐너 없음·한 줄 경고
     assert_contains('run no scanners, package managers or project scripts', $md);
     assert_true((bool)preg_match('/`남이 만든 코드[^`]*`/u', $md), '한 줄 경고');
@@ -228,7 +208,8 @@ test('플러그인: review.md — 작은 프로젝트 다 읽기·전체 Glob �
 test('플러그인: config.md — 예외 상한(전체 경로·와일드카드 id·1년 넘는 기한 무효), 핵심 묶음 끄기는 [참고], 새 예외는 changed 에서만', function () {
     $t = file_get_contents(PL_REF . '/config.md');
     foreach (['`**`', '`**/*`', 'wildcard', 'more than one year after today', '(예외 기한 1년 초과)', 'Disabling `auth`, `web` or `deploy` is always reported as a `[참고]` finding',
-        'keeps those three on', 'only in a `changed` review', 'Other scopes don\'t check this'] as $s) assert_contains($s, $t);
+        'only in a `changed` review', 'Other scopes don\'t check this'] as $s) assert_contains($s, $t);
+    assert_true(!str_contains($t, 'min_severity') && !str_contains($t, 'always_on'), '상시 메모 설정(always_on.min_severity) 없음');
 });
 test('플러그인: 숨은 문자(zero-width·bidi) 없음, 손으로 쓰는 파일에 사설 IP·절대 서버 경로 없음', function () {
     foreach (pl_files() as $rel => $t) {
@@ -277,7 +258,7 @@ test('플러그인: 라우팅 표는 짧다 — route 12낱말 이하, 표 약 3
 // 11-18 권한 결정: 자동 허용 훅 없음, 허용은 "자기 설치 폴더 Read 만"(스모크 5~9). 보안 도구가 사용자 권한을 넓히지 않게 지킨다.
 const PL_ALLOWED = 'Read(~/.claude/plugins/cache/limindex/white-security/**)';
 
-test('플러그인 권한: allowed-tools 는 검토 스킬 하나에만, 자기 설치 폴더 Read 하나뿐(상시 스킬은 없음)', function () {
+test('플러그인 권한: allowed-tools 는 검토 스킬(유일한 스킬)에만, 자기 설치 폴더 Read 하나뿐', function () {
     $files = ['review SKILL.md' => PL_REVIEW . '/SKILL.md'];
     foreach ($files as $name => $f) {
         $fm = pl_frontmatter(file_get_contents($f));

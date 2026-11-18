@@ -6,7 +6,6 @@ slug: otp-abuse
 group: auth
 severity: high
 grade_hint: "시도 제한 없음, 예측 가능한 번호, 응답에 번호"
-always_on: "`otp_code` `/otp/verify` → 인증번호는 암호학적 난수 6자리 이상, 짧은 만료·시도 횟수 제한을 두고 응답에 담지 않아야 한다."
 site_only: false
 depth: brief
 languages: [laravel, nextjs, fastapi]

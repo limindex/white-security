@@ -5,7 +5,6 @@ slug: insecure-container
 group: deploy
 severity: high
 grade_hint: "이미지 속 비밀값, docker.sock·privileged"
-always_on: "`docker.sock` `privileged: true` → 컨테이너에 `docker.sock`·`privileged`를 주지 않고, root 아닌 `USER`로 실행해야 한다."
 site_only: false
 depth: brief
 languages: [dockerfile, yaml]

@@ -5,7 +5,6 @@ slug: insecure-data-storage
 group: mobile
 severity: high
 grade_hint: "토큰·비밀번호를 평문 저장소에 저장"
-always_on: "`AsyncStorage.setItem(` `SharedPreferences.getInstance(` → 토큰·비밀번호는 Keychain·Keystore 기반 저장소에만 두어야 한다."
 site_only: false
 depth: brief
 languages: [expo, flutter, kotlin]

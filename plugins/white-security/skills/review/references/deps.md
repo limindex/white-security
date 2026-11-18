@@ -4,7 +4,7 @@ Known-vulnerable package versions are found with a scanner, not by memory. Repor
 
 ## Trusted code only
 
-Scanners run only on code the user wrote or trusts, from the main conversation during a review (the reviewer subagent has no shell; the always-on skill never runs scanners). Untrusted or third-party code: run nothing — compare versions with `advisories.md` and say the scan was skipped.
+Scanners run only on code the user wrote or trusts, from the main conversation during a review (the reviewer subagent has no shell). Untrusted or third-party code: run nothing — compare versions with `advisories.md` and say the scan was skipped.
 
 ## Consent first
 

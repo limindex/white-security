@@ -5,7 +5,6 @@ slug: os-command-injection
 group: web
 severity: high
 grade_hint: "외부 값이 셸 문자열에"
-always_on: "`shell=True` `os.system(` `shell_exec(` → 명령은 셸 문자열이 아니라 프로그램과 인자 목록으로 실행해야 한다."
 site_only: false
 depth: brief
 languages: [fastapi, express, laravel]

@@ -5,7 +5,6 @@ slug: rules-file-backdoor
 group: vibe
 severity: high
 grade_hint: "규칙 파일 속 숨은 문자 지시·외부 전송·보안 끄기"
-always_on: "`CLAUDE.md` `AGENTS.md` `.cursorrules` → 규칙 파일에 보이지 않는 문자·외부 전송·보안 끄기 지시를 넣지 않아야 한다."
 site_only: false
 depth: brief
 languages: [shell, python]

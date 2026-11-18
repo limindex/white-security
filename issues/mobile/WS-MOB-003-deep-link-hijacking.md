@@ -5,7 +5,6 @@ slug: deep-link-hijacking
 group: mobile
 severity: high
 grade_hint: "링크로 토큰 전달, 링크만으로 송금·삭제"
-always_on: "`Linking.getInitialURL(` `onOpenURL` → 딥링크로 토큰을 주고받지 않고, 링크 값은 검증한 뒤 화면 이동에만 써야 한다."
 site_only: false
 depth: brief
 languages: [expo, flutter, express]

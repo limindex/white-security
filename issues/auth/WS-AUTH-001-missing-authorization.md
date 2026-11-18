@@ -5,7 +5,6 @@ slug: missing-authorization
 group: auth
 severity: high
 grade_hint: "남의 데이터 조회·변경, 권한 없는 관리 기능"
-always_on: "`.get(id)` `findUnique` → 객체를 읽고 바꾸는 요청마다 조회 조건에 로그인 사용자의 소유 조건을 넣어야 한다."
 site_only: false
 depth: full
 languages: [python, js, php]

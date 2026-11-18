@@ -5,7 +5,6 @@ slug: webview-javascript-bridge
 group: mobile
 severity: high
 grade_hint: "임의 주소 WebView에 토큰·결제 브리지"
-always_on: "`originWhitelist` `addJavascriptInterface(` → WebView는 우리 https 도메인만 열고, 브리지에 토큰·결제 기능을 열지 않아야 한다."
 site_only: false
 depth: brief
 languages: [react-native, flutter, kotlin]

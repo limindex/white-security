@@ -6,7 +6,6 @@ slug: indirect-prompt-injection
 group: ai-use
 severity: high
 grade_hint: "외부 글과 부작용 도구 자동 실행이 한 흐름"
-always_on: "`messages.create(` `tool_calls` → 외부 글은 지시문과 분리된 데이터로만 넣고, 그 뒤 부작용 도구는 사람 확인을 거쳐야 한다."
 site_only: false
 depth: full
 languages: [python, js, php]

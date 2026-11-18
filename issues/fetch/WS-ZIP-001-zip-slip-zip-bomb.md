@@ -5,7 +5,6 @@ slug: zip-slip-zip-bomb
 group: fetch
 severity: high
 grade_hint: "남이 올린 압축을 경로 검사 없이 풂"
-always_on: "`zipfile` `tarfile.open(` → 압축을 풀 때 항목마다 최종 경로가 대상 폴더 안인지 확인하고, 크기·개수 상한을 두어야 한다."
 site_only: false
 depth: brief
 languages: [python, php]

@@ -5,7 +5,6 @@ slug: oauth-login-flaws
 group: auth
 severity: high
 grade_hint: "state·PKCE 둘 다 없음, 요청 값 redirect_uri"
-always_on: "`->stateless()` `allowDangerousEmailAccountLinking` → OAuth 로그인은 `state`·PKCE를 확인하고, 이메일만으로 계정을 잇지 않아야 한다."
 site_only: false
 depth: brief
 languages: [laravel, nextjs, fastapi]

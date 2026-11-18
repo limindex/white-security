@@ -5,7 +5,6 @@ slug: unencrypted-personal-data
 group: data
 severity: high
 grade_hint: "고유식별정보·카드·계좌를 평문 저장, 키가 소스에"
-always_on: "`card_number` `account_number` → 고유식별정보·카드·계좌번호는 암호화해 저장하고, 키는 소스 밖에 두어야 한다."
 site_only: false
 depth: brief
 languages: [laravel, django, nextjs]

@@ -6,7 +6,6 @@ slug: ssrf
 group: fetch
 severity: high
 grade_hint: "사용자·AI가 준 URL을 검사 없이 서버가 엶"
-always_on: "`requests.get(` `fetch(` → 사용자·AI가 준 URL은 https·공인 IP만 허용하고, 검사한 IP로 접속해 리다이렉트마다 다시 검사해야 한다."
 site_only: false
 depth: brief
 languages: [python, js, php]

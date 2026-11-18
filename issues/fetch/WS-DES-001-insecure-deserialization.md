@@ -5,7 +5,6 @@ slug: insecure-deserialization
 group: fetch
 severity: high
 grade_hint: "요청 데이터를 pickle·unserialize·unsafe YAML로"
-always_on: "`pickle.load(s)` `yaml.load(` `unserialize(` → 남이 준 데이터는 JSON이나 `yaml.safe_load`로 읽고 객체로 역직렬화하지 않아야 한다."
 site_only: false
 depth: brief
 languages: [python, js, php]

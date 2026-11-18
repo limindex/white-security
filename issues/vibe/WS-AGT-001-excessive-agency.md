@@ -5,7 +5,6 @@ slug: excessive-agency
 group: vibe
 severity: high
 grade_hint: "운영 셸·SQL·삭제·배포 도구를 확인 없이 실행"
-always_on: "`tools=` `@tool` → 에이전트에는 필요한 도구만 주고, 삭제·배포·결제 도구는 사람 확인 뒤 실행해야 한다."
 site_only: false
 depth: brief
 languages: [python]

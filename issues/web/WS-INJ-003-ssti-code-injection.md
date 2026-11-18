@@ -5,7 +5,6 @@ slug: ssti-code-injection
 group: web
 severity: high
 grade_hint: "외부 값이 템플릿 원문·eval에"
-always_on: "`render_template_string(` `new Function(` → 템플릿·코드 원문은 고정하고, 사용자 값은 변수로만 넘겨야 한다."
 site_only: false
 depth: brief
 languages: [flask, python, express, laravel]

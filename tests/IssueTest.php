@@ -240,23 +240,11 @@ test('grade_hint: 선택, 한 줄 문자열, 40자 이하, site_only 이슈엔 �
     assert_contains((string)Issue::GRADE_HINT_MAX, $long);
 });
 
-test('always_on: 선택, high 만, "`찾는 곳 신호` → 행동." 형식, 120자 이하', function () {
-    $ok = "always_on: \"`cursor.execute(` → 값은 자리표시자로 넘겨야 한다.\"\n";
-    $i = Issue::fromFile(ws_tmp(ws_mut("severity: high\n", "severity: high\n" . $ok)), ws_groups());
-    assert_same('`cursor.execute(` → 값은 자리표시자로 넘겨야 한다.', $i->alwaysOn);
-    assert_same(null, Issue::fromFile(__DIR__ . '/fixtures/issues/web/WS-INJ-001-sql-injection.md', ws_groups())->alwaysOn);
-    $bad = [
-        'severity: medium' => ["severity: medium\n" . $ok, 'high'],
-        '찾는 곳에 없는 신호' => ["severity: high\nalways_on: \"`jwt.decode(` → 서명을 확인해야 한다.\"\n", '찾는 곳'],
-        '화살표 없음' => ["severity: high\nalways_on: \"`cursor.execute(` 값은 자리표시자로.\"\n", '→'],
-        '신호 없이 글만' => ["severity: high\nalways_on: \"쿼리 → 값은 자리표시자로 넘겨야 한다.\"\n", '신호'],
-        '마침표 없음' => ["severity: high\nalways_on: \"`cursor.execute(` → 값은 자리표시자로\"\n", '마침표'],
-        '너무 김' => ["severity: high\nalways_on: \"`cursor.execute(` → " . str_repeat('가', Issue::ALWAYS_ON_MAX) . ".\"\n", (string)Issue::ALWAYS_ON_MAX],
-    ];
-    foreach ($bad as $why => [$repl, $want]) {
-        $e = ws_issue_error(ws_mut("severity: high\n", $repl));
-        assert_true(str_contains($e, 'always_on') && str_contains($e, $want), "$why: $e");
-    }
+test('always_on: 상시 스킬을 없앤 뒤(11-19) 쓰지 않는 칸 — 남아 있으면 빌드 실패', function () {
+    assert_true(!property_exists(Issue::class, 'alwaysOn') && !defined('Issue::ALWAYS_ON_MAX'), '상시 칸 없음');
+    $e = ws_issue_error(ws_mut("severity: high\n", "severity: high\nalways_on: \"`cursor.execute(` → 값은 자리표시자로 넘겨야 한다.\"\n"));
+    assert_contains('always_on', $e);
+    assert_contains('지워야', $e);
 });
 
 /** 원본 문자열을 임시 파일로 쓰고 경로를 돌려준다. */

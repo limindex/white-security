@@ -6,7 +6,6 @@ slug: markdown-image-exfiltration
 group: ai-use
 severity: high
 grade_hint: "남의 글이 섞인 AI 출력에서 외부 이미지 자동 표시"
-always_on: "`marked(` `react-markdown` → AI 출력 HTML은 새니타이저를 거치고, 이미지 `src`는 직접 운영하는 도메인만 허용해야 한다."
 site_only: false
 depth: brief
 languages: [js, python]

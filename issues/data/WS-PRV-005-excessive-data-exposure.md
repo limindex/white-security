@@ -5,7 +5,6 @@ slug: excessive-data-exposure
 group: data
 severity: high
 grade_hint: "다른 회원 연락처·주소가 응답에 원문으로"
-always_on: "`.select('*')` `->toArray()` → 응답은 화면에 필요한 필드만 골라 보내야 한다."
 site_only: false
 depth: brief
 languages: [nextjs, laravel, sql]

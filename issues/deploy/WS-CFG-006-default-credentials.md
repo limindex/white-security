@@ -5,7 +5,6 @@ slug: default-credentials
 group: deploy
 severity: high
 grade_hint: "외부에 닿는 서비스의 기본·고정 비밀번호"
-always_on: "`MYSQL_ROOT_PASSWORD` `POSTGRES_HOST_AUTH_METHOD` → DB·관리 계정은 길고 무작위한 비밀번호를 쓰고 `trust` 인증을 쓰지 않아야 한다."
 site_only: false
 depth: brief
 languages: [yaml, laravel, django]

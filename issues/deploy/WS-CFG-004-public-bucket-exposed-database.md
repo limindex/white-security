@@ -5,7 +5,6 @@ slug: public-bucket-exposed-database
 group: deploy
 severity: high
 grade_hint: "개인정보 버킷 공개, 인증 없는 DB·Redis 노출"
-always_on: "`getPublicUrl(` `public: true` → 개인 파일은 비공개 버킷에 두고 짧은 서명 URL로만 내줘야 한다."
 site_only: false
 depth: brief
 languages: [yaml, supabase, shell]

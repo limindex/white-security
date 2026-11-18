@@ -5,7 +5,6 @@ slug: exposed-admin-interface
 group: auth
 severity: high
 grade_hint: "관리 기능·DB 도구가 로그인·역할 확인 없이 열림"
-always_on: "`admin.site.urls` `app/admin/` → 관리자 화면·API는 서버에서 DB의 역할을 확인해야 한다."
 site_only: false
 depth: brief
 languages: [laravel, nextjs, django]

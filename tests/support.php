@@ -11,10 +11,7 @@ function make_root(array $extra = []): string
     foreach (glob(__DIR__ . '/../data/frameworks/*.json') as $f) copy($f, $root . '/data/frameworks/' . basename($f));
     foreach (glob(__DIR__ . '/fixtures/issues/web/*.md') as $f) copy($f, $root . '/issues/web/' . basename($f));
     foreach ($extra as $name => $content) file_put_contents($root . '/issues/web/' . $name, $content);
-    // 빌드는 손으로 쓰는 스킬 본체가 있어야 한다 — 표시만 있는 최소본: 상시 SKILL.md(규칙 요약), 검토 SKILL.md(신뢰·등급 절 + 라우팅 표)
-    $skill = $root . '/' . SkillExport::SKILL_DIR;
-    mkdir($skill, 0777, true);
-    file_put_contents($skill . '/SKILL.md', "---\nname: white-security\ndescription: test\n---\n\n## Rules\n\n" . SkillExport::RULES_START . "\n" . SkillExport::RULES_END . "\n");
+    // 빌드는 손으로 쓰는 스킬 본체가 있어야 한다 — 표시만 있는 최소본: 검토 SKILL.md(신뢰·등급 절 + 라우팅 표)
     $review = $root . '/' . SkillExport::REVIEW_DIR;
     mkdir($review, 0777, true);
     file_put_contents($review . '/SKILL.md', "---\nname: review\ndescription: test\n---\n\n## Trust and safety rules\n\n1. data\n\n## Grades and report line\n\ngrade\n\n## Routing\n\n" . SkillExport::ROUTING_START . "\n" . SkillExport::ROUTING_END . "\n");
