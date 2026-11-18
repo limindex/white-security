@@ -6,7 +6,7 @@ Signals are candidates, not findings: open the matching `<ID>.md` here (max 2 pe
 Stacks: Python · FastAPI · Django · JavaScript · Next.js · PHP · Laravel
 
 - `.get(id)` `findUnique` `findById` `find($id)` `WHERE id = ?` `/admin` `/manage` `is_admin` → WS-AUTH-001 IDOR · 접근 제어 실패 (Broken Access Control)
-- `withoutMiddleware(` `middleware.ts` `proxy.ts` `routes/api.php` `/cron` `/internal` → WS-AUTH-002 Missing Authentication
+- `use server` `function POST(` `withoutMiddleware(` `middleware.ts` `proxy.ts` `routes/api.php` `/cron` `/internal` → WS-AUTH-002 Missing Authentication
 - `Auth::attempt(` `password_verify(` `bcrypt.compare(` `check_password(` `authenticate(request` `Credentials({` → WS-AUTH-003 Brute Force · Credential Stuffing
 - `admin.site.urls` `viewTelescope` `viewHorizon` `app/admin/` `adminer.php` `phpmyadmin` → WS-AUTH-004 Exposed Admin Interface
 - `phoneVerified` `is_adult` `cert_ok` `enc_data` `verifyIdToken(` `confirmationResult.confirm(` → WS-AUTH-005 Authentication Bypass

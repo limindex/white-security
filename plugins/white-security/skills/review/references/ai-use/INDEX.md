@@ -5,8 +5,8 @@ When: AI에 문서·웹페이지·메일을 읽히거나 요약시키는 기능,
 Signals are candidates, not findings: open the matching `<ID>.md` here (max 2 per task) and decide with its checks (constant or request value?).
 Stacks: Python · JavaScript · PHP
 
-- `eval(` `exec(` `subprocess.` `shell_exec(` `cursor.execute(` `innerHTML =` `dangerouslySetInnerHTML` `v-html` → WS-LLM-001 Improper Output Handling
-- `"role": "system"` `instructions=` `systemInstruction` `prompts/` `*.prompt` `prompts/*.txt` → WS-LLM-002 System Prompt Leakage
+- `eval(` `exec(` `subprocess.` `cursor.execute(` `innerHTML =` `dangerouslySetInnerHTML` `v-html` `new Function(` → WS-LLM-001 Improper Output Handling
+- `"role": "system"` `instructions=` `systemInstruction` `prompts/` `*.prompt` → WS-LLM-002 System Prompt Leakage
 - `openai` `anthropic` `generativeai` `fetch("https://api.` `logger.` `console.log` `error_log` → WS-LLM-003 Sensitive Information Disclosure
 - `chat.completions.create(` `messages.create(` `generateContent(` `max_tokens` `dangerouslyAllowBrowser` → WS-LLM-004 Unbounded Consumption
 - `index.query(` `collection.query(` `.similarity_search(` `as_retriever(` `match_documents` `.upsert(` `.add_documents(` `collection.add(` → WS-LLM-005 RAG Poisoning · 검색 권한 누락

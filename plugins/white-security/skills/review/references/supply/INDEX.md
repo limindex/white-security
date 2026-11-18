@@ -7,8 +7,8 @@ Stacks: Python · FastAPI · JavaScript · Next.js · PHP · Laravel · Shell ·
 
 - `package.json` `requirements*.txt` `pyproject.toml` `composer.json` `npm install` `pip install` `composer require` `.claude/settings.json` → WS-SUP-001 Slopsquatting
 - `package-lock.json` `pnpm-lock.yaml` `uv.lock` `poetry.lock` `composer.lock` `dependabot.yml` `renovate.json` `npm audit fix --force` → WS-SUP-002 Vulnerable Dependencies
-- `postinstall` `preinstall` `ignore-scripts` `allowBuilds` `dangerouslyAllowAllBuilds` `onlyBuiltDependencies` `allow-plugins` `--only-binary` → WS-SUP-003 Install Scripts (postinstall) · Build Plugins
-- `npm install` `npm ci` `--frozen-lockfile` `--require-hashes` `--extra-index-url` `"resolved":` `composer update` `uv sync` → WS-SUP-004 Lockfile Integrity
+- `postinstall` `preinstall` `yarnPath` `ignore-scripts` `allowBuilds` `dangerouslyAllowAllBuilds` `onlyBuiltDependencies` `allow-plugins` → WS-SUP-003 Install Scripts (postinstall) · Build Plugins
+- `npm install` `npm ci` `--frozen-lockfile` `--extra-index-url` `_authToken=${` `"resolved":` `--require-hashes` `npmAuthToken` → WS-SUP-004 Lockfile Integrity
 - `pull_request_target` `workflow_run` `${{ github.event.` `${{ github.head_ref` `write-all` `persist-credentials` `| bash` `ADD http` → WS-SUP-005 CI/CD Integrity · Unverified Downloads (GitHub Actions, curl | sh)
 - `jquery-1.` `jquery-2.` `/*! jQuery v` `public/vendor/` `static/vendor/` `third_party/` `"github:` `"overrides"` → WS-SUP-006 Vendored · Copied Code
 - `requests.get(` `requests.post(` `httpx.` `axios.get(` `Http::get(` `allow_redirects` `follow_redirects=True` `AbortSignal.timeout(` → WS-SUP-007 Unsafe Consumption of APIs

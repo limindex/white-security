@@ -6,7 +6,7 @@
 ```js
 // src/api.js (브라우저 번들에 들어간다)
 export async function ask(prompt) {
-  const res = await fetch("https://api.example-ai.com/v1/chat", {
+  const res = await fetch("https://api.example.com/v1/chat", {
     method: "POST",
     headers: { Authorization: `Bearer ${import.meta.env.VITE_AI_SECRET_KEY}` },
     body: JSON.stringify({ prompt }),
@@ -28,7 +28,7 @@ const app = express();
 app.use(express.json({ limit: "20kb" }));
 
 app.post("/api/chat", requireLogin, async (req, res) => { // requireLogin: 앱의 로그인 확인 미들웨어
-  const r = await fetch("https://api.example-ai.com/v1/chat", {
+  const r = await fetch("https://api.example.com/v1/chat", {
     method: "POST",
     headers: { Authorization: `Bearer ${AI_KEY}`, "Content-Type": "application/json" },
     body: JSON.stringify({ prompt: String(req.body.prompt ?? "").slice(0, 4000) }),
