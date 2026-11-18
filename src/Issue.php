@@ -12,7 +12,7 @@ final class Issue
 {
     public const SEVERITIES = ['high', 'medium', 'low'];
     public const DEPTHS = ['full', 'brief'];
-    public const MAP_KEYS = ['owasp2025', 'api2023', 'llm2026', 'agentic2026', 'asvs5', 'cwe', 'kr_guide', 'kr_ciip'];
+    public const MAP_KEYS = ['owasp2025', 'api2023', 'llm2026', 'agentic2026', 'owasp_mobile2024', 'asvs5', 'cwe', 'kr_guide', 'kr_ciip'];
     public const FULL_SECTIONS = ['요약', '발생 상황', '위험 배경', '대응 방법', '점검 항목', '탐지 규칙', '코드 예시'];
     public const BRIEF_SECTIONS = ['요약', '점검 항목', '코드 예시'];
     /** maps.cwe 는 Top 25 밖 번호도 받는다. 커버리지 표는 data/frameworks/cwe.json(Top 25)만 센다. */
@@ -108,6 +108,7 @@ final class Issue
         $languages = $fm['languages'] ?? [];
         if (!is_array($languages) || array_filter($languages, fn($l) => !is_string($l) || $l === '')) throw $fail('languages 는 문자열 목록이어야 합니다');
         if (count(array_unique($languages)) !== count($languages)) throw $fail('languages 에 중복이 있습니다');
+        foreach ($languages as $l) if (!in_array($l, Stacks::keys(), true)) throw $fail("languages 의 `$l` 은(는) 허용 코드 키가 아닙니다(data/stacks.json: " . implode(', ', Stacks::keys()) . ')');
         if (!$siteOnly && !$languages) throw $fail('languages 는 site_only: true 가 아니면 1개 이상이어야 합니다');
 
         $mapsIn = $fm['maps'] ?? [];
@@ -197,6 +198,7 @@ final class Issue
             }
         }
         $found = array_keys($code);
+        foreach ($found as $l) if (!in_array($l, Stacks::keys(), true)) throw $fail("`### $l` 은(는) 허용 코드 키가 아닙니다(data/stacks.json: " . implode(', ', Stacks::keys()) . ')');
         $a = $languages; $b = $found; sort($a); sort($b);
         if ($a !== $b) throw $fail('languages [' . implode(', ', $languages) . '] 와 `## 코드 예시` 의 ### 소제목 [' . implode(', ', $found) . '] 이(가) 다릅니다');
 

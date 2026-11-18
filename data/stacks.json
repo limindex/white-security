@@ -1,0 +1,37 @@
+{
+  "groups": [
+    {"id": "python", "name": "Python"},
+    {"id": "js", "name": "JavaScript·TypeScript"},
+    {"id": "php", "name": "PHP"},
+    {"id": "baas", "name": "BaaS"},
+    {"id": "mobile", "name": "모바일"},
+    {"id": "other", "name": "설정·기타"}
+  ],
+  "stacks": [
+    {"key": "python", "label": "Python", "lang": "python", "stack": "python"},
+    {"key": "fastapi", "label": "FastAPI", "lang": "python", "stack": "python"},
+    {"key": "django", "label": "Django", "lang": "python", "stack": "python"},
+    {"key": "flask", "label": "Flask", "lang": "python", "stack": "python"},
+    {"key": "js", "label": "JavaScript", "lang": "javascript", "stack": "js"},
+    {"key": "ts", "label": "TypeScript", "lang": "typescript", "stack": "js"},
+    {"key": "nextjs", "label": "Next.js", "lang": "typescript", "stack": "js"},
+    {"key": "react", "label": "React", "lang": "javascript", "stack": "js"},
+    {"key": "express", "label": "Express", "lang": "javascript", "stack": "js"},
+    {"key": "php", "label": "PHP", "lang": "php", "stack": "php"},
+    {"key": "laravel", "label": "Laravel", "lang": "php", "stack": "php"},
+    {"key": "supabase", "label": "Supabase", "lang": "typescript", "stack": "baas"},
+    {"key": "firebase", "label": "Firebase", "lang": "javascript", "stack": "baas"},
+    {"key": "react-native", "label": "React Native", "lang": "typescript", "stack": "mobile"},
+    {"key": "expo", "label": "Expo", "lang": "typescript", "stack": "mobile"},
+    {"key": "flutter", "label": "Flutter", "lang": "dart", "stack": "mobile"},
+    {"key": "kotlin", "label": "Kotlin", "lang": "kotlin", "stack": "mobile"},
+    {"key": "swift", "label": "Swift", "lang": "swift", "stack": "mobile"},
+    {"key": "shell", "label": "Shell", "lang": "sh", "stack": "other"},
+    {"key": "sql", "label": "SQL", "lang": "sql", "stack": "other"},
+    {"key": "json", "label": "JSON", "lang": "json", "stack": "other"},
+    {"key": "yaml", "label": "YAML", "lang": "yaml", "stack": "other"},
+    {"key": "toml", "label": "TOML", "lang": "toml", "stack": "other"},
+    {"key": "dockerfile", "label": "Dockerfile", "lang": "dockerfile", "stack": "other"},
+    {"key": "nginx", "label": "Nginx", "lang": "nginx", "stack": "other"}
+  ]
+}

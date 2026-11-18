@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../lib/Parsedown.php';
 require_once __DIR__ . '/FrontMatter.php';
 require_once __DIR__ . '/Markdown.php';
+require_once __DIR__ . '/Stacks.php';
 require_once __DIR__ . '/Issue.php';
 require_once __DIR__ . '/Coverage.php';
 require_once __DIR__ . '/Repository.php';

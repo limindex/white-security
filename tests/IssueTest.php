@@ -78,7 +78,7 @@ test('brief 는 세 제목만 필수', function () {
     assert_same(true, $i->siteOnly);
     assert_same([], $i->code);
     assert_same('brief', $i->depth);
-    assert_same(['owasp2025' => [], 'api2023' => [], 'llm2026' => [], 'agentic2026' => [], 'asvs5' => [], 'cwe' => [], 'kr_guide' => [], 'kr_ciip' => []], $i->maps);
+    assert_same(['owasp2025' => [], 'api2023' => [], 'llm2026' => [], 'agentic2026' => [], 'owasp_mobile2024' => [], 'asvs5' => [], 'cwe' => [], 'kr_guide' => [], 'kr_ciip' => []], $i->maps);
 });
 
 test('sources 가 비어 있으면 오류', function () {
