@@ -60,7 +60,7 @@ test('홈: 약속 문구·설치 버튼·묶음 카드·최근 업데이트', fu
     assert_true(!preg_match('/완벽|보장/u', $b), '과장 문구');
     assert_true((bool)preg_match('#<a[^>]*href="/white-security/install"[^>]*>[^<]*(<span[^>]*>)?스킬 설치#u', $b), '스킬 설치 버튼');
     assert_contains('class="ws-group-card', $b);
-    assert_contains('웹 기본', $b);
+    assert_contains('웹 애플리케이션', $b);
     assert_contains('최근 업데이트', $b);
     assert_true((bool)preg_match('#class="ws-recent".*WS-INJ-001#s', $b), '최근 업데이트에 fixture');
 });

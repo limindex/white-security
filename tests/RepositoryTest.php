@@ -60,3 +60,21 @@ test('Repository: 정상 groups.json 이면 묶음 오류 없음, 틀린 항목�
     assert_same(1, count($repo->errors()));
     assert_same(1, count($repo->all()));
 });
+
+test('묶음 이름·설명: 명사형 공식 이름, 설명은 "~할 때" 없이 명사형', function () {
+    $g = json_decode(file_get_contents(__DIR__ . '/../data/groups.json'), true);
+    $names = array_column($g, 'name', 'id');
+    assert_same([
+        'ai-use' => 'AI 활용', 'vibe' => 'AI 코딩 도구', 'fetch' => '외부 데이터 수집·처리', 'scraped' => '자동 수집 대응',
+        'web' => '웹 애플리케이션', 'auth' => '인증·인가', 'deploy' => '설정·배포', 'data' => '개인정보 보호',
+        'supply' => '소프트웨어 공급망', 'people' => '사용자 보안',
+    ], $names);
+    foreach ($g as $row) {
+        assert_true(is_string($row['when'] ?? null) && trim($row['when']) !== '', "{$row['id']} when");
+        assert_true(!preg_match('/(때|요|다)\.?$/u', $row['when']), "{$row['id']} when 명사형: {$row['when']}");
+    }
+    // ai-use 는 AI API 호출(LLM-003·004)과 답변 활용(LLM-006)까지 포괄
+    $ai = array_column($g, 'when', 'id')['ai-use'];
+    assert_contains('AI API', $ai);
+    assert_contains('답변', $ai);
+});

@@ -75,9 +75,9 @@ test('build: 스킬 references — 장면 절 없음·site_only 제외·INDEX', 
     $idx = file_get_contents("$ref/INDEX.md");
     assert_true(str_starts_with($idx, '<!-- 생성 파일'), 'INDEX 머리');
     assert_contains('[WS-INJ-001 SQL 삽입](web/WS-INJ-001.md) — ', $idx);
-    assert_contains("## 웹 기본\n\n언제 읽나: 입력을 받아 DB·화면·파일로 넘기는 웹 기능을 만들 때\n", $idx);
+    assert_contains("## 웹 애플리케이션\n\n언제 읽나: 입력을 받아 DB·화면·파일·명령으로 넘기는 웹 기능\n", $idx);
     assert_true(!str_contains($idx, 'WS-PPL-001'), 'INDEX 에 site_only 없음');
-    assert_true(!str_contains($idx, '사람'), 'site_only 묶음 제외');
+    assert_true(!str_contains($idx, '사용자 보안'), 'site_only 묶음 제외');
     // INDEX 링크가 실제 파일로 풀린다
     preg_match_all('/\]\(([^)]+\.md)\)/', $idx, $m);
     assert_true(count($m[1]) >= 1);

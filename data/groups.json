@@ -1,12 +1,12 @@
 [
-  {"id": "ai-use", "name": "AI를 쓸 때", "order": 1, "site_only": false, "when": "AI에게 문서·웹페이지·메일을 읽히거나 요약시킬 때"},
-  {"id": "vibe", "name": "바이브 코딩할 때", "order": 2, "site_only": false, "when": "AI 코딩 도구에게 코드 작성·설정 변경·명령 실행을 맡길 때"},
-  {"id": "fetch", "name": "긁어 오고 읽을 때", "order": 3, "site_only": false, "when": "외부 URL·파일·XML을 가져와 읽거나 파싱할 때"},
-  {"id": "scraped", "name": "긁힐 때", "order": 4, "site_only": false, "when": "내 사이트·API를 남이 자동으로 긁어 갈 수 있을 때"},
-  {"id": "web", "name": "웹 기본", "order": 5, "site_only": false, "when": "입력을 받아 DB·화면·파일로 넘기는 웹 기능을 만들 때"},
-  {"id": "auth", "name": "로그인·권한", "order": 6, "site_only": false, "when": "로그인·권한·'내 것만 보기' 기능을 만들거나 고칠 때"},
-  {"id": "deploy", "name": "설정·배포", "order": 7, "site_only": false, "when": "API 키·설정 파일을 다루거나 서버에 올릴 때"},
-  {"id": "data", "name": "데이터·개인정보", "order": 8, "site_only": false, "when": "개인정보를 저장·조회·내려받기 할 때"},
-  {"id": "supply", "name": "의존성·공급망", "order": 9, "site_only": false, "when": "패키지를 새로 설치하거나 버전을 올릴 때"},
-  {"id": "people", "name": "사람", "order": 10, "site_only": true, "when": "사람을 속여 돈·계정을 노리는 연락을 받을 때"}
+  {"id": "ai-use", "name": "AI 활용", "order": 1, "site_only": false, "when": "AI에 문서·웹페이지·메일을 읽히거나 요약시키는 기능, AI API 호출, 문서 검색 답변(RAG), AI 답변을 화면·판단에 쓰는 기능"},
+  {"id": "vibe", "name": "AI 코딩 도구", "order": 2, "site_only": false, "when": "AI 코딩 도구에 코드 작성·설정 변경·명령 실행을 맡기는 경우"},
+  {"id": "fetch", "name": "외부 데이터 수집·처리", "order": 3, "site_only": false, "when": "외부 URL·파일·XML·압축 파일을 가져와 읽거나 파싱하는 경우"},
+  {"id": "scraped", "name": "자동 수집 대응", "order": 4, "site_only": false, "when": "내 사이트·API가 자동 수집(크롤링) 대상이 되는 경우"},
+  {"id": "web", "name": "웹 애플리케이션", "order": 5, "site_only": false, "when": "입력을 받아 DB·화면·파일·명령으로 넘기는 웹 기능"},
+  {"id": "auth", "name": "인증·인가", "order": 6, "site_only": false, "when": "로그인·권한·본인 데이터 접근 기능"},
+  {"id": "deploy", "name": "설정·배포", "order": 7, "site_only": false, "when": "설정 파일·키·서버·컨테이너·배포 환경"},
+  {"id": "data", "name": "개인정보 보호", "order": 8, "site_only": false, "when": "개인정보의 저장·조회·로그·내보내기"},
+  {"id": "supply", "name": "소프트웨어 공급망", "order": 9, "site_only": false, "when": "패키지 설치·업데이트·외부 코드와 모델 사용"},
+  {"id": "people", "name": "사용자 보안", "order": 10, "site_only": true, "when": "사람을 노리는 사기·계정 탈취 (사이트 전용)"}
 ]
