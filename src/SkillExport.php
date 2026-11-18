@@ -33,7 +33,9 @@ final class SkillExport
             if (isset($siteOnlyGroups[$g['id']])) continue;
             $list = array_values(array_filter($by[$g['id']] ?? [], fn(Issue $i) => !$i->siteOnly));
             if (!$list) continue;
-            $index .= "\n## {$g['name']}\n\n언제 읽나: 「{$g['name']}」 상황에서 코드를 쓰거나 고칠 때\n\n";
+            $when = $g['when'] ?? null;
+            if ($when === null || $when === '') $when = "「{$g['name']}」 상황에서 코드를 쓰거나 고칠 때";
+            $index .= "\n## {$g['name']}\n\n언제 읽나: $when\n\n";
             foreach ($list as $i) {
                 $index .= "- [{$i->id} {$i->title}]({$i->group}/{$i->id}.md) — " . self::summary($i) . "\n";
                 $put($i->group . '/' . $i->id . '.md', self::issueFile($i));

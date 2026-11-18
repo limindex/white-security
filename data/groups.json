@@ -1,12 +1,12 @@
 [
-  {"id": "ai-use", "name": "AI를 쓸 때", "order": 1, "site_only": false},
-  {"id": "vibe", "name": "바이브 코딩할 때", "order": 2, "site_only": false},
-  {"id": "fetch", "name": "긁어 오고 읽을 때", "order": 3, "site_only": false},
-  {"id": "scraped", "name": "긁힐 때", "order": 4, "site_only": false},
-  {"id": "web", "name": "웹 기본", "order": 5, "site_only": false},
-  {"id": "auth", "name": "로그인·권한", "order": 6, "site_only": false},
-  {"id": "deploy", "name": "설정·배포", "order": 7, "site_only": false},
-  {"id": "data", "name": "데이터·개인정보", "order": 8, "site_only": false},
-  {"id": "supply", "name": "의존성·공급망", "order": 9, "site_only": false},
-  {"id": "people", "name": "사람", "order": 10, "site_only": true}
+  {"id": "ai-use", "name": "AI를 쓸 때", "order": 1, "site_only": false, "when": "AI에게 문서·웹페이지·메일을 읽히거나 요약시킬 때"},
+  {"id": "vibe", "name": "바이브 코딩할 때", "order": 2, "site_only": false, "when": "AI 코딩 도구에게 코드 작성·설정 변경·명령 실행을 맡길 때"},
+  {"id": "fetch", "name": "긁어 오고 읽을 때", "order": 3, "site_only": false, "when": "외부 URL·파일·XML을 가져와 읽거나 파싱할 때"},
+  {"id": "scraped", "name": "긁힐 때", "order": 4, "site_only": false, "when": "내 사이트·API를 남이 자동으로 긁어 갈 수 있을 때"},
+  {"id": "web", "name": "웹 기본", "order": 5, "site_only": false, "when": "입력을 받아 DB·화면·파일로 넘기는 웹 기능을 만들 때"},
+  {"id": "auth", "name": "로그인·권한", "order": 6, "site_only": false, "when": "로그인·권한·'내 것만 보기' 기능을 만들거나 고칠 때"},
+  {"id": "deploy", "name": "설정·배포", "order": 7, "site_only": false, "when": "API 키·설정 파일을 다루거나 서버에 올릴 때"},
+  {"id": "data", "name": "데이터·개인정보", "order": 8, "site_only": false, "when": "개인정보를 저장·조회·내려받기 할 때"},
+  {"id": "supply", "name": "의존성·공급망", "order": 9, "site_only": false, "when": "패키지를 새로 설치하거나 버전을 올릴 때"},
+  {"id": "people", "name": "사람", "order": 10, "site_only": true, "when": "사람을 속여 돈·계정을 노리는 연락을 받을 때"}
 ]

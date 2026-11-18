@@ -53,7 +53,7 @@ final class Repository
 
     /**
      * 묶음 목록을 읽는다. 문제는 조용히 넘기지 않고 $errors 에 남긴다(서버 경로 없이 상대 이름만).
-     * @param list<string> $errors @return list<array{id:string,name:string,order:int,site_only:bool}>
+     * @param list<string> $errors @return list<array{id:string,name:string,order:int,site_only:bool,when:?string}>
      */
     private static function loadGroups(string $file, array &$errors): array
     {
@@ -74,7 +74,8 @@ final class Repository
             if (!$ok) { $errors[] = "$name: {$no}번째 항목에 id·name·order 가 없거나 형식이 틀립니다"; continue; }
             if (isset($ids[$g['id']])) { $errors[] = "$name: id `{$g['id']}` 가 두 번 나옵니다"; continue; }
             $ids[$g['id']] = true;
-            $out[] = ['id' => $g['id'], 'name' => $g['name'], 'order' => $g['order'], 'site_only' => (bool)($g['site_only'] ?? false)];
+            $when = isset($g['when']) && is_string($g['when']) && trim($g['when']) !== '' ? trim($g['when']) : null;
+            $out[] = ['id' => $g['id'], 'name' => $g['name'], 'order' => $g['order'], 'site_only' => (bool)($g['site_only'] ?? false), 'when' => $when];
         }
         return $out;
     }
