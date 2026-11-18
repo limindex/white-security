@@ -32,11 +32,11 @@ $chips = [['owasp2025', 'A05'], ['asvs5', 'V1.2'], ['cwe', 'CWE-89']];
 <section class="ws-sec" aria-labelledby="g-id">
 <h2 id="g-id">문서 번호</h2>
 <p class="ws-idform"><code>WS-&lt;분류&gt;-&lt;번호&gt;</code></p>
-<ul>
-<li>분류: 이슈 종류를 나타내는 영문 약어 2~5자. 예: <code>INJ</code> 인젝션, <code>SSRF</code> 서버사이드 요청 위조.</li>
-<li>번호: 분류 안의 세 자리 일련번호.</li>
-<li>번호 불변: 제목·내용·묶음이 바뀌어도 같은 번호 유지. 인용과 링크는 번호 기준. 폐지한 번호의 재사용 없음.</li>
-</ul>
+<dl class="ws-deflist">
+<div><dt>분류</dt><dd><code>INJ</code>(인젝션) · <code>SSRF</code>(서버사이드 요청 위조) 같은 영문 약어 2~5자</dd></div>
+<div><dt>번호</dt><dd>분류 안의 세 자리 일련번호</dd></div>
+<div><dt>번호 불변</dt><dd>제목·내용·묶음이 바뀌어도 같은 번호 유지 · 인용과 링크의 기준 · 폐지한 번호의 재사용 없음</dd></div>
+</dl>
 <?php if ($prefixes): ?>
 <div class="ws-table-wrap">
 <table class="ws-table ws-table--def">
@@ -70,15 +70,23 @@ $chips = [['owasp2025', 'A05'], ['asvs5', 'V1.2'], ['cwe', 'CWE-89']];
 <li><span class="ws-seclist-name"><?= Site::e($name) ?></span><span class="ws-seclist-desc"><?= Site::e($desc) ?><?php if ($note !== ''): ?><span class="ws-seclist-note"><?= Site::e($note) ?></span><?php endif ?></span></li>
 <?php endforeach ?>
 </ol>
-<p>절 제목 옆 <span class="ws-hash" aria-hidden="true">#</span> 표시: 그 절의 고정 주소 복사.</p>
+<p>절 제목 옆 <span class="ws-hash" aria-hidden="true">#</span> 단추는 그 절의 고정 주소 복사용.</p>
 </section>
 
 <section class="ws-sec" aria-labelledby="g-chip">
 <h2 id="g-chip">기준 번호</h2>
-<p>제목 아래 칩: 이 이슈가 대응하는 공인 보안 기준의 항목 번호. 앞은 기준 이름, 뒤는 항목 번호. CWE 번호는 MITRE 정의 페이지로 연결.</p>
+<p>이슈가 대응하는 공인 보안 기준의 항목 번호. 문서 제목 아래에 칩으로 표시.</p>
+<figure class="ws-example">
+<figcaption>예시</figcaption>
 <ul class="ws-maps" aria-label="기준 번호 예">
 <?php foreach ($chips as [$k, $c]): ?><?= Site::mapChip($k, $c) ?><?php endforeach ?>
 </ul>
-<p>기준 8종 전체와 항목별 대응 이슈는 <a href="<?= Site::e($site->url('coverage')) ?>">점검 기준 대응표</a>.</p>
+</figure>
+<dl class="ws-deflist">
+<div><dt>칩 앞부분</dt><dd>기준 이름과 판본 연도</dd></div>
+<div><dt>칩 뒷부분</dt><dd>그 기준 안의 항목 번호</dd></div>
+<div><dt>작은 화살표</dt><dd>공식 정의 페이지 링크 · CWE 번호는 MITRE 정의로 연결</dd></div>
+</dl>
+<p>기준 8종 전체의 항목별 대응은 <a href="<?= Site::e($site->url('coverage')) ?>">점검 기준 대응표</a>.</p>
 </section>
 </div>

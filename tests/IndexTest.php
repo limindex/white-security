@@ -39,7 +39,7 @@ test('index.php: base 밖이거나 index.php 직접이면 ?p= 로 폴백', funct
     $root = idx_copy();
     assert_contains('SQL 삽입', idx_run($root, '/elsewhere', ['p' => 'issues/WS-INJ-001']));
     assert_contains('SQL 삽입', idx_run($root, '/white-security/index.php?p=issues/WS-INJ-001', ['p' => 'issues/WS-INJ-001']));
-    assert_contains('화이트 보안', idx_run($root, '/white-security/index.php'));
+    assert_contains('White Security', idx_run($root, '/white-security/index.php'));
 });
 
 test('index.php: 예외는 고정 500 페이지, 경로·메시지 노출 없음', function () {

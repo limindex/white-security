@@ -1,7 +1,8 @@
 <?php /** @var Site $site @var string $title @var string $lead */
+$repo = $site->repoSlug();
 $cmds = [
-    ['Claude Code', 'Claude Code 플러그인 설치', "/plugin marketplace add juslim-afk/white-security\n/plugin install white-security@white-security"],
-    ['여러 도구 공용', 'skills 형식을 읽는 코딩 도구에 설치', 'npx skills add juslim-afk/white-security'],
+    ['Claude Code', 'Claude Code 플러그인 설치', "/plugin marketplace add $repo\n/plugin install white-security@white-security"],
+    ['여러 도구 공용', 'skills 형식을 읽는 코딩 도구에 설치', "npx skills add $repo"],
 ];
 ?>
 <div class="ws-page">
@@ -17,7 +18,7 @@ $cmds = [
 </section>
 <?php endforeach ?>
 <section class="ws-sec">
-<h2>설치 뒤</h2>
+<h2>설치 후 동작</h2>
 <ul>
 <li>코드 작성·수정 때 해당 묶음의 점검 항목을 스킬이 스스로 대조.</li>
 <li>보안 검토 요청 시 위험·주의·참고 등급별 보고. 등급 뜻은 <a href="<?= Site::e($site->url('severity')) ?>">심각도 기준</a>.</li>

@@ -18,7 +18,9 @@ final class Site
     ];
     /** 왼쪽 메뉴 구역 순서. 보안 이슈 구역은 두 구역 사이에 들어간다. */
     public const NAV_SECTIONS = ['시작하기', '참고'];
-    public const BRAND = '화이트 보안';
+    public const BRAND = 'White Security';
+    /** 사이트 성격: 웹사이트는 가이드, 제품은 스킬 */
+    public const BRAND_DESC = '바이브 코딩 보안 가이드';
     private const ID_RE = '/^WS-[A-Z]{2,5}-\d{3}$/';
     /** 마지막 확인일이 이 일수를 넘으면 "확인 필요" */
     public const STALE_DAYS = 180;
@@ -94,7 +96,8 @@ final class Site
         $k = str_starts_with($code, strtoupper($key) . '-') ? '' : '<span class="ws-chip-k">' . self::e(self::mapLabel($key)) . '</span>';
         $u = self::cweUrl($key, $code);
         $v = $u !== null
-            ? '<a class="ws-chip-v" href="' . self::e($u) . '" rel="noopener noreferrer">' . self::e($code) . '</a>'
+            ? '<a class="ws-chip-v" href="' . self::e($u) . '" rel="noopener noreferrer"><span>' . self::e($code) . '</span>'
+                . '<svg class="ws-ext" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true" focusable="false"><path d="M4.5 2.5h5v5M9.5 2.5l-7 7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>'
             : '<span class="ws-chip-v">' . self::e($code) . '</span>';
         return '<li class="ws-chip">' . $k . $v . '</li>';
     }
@@ -121,13 +124,19 @@ final class Site
         return array_slice($all, 0, $n);
     }
 
-    public const DEFAULT_DESC = 'AI 코딩 도구가 자주 만드는 보안 실수를 이슈별로 정리한 한국어 문서와 점검 스킬';
+    public const DEFAULT_DESC = 'AI 코딩 도구가 자주 만드는 보안 실수를 정리한 보안 이슈 문서와 AI 코딩 도구용 점검 스킬';
 
     /** data/site.json 설정값 (없으면 빈 문자열) */
     public function setting(string $key): string
     {
         if ($key === 'origin' && $this->origin !== null) return $this->origin;
         return $this->repo->settings()[$key] ?? '';
+    }
+
+    /** 설치 명령에 쓰는 GitHub 저장소 이름(소유자/저장소): data/site.json 의 github 에서, 없으면 기본값 */
+    public function repoSlug(): string
+    {
+        return preg_match('#^https://github\.com/([A-Za-z0-9._-]+/[A-Za-z0-9._-]+)/?$#', $this->setting('github'), $m) ? $m[1] : 'juslim-afk/white-security';
     }
 
     /** origin 형식: https://도메인[:포트], 끝 / 없음 */

@@ -29,7 +29,7 @@ try {
     }
     $home = htmlspecialchars(WS_BASE, ENT_QUOTES, 'UTF-8');
     echo '<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
-        . '<title>일시적인 오류 · 화이트 보안</title><link rel="stylesheet" href="' . $home . 'assets/css/site.css"></head>'
+        . '<title>일시적인 오류 — White Security</title><link rel="stylesheet" href="' . $home . 'assets/css/site.css"></head>'
         . '<body class="ws-fatal"><main class="ws-fatal-box"><h1>일시적인 오류</h1>'
         . '<p>페이지를 그리지 못했습니다. 잠시 뒤 다시 열어 주세요.</p>'
         . '<p><a class="ws-btn" href="' . $home . '">홈으로</a></p></main></body></html>';

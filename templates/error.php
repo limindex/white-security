@@ -6,8 +6,8 @@
 <p class="ws-page-lead"><?= Site::e($message) ?> · 문서 번호(WS-…)는 바뀌지 않으므로 검색으로 다시 찾기 가능</p>
 </header>
 <ul class="ws-links">
-<li><a href="<?= Site::e($site->url('')) ?>">홈</a></li>
-<li><a href="<?= Site::e($site->url('start')) ?>">처음이라면</a></li>
-<li><a href="<?= Site::e($site->url('coverage')) ?>">점검 기준 대응표</a></li>
+<li><a href="<?= Site::e($site->url('')) ?>"><span class="ws-tx">홈</span></a></li>
+<li><a href="<?= Site::e($site->url('start')) ?>"><span class="ws-tx">처음이라면</span></a></li>
+<li><a href="<?= Site::e($site->url('coverage')) ?>"><span class="ws-tx">점검 기준 대응표</span></a></li>
 </ul>
 </div>

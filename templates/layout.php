@@ -3,7 +3,7 @@
  * @var Site $site @var string $title @var string $content @var list<string> $errors @var ?string $current @var ?string $page
  * @var bool $wide @var ?string $group @var list<array{0:string,1:?string}> $crumbs @var string $desc @var string $ogType @var ?string $canonical
  */
-$full = $title !== '' ? $title . ' · ' . Site::BRAND : Site::BRAND . ' · AI 코딩 보안 문서와 점검 스킬';
+$full = $title !== '' ? $title . ' — ' . Site::BRAND . ' ' . Site::BRAND_DESC : Site::BRAND . ' — ' . Site::BRAND_DESC;
 $publisher = $site->setting('publisher');
 $github = $site->setting('github');
 ?>
@@ -45,14 +45,15 @@ $github = $site->setting('github');
 <a class="ws-brand" href="<?= Site::e($site->url('')) ?>"<?= $title === '' && !$page && $current === null ? ' aria-current="page"' : '' ?>>
 <svg class="ws-mark" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><rect x="1" y="1" width="22" height="22" rx="6" fill="currentColor"/><path class="ws-mark-w" d="M6 8l2.5 8.5L12 10l3.5 6.5L18 8"/></svg>
 <span class="ws-brand-name"><?= Site::e(Site::BRAND) ?></span>
-<span class="ws-brand-en">White Security</span>
+<i class="ws-brand-sep" aria-hidden="true"></i>
+<span class="ws-brand-desc"><?= Site::e(Site::BRAND_DESC) ?></span>
 </a>
 <?php if ($publisher !== ''): ?>
-<span class="ws-publisher"><?= Site::e($publisher) ?></span>
+<span class="ws-publisher">by <?= Site::e($publisher) ?></span>
 <?php endif ?>
 <div class="ws-search" role="search">
 <svg class="ws-search-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5L13.5 13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-<input type="search" id="ws-q" class="ws-search-input" placeholder="이슈·용어 검색" aria-label="문서 검색" autocomplete="off" spellcheck="false"
+<input type="search" id="ws-q" class="ws-search-input" placeholder="문서 검색" aria-label="문서 검색" autocomplete="off" spellcheck="false"
  role="combobox" aria-expanded="false" aria-controls="ws-q-list" aria-autocomplete="list" aria-keyshortcuts="/" data-search="<?= Site::e($site->url('api/search.json')) ?>">
 <kbd class="ws-kbd" aria-hidden="true">/</kbd>
 <div class="ws-results" id="ws-q-pop" hidden>
@@ -69,12 +70,13 @@ $github = $site->setting('github');
 <?= $site->render('_nav', ['current' => $current, 'page' => $page, 'group' => $group]) ?>
 <main id="ws-main" class="ws-main" tabindex="-1">
 <?php if ($crumbs): $last = count($crumbs) - 1; ?>
-<nav class="ws-crumbs" aria-label="경로"><ol><?php foreach ($crumbs as $n => [$label, $href]): ?><?php if ($n === $last): ?><li aria-current="page"><?= Site::e($label) ?></li><?php elseif ($href !== null): ?><li><a href="<?= Site::e($href) ?>"><?= Site::e($label) ?></a></li><?php else: ?><li><?= Site::e($label) ?></li><?php endif ?><?php endforeach ?></ol></nav>
+<nav class="ws-crumbs" aria-label="경로"><ol><?php foreach ($crumbs as $n => [$label, $href]): ?><?php if ($n === $last): ?><li aria-current="page"><span><?= Site::e($label) ?></span></li><?php elseif ($href !== null): ?><li><a href="<?= Site::e($href) ?>"><?= Site::e($label) ?></a></li><?php else: ?><li><span><?= Site::e($label) ?></span></li><?php endif ?><?php endforeach ?></ol></nav>
 <?php endif ?>
 <?= $content ?>
 <footer class="ws-foot">
 <p class="ws-foot-scope"><span>흔한 실수를 크게 줄이는 용도</span><i></i><span>보안 감사·침투 테스트를 대신하지 않음</span></p>
-<p class="ws-foot-links"><a href="<?= Site::e($site->url('sources')) ?>">출처·라이선스</a><i></i><span>문서 CC BY-SA 4.0</span><i></i><span>예시 코드 MIT</span></p>
+<p class="ws-foot-links"><?php if ($publisher !== ''): ?><span><?= Site::e($publisher) ?> 발행</span><i></i><?php endif ?><a href="<?= Site::e($site->url('sources')) ?>">출처·라이선스</a></p>
+<p class="ws-foot-license"><span>문서 CC BY-SA 4.0</span><i></i><span>예시 코드 MIT</span></p>
 </footer>
 </main>
 </div>
