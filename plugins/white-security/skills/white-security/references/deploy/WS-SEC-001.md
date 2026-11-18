@@ -1,5 +1,5 @@
 <!-- generated from white-security issues; do not edit -->
-# WS-SEC-001 Hardcoded Secrets (비밀키 노출)
+# WS-SEC-001 Hardcoded Secrets (하드코딩된 비밀값 노출)
 
 ## 탐지 규칙
 

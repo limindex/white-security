@@ -1,6 +1,6 @@
 ---
 id: WS-SEC-001
-title: Hardcoded Secrets (비밀키 노출)
+title: Hardcoded Secrets (하드코딩된 비밀값 노출)
 slug: secret-exposure
 group: deploy
 severity: high
