@@ -1,6 +1,7 @@
 ---
 id: WS-PI-001
 title: IPI (간접 프롬프트 인젝션)
+title_en: IPI (Indirect Prompt Injection)
 slug: indirect-prompt-injection
 group: ai-use
 severity: high
@@ -83,7 +84,7 @@ AI 답은 정해진 형식으로만 받고, 화면에는 글자로만 보여 줘
 
 ## 탐지 규칙
 
-- **찾는 곳**: LLM 호출부(`messages`, `prompt`, `chat(`, `completions`, `generate(`, `invoke(`), 외부 내용 수집부(`requests.get`, `fetch(`, `file_get_contents(`, `curl_exec(`, 메일·첨부 읽기, 벡터 검색 결과, MCP·도구 응답), 도구 실행부(`tool_calls`, `function_call`, `toolCalls`), 출력 렌더링(`innerHTML`, `dangerouslySetInnerHTML`, `v-html`, `marked(`, `|safe`, 이스케이프 없는 `echo`).
+- **찾는 곳**: LLM 호출부(messages·prompt를 넘기는 `chat.completions.create(`, `messages.create(`, `generateContent(`, `.invoke(`), 외부 내용 수집부(`requests.get(`, `fetch(`, `file_get_contents(`, `curl_exec(`, 메일·첨부 읽기, 벡터 검색 결과, MCP·도구 응답), 도구 실행부(`tool_calls`, `function_call`, `toolCalls`), 출력 렌더링(`innerHTML =`, `dangerouslySetInnerHTML`, `v-html`, `marked(`, `|safe`, 이스케이프 없는 PHP echo).
 - **검사 1 — 외부 내용이 지시문에 섞임**: 지적할 때: 외부에서 온 문자열이 system 메시지나 지시 문장과 한 문자열로 합쳐지는 경우(f-string, 템플릿 리터럴, `.` 연결, `format()`). 보이지 않는 문자 정리 없이 넣은 외부 문서의 결과가 부작용 도구나 다른 사용자에게 보이는 화면으로 이어지는 경우. / 지적하지 않을 때: 지시문은 상수이고 외부 내용은 별도 user 메시지에 들어가는 경우. 합치는 값이 운영자만 쓰는 값(관리자가 등록한 상품명 등)인 경우.
 - **검사 2 — 도구 호출을 확인 없이 실행**: 지적할 때: 외부 내용을 읽은 호출이 낸 도구 호출을 그대로 실행하고, 그 도구에 부작용(보내기·쓰기·지우기·결제·외부 요청)이 있는 경우. / 지적하지 않을 때: 그 단계의 도구가 모두 읽기 전용이고 대상이 코드로 고정된 경우. 부작용 도구 실행 전에 사람 확인 단계(승인 대기열, 확인 버튼)가 있는 경우.
 - **검사 3 — 출력을 그대로 사용**: 지적할 때: 모델 출력을 `innerHTML`·`dangerouslySetInnerHTML`·`v-html`·이스케이프 없는 `echo`로 그리거나, 마크다운을 HTML로 바꾸면서 외부 이미지 URL을 막지 않거나, 셸·SQL·`eval`로 넘기는 경우. / 지적하지 않을 때: 텍스트로만 그리는 경우(`textContent`, 템플릿 자동 이스케이프, `htmlspecialchars`). 새니타이저와 이미지 도메인 허용 목록을 거치는 경우.

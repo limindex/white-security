@@ -87,7 +87,7 @@ IDOR(Insecure Direct Object Reference, 소유자 확인 없는 객체 접근)와
 
 ## 탐지 규칙
 
-- **찾는 곳**: 경로·쿼리·본문의 ID로 DB를 조회하는 라우트(`get(id)`, `findUnique`, `findById`, `find($id)`, `WHERE id = ?`), 관리자 경로(`/admin`, `/manage`), 역할 판단(`role`, `is_admin`, `level`, `grade`), 금액 처리(`price`, `amount`, `discount`), 모델 갱신(`update(`, `fill(`, `Object.assign(`).
+- **찾는 곳**: 경로·쿼리·본문의 ID로 DB를 조회하는 라우트(`.get(id)`, `findUnique`, `findById`, `find($id)`, `WHERE id = ?`), 관리자 경로(`/admin`, `/manage`), 역할 판단(role, `is_admin`, level, grade — 예: `req.body.role`), 금액 처리(price, amount, discount — 예: `req.body.price`), 모델 갱신(update, `->fill(`, `Object.assign(`).
 - **검사 1 — 소유자 확인 없는 객체 접근**: 지적할 때: 요청에서 온 ID로 조회한 객체를 소유자·권한 비교 없이 응답하거나 수정·삭제하는 경우. / 지적하지 않을 때: 조회 조건에 현재 사용자 조건이 있거나 조회 뒤 소유자 비교가 있는 경우. 누구나 봐도 되는 공개 데이터인 경우. 미들웨어·정책 클래스·ORM 전역 스코프·DB 행 수준 보안(RLS)이 소유자 제한을 거는 것을 실제로 찾은 경우(못 찾으면 "확인 필요"와 볼 곳 표시).
 - **검사 2 — 기능 수준 권한**: 지적할 때: 관리자 동작 핸들러에 서버 쪽 역할 확인이 없는 경우(로그인 확인만 있는 경우 포함). 중요 기능에 로그인 확인조차 없는 경우. / 지적하지 않을 때: 라우트 그룹 미들웨어가 역할을 확인하는 것을 실제 설정에서 찾은 경우.
 - **검사 3 — 클라이언트가 정한 권한·금액·필드**: 지적할 때: `role`, `is_admin`, `level`, `price`, `amount`, `discount`를 요청·쿠키에서 읽어 권한 판단이나 결제 금액에 그대로 쓰는 경우. 요청 본문 전체를 모델 갱신에 넘기는 경우(`**request.json`, `data: req.body`, `$user->fill($request->all())`). / 지적하지 않을 때: 받은 값을 서버 계산 값과 비교만 하고 다르면 거절하는 경우. 허용 필드 목록(`$fillable`, DTO)으로 바꿀 수 있는 필드를 제한하는 경우.

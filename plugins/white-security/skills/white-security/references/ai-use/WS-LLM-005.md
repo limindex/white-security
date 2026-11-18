@@ -14,38 +14,10 @@
 
 ## 탐지 규칙
 
-- **찾는 곳**: 벡터 검색 호출(`.query(`, `.similarity_search(`, `.search(`, `as_retriever(`, `match_documents`), 문서 넣기(`.upsert(`, `.add_documents(`, `.add(`).
+- **찾는 곳**: 벡터 검색 호출(`index.query(`, `collection.query(`, `.similarity_search(`, 벡터 DB의 search, `as_retriever(`, `match_documents`), 문서 넣기(`.upsert(`, `.add_documents(`, `collection.add(`).
 - **검사 1 — 검색의 권한 필터 누락**: 지적할 때: 여러 사용자·회사의 문서가 한 인덱스에 있는데 검색에 사용자·테넌트 필터가 없고, 검색 뒤 권한 확인도 없는 경우. / 지적하지 않을 때: 인덱스에 공개 문서만 있는 경우. 테넌트별로 인덱스가 나뉘어 있고 서버가 세션으로 인덱스를 고르는 경우.
 - **검사 2 — 확인 없는 문서 등록**: 지적할 때: 로그인한 누구나(또는 외부 크롤링 결과가) 모든 사용자가 쓰는 공용 인덱스에 확인 없이 들어가는 경우. / 지적하지 않을 때: 넣는 사람 권한을 확인하고 출처를 기록하는 경우. 사용자 본인 전용 인덱스인 경우.
 - **등급**: 위험: 다른 사용자·회사 문서가 검색될 수 있는 경우. / 주의: 공용 인덱스에 확인 없이 문서가 들어가는 경우. / 참고: 원본 삭제가 벡터 DB에 반영되지 않는 경우. 답에 근거가 없는 경우.
 - **보고 예**: `[위험] WS-LLM-005 rag/search.py:18 — index.query 에 tenant 필터가 없어 다른 회사 문서가 검색됨 → filter={"tenant_id": user.tenant_id} 추가, 원본 권한 재확인`
 
-## 코드 예시
-
-### python
-
-✗ 취약 코드 (vulnerable example — do not use)
-
-```python
-def answer(user, question: str) -> str:
-    hits = index.query(vector=embed(question), top_k=5)  # 모든 회사 문서에서 찾는다
-    context = "\n".join(h.metadata["text"] for h in hits)
-    return llm.chat(question, context=context)
-```
-
-✓ 안전 코드 (safe example)
-
-```python
-def answer(user, question: str) -> dict:
-    hits = index.query(vector=embed(question), top_k=5,
-                       filter={"tenant_id": user.tenant_id})       # 내 회사 문서에서만 찾는다
-    docs = [d for d in docs_repo.get_many([h.id for h in hits]) if d.can_read(user)]  # 원본 권한 재확인
-    context = "\n".join(f"[{d.id}] {d.text}" for d in docs)
-    return {"answer": llm.chat(question, context=context), "sources": [d.id for d in docs]}
-
-def ingest(doc, uploader) -> None:
-    if not uploader.can_publish(doc.tenant_id):
-        raise PermissionError("이 회사 문서함에 올릴 권한이 없습니다")
-    meta = {"tenant_id": doc.tenant_id, "source": doc.source, "by": uploader.id}
-    index.upsert([(doc.id, embed(doc.text), meta)])
-```
+Code examples (read only the file for the language you are writing): `WS-LLM-005.code.python.md`

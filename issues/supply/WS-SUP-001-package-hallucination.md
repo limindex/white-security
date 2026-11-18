@@ -88,7 +88,7 @@ Slopsquatting(슬롭스쿼팅)은 AI가 지어낸 패키지(남이 만들어 둔
 
 ## 탐지 규칙
 
-- **찾는 곳**: 이번 변경에서 추가된 의존성(`package.json`, `requirements*.txt`, `pyproject.toml`, `composer.json`의 차이), 코드의 새 `import`·`require`·`use`, 에이전트가 실행하려는 설치 명령, 에이전트 설정의 허용 목록(예: `.claude/settings.json`의 `Bash(npm install:*)`).
+- **찾는 곳**: 이번 변경에서 추가된 의존성(`package.json`, `requirements*.txt`, `pyproject.toml`, `composer.json`의 차이), 코드의 새 import·require·use, 에이전트가 실행하려는 설치 명령(`npm install`, `pip install`, `composer require`), 에이전트 설정의 허용 목록(예: `.claude/settings.json`의 `Bash(npm install:*)`).
 - **검사 1 — 실재 확인(모델 기억이 아니라 레지스트리 실제 조회, 조회하지 못하면 안전 판단 대신 "확인 못 함")**: 지적할 때: 조회 결과 404, 처음 등록일 90일 이내, 유명 패키지와 편집 거리 1~2이면서 다른 신호(90일 이내 등록, 매우 적은 내려받기, 공식 문서와 다른 repository 링크)가 함께 있는 경우. / 지적하지 않을 때: 이미 잠금 파일에 있고 이번 변경에서 이름이 바뀌지 않은 의존성, 표준 라이브러리 모듈, 워크스페이스 안 패키지(`file:`, `workspace:`, `path` repository), 다른 신호 없이 이름만 비슷한 정상 짝(`react`·`preact`, `vue`·`vite`, `qs`·`ms`).
 - **검사 2 — 잠금 파일**: 지적할 때: 매니페스트는 바뀌었는데 잠금 파일이 없거나 함께 바뀌지 않은 경우. CI가 `npm ci` 대신 `npm install`로 설치하는 경우. / 지적하지 않을 때: 라이브러리 repository라 잠금 파일을 일부러 두지 않고 그 이유가 문서에 있는 경우(참고로만 기록).
 - **검사 3 — 자동 설치**: 지적할 때: 코드나 에이전트 설정이 모델이 제안한 이름을 확인 없이 설치하는 경우(`subprocess.run(["pip", "install", name])`, `` exec(`npm install ${name}`) ``, 설치 명령 자동 승인). / 지적하지 않을 때: 설치 전에 레지스트리 조회와 사람 승인이 있는 경우.

@@ -1,6 +1,7 @@
 ---
 id: WS-XML-001
 title: XXE · Billion Laughs
+title_en: XXE (XML External Entity) · Billion Laughs
 slug: billion-laughs-xxe
 group: fetch
 severity: high

@@ -1,6 +1,7 @@
 ---
 id: WS-SSRF-001
 title: SSRF (서버사이드 요청 위조)
+title_en: SSRF (Server-Side Request Forgery)
 slug: ssrf
 group: fetch
 severity: high

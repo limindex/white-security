@@ -66,8 +66,9 @@ test('build: 스킬 references — 플러그인 폴더에 묶음별 INDEX·이�
     assert_true(!is_dir("$root/skills"), '옛 위치에 만들지 않음');
     $f = file_get_contents("$ref/web/WS-INJ-001.md");
     assert_true(str_starts_with($f, SkillExport::HEADER), '머리 주석');
-    foreach (['## 점검 항목', '## 탐지 규칙', '## 코드 예시', 'cur.execute("SELECT * FROM u WHERE id=%s", (uid,))'] as $s) assert_contains($s, $f);
-    foreach (['## 발생 상황', '## 요약', '## 위험 배경', '## 대응 방법'] as $s) assert_true(!str_contains($f, $s), $s);
+    foreach (['## 점검 항목', '## 탐지 규칙'] as $s) assert_contains($s, $f);
+    foreach (['## 발생 상황', '## 요약', '## 위험 배경', '## 대응 방법', '## 코드 예시'] as $s) assert_true(!str_contains($f, $s), $s);
+    assert_contains('cur.execute("SELECT * FROM u WHERE id=%s", (uid,))', file_get_contents("$ref/web/WS-INJ-001.code.python.md"));
     assert_true(!is_file("$ref/people/WS-PPL-001.md") && !is_dir("$ref/people"), 'site_only 제외');
     assert_true(is_file("$ref/web/INDEX.md") && !is_file("$ref/INDEX.md"), '묶음 INDEX 만');
     assert_contains('plugins/white-security/skills/white-security/references', $out);

@@ -150,7 +150,7 @@ test('문서 메타: 형식 오류', function () {
 test('탐지 규칙: 정상 형식을 칸별로 읽고 찾는 곳의 백틱 코드를 신호로 뽑는다', function () {
     $i = Issue::fromFile(__DIR__ . '/fixtures/issues/web/WS-INJ-001-sql-injection.md', ws_groups());
     $d = $i->detection;
-    assert_same(['execute(', 'query(', '->query('], $d['signals']);
+    assert_same(['cursor.execute(', 'db.query(', '->query('], $d['signals']);
     assert_contains('쿼리 조립 지점', $d['where']);
     assert_same(2, count($d['checks']));
     assert_same('값 이어 붙이기', $d['checks'][0]['name']);
@@ -163,16 +163,16 @@ test('탐지 규칙: 정상 형식을 칸별로 읽고 찾는 곳의 백틱 코�
 });
 
 test('탐지 규칙: 백틱 두 개짜리 코드와 중복 신호', function () {
-    $raw = ws_mut('- **찾는 곳**: 쿼리 조립 지점(`execute(`, `query(`, `->query(`)', '- **찾는 곳**: `` exec(`npm i ${n}`) `` 와 `execute(`, 다시 `execute(`');
+    $raw = ws_mut('- **찾는 곳**: 쿼리 조립 지점(`cursor.execute(`, `db.query(`, `->query(`)', '- **찾는 곳**: `` exec(`npm i ${n}`) `` 와 `cursor.execute(`, 다시 `cursor.execute(`');
     $f = sys_get_temp_dir() . '/ws-det-' . bin2hex(random_bytes(4)) . '.md';
     file_put_contents($f, $raw);
     $i = Issue::fromFile($f, ws_groups());
     unlink($f);
-    assert_same(['exec(`npm i ${n}`)', 'execute('], $i->detection['signals']);
+    assert_same(['exec(`npm i ${n}`)', 'cursor.execute('], $i->detection['signals']);
 });
 
 test('탐지 규칙: 형식 위반은 파일명과 이유로 거절', function () {
-    $where = "- **찾는 곳**: 쿼리 조립 지점(`execute(`, `query(`, `->query(`)\n";
+    $where = "- **찾는 곳**: 쿼리 조립 지점(`cursor.execute(`, `db.query(`, `->query(`)\n";
     $c1 = "- **검사 1 — 값 이어 붙이기**: 지적할 때: 요청 값을 쿼리 문자열에 이어 붙이는 경우. / 지적하지 않을 때: 매개변수 바인딩을 쓰는 경우.\n";
     $grade = "- **등급**: 위험: 외부 값이 쿼리에 그대로 들어가는 경우. / 주의: 값의 출처를 끝까지 따라가지 못한 경우. / 참고: DB 오류 원문 노출.\n";
     $cases = [
@@ -207,3 +207,29 @@ test('탐지 규칙: site_only 가 아니면 brief 라도 필수, site_only 는 
     unlink($f);
     assert_same(null, $i->detection);
 });
+
+test('탐지 규칙 신호: 너무 짧거나 흔한 낱말은 파일:줄과 함께 거절, 금지 목록은 한 곳', function () {
+    assert_true(in_array('system', Issue::SIGNAL_STOPLIST, true) && in_array('update(', Issue::SIGNAL_STOPLIST, true), '금지 목록 상수');
+    foreach (['`system`' => 'system', '`gs`' => 'gs', '`update(`' => 'update(', '`innerHTML`' => 'innerHTML', '`use`' => 'use'] as $code => $sig) {
+        $m = ws_issue_error(ws_mut('`db.query(`', "`db.query(`, $code"));
+        assert_true((bool)preg_match('/-bad\.md:\d+: 탐지 규칙/u', $m), "파일:줄 — $m");
+        assert_contains("`$sig`", $m);
+    }
+    // 4자 이상이거나 ( . : / = - _ 중 하나가 있으면 통과
+    foreach (['`zipfile`', '`a.b`', '`x=`', '`gs -`'] as $ok) Issue::fromFile(ws_tmp(ws_mut('`db.query(`', "`db.query(`, $ok")), ws_groups());
+    assert_true(Issue::signalProblem('gs') !== null && Issue::signalProblem('gs -') === null && Issue::signalProblem('Wand(') === null);
+});
+
+test('title_en: 선택, 한 줄 문자열', function () {
+    $i = Issue::fromFile(ws_tmp(ws_mut("title: SQL 삽입\n", "title: SQL 삽입\ntitle_en: SQL Injection\n")), ws_groups());
+    assert_same('SQL Injection', $i->titleEn);
+    assert_same(null, Issue::fromFile(__DIR__ . '/fixtures/issues/web/WS-INJ-001-sql-injection.md', ws_groups())->titleEn);
+    assert_contains('title_en', ws_issue_error(ws_mut("title: SQL 삽입\n", "title: SQL 삽입\ntitle_en: 3\n")));
+});
+
+/** 원본 문자열을 임시 파일로 쓰고 경로를 돌려준다. */
+function ws_tmp(string $raw): string {
+    $f = sys_get_temp_dir() . '/ws-ok-' . bin2hex(random_bytes(4)) . '.md';
+    file_put_contents($f, $raw);
+    return $f;
+}
