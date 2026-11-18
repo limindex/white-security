@@ -15,7 +15,7 @@
 
 ## 탐지 규칙
 
-- **찾는 곳**: 외부 입력이나 LLM 출력이 들어가는 `requests.get(`, `httpx.`, `urllib.request.urlopen(`, `fetch(`, `axios(`, `got(`, `http.get(`, `file_get_contents(`, `curl_init(`, `Guzzle`, 헤드리스 브라우저의 `page.goto(`.
+- **찾는 곳**: 외부 입력이나 LLM 출력이 들어가는 `requests.get(`, `httpx.`, `urllib.request.urlopen(`, `fetch(`, `axios(`, `file_get_contents(`, `curl_init(`, 헤드리스 브라우저의 `page.goto(`, `got(`, `http.get(`, `Guzzle`.
 - **검사 1 — 주소 검사 없음**: 지적할 때: 요청·DB·LLM 출력에서 온 URL을 검사 없이 서버가 여는 경우. / 지적하지 않을 때: URL이 코드에 고정된 경우. 서버가 정한 도메인 허용 목록에서만 고르는 경우.
 - **검사 2 — 문자열에만 머무는 검사**: 지적할 때: 호스트 이름을 문자열로만 막는 경우(`"localhost" in url`, `startswith`). IP를 검사한 뒤 라이브러리가 DNS를 다시 조회해 접속하는 경우. Node처럼 IP 주소면 `lookup`을 건너뛰는 구조에서 IP 주소를 따로 막지 않는 경우. 리다이렉트를 검사 없이 따라가는 경우. / 지적하지 않을 때: 확인한 IP로 접속을 고정하고(`CURLOPT_RESOLVE`, 사용자 정의 `lookup`, 연결 고정), 리다이렉트를 끄거나 매번 다시 검사하는 경우. 바깥 요청 전용 프록시가 내부 대역을 막는 경우.
 - **등급**: 위험: 사용자·AI가 준 URL을 검사 없이 여는 경우. 특히 응답이 사용자에게 돌아가거나 클라우드 서버에서 도는 경우. / 주의: 문자열 검사만 있거나 DNS를 두 번 조회하는 경우. 리다이렉트를 따라가는 경우. / 참고: 시간·크기 제한이 없는 경우. PHP `CURLOPT_MAXFILESIZE`에만 기대는 경우(curl 8.4 전에는 길이를 모르는 응답에 효과 없음).

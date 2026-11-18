@@ -91,7 +91,7 @@ DB에 보내는 쿼리를 모두 찾아, 사용자 입력이 SQL 문장에 직�
 
 ## 탐지 규칙
 
-- **찾는 곳**: 쿼리 실행부와 그 인자(`cursor.execute(`, `executemany(`, `cursor.`, `db.query(`, Django `.raw(`, SQLAlchemy `text("`, `->query(`, `->exec(`, `->prepare(`, `mysqli_query(`, `pg_query(`, `pool.query(`, `sequelize.query(`, `knex.raw(`, `whereRaw(`).
+- **찾는 곳**: 쿼리 실행부와 그 인자(`cursor.execute(`, `->query(`, `mysqli_query(`, `pool.query(`, `db.query(`, `sequelize.query(`, `knex.raw(`, `whereRaw(`, `executemany(`, `cursor.`, Django `.raw(`, SQLAlchemy `text("`, `->exec(`, `->prepare(`, `pg_query(`).
 - **검사 1 — 값 이어 붙이기**: 지적할 때: 요청·파일·외부 API·LLM 출력에서 온 값이 `+`, `.`, f-string, 템플릿 리터럴, `%` 포맷, `format()`, `sprintf`로 쿼리 문자열에 합쳐지는 경우(함수 몇 단계를 거쳐 와도 출처가 외부면 같음). / 지적하지 않을 때: 합치는 값이 코드 상수나 허용 목록에서 고른 식별자이거나, 자리표시자 문자열만 조립하는 경우(`", ".join(["%s"] * len(ids))`).
 - **검사 2 — 식별자 자리**: 지적할 때: `ORDER BY`, 테이블 이름, 컬럼 이름에 요청 값이 그대로 들어가는 경우. / 지적하지 않을 때: `SORT_COLUMNS[sort]`처럼 허용 목록 매핑을 거치고, 목록에 없으면 기본값을 쓰는 경우.
 - **검사 3 — 이스케이프에 기댄 코드**: 지적할 때: `addslashes`나 자체 이스케이프 뒤에 문자열을 이어 붙이는 경우(SQL 인젝션으로 보고 바인딩 권고). / 지적하지 않을 때: 이스케이프 결과가 쿼리 문자열이 아닌 곳(화면 출력, 파일 등)에만 쓰이는 경우.

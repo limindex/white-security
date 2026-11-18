@@ -163,18 +163,12 @@ final class SkillExport
     }
 
     /**
-     * 가장 구체적인 신호 INDEX_MAX_SIGNALS 개: ( . : / = - _ 가 있는 것 먼저, 그다음 긴 것, 같으면 앞선 것. 출력은 원래 순서.
+     * INDEX 에 싣는 신호: `찾는 곳` 에 적힌 순서대로 앞 INDEX_MAX_SIGNALS 개. 작성자가 핵심 신호를 앞에 둔다(HANDOFF §4).
      * @param list<string> $signals @return list<string>
      */
     public static function topSignals(array $signals): array
     {
-        if (count($signals) <= self::INDEX_MAX_SIGNALS) return $signals;
-        $rank = [];
-        foreach ($signals as $n => $s) $rank[] = [strpbrk($s, '(.:/=-_') !== false ? 0 : 1, -mb_strlen($s), $n];
-        sort($rank);
-        $keep = array_column(array_slice($rank, 0, self::INDEX_MAX_SIGNALS), 2);
-        sort($keep);
-        return array_map(fn(int $n) => $signals[$n], $keep);
+        return array_slice($signals, 0, self::INDEX_MAX_SIGNALS);
     }
 
     /**

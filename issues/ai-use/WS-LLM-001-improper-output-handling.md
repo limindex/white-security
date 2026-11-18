@@ -62,7 +62,7 @@ AI 답은 정해진 JSON 형식으로만 받아 검사하고, 실행할 일은 �
 
 ## 탐지 규칙
 
-- **찾는 곳**: LLM 응답 변수(reply, completion, output, content 등. 예: `response.text`, `.message.content`, `output_text`)가 흘러가는 곳 — `eval(`, `exec(`, `new Function(`, `subprocess.`, `child_process.exec(`, `shell_exec(`, `cursor.execute(`·`db.query(`의 SQL 문자열, `innerHTML =`, `dangerouslySetInnerHTML`, `v-html`, 이스케이프 없는 PHP echo.
+- **찾는 곳**: LLM 응답이 흘러가는 곳 — 코드 실행(`eval(`, `exec(`), 셸(`subprocess.`, `shell_exec(`), SQL 문자열(`cursor.execute(`), HTML(`innerHTML =`, `dangerouslySetInnerHTML`, `v-html`), 그 밖에 `new Function(`, `child_process.exec(`, `db.query(`, 이스케이프 없는 PHP echo. 응답 변수 예: reply, completion, output, content 등(`response.text`, `.message.content`, `output_text`).
 - **검사 1 — AI 출력 실행**: 지적할 때: LLM 응답 문자열이 코드 실행·셸·SQL 문자열로 그대로 들어가는 경우. / 지적하지 않을 때: 응답을 JSON으로 파싱해 허용 목록의 값만 쓰고, 실행은 고정된 함수·매개변수 바인딩으로 하는 경우. 격리된 샌드박스(네트워크·파일 접근 없는 별도 컨테이너)에서만 실행하는 경우.
 - **검사 2 — AI 출력의 HTML 렌더링**: 지적할 때: LLM 응답을 새니타이저 없이 HTML로 넣는 경우. / 지적하지 않을 때: 텍스트로 그리거나 새니타이저를 거치는 경우.
 - **등급**: 위험: AI 출력이 `eval`·셸·SQL로 들어가는 경우. 남이 쓴 글이 섞인 AI 출력이 HTML로 그려지는 경우. / 주의: 사용자 본인 입력만 들어가는 AI 출력이 HTML로 그려지는 경우. 출력 형식 검사가 없는 경우. / 참고: 샌드박스에서만 실행하지만 시간·메모리 제한이 없는 경우.

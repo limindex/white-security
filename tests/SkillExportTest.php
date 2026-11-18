@@ -142,15 +142,16 @@ test('SkillExport: 코드 예시는 언어별 파일로 분리, 이슈 파일에
     assert_contains('$st = $db->prepare', file_get_contents("$ref/web/WS-INJ-001.code.php.md"));
 });
 
-test('SkillExport: INDEX 는 이슈당 신호 8개까지(구두점 있는 것·긴 것 우선, 원래 순서로), 600토큰 넘으면 실패', function () {
+test('SkillExport: INDEX 는 이슈당 신호를 찾는 곳 순서대로 앞 8개만(작성자가 핵심 신호를 앞에), 600토큰 넘으면 실패', function () {
     $sigs = ['abcd', 'x.y', 'longer_name_1', 'aaaa', 'bbbbbbbb', 'c.c(', 'dddd', 'eeee', 'ffff', 'g-g', 'hhhhhhhhhhhh'];
     $where = '- **찾는 곳**: ' . implode(', ', array_map(fn($s) => "`$s`", $sigs));
     [$ref] = se_write(['WS-INJ-005-x.md' => str_replace(['WS-INJ-001', '- **찾는 곳**: 쿼리 조립 지점(`cursor.execute(`, `db.query(`, `->query(`)'], ['WS-INJ-005', $where], file_get_contents(__DIR__ . '/fixtures/issues/web/WS-INJ-001-sql-injection.md'))]);
     $idx = file_get_contents("$ref/web/INDEX.md");
     preg_match('/^- (.*) → WS-INJ-005/m', $idx, $m);
     preg_match_all('/`([^`]+)`/', $m[1], $got);
-    // 구두점 있는 4개(longer_name_1·c.c(·x.y·g-g) + 없는 것 중 긴 순 4개(hhhhhhhhhhhh·bbbbbbbb·abcd·aaaa, 같은 길이는 앞선 것), 출력은 원래 순서
-    assert_same(['abcd', 'x.y', 'longer_name_1', 'aaaa', 'bbbbbbbb', 'c.c(', 'g-g', 'hhhhhhhhhhhh'], $got[1], '고른 8개·원래 순서');
+    assert_same(array_slice($sigs, 0, 8), $got[1], '원래 순서 앞 8개');
+    assert_same(array_slice($sigs, 0, 8), SkillExport::topSignals($sigs));
+    assert_same(['a.b', 'c.d'], SkillExport::topSignals(['a.b', 'c.d']));
     // 상한 초과
     $root = make_root();
     file_put_contents($root . '/data/groups.json', json_encode([['id' => 'web', 'name' => '웹', 'order' => 5, 'route' => 'sql', 'when' => str_repeat('아주 긴 설명 ', 300)]], JSON_UNESCAPED_UNICODE));
