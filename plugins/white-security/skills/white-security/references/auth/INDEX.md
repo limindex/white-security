@@ -11,5 +11,9 @@ Stacks: Python · FastAPI · Django · JavaScript · Next.js · PHP · Laravel
 - `admin.site.urls` `viewTelescope` `viewHorizon` `app/admin/` `adminer.php` `phpmyadmin` `useSession(` → WS-AUTH-004 Exposed Admin Interface
 - `phoneVerified` `is_adult` `cert_ok` `enc_data` `verifyIdToken(` `confirmationResult.confirm(` → WS-AUTH-005 Authentication Bypass
 - `$guarded = []` `$request->all()` `forceFill(` `"__all__"` `data: body` `**payload` → WS-AUTH-006 Mass Assignment
+- `/coupons` `/redeem` `/referral` `/signup` `siteverify` `@ratelimit(` → WS-FLOW-001 Business Flow Abuse
+- `->stateless()` `allowDangerousEmailAccountLinking` `redirect_uri` `Socialite::driver(` `verify_oauth2_token(` `/oauth/callback` → WS-OAUTH-001 OAuth Login Flaws
+- `constructEvent(` `construct_event(` `stripe-signature` `/payments/confirm` `/webhooks/` → WS-PAY-001 Payment Tampering
 - `md5(` `sha1(` `hashlib.sha256(` `createHash(` `Crypt::encrypt(` `MD5PasswordHasher` → WS-PWD-001 Weak Password Storage · Policy
 - `jwt.decode(` `decodeJwt(` `jwtVerify(` `ignoreExpiration` `verify_signature` `session_regenerate_id(` → WS-SESS-001 Broken Session Management
+- `Math.random(` `random.randint(` `mt_rand(` `verification_code` `otp_code` `/sms/send` → WS-SMS-001 OTP Abuse (SMS Code Brute Force · SMS Pumping)
