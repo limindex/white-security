@@ -40,7 +40,7 @@ sources:
 
 ## 한 줄 요약
 
-`pickle`, `yaml.load`, PHP `unserialize` 같은 함수는 글자를 프로그램 객체로 되살리는데, 남이 준 데이터를 넣으면 객체를 만드는 순간 그 사람이 심은 코드가 돈다. 이것을 Insecure Deserialization(안전하지 않은 역직렬화)이라고 한다(진단가이드 이름: 신뢰할 수 없는 데이터의 역직렬화).
+`pickle`, `yaml.load`, PHP `unserialize`처럼 글자를 프로그램 객체로 되살리는 함수에 남이 준 데이터를 넣을 때, 객체가 만들어지는 순간 공격자가 심은 코드가 실행되는 문제. Insecure Deserialization(안전하지 않은 역직렬화)이라 부름(진단가이드 이름: 신뢰할 수 없는 데이터의 역직렬화).
 
 ## 나는 뭘 하면 되나
 
@@ -50,33 +50,33 @@ JSON 으로 바꾸고 읽은 뒤 형식을 검사해 줘. YAML 은 yaml.safe_loa
 쿠키처럼 클라이언트가 들고 있는 값은 서명을 확인하거나, ID만 두고 내용은 서버에 두게 해 줘.
 ```
 
-- 쿠키 값을 한 글자 바꿔 요청해 본다. 오류 없이 거절(400)돼야 한다.
+- 쿠키 값을 한 글자 바꿔 요청했을 때, 오류 화면 없이 거절(400)되어야 한다.
 
 ## 체크 항목
 
-- 남이 준 데이터(쿠키·요청 본문·큐 메시지·업로드 파일)를 `pickle`, 안전 로더 없는 `yaml.load`, PHP `unserialize`, Java `ObjectInputStream`, `node-serialize`로 되살리지 않는다. JSON을 쓴다.
-- YAML은 `yaml.safe_load`를 쓴다.
-- PHP 공식 문서는 `allowed_classes` 옵션을 써도 믿을 수 없는 입력은 `unserialize`에 넣지 말라고 한다.
-- 서버가 만든 값을 클라이언트에 맡겨야 하면 HMAC 서명(서버 비밀 키로 만든 확인값)을 붙이고 되살리기 전에 확인한다.
-- JSON으로 읽은 뒤에도 타입·필드를 검사하고, 쓸 값만 꺼낸다.
-- AI 모델 파일(`.pkl`, `.pt` 등)도 pickle일 수 있다. 모델 공급망은 WS-SUP-008에서 본다.
+- 남이 준 데이터(쿠키·요청 본문·큐 메시지·업로드 파일)는 `pickle`, 안전 로더 없는 `yaml.load`, PHP `unserialize`, Java `ObjectInputStream`, `node-serialize`로 되살리지 않고 JSON을 써야 한다.
+- YAML은 `yaml.safe_load`를 써야 한다.
+- PHP `unserialize`에는 `allowed_classes` 옵션과 관계없이 믿을 수 없는 입력을 넣지 않아야 한다(PHP 공식 문서의 경고).
+- 서버가 만든 값을 클라이언트에 맡겨야 하면 HMAC 서명(서버 비밀 키로 만든 확인값)을 붙이고 되살리기 전에 확인해야 한다.
+- JSON으로 읽은 뒤에도 타입·필드를 검사하고, 쓸 값만 꺼내야 한다.
+- AI 모델 파일(`.pkl`, `.pt` 등)도 pickle일 수 있음. 모델 공급망은 WS-SUP-008 범위.
 
 ## 스킬이 잡는 방식
 
 **찾는 곳**: `pickle.load(s)`, `cPickle`, `dill`, `joblib.load`, `yaml.load(`·`yaml.unsafe_load`, `jsonpickle.decode`, `unserialize(`, `node-serialize`, `serialize-javascript`를 되살릴 때의 `eval`, `ObjectInputStream`, `XMLDecoder`, `BinaryFormatter`.
 
-**검사 1. 바깥 데이터를 되살린다**
-- 지적할 때: 요청·쿠키·파일·큐·외부 API에서 온 값이 위 함수로 들어간다.
-- 지적하지 않을 때: 서버가 만들고 서버만 쓰는 파일(배포 산출물, 사내 캐시)이고 외부에서 쓸 수 없다. 이때도 참고로 JSON 전환을 권한다.
+**검사 1. 바깥 데이터의 역직렬화**
+- 지적할 때: 요청·쿠키·파일·큐·외부 API에서 온 값이 위 함수로 들어가는 경우.
+- 지적하지 않을 때: 서버가 만들고 서버만 쓰는 파일(배포 산출물, 사내 캐시)이고 외부에서 쓸 수 없는 경우(참고로 JSON 전환 권장).
 
 **검사 2. YAML 로더**
-- 지적할 때: `yaml.load(x)`에 `Loader`가 없거나 `Loader=yaml.Loader`·`UnsafeLoader`다. `yaml.unsafe_load`를 쓴다.
-- 지적하지 않을 때: `yaml.safe_load`나 `Loader=yaml.SafeLoader`다. `FullLoader`는 참고로만 `safe_load`를 권한다.
+- 지적할 때: `yaml.load(x)`에 `Loader`가 없거나 `Loader=yaml.Loader`·`UnsafeLoader`인 경우. `yaml.unsafe_load`를 쓰는 경우.
+- 지적하지 않을 때: `yaml.safe_load`나 `Loader=yaml.SafeLoader`인 경우. `FullLoader`는 참고로만 `safe_load` 권장.
 
 **등급**
-- 위험: 요청·쿠키·업로드 데이터가 `pickle`·`unserialize`·`node-serialize`·안전하지 않은 YAML 로더로 들어간다.
-- 주의: 서명은 확인하지만 여전히 `pickle`·`unserialize`를 쓴다(키가 새면 바로 뚫린다).
-- 참고: 서버 내부 데이터에 `pickle`을 쓴다.
+- 위험: 요청·쿠키·업로드 데이터가 `pickle`·`unserialize`·`node-serialize`·안전하지 않은 YAML 로더로 들어가는 경우.
+- 주의: 서명은 확인하지만 여전히 `pickle`·`unserialize`를 쓰는 경우(키가 새면 바로 뚫림).
+- 참고: 서버 내부 데이터에 `pickle`을 쓰는 경우.
 
 **보고 형식**: `[위험|주의|참고] <id> <파일:줄> — <이유> → <고칠 방법>`
 
@@ -86,14 +86,14 @@ JSON 으로 바꾸고 읽은 뒤 형식을 검사해 줘. YAML 은 yaml.safe_loa
 
 ### python
 
-✗ 뚫리는 코드
+✗ 취약 코드
 
 ```python
 cart = pickle.loads(base64.b64decode(request.cookies["cart"]))  # 쿠키를 만든 사람의 코드가 돈다
 config = yaml.load(request.data, Loader=yaml.Loader)  # 태그로 파이썬 객체를 만든다
 ```
 
-✓ 막는 코드
+✓ 안전 코드
 
 ```python
 import base64, hashlib, hmac, json, yaml
@@ -113,7 +113,7 @@ config = yaml.safe_load(request.data)  # 기본 타입만 만든다
 
 ### js
 
-✗ 뚫리는 코드
+✗ 취약 코드
 
 ```js
 import serialize from "node-serialize";
@@ -122,7 +122,7 @@ import serialize from "node-serialize";
 const prefs = serialize.unserialize(Buffer.from(req.cookies.prefs, "base64").toString());
 ```
 
-✓ 막는 코드
+✓ 안전 코드
 
 ```js
 let prefs;
@@ -136,7 +136,7 @@ const theme = ["light", "dark"].includes(prefs?.theme) ? prefs.theme : "light"; 
 
 ### php
 
-✗ 뚫리는 코드
+✗ 취약 코드
 
 ```php
 <?php
@@ -144,7 +144,7 @@ const theme = ["light", "dark"].includes(prefs?.theme) ? prefs.theme : "light"; 
 $cart = unserialize(base64_decode($_COOKIE['cart']));
 ```
 
-✓ 막는 코드
+✓ 안전 코드
 
 ```php
 <?php

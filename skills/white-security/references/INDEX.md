@@ -7,42 +7,42 @@
 
 언제 읽나: AI에게 문서·웹페이지·메일을 읽히거나 요약시킬 때
 
-- [WS-LLM-001 Improper Output Handling(AI 출력을 그대로 실행·표시)](ai-use/WS-LLM-001.md) — AI가 쓴 글·코드·SQL·명령을 확인 없이 `eval`, 셸, DB, `innerHTML`에 넘기면, AI를 속인 사람의 코드가 내 서버나 사용자 화면에서 돈다. 이것을 Improper Output Handling(부적절한 출력 처리)이라고 한다(진단가이드 이름: 코드 삽입·SQL 삽입·운영체제 명령어 삽입·크로스사이트 스크립트).
-- [WS-LLM-002 System Prompt Leakage(시스템 프롬프트 유출)](ai-use/WS-LLM-002.md) — 시스템 프롬프트(AI에게 미리 깔아 두는 기본 지시문)는 언젠가 새어 나간다고 보고 짜야 한다. 그 안에 API 키를 넣거나 "관리자에게만 알려 줘" 같은 문장으로 권한을 대신하면 그대로 뚫린다(진단가이드 이름: 하드코드된 중요정보).
-- [WS-LLM-003 Sensitive Information Disclosure — AI API로 보내는 개인정보·키](ai-use/WS-LLM-003.md) — 고객 정보나 키를 프롬프트에 통째로 넣어 외부 AI API로 보내면, 그 데이터는 내 서버 밖(AI 회사의 서버와 로그)에 남는다. OWASP는 이를 Sensitive Information Disclosure(민감 정보 노출)로 다룬다.
-- [WS-LLM-004 Unbounded Consumption(토큰·비용 폭탄)](ai-use/WS-LLM-004.md) — 로그인도 횟수 제한도 없이 AI 호출 API를 열어 두면, 누군가 긴 글을 수만 번 보내 내 돈으로 AI를 쓴다. OWASP는 이를 Unbounded Consumption(자원 소비 무제한)이라고 부른다.
-- [WS-LLM-005 RAG 권한 누락 · RAG Poisoning(벡터 DB 문서 오염)](ai-use/WS-LLM-005.md) — RAG(질문과 비슷한 문서를 먼저 찾아 AI에게 같이 넘기는 방식)에서 검색할 때 권한을 거르지 않으면 남의 문서가 답에 섞여 나온다. 아무나 문서를 넣을 수 있으면 가짜 문서 몇 개로 답을 바꿀 수 있는데, 이를 RAG Poisoning이라고 한다(진단가이드 이름: 부적절한 인가).
-- [WS-LLM-006 Misinformation · Overreliance(AI 답을 사실로 믿고 자동 처리)](ai-use/WS-LLM-006.md) — AI는 틀린 내용도 자신 있게 말한다(Hallucination, NIST 용어로는 Confabulation). 그 답을 확인 없이 환불·결제·고객 안내에 바로 쓰는 것을 Overreliance(과신)라고 하며, 틀린 결과의 책임은 서비스를 만든 쪽이 진다.
+- [WS-LLM-001 Improper Output Handling(AI 출력을 그대로 실행·표시)](ai-use/WS-LLM-001.md) — AI가 쓴 글·코드·SQL·명령을 확인 없이 `eval`, 셸, DB, `innerHTML`에 넘길 때, AI를 속인 사람의 코드가 서버나 사용자 화면에서 실행되는 문제. Improper Output Handling(부적절한 출력 처리)이라 부름(진단가이드 이름: 코드 삽입·SQL 삽입·운영체제 명령어 삽입·크로스사이트 스크립트).
+- [WS-LLM-002 System Prompt Leakage(시스템 프롬프트 유출)](ai-use/WS-LLM-002.md) — 시스템 프롬프트(AI에게 미리 깔아 두는 기본 지시문)는 언젠가 새어 나간다는 전제가 필요. 그 안에 API 키를 넣거나 "관리자에게만 알려 줘" 같은 문장으로 권한을 대신하면 그대로 뚫리는 문제(진단가이드 이름: 하드코드된 중요정보).
+- [WS-LLM-003 Sensitive Information Disclosure — AI API로 보내는 개인정보·키](ai-use/WS-LLM-003.md) — 고객 정보나 키를 프롬프트에 통째로 넣어 외부 AI API로 보낼 때, 그 데이터가 내 서버 밖(AI 회사의 서버와 로그)에 남는 문제. OWASP 분류로는 Sensitive Information Disclosure(민감 정보 노출).
+- [WS-LLM-004 Unbounded Consumption(토큰·비용 폭탄)](ai-use/WS-LLM-004.md) — 로그인도 횟수 제한도 없이 AI 호출 API를 열어 둘 때, 누군가 긴 글을 수만 번 보내 서비스 운영자 비용으로 AI를 쓰는 문제. OWASP 분류로는 Unbounded Consumption(자원 소비 무제한).
+- [WS-LLM-005 RAG 권한 누락 · RAG Poisoning(벡터 DB 문서 오염)](ai-use/WS-LLM-005.md) — RAG(질문과 비슷한 문서를 먼저 찾아 AI에게 함께 넘기는 방식)에서 검색할 때 권한을 거르지 않아 남의 문서가 답에 섞여 나오는 문제. 누구나 문서를 넣을 수 있으면 가짜 문서 몇 개로 답이 바뀌는 RAG Poisoning 위험도 있음(진단가이드 이름: 부적절한 인가).
+- [WS-LLM-006 Misinformation · Overreliance(AI 답을 사실로 믿고 자동 처리)](ai-use/WS-LLM-006.md) — AI가 틀린 내용도 자신 있게 말하는 현상(Hallucination, NIST 용어로는 Confabulation)과, 그 답을 확인 없이 환불·결제·고객 안내에 바로 쓰는 Overreliance(과신)에 대한 이슈. 틀린 결과의 책임은 서비스 운영자 몫.
 - [WS-PI-001 간접 프롬프트 삽입](ai-use/WS-PI-001.md) — AI에게 남이 쓴 글(웹페이지·메일·PDF)을 읽히면, 글 속에 숨은 문장을 AI가 명령으로 알아듣고 엉뚱한 답을 하거나 엉뚱한 일을 할 수 있다. 이것을 간접 프롬프트 삽입(간접 프롬프트 인젝션)이라고 한다. 프롬프트는 AI에게 주는 지시문이다.
-- [WS-PI-002 데이터 엑스필트레이션(Data Exfiltration) — 마크다운 이미지로 새는 정보](ai-use/WS-PI-002.md) — AI 답 속 마크다운 이미지(`![](주소)`)를 그대로 그리면 브라우저가 그 주소로 저절로 접속하고, 주소에 붙은 대화 내용이 남의 서버로 넘어간다. 이렇게 몰래 정보를 빼내는 것을 데이터 엑스필트레이션(Data Exfiltration)이라고 한다.
+- [WS-PI-002 데이터 엑스필트레이션(Data Exfiltration) — 마크다운 이미지로 새는 정보](ai-use/WS-PI-002.md) — AI 답 속 마크다운 이미지(`![](주소)`)를 그대로 화면에 그릴 때, 브라우저가 그 주소로 자동 접속하면서 주소에 붙은 대화 내용이 외부 서버로 넘어가는 문제. 이렇게 정보를 몰래 빼내는 공격을 데이터 엑스필트레이션(Data Exfiltration)이라 부름.
 
 ## 바이브 코딩할 때
 
 언제 읽나: AI 코딩 도구에게 코드 작성·설정 변경·명령 실행을 맡길 때
 
-- [WS-AGT-001 Excessive Agency(과도한 권한) — 지우기·배포를 묻지 않고 실행](vibe/WS-AGT-001.md) — AI 에이전트(여러 단계를 스스로 처리하는 AI)에게 지우기·배포·결제 도구를 넉넉히 주고 확인 없이 실행하게 하면, AI가 착각하거나 속았을 때 되돌릴 수 없는 일이 생긴다. 이것을 Excessive Agency(과도한 권한 위임)라고 한다.
-- [WS-AGT-002 Rules File Backdoor(규칙 파일 속 숨은 지시)](vibe/WS-AGT-002.md) — AI 코딩 도구가 늘 읽는 규칙 파일(`CLAUDE.md`, `AGENTS.md`, `.cursorrules` 등)에 눈에 안 보이는 문자로 지시를 숨겨 두면, AI가 몰래 위험한 코드를 쓰게 만들 수 있다. 2025년 공개된 이 수법을 Rules File Backdoor라고 부른다.
-- [WS-AGT-003 Memory Poisoning(에이전트 메모리 오염)](vibe/WS-AGT-003.md) — AI 에이전트가 대화나 읽은 문서 내용을 장기 기억(메모리)에 저장해 다음 대화에도 쓰면, 남이 심어 둔 문장이 기억으로 남아 계속 영향을 준다. 이것을 Memory Poisoning(메모리 오염)이라고 한다.
-- [WS-AGT-004 Confused Deputy(권한 빌려 쓰기) · 에이전트 간 통신 검증 없음](vibe/WS-AGT-004.md) — 에이전트가 넓은 서비스 계정으로 일하면서 '누구 대신' 일하는지 확인하지 않으면, 사용자가 볼 수 없는 데이터도 에이전트를 통해 꺼낼 수 있다. 이것을 Confused Deputy(권한을 빌려 주는 대리인 문제)라고 하며, 다른 에이전트가 보낸 요청을 확인 없이 믿는 것도 같은 구멍이다(진단가이드 이름: 부적절한 인가).
-- [WS-AGT-005 Cascading Failures · Rogue Agent(멈추지 않는 에이전트)](vibe/WS-AGT-005.md) — 에이전트 반복에 횟수·시간·비용 한도와 멈춤 스위치가 없으면, 오류 하나가 같은 행동을 끝없이 되풀이하거나 다른 시스템으로 번진다(Cascading Failures, 연쇄 장애). 맡긴 범위를 벗어나 움직이는 Rogue Agent(통제를 벗어난 에이전트)를 멈출 때도 같은 장치가 필요하다(진단가이드 이름: 종료되지 않는 반복문 또는 재귀 함수).
-- [WS-AGT-006 YOLO 모드 · 과다 허용 설정(AI 코딩 도구 권한)](vibe/WS-AGT-006.md) — AI 코딩 도구가 모든 명령을 묻지 않고 실행하게(YOLO 모드, `Bash(*)` 허용, 자동 승인) 설정해 두면, AI가 읽은 글 속 숨은 지시 하나로 내 컴퓨터에서 남의 명령이 돈다(진단가이드 이름: 중요한 자원에 대한 잘못된 권한 설정).
-- [WS-MCP-001 Tool Poisoning · Rug Pull (MCP)](vibe/WS-MCP-001.md) — MCP(AI에게 바깥 도구를 붙이는 표준 연결 방식) 서버의 도구 설명에 AI만 읽는 숨은 지시를 넣는 것을 Tool Poisoning, 승인받은 뒤 업데이트로 설명이나 동작을 몰래 바꾸는 것을 Rug Pull이라고 한다. 둘 다 AI가 내 파일·메일·키를 밖으로 보내게 만들 수 있다(진단가이드 이름: 무결성 검사 없는 코드 다운로드).
+- [WS-AGT-001 Excessive Agency(과도한 권한) — 지우기·배포를 묻지 않고 실행](vibe/WS-AGT-001.md) — AI 에이전트(여러 단계를 스스로 처리하는 AI)에게 삭제·배포·결제 도구를 넉넉히 주고 확인 없이 실행하게 할 때, AI의 착각이나 속임수 하나로 되돌릴 수 없는 일이 생기는 문제. Excessive Agency(과도한 권한 위임)라 부름.
+- [WS-AGT-002 Rules File Backdoor(규칙 파일 속 숨은 지시)](vibe/WS-AGT-002.md) — AI 코딩 도구가 늘 읽는 규칙 파일(`CLAUDE.md`, `AGENTS.md`, `.cursorrules` 등)에 보이지 않는 문자로 지시를 숨겨, AI가 몰래 위험한 코드를 쓰게 만드는 공격. 2025년 공개된 수법으로 Rules File Backdoor라 부름.
+- [WS-AGT-003 Memory Poisoning(에이전트 메모리 오염)](vibe/WS-AGT-003.md) — AI 에이전트가 대화나 읽은 문서 내용을 장기 기억(메모리)에 저장해 다음 대화에도 쓸 때, 남이 심어 둔 문장이 기억으로 남아 계속 영향을 주는 문제. Memory Poisoning(메모리 오염)이라 부름.
+- [WS-AGT-004 Confused Deputy(권한 빌려 쓰기) · 에이전트 간 통신 검증 없음](vibe/WS-AGT-004.md) — 에이전트가 넓은 서비스 계정으로 일하면서 '누구 대신' 일하는지 확인하지 않아, 사용자가 볼 수 없는 데이터도 에이전트를 통해 꺼낼 수 있는 문제. Confused Deputy(권한을 빌려 주는 대리인 문제)라 부르며, 다른 에이전트가 보낸 요청을 확인 없이 믿는 것도 같은 구멍(진단가이드 이름: 부적절한 인가).
+- [WS-AGT-005 Cascading Failures · Rogue Agent(멈추지 않는 에이전트)](vibe/WS-AGT-005.md) — 에이전트 반복에 횟수·시간·비용 한도와 멈춤 스위치가 없을 때, 오류 하나가 같은 행동을 끝없이 되풀이하거나 다른 시스템으로 번지는 문제(Cascading Failures, 연쇄 장애). 맡긴 범위를 벗어나 움직이는 Rogue Agent(통제를 벗어난 에이전트)를 멈출 때도 같은 장치가 필요(진단가이드 이름: 종료되지 않는 반복문 또는 재귀 함수).
+- [WS-AGT-006 YOLO 모드 · 과다 허용 설정(AI 코딩 도구 권한)](vibe/WS-AGT-006.md) — AI 코딩 도구가 모든 명령을 묻지 않고 실행하도록(YOLO 모드, `Bash(*)` 허용, 자동 승인) 설정해 둘 때, AI가 읽은 글 속 숨은 지시 하나로 내 컴퓨터에서 남의 명령이 실행되는 문제(진단가이드 이름: 중요한 자원에 대한 잘못된 권한 설정).
+- [WS-MCP-001 Tool Poisoning · Rug Pull (MCP)](vibe/WS-MCP-001.md) — MCP(AI에게 외부 도구를 붙이는 표준 연결 방식) 서버의 도구 설명에 AI만 읽는 숨은 지시를 넣는 Tool Poisoning, 승인받은 뒤 업데이트로 설명이나 동작을 몰래 바꾸는 Rug Pull에 대한 이슈. 둘 다 AI가 파일·메일·키를 외부로 보내게 만들 수 있는 위험(진단가이드 이름: 무결성 검사 없는 코드 다운로드).
 
 ## 긁어 오고 읽을 때
 
 언제 읽나: 외부 URL·파일·XML을 가져와 읽거나 파싱할 때
 
-- [WS-DES-001 Insecure Deserialization(안전하지 않은 역직렬화)](fetch/WS-DES-001.md) — `pickle`, `yaml.load`, PHP `unserialize` 같은 함수는 글자를 프로그램 객체로 되살리는데, 남이 준 데이터를 넣으면 객체를 만드는 순간 그 사람이 심은 코드가 돈다. 이것을 Insecure Deserialization(안전하지 않은 역직렬화)이라고 한다(진단가이드 이름: 신뢰할 수 없는 데이터의 역직렬화).
-- [WS-FILE-001 Decompression Bomb · 파서 취약점 — 남이 준 이미지·PDF·오피스 파일 처리](fetch/WS-FILE-001.md) — 남이 올린 이미지·PDF·오피스 파일로 썸네일·미리보기·텍스트 추출을 하면, 작은 파일 하나가 메모리를 다 쓰게 하거나(Decompression Bomb, 픽셀 폭탄) 파서 프로그램의 취약점을 건드릴 수 있다. 사진 속 위치 정보(EXIF)를 지우지 않고 다시 공개하는 사고도 흔하다.
-- [WS-SSRF-001 SSRF(서버사이드 요청 위조)](fetch/WS-SSRF-001.md) — "이 주소 미리보기", "이 URL 요약" 기능이 받은 주소를 서버가 그대로 열면, 밖에서는 못 들어오는 내부 관리 화면이나 클라우드 메타데이터(서버 키가 나오는 주소 `169.254.169.254`)를 대신 열어 주게 된다. 이것을 SSRF라고 한다(진단가이드 이름: 서버사이드 요청 위조).
+- [WS-DES-001 Insecure Deserialization(안전하지 않은 역직렬화)](fetch/WS-DES-001.md) — `pickle`, `yaml.load`, PHP `unserialize`처럼 글자를 프로그램 객체로 되살리는 함수에 남이 준 데이터를 넣을 때, 객체가 만들어지는 순간 공격자가 심은 코드가 실행되는 문제. Insecure Deserialization(안전하지 않은 역직렬화)이라 부름(진단가이드 이름: 신뢰할 수 없는 데이터의 역직렬화).
+- [WS-FILE-001 Decompression Bomb · 파서 취약점 — 남이 준 이미지·PDF·오피스 파일 처리](fetch/WS-FILE-001.md) — 남이 올린 이미지·PDF·오피스 파일로 썸네일·미리보기·텍스트 추출을 할 때, 작은 파일 하나가 메모리를 다 쓰게 하거나(Decompression Bomb, 픽셀 폭탄) 파서 프로그램의 취약점을 건드리는 문제. 사진 속 위치 정보(EXIF)를 지우지 않고 다시 공개하는 사고도 같은 범위.
+- [WS-SSRF-001 SSRF(서버사이드 요청 위조)](fetch/WS-SSRF-001.md) — "주소 미리보기", "URL 요약" 기능이 받은 주소를 서버가 그대로 열 때, 외부에서는 닿지 않는 내부 관리 화면이나 클라우드 메타데이터(서버 키가 나오는 주소 `169.254.169.254`)를 대신 열어 주는 문제. SSRF라 부름(진단가이드 이름: 서버사이드 요청 위조).
 - [WS-XML-001 XML 외부 개체 참조·엔티티 폭탄](fetch/WS-XML-001.md) — XML(태그로 내용을 감싸 적는 데이터 형식) 파일을 읽는 프로그램이 파일 속 특별한 선언을 그대로 따르면, 서버의 비밀 파일이 새어 나가거나 작은 파일 하나가 서버 메모리를 다 써서 서비스가 멈춘다. 진단가이드 이름은 '부적절한 XML 외부 개체 참조'다.
-- [WS-ZIP-001 Zip Slip · 압축 폭탄(Zip Bomb)](fetch/WS-ZIP-001.md) — 압축 파일 속 이름에 `../`가 들어 있으면 풀 때 정해 둔 폴더 밖에 파일이 써진다(Zip Slip). 작은 압축 하나가 풀면서 디스크와 메모리를 다 채우기도 한다(압축 폭탄, Zip Bomb)(진단가이드 이름: 경로 조작 및 자원 삽입).
+- [WS-ZIP-001 Zip Slip · 압축 폭탄(Zip Bomb)](fetch/WS-ZIP-001.md) — 압축 파일 속 이름에 `../`가 들어 있어 풀 때 정해 둔 폴더 밖에 파일이 써지는 Zip Slip, 작은 압축 하나가 풀리면서 디스크와 메모리를 다 채우는 압축 폭탄(Zip Bomb)에 대한 이슈(진단가이드 이름: 경로 조작 및 자원 삽입).
 
 ## 긁힐 때
 
 언제 읽나: 내 사이트·API를 남이 자동으로 긁어 갈 수 있을 때
 
-- [WS-BOT-001 Scraping · AI 크롤러 대량 수집(robots.txt만으로는 못 막음)](scraped/WS-BOT-001.md) — AI 학습·검색용 크롤러(웹페이지를 자동으로 긁어 가는 프로그램)는 사람보다 훨씬 많이, 빠르게 긁어 가서 서버 비용과 장애를 부른다(Scraping). robots.txt는 부탁일 뿐이라 횟수 제한·캐시·로그인 같은 서버 쪽 장치가 있어야 한다.
+- [WS-BOT-001 Scraping · AI 크롤러 대량 수집(robots.txt만으로는 못 막음)](scraped/WS-BOT-001.md) — AI 학습·검색용 크롤러(웹페이지를 자동으로 긁어 가는 프로그램)가 사람보다 훨씬 많이, 빠르게 긁어 가면서 서버 비용과 장애를 일으키는 문제(Scraping). robots.txt는 요청일 뿐이므로 횟수 제한·캐시·로그인 같은 서버 쪽 장치가 필요.
 
 ## 웹 기본
 
