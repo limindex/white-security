@@ -30,9 +30,9 @@ sources:
   - title: "NCSC - ChatGPT and large language models: what's the risk?"
     url: https://www.ncsc.gov.uk/blog-post/chatgpt-and-large-language-models-whats-the-risk
     year: 2023
-  - title: "OWASP Top 10 for LLM Applications 2025 - LLM02 Sensitive Information Disclosure"
-    url: https://genai.owasp.org/llmrisk/llm022025-sensitive-information-disclosure/
-    year: 2025
+  - title: "OWASP Top 10 for LLM Applications 2026 - LLM02:2026 Sensitive Information Disclosure"
+    url: https://genai.owasp.org/resource/owasp-genai-llm-top-10-2026/
+    year: 2026
 ---
 
 ## 요약

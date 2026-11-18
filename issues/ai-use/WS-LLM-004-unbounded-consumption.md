@@ -24,9 +24,9 @@ revisions:
 applies_to: [Python, Node.js, AI 호출 API를 여는 모든 서비스]
 severity_reason: "영향: 사용량 과금 폭증·서비스 중단 · 악용: 로그인·한도 없는 주소 하나로 자동화 요청만으로 가능"
 sources:
-  - title: "OWASP Top 10 for LLM Applications - LLM10:2025 Unbounded Consumption"
-    url: https://genai.owasp.org/llmrisk/llm102025-unbounded-consumption/
-    year: 2025
+  - title: "OWASP Top 10 for LLM Applications 2026 - LLM06:2026 Unbounded Consumption"
+    url: https://genai.owasp.org/resource/owasp-genai-llm-top-10-2026/
+    year: 2026
   - title: "OWASP API Security Top 10 2023 - API4 Unrestricted Resource Consumption"
     url: https://owasp.org/API-Security/editions/2023/en/0xa4-unrestricted-resource-consumption/
     year: 2023

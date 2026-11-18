@@ -112,8 +112,14 @@ test('build: 위험한 out 은 거부하고 지우지 않는다', function () {
 });
 
 test('build: 확인 안 된 표준 항목은 적용 범위에 안내가 나오고 JSON 에 verified 가 실린다', function () {
-    [$code, $out, $root] = bt_build();
-    assert_same(0, $code, $out);
+    // 실제 기준 파일은 모두 원문 대조를 마쳤으므로, 임시 사본의 한 항목만 미확인으로 바꿔 안내 표시를 시험한다
+    $root = make_root();
+    $fwFile = $root . '/data/frameworks/agentic2026.json';
+    $fw = json_decode(file_get_contents($fwFile), true);
+    $fw['items'][0]['verified'] = false;
+    file_put_contents($fwFile, json_encode($fw, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+    exec(escapeshellarg(BT_PHP) . ' ' . escapeshellarg(__DIR__ . '/../build.php') . ' --root=' . escapeshellarg($root) . ' --out=dist --today=2026-11-18 2>&1', $lines, $code);
+    assert_same(0, $code, implode("\n", $lines));
     $cov = file_get_contents("$root/dist/coverage/index.html");
     assert_contains('일부 항목 출처 확인 중', $cov);
     $j = json_decode(file_get_contents("$root/dist/api/coverage.json"), true);

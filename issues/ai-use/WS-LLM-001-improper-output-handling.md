@@ -24,9 +24,9 @@ revisions:
 applies_to: [Python, Node.js, PHP, LLM 연동 웹 애플리케이션]
 severity_reason: "영향: 서버 명령·코드 실행, 사용자 화면 스크립트 실행 · 악용: AI가 읽는 글 한 편으로 가능"
 sources:
-  - title: "OWASP Top 10 for LLM Applications - LLM05:2025 Improper Output Handling"
-    url: https://genai.owasp.org/llmrisk/llm052025-improper-output-handling/
-    year: 2025
+  - title: "OWASP Top 10 for LLM Applications 2026 - LLM10:2026 Improper Output Handling"
+    url: https://genai.owasp.org/resource/owasp-genai-llm-top-10-2026/
+    year: 2026
   - title: "NVD CVE-2023-29374 (LangChain LLMMathChain, 프롬프트 인젝션으로 exec 실행)"
     url: https://nvd.nist.gov/vuln/detail/CVE-2023-29374
     year: 2023

@@ -24,9 +24,9 @@ revisions:
 applies_to: [Python, Node.js, LLM 연동 서비스]
 severity_reason: "영향: 프롬프트 속 비밀값·업무 규칙 노출(권한을 프롬프트에 맡긴 경우 우회) · 악용: 대화 몇 번으로 가능하나 피해는 프롬프트에 넣은 내용 범위"
 sources:
-  - title: "OWASP Top 10 for LLM Applications - LLM07:2025 System Prompt Leakage"
-    url: https://genai.owasp.org/llmrisk/llm072025-system-prompt-leakage/
-    year: 2025
+  - title: "OWASP Top 10 for LLM Applications 2026 - LLM08:2026 Hidden Context Exposure (System Prompt Leakage 포함)"
+    url: https://genai.owasp.org/resource/owasp-genai-llm-top-10-2026/
+    year: 2026
   - title: "과학기술정보통신부 AI 보안 위협 대응 매뉴얼(2026.7) - M03 시스템 프롬프트 유출(25쪽), 교육 분야 시나리오(86~87쪽)"
     url: https://www.msit.go.kr/bbs/view.do?sCode=user&mId=328&mPid=243&bbsSeqNo=127&nttSeqNo=3139462
     year: 2026

@@ -24,9 +24,9 @@ revisions:
 applies_to: [Python, 도구를 쓰는 AI 에이전트]
 severity_reason: "영향: 삭제·배포·결제 등 되돌릴 수 없는 작업 · 악용: AI의 착각이나 숨은 지시 하나로 가능"
 sources:
-  - title: "OWASP Top 10 for LLM Applications - LLM06:2025 Excessive Agency"
-    url: https://genai.owasp.org/llmrisk/llm062025-excessive-agency/
-    year: 2025
+  - title: "OWASP Top 10 for LLM Applications 2026 - LLM03:2026 Excessive Agency"
+    url: https://genai.owasp.org/resource/owasp-genai-llm-top-10-2026/
+    year: 2026
   - title: OWASP AI Agent Security Cheat Sheet
     url: https://cheatsheetseries.owasp.org/cheatsheets/AI_Agent_Security_Cheat_Sheet.html
     year: 2026

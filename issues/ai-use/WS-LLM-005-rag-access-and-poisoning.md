@@ -24,9 +24,9 @@ revisions:
 applies_to: [Python, RAG·벡터 DB 기반 서비스]
 severity_reason: "영향: 권한 밖 문서 노출·답변 조작 · 악용: 일반 사용자 질문이나 문서 몇 개 등록으로 가능"
 sources:
-  - title: "OWASP Top 10 for LLM Applications - LLM08:2025 Vector and Embedding Weaknesses"
-    url: https://genai.owasp.org/llmrisk/llm082025-vector-and-embedding-weaknesses/
-    year: 2025
+  - title: "OWASP Top 10 for LLM Applications 2026 - LLM09:2026 Vector and Embedding Weaknesses"
+    url: https://genai.owasp.org/resource/owasp-genai-llm-top-10-2026/
+    year: 2026
   - title: "Zou 외, PoisonedRAG: Knowledge Corruption Attacks to Retrieval-Augmented Generation of Large Language Models (USENIX Security 2025, arXiv:2402.07867)"
     url: https://arxiv.org/abs/2402.07867
     year: 2025

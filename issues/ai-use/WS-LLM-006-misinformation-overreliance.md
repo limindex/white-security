@@ -24,9 +24,9 @@ revisions:
 applies_to: [Python, AI 답변을 업무 처리에 쓰는 서비스]
 severity_reason: "영향: 틀린 환불·안내 등 잘못된 업무 처리와 운영자 책임 · 악용: 공격 없이도 발생하나 피해 범위는 자동 처리에 맡긴 일로 한정"
 sources:
-  - title: "OWASP Top 10 for LLM Applications - LLM09:2025 Misinformation"
-    url: https://genai.owasp.org/llmrisk/llm092025-misinformation/
-    year: 2025
+  - title: "OWASP Top 10 for LLM Applications 2026 - LLM07:2026 Misinformation"
+    url: https://genai.owasp.org/resource/owasp-genai-llm-top-10-2026/
+    year: 2026
   - title: "BBC - Airline held liable for its chatbot giving passenger bad advice"
     url: https://www.bbc.com/travel/article/20240222-air-canada-chatbot-misinformation-what-travellers-should-know
     year: 2024

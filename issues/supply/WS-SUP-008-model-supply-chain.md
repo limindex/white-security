@@ -33,9 +33,9 @@ sources:
   - title: "Hugging Face Hub Docs - Pickle Scanning"
     url: https://huggingface.co/docs/hub/security-pickle
     year: 2026
-  - title: "OWASP Top 10 for LLM Applications 2025 - LLM03 Supply Chain, LLM04 Data and Model Poisoning"
-    url: https://genai.owasp.org/llmrisk/llm032025-supply-chain/
-    year: 2025
+  - title: "OWASP Top 10 for LLM Applications 2026 - LLM04:2026 Supply Chain, LLM05:2026 Data and Model Poisoning"
+    url: https://genai.owasp.org/resource/owasp-genai-llm-top-10-2026/
+    year: 2026
   - title: "Hugging Face transformers Docs - Loading models (revision, use_safetensors, trust_remote_code)"
     url: https://huggingface.co/docs/transformers/main/en/models
     year: 2026

@@ -25,9 +25,9 @@ revisions:
 applies_to: [Python, Node.js, PHP, 외부 글을 AI에 넘기는 모든 서비스]
 severity_reason: "영향: 답변 조작·데이터 유출·연결된 도구의 무단 실행 · 악용: 웹페이지·메일·문서에 문장 하나를 숨기는 것으로 가능"
 sources:
-  - title: "OWASP Top 10 for LLM Applications - LLM01:2025 Prompt Injection"
-    url: https://genai.owasp.org/llmrisk/llm01-prompt-injection/
-    year: 2025
+  - title: "OWASP Top 10 for LLM Applications 2026 - LLM01:2026 Prompt Injection"
+    url: https://genai.owasp.org/resource/owasp-genai-llm-top-10-2026/
+    year: 2026
   - title: OWASP LLM Prompt Injection Prevention Cheat Sheet
     url: https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html
     year: 2026

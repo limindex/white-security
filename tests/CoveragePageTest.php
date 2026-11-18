@@ -25,11 +25,11 @@ test('대응표: 범례(덮음·사이트 전용·빈칸)와 전체 요약 줄',
     assert_true((bool)preg_match('#class="ws-cov-line">.*?기준.*?항목.*?대응#su', $b), '요약 줄');
 });
 
-test('대응표: 기준별 표는 기본 접힘 details, 확인 중 표시 유지', function () {
+test('대응표: 기준별 표는 기본 접힘 details, 원문 대조를 마친 기준엔 확인 중 표시 없음', function () {
     $b = cp_body();
     assert_true((bool)preg_match('#<section class="ws-sec ws-fold" id="fw-owasp2025">\s*<details>\s*<summary>#', $b), '접힘 표');
     assert_true(!str_contains($b, '<details open>'), '기본 접힘');
-    assert_contains('일부 항목 출처 확인 중', $b);
+    assert_true(!str_contains($b, '일부 항목 출처 확인 중'), '확인 중 표시 없음(미확인 표시는 BuildTest 에서 임시 사본으로 시험)');
     assert_true(substr_count($b, '<table') >= 8, '표 8개');
 });
 

@@ -24,9 +24,9 @@ revisions:
 applies_to: [Python, 외부 AI API를 호출하는 모든 서비스]
 severity_reason: "영향: 개인정보·키의 외부 보관과 처리 위탁 문제 · 악용: 공격 없이 설정·계약 조건에 따라 발생, 즉시 탈취로 이어지지는 않음"
 sources:
-  - title: "OWASP Top 10 for LLM Applications - LLM02:2025 Sensitive Information Disclosure"
-    url: https://genai.owasp.org/llmrisk/llm022025-sensitive-information-disclosure/
-    year: 2025
+  - title: "OWASP Top 10 for LLM Applications 2026 - LLM02:2026 Sensitive Information Disclosure"
+    url: https://genai.owasp.org/resource/owasp-genai-llm-top-10-2026/
+    year: 2026
   - title: 개인정보보호위원회 생성형 인공지능(AI) 개발·활용을 위한 개인정보 처리 안내서
     url: https://www.pipc.go.kr/np/cop/bbs/selectBoardArticle.do?bbsId=BS217&mCode=D010030000&nttId=11439
     year: 2025

@@ -9,62 +9,52 @@
     {
       "id": "LLM01",
       "title": "Prompt Injection",
-      "title_ko": "프롬프트 삽입",
-      "verified": false
+      "title_ko": "프롬프트 인젝션"
     },
     {
       "id": "LLM02",
       "title": "Sensitive Information Disclosure",
-      "title_ko": "민감 정보 노출",
-      "verified": false
+      "title_ko": "민감 정보 노출"
     },
     {
       "id": "LLM03",
       "title": "Excessive Agency",
-      "title_ko": "과도한 권한 위임",
-      "verified": false
+      "title_ko": "과도한 권한 위임"
     },
     {
       "id": "LLM04",
       "title": "Supply Chain",
-      "title_ko": "공급망",
-      "verified": false
+      "title_ko": "공급망"
     },
     {
       "id": "LLM05",
       "title": "Data and Model Poisoning",
-      "title_ko": "데이터·모델 오염",
-      "verified": false
+      "title_ko": "데이터·모델 오염"
     },
     {
       "id": "LLM06",
       "title": "Unbounded Consumption",
-      "title_ko": "자원 소비 무제한",
-      "verified": false
+      "title_ko": "자원 소비 무제한"
     },
     {
       "id": "LLM07",
       "title": "Misinformation",
-      "title_ko": "잘못된 정보",
-      "verified": false
+      "title_ko": "잘못된 정보"
     },
     {
       "id": "LLM08",
       "title": "Hidden Context Exposure",
-      "title_ko": "숨은 맥락 노출",
-      "verified": false
+      "title_ko": "숨은 맥락 노출"
     },
     {
       "id": "LLM09",
       "title": "Vector and Embedding Weaknesses",
-      "title_ko": "벡터·임베딩 취약점",
-      "verified": false
+      "title_ko": "벡터·임베딩 취약점"
     },
     {
       "id": "LLM10",
       "title": "Improper Output Handling",
-      "title_ko": "출력 처리 미흡",
-      "verified": false
+      "title_ko": "출력 처리 미흡"
     }
   ]
 }
