@@ -78,8 +78,8 @@ XXE(XML External Entity, XML 외부 개체 참조)와 Billion Laughs(엔티티 �
 ## 위험 배경
 
 - 스크래퍼와 AI 에이전트가 사람이 고르지 않은 외부 파일(RSS, 사이트맵, SVG, 오피스 파일)을 확인 없이 파서로 바로 넘기는 일의 증가.
-- 언어마다 다른 기본값, 옵션 하나로 다시 열리는 구조. PHP는 기본 차단이지만 `LIBXML_NOENT` 같은 옵션을 켜면 다시 열림(PHP 매뉴얼). Python 표준 모듈은 함께 쓰는 Expat 부품이 2.7.2보다 오래되면 Billion Laughs에 취약할 수 있음(Python 공식 문서). XXE를 막아도 Billion Laughs는 따로 막아야 함(OWASP 치트시트).
-- OWASP Top 10:2025는 두 문제를 '보안 설정 오류'(A02)에 포함. 국내 공공 개발보안 기준 49개 항목에도 '부적절한 XML 외부 개체 참조' 포함.
+- 언어마다 다른 기본값, 옵션 하나로 다시 열리는 구조. PHP는 기본 차단이지만 `LIBXML_NOENT` 같은 옵션을 켜면 다시 열림(PHP 매뉴얼). Python 표준 모듈은 Expat이 2.7.2보다 오래되면 Billion Laughs에 취약할 수 있음(Python 문서).
+- XXE를 막아도 Billion Laughs는 따로 막아야 함(OWASP 치트시트). OWASP Top 10:2025는 두 문제를 '보안 설정 오류'(A02)에 포함. 국내 공공 개발보안 기준 49개 항목에도 '부적절한 XML 외부 개체 참조' 포함.
 
 ## 대응 방법
 

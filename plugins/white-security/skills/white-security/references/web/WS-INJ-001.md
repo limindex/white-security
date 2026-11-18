@@ -13,8 +13,8 @@
 
 ## 점검 항목
 
-- 쿼리에 들어가는 값은 모두 바인딩(`?`, `%s`, `:name`, `$1`)으로 넘겨야 한다. 문자열 연결·f-string·템플릿 리터럴·`sprintf`로 값을 넣지 않아야 하고, `IN (...)` 목록은 값 개수만큼 자리표시자를 만들며, `LIKE` 검색도 값은 바인딩하고 필요하면 `%`·`_`를 이스케이프해야 한다.
-- 이스케이프 함수(`addslashes`, 직접 만든 `sql_escape`, `mysqli_real_escape_string`)를 주된 방어로 쓰지 않아야 한다. 참고로 "EUC-KR·CP949에서는 `addslashes`가 멀티바이트 문자로 우회된다"는 설명은 한국어 문자셋에 해당하지 않음. 이 우회는 앞 바이트와 `\`(0x5C)가 한 글자로 묶이는 GBK·Big5·Shift_JIS·CP932에서 생기고, EUC-KR·CP949에는 0x5C를 둘째 바이트로 쓰는 글자가 없음(Python 표준 코덱으로 0x81~0xFE 뒤에 0x5C를 붙여 확인). 그래도 이어 붙이는 쿼리는 인코딩과 상관없이 SQL 인젝션 항목.
+- 쿼리 값은 모두 바인딩(`?`, `%s`, `:name`, `$1`)으로 넘겨야 한다. 문자열 연결·f-string·템플릿 리터럴·`sprintf`로 값을 넣지 않아야 하고, `IN (...)` 목록은 값 개수만큼 자리표시자를 만들며, `LIKE` 검색도 값은 바인딩하고 필요하면 `%`·`_`를 이스케이프해야 한다.
+- 이스케이프 함수(`addslashes`, 직접 만든 `sql_escape`, `mysqli_real_escape_string`)를 주된 방어로 쓰지 않아야 한다.
 - 테이블·컬럼 이름, `ORDER BY` 방향처럼 바인딩할 수 없는 자리는 코드에 정해 둔 허용 목록에서만 골라야 한다.
 - ORM의 날 SQL 기능(SQLAlchemy `text()`, Django `raw()`·`extra()`, `knex.raw`, `sequelize.query`, Laravel `DB::raw`·`whereRaw`)에도 같은 규칙을 적용해야 한다. Java MyBatis라면 `${}` 대신 `#{}`를 써야 한다.
 - DB 연결 문자셋을 DSN에 적어야 하고(`charset=utf8mb4`), PDO는 `PDO::ATTR_EMULATE_PREPARES => false`로 서버 쪽 준비문을 써야 한다.
@@ -22,7 +22,7 @@
 
 ## 검토 주의
 
-이스케이프 코드를 지적할 때 이유로 "EUC-KR 멀티바이트 우회"를 들지 않아야 하고, 연결 문자셋이 GBK·Big5·Shift_JIS·CP932일 때만 그 우회를 근거로 함께 적어야 한다(EUC-KR이어도 이어 붙이는 쿼리 자체는 지적 대상).
+이스케이프 코드를 지적할 때 이유로 "EUC-KR 멀티바이트 우회"를 들지 않아야 하고, 연결 문자셋이 GBK·Big5·Shift_JIS·CP932일 때만 그 우회를 근거로 함께 적어야 한다(EUC-KR이어도 이어 붙이는 쿼리 자체는 지적 대상). 이 우회는 앞 바이트와 `\`(0x5C)가 한 글자로 묶이는 GBK·Big5·Shift_JIS·CP932에서 생기고, EUC-KR·CP949에는 0x5C를 둘째 바이트로 쓰는 글자가 없다(Python 표준 코덱으로 0x81~0xFE 뒤에 0x5C를 붙여 확인).
 
 Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-INJ-001.code.python.md` (Python) · `WS-INJ-001.code.js.md` (JavaScript) · `WS-INJ-001.code.php.md` (PHP)
 

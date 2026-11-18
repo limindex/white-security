@@ -11,11 +11,11 @@
 
 ## 점검 항목
 
-- robots.txt는 차단 장치가 아니므로(RFC 9309도 접근 권한 수단이 아니라고 명시), 공개하면 안 되는 내용은 로그인 뒤에 두어야 한다.
+- 공개하면 안 되는 내용은 robots.txt가 아니라 로그인 뒤에 두어야 한다(RFC 9309도 robots.txt는 접근 권한 수단이 아니라고 명시).
 - IP·API 키별 요청 횟수를 제한하고, 넘으면 429와 `Retry-After`를 돌려주어야 한다.
 - 목록 개수(페이지 크기)와 검색어 길이에 상한을 두고, 무거운 응답은 캐시해야 한다.
 - 프록시·CDN 뒤라면 신뢰하는 프록시가 넣은 IP만 써야 한다(`X-Forwarded-For`는 누구나 바꿔 보낼 수 있음). User-Agent만 보고 막거나 허용하지 않아야 한다.
-- 트래픽·대역폭 비용 경보를 걸어야 한다. Read the Docs는 2024년 5월 한 크롤러가 73TB를 내려받아 대역폭 비용이 5천 달러를 넘었다고 밝힘. Wikimedia는 2025년 가장 비싼 트래픽의 65% 이상이 봇이라고 밝힘.
+- 트래픽·대역폭 비용 경보를 걸어야 한다.
 
 Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-BOT-001.code.python.md` (Python) · `WS-BOT-001.code.nginx.md` (Nginx)
 

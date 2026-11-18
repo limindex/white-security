@@ -18,7 +18,11 @@
 - `request.auth != null`만 보지 말고 `request.auth.uid`를 소유자 필드와 비교해야 한다.
 - 쓰기 규칙은 소유자·역할 필드를 바꾸지 못하게 `request.resource.data`를 검사해야 한다.
 - Realtime Database는 상위 경로에 `.read: true`를 주지 않아야 한다(하위 규칙으로 못 막음).
-- 서비스 계정 키는 서버에만 둬야 한다. `firebaseConfig`의 `apiKey`는 공개 값이라 괜찮음.
+- 서비스 계정 키는 서버에만 둬야 한다.
+
+## 검토 주의
+
+`firebaseConfig`의 `apiKey`는 앱에 공개되는 값이라 비밀값 노출로 지적하지 않아야 한다.
 
 Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-BAAS-002.code.firebase.md` (Firebase) · `WS-BAAS-002.code.nextjs.md` (Next.js)
 

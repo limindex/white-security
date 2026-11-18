@@ -14,11 +14,15 @@
 ## 점검 항목
 
 - 새 의존성은 설치 전에 레지스트리에 실제로 있는지 확인해야 한다(PyPI `https://pypi.org/pypi/<이름>/json`, npm `https://registry.npmjs.org/<이름>`, Packagist `https://packagist.org/packages/<vendor>/<이름>.json` 이 404면 없는 패키지). 처음 등록일이 최근(기본 90일 이내)이거나 내려받은 수가 매우 적으면 멈추고 사람에게 물어야 한다.
-- 유명 패키지와 한두 글자, 하이픈·밑줄, 단·복수만 다른 이름이 최근 등록·적은 내려받기·공식 문서와 다른 저장소 같은 신호와 함께 보이면 멈춰야 한다. 이름이 비슷하다는 것만으로는 막지 않음(`react`·`preact`처럼 정상인 경우가 많음). 저장소 링크·관리자가 그 도구의 공식 문서와 같은지도 확인해야 한다.
+- 유명 패키지와 한두 글자, 하이픈·밑줄, 단·복수만 다른 이름이 최근 등록·적은 내려받기·공식 문서와 다른 저장소 같은 신호와 함께 보이면 멈추고, 저장소 링크·관리자가 그 도구의 공식 문서와 같은지 확인해야 한다.
 - 잠금 파일(`package-lock.json`, `poetry.lock`·`uv.lock`·해시를 고정한 `requirements.txt`, `composer.lock`)을 커밋하고, CI와 배포는 잠금 파일대로만 설치해야 한다(`npm ci`, `pip install --require-hashes -r requirements.txt`, `composer install`).
 - 처음 들이는 패키지는 설치 중 코드가 돌지 않게 받아야 한다(`npm install --ignore-scripts`, `pip install --only-binary :all:`). Composer는 의존성 패키지의 `scripts`는 실행하지 않지만 플러그인은 실행하므로 `composer require --no-plugins`로 받고, `composer.json`의 `config.allow-plugins`에는 허용한 플러그인만 둬야 한다.
 - 에이전트의 설치 명령(`npm install`, `pip install`, `composer require`)은 자동 승인 목록에 넣지 않아야 한다.
 - 사내 전용 패키지 이름이 공개 레지스트리에서 비어 있어 남이 먼저 등록할 수 있는지(Dependency Confusion, 의존성 혼동) 확인하고, 레지스트리 범위를 고정해야 한다.
+
+## 검토 주의
+
+이름이 비슷하다는 것만으로는 막지 않아야 한다(`react`·`preact`처럼 정상인 경우가 많음).
 
 Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-SUP-001.code.python.md` (Python) · `WS-SUP-001.code.js.md` (JavaScript) · `WS-SUP-001.code.php.md` (PHP)
 

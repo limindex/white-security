@@ -16,7 +16,7 @@
 - PHP `unserialize`에는 `allowed_classes` 옵션과 관계없이 믿을 수 없는 입력을 넣지 않아야 한다(PHP 공식 문서의 경고).
 - 서버가 만든 값을 클라이언트에 맡겨야 하면 HMAC 서명(서버 비밀 키로 만든 확인값)을 붙이고 되살리기 전에 확인해야 한다.
 - JSON으로 읽은 뒤에도 타입·필드를 검사하고, 쓸 값만 꺼내야 한다.
-- AI 모델 파일(`.pkl`, `.pt` 등)도 pickle일 수 있음. 모델 공급망은 WS-SUP-008 범위.
+- AI 모델 파일(`.pkl`, `.pt` 등)도 pickle일 수 있으므로 같은 기준으로 다뤄야 한다(모델 공급망은 WS-SUP-008).
 
 Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-DES-001.code.python.md` (Python) · `WS-DES-001.code.js.md` (JavaScript) · `WS-DES-001.code.php.md` (PHP)
 

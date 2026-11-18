@@ -14,7 +14,7 @@
 - AI를 부르는 API는 로그인한 사용자만 쓰게 하고, 사용자별·IP별 호출 횟수를 제한해야 한다.
 - 입력 길이, 대화 기록 길이, 답 길이 상한(`max_tokens`·`max_output_tokens`)을 정해야 한다.
 - 하루·한 달 비용 한도를 내 서버와 AI 회사 콘솔 양쪽에 걸어야 한다.
-- AI API 키는 서버에만 두어야 한다. 2024년 Sysdig 분석은 훔친 클라우드 키로 남의 AI를 쓰는 LLMjacking 피해가 하루 4만 6천 달러를 넘을 수 있다고 계산함.
+- AI API 키는 서버에만 두어야 한다.
 - 시간 초과와 재시도 횟수를 정해야 한다.
 
 Code examples (open only if 고칠 방법 is not enough; your stack only): `WS-LLM-004.code.python.md` (Python) · `WS-LLM-004.code.js.md` (JavaScript)

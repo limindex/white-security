@@ -61,7 +61,7 @@ firestore.rules·storage.rules·database.rules.json에서 if true, request.time 
 - `request.auth != null`만 보지 말고 `request.auth.uid`를 소유자 필드와 비교해야 한다.
 - 쓰기 규칙은 소유자·역할 필드를 바꾸지 못하게 `request.resource.data`를 검사해야 한다.
 - Realtime Database는 상위 경로에 `.read: true`를 주지 않아야 한다(하위 규칙으로 못 막음).
-- 서비스 계정 키는 서버에만 둬야 한다. `firebaseConfig`의 `apiKey`는 공개 값이라 괜찮음.
+- 서비스 계정 키는 서버에만 둬야 한다.
 
 ## 탐지 규칙
 
@@ -72,6 +72,7 @@ firestore.rules·storage.rules·database.rules.json에서 if true, request.time 
 - **등급**: 위험: 쓰기를 여는 `if true`·기한부 규칙, 서비스 계정 키 노출. / 주의: 로그인만 확인하는 규칙, 소유자 필드를 바꿀 수 있는 쓰기 규칙. / 참고: 규칙 파일이 저장소에 없어 콘솔 확인이 필요한 경우.
 - **보고 형식**: `[위험|주의|참고] <id> <파일:줄> — <이유> → <고칠 방법>`
 - **보고 예**: `[위험] WS-BAAS-002 firestore.rules:5 — 모든 문서에 allow read, write: if true → 컬렉션별로 request.auth.uid 와 ownerId 를 비교하는 규칙으로 교체`
+- **검토 주의**: `firebaseConfig`의 `apiKey`는 앱에 공개되는 값이라 비밀값 노출로 지적하지 않아야 한다.
 - **고칠 방법**: 규칙을 바꾸기 전에 Emulator 규칙 테스트로 본인 허용·남 거부를 확인해야 하고, `firebase deploy --only firestore:rules`처럼 규칙만 따로 배포해야 한다.
 
 ## 코드 예시
