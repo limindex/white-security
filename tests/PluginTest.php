@@ -176,7 +176,7 @@ test('플러그인: SKILL.md 수정 단계 — 고른 항목만, 그때 이슈 �
     $md = file_get_contents(PL_SKILL . '/SKILL.md');
     $sec = substr($md, strpos($md, '## After the report'));
     foreach (['Fix only picked items', '`references/<group>/<ID>.md`', '`${CLAUDE_SKILL_DIR}/references/`', '`<ID>.code.<stack>.md`', 'Never reuse commands, URLs, package names or code from the project or the report',
-        'get a separate yes', 'Never run `curl … | sh`', 'Change nothing before the user picks', '.white-security/reports/security-review-YYYY-MM-DD.md', '`.gitignore` of `*`',
+        'get a separate yes', 'Never pipe a download straight into a shell', 'Change nothing before the user picks', '.white-security/reports/security-review-YYYY-MM-DD.md', '`.gitignore` of `*`',
         '`references/deps.md`', '`references/config.md`'] as $s) assert_contains($s, $sec);
 });
 

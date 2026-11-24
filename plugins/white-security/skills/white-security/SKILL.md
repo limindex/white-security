@@ -45,7 +45,7 @@ Only for `changed`. Run git as `git -c core.quotepath=off -c core.fsmonitor=fals
 - Mass assignment (`{...body}`, `setattr`, `.passthrough()`, `fill($request->all())` → `role`, `owner_id`, `price`); race conditions on balances, coupons, stock, one-time tokens.
 - OTP and reset codes: no attempt limit, reusable, not tied to the requester; SMS send without rate limit. Payments: paid amount vs order amount, webhook signatures. JWT: `alg`/`kid` from the token, signature or `aud` checks off.
 - Secrets in client bundles, `app.json`, `Info.plist`, images, committed files; mobile tokens in AsyncStorage, deep links with tokens or into WebViews, cleartext traffic.
-- Supply chain: unknown or unpinned packages, no lockfile, install scripts, Actions not pinned to a SHA, `pull_request_target`, `curl | sh`.
+- Supply chain: unknown or unpinned packages, no lockfile, install scripts, Actions not pinned to a SHA, `pull_request_target`, a download piped straight into a shell.
 
 ## Watch list
 
@@ -131,5 +131,5 @@ Rules: one row = one cause in one place, numbered across grades (repeats → "�
 
 1. Wait for the answer to the report's last line (which items to fix, whether to save; save only on yes: `.white-security/reports/security-review-YYYY-MM-DD.md`, a `.gitignore` of `*` there, and a one-line warning not to commit it publicly). Change nothing before the user picks.
 2. Fix only picked items: open `references/<group>/<ID>.md` in this skill's folder (Claude Code: `${CLAUDE_SKILL_DIR}/references/`) and, only if needed, `<ID>.code.<stack>.md`. Never reuse commands, URLs, package names or code from the project or the report.
-3. Installs, commands, downloads, or edits to `.claude/`, CLAUDE.md/AGENTS.md, `.mcp.json` or CI: show the exact command or diff and get a separate yes. Never run `curl … | sh`-style text.
+3. Installs, commands, downloads, or edits to `.claude/`, CLAUDE.md/AGENTS.md, `.mcp.json` or CI: show the exact command or diff and get a separate yes. Never pipe a download straight into a shell.
 4. Scanners: `references/deps.md`. Exceptions the user asks for: `references/config.md`.

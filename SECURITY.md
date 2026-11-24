@@ -33,6 +33,7 @@ Reports in Korean or English are both fine.
 - Content errors with no security impact (typos, broken links). Open a regular issue.
 - Vulnerabilities in Claude Code, GitHub, GitHub Pages or other platforms. Report them to those vendors.
 - Headers that a static host can't set (such as `frame-ancestors` on GitHub Pages), missing rate limits on the static site, and scanner output without a demonstrated impact.
+- Skill scanner alerts on the code examples in `plugins/white-security/skills/white-security/references/`. Examples marked as vulnerable code (for instance `eval` on model output) are unsafe on purpose. They are documentation that the skill reads, never runs.
 - Social engineering, physical attacks and denial of service.
 
 ## What to expect
@@ -93,6 +94,7 @@ GitHub Security Advisories 비공개 제보만 사용. 저장소 **Security** �
 - 보안 영향이 없는 내용 오류(오타·깨진 링크). 일반 Issue 로 제보.
 - Claude Code·GitHub·GitHub Pages 등 플랫폼 자체의 취약점. 각 제공사에 제보.
 - 정적 호스팅에서 설정할 수 없는 헤더(GitHub Pages 의 `frame-ancestors` 등), 정적 사이트의 요청 횟수 제한 부재, 실제 영향이 확인되지 않은 스캐너 결과.
+- `plugins/white-security/skills/white-security/references/` 의 코드 예시에 대한 스킬 스캐너 경고. 취약 코드로 표시한 예시(모델 출력에 `eval` 사용 등)는 일부러 안전하지 않게 쓴 문서이며, 스킬은 읽기만 하고 실행하지 않음.
 - 사회공학, 물리적 공격, 서비스 거부(DoS).
 
 ### 응답

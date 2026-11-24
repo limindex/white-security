@@ -30,7 +30,7 @@ Return only the final Korean report in the format below — no preamble, no work
 - Mass assignment (`{...body}`, `setattr`, `.passthrough()`, `fill($request->all())` → `role`, `owner_id`, `price`); race conditions on balances, coupons, stock, one-time tokens.
 - OTP and reset codes: no attempt limit, reusable, not tied to the requester; SMS send without rate limit. Payments: paid amount vs order amount, webhook signatures. JWT: `alg`/`kid` from the token, signature or `aud` checks off.
 - Secrets in client bundles, `app.json`, `Info.plist`, images, committed files; mobile tokens in AsyncStorage, deep links with tokens or into WebViews, cleartext traffic.
-- Supply chain: unknown or unpinned packages, no lockfile, install scripts, Actions not pinned to a SHA, `pull_request_target`, `curl | sh`.
+- Supply chain: unknown or unpinned packages, no lockfile, install scripts, Actions not pinned to a SHA, `pull_request_target`, a download piped straight into a shell.
 
 ## Watch list
 
