@@ -70,7 +70,7 @@ $github = $site->setting('github');
 <button class="ws-menu-btn" type="button" aria-controls="ws-menu" aria-expanded="false" aria-label="문서 메뉴"><svg class="ws-menu-ico" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true" focusable="false"><path class="ws-menu-ico-open" d="M3 6h14M3 10h14M3 14h14"/><path class="ws-menu-ico-close" d="M5 5l10 10M15 5L5 15"/></svg></button>
 </header>
 <div class="ws-shell<?= $wide ? ' ws-shell--wide' : '' ?>">
-<?= $site->render('_nav', ['current' => $current, 'page' => $page, 'group' => $group]) ?>
+<?= $site->render('_nav', ['current' => $current, 'page' => $page, 'group' => $group, 'home' => $title === '' && !$page && $current === null]) ?>
 <main id="ws-main" class="ws-main" tabindex="-1">
 <?php if ($crumbs): $last = count($crumbs) - 1; ?>
 <nav class="ws-crumbs" aria-label="경로"><ol><?php foreach ($crumbs as $n => [$label, $href]): ?><?php if ($n === $last): ?><li aria-current="page"><span><?= Site::e($label) ?></span></li><?php elseif ($href !== null): ?><li><a href="<?= Site::e($href) ?>"><?= Site::e($label) ?></a></li><?php else: ?><li><span><?= Site::e($label) ?></span></li><?php endif ?><?php endforeach ?></ol></nav>

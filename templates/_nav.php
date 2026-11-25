@@ -2,12 +2,15 @@
 /**
  * 왼쪽 메뉴: 시작하기 · 보안 이슈(묶음별 접힘) · 참고.
  * 좁은 화면에서는 바깥 details 가 "메뉴" 접기 막대가 된다(JS 없으면 펼친 채).
- * @var Site $site @var ?string $current @var ?string $page @var ?string $group
+ * @var Site $site @var ?string $current @var ?string $page @var ?string $group @var bool $home 홈 화면이면 true
  */
 $byGroup = $site->repo->byGroup();
 $total = count($site->repo->all());
-$section = function (string $name) use ($site, $page): string {
+$isHome = $page === null && $group === null && ($current ?? null) === null && ($home ?? false);
+$section = function (string $name) use ($site, $page, $isHome): string {
     $out = '<h2 class="ws-nav-h">' . Site::e($name) . '</h2><ul class="ws-nav-pages">';
+    // 첫 묶음 맨 위에 홈(로고를 몰라도 돌아갈 수 있게)
+    if ($name === Site::NAV_SECTIONS[0]) $out .= '<li><a href="' . Site::e($site->url('')) . '"' . ($isHome ? ' aria-current="page"' : '') . '>홈</a></li>';
     foreach ($site->pages() as $slug => $m) {
         if ($m['section'] !== $name || ($m['nav'] ?? true) === false) continue;
         $out .= '<li><a href="' . Site::e($site->url($slug)) . '"' . ($page === $slug ? ' aria-current="page"' : '') . '>' . Site::e($m['title']) . '</a></li>';

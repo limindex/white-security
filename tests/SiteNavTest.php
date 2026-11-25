@@ -269,3 +269,10 @@ test('처음이라면 목록: 문서 번호는 제목 블록 안(이유 아래 �
     $b = (new Site(Repository::load($root), '/white-security/', 'live'))->route('start')['body'];
     assert_true((bool)preg_match('#<span class="ws-readlist-main"><span class="ws-readlist-title">.*?</span><span class="ws-readlist-why">x</span><span class="ws-id">WS-INJ-001</span></span>#su', $b), '제목 블록 안 id');
 });
+
+test('왼쪽 메뉴: 시작하기 맨 위에 홈 — 홈에서는 현재 위치, 다른 페이지에서는 링크', function () {
+    $s = new Site(Repository::load(dirname(__DIR__)), '/white-security/', 'live');
+    $home = $s->route('')['body']; $about = $s->route('about')['body'];
+    assert_contains('<ul class="ws-nav-pages"><li><a href="/white-security/" aria-current="page">홈</a></li>', $home);
+    assert_contains('<ul class="ws-nav-pages"><li><a href="/white-security/">홈</a></li>', $about);
+});
