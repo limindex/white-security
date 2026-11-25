@@ -1,6 +1,7 @@
 <?php
 // 금지어 검사(로컬 전용, push 전에 실행): php scripts/check-forbidden.php [--list=<목록 파일>] [--range=<커밋 범위>]
 // 목록은 저장소에 올리지 않는 scripts/forbidden.txt(.gitignore)에만 둔다. 한 줄에 낱말 하나, 빈 줄·# 줄은 무시, 대소문자 무시.
+// `!` 로 시작하는 줄은 허용 문구: 그 문구를 지운 뒤 금지어를 찾는다(예: 공개 주소처럼 금지어를 포함한 정해진 표기 하나만 허용).
 // 검사 대상: git 이 추적하는 파일과 무시되지 않은 새 파일(내용·파일 이름), 그리고 범위 안 커밋의 메시지·작성자·커미터(기본: HEAD 까지 전체 이력).
 // 출력은 "파일:줄 f***" 처럼 낱말 첫 글자만 남기고 가린다. 목록 내용·걸린 줄은 어디에도 찍지 않는다.
 // 목록 파일이 없으면(CI 등) 아무 내용 없이 건너뛴다(종료 코드 0). 걸리면 종료 코드 1.
@@ -26,7 +27,7 @@ function ws_forbidden_mask(string $word): string { return mb_substr($word, 0, 1,
 /** 찍기 전에 파일 이름 속 금지어도 가린다(경로를 찍다가 낱말이 새지 않게) @param list<string> $words */
 function ws_forbidden_redact(string $s, array $words): string
 {
-    foreach ($words as $w) $s = (string)preg_replace('/' . preg_quote($w, '/') . '/iu', ws_forbidden_mask($w), $s);
+    foreach ($words as $w) if (!str_starts_with($w, '!')) $s = (string)preg_replace('/' . preg_quote($w, '/') . '/iu', ws_forbidden_mask($w), $s);
     return $s;
 }
 
@@ -37,9 +38,11 @@ function ws_forbidden_redact(string $s, array $words): string
 function ws_forbidden_hits(string $text, array $words): array
 {
     $hits = [];
+    $allow = [];
+    foreach ($words as $w) if (str_starts_with($w, '!') && strlen($w) > 1) $allow[] = substr($w, 1);
     foreach (explode("\n", $text) as $i => $line) {
-        $low = mb_strtolower($line, 'UTF-8');
-        foreach ($words as $w) if (str_contains($low, $w)) $hits[] = ['line' => $i + 1, 'mask' => ws_forbidden_mask($w)];
+        $low = str_replace($allow, ' ', mb_strtolower($line, 'UTF-8'));
+        foreach ($words as $w) if (!str_starts_with($w, '!') && str_contains($low, $w)) $hits[] = ['line' => $i + 1, 'mask' => ws_forbidden_mask($w)];
     }
     return $hits;
 }

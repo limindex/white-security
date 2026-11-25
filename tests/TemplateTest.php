@@ -55,7 +55,7 @@ test('이슈 화면: 본문 절·출처·최종 확인일, 현재 이슈 강조'
 
 test('홈: 약속 문구·시작점(스킬 설치)·묶음 색인·최근 개정', function () {
     $b = tpl_site()->route('')['body'];
-    assert_contains('AI 코딩 보안 취약점 점검 지원', $b);
+    assert_contains('AI 코딩 보안 점검 에이전트', $b);
     assert_contains('흔한 실수를 크게 줄', $b);
     assert_contains('보안 감사를 대신하지 않', $b);
     assert_true(!preg_match('/완벽|보장/u', $b), '과장 문구');

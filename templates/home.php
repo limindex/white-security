@@ -5,8 +5,8 @@ $first = array_slice($site->repo->start(), 0, 3);
 <div class="ws-home">
 <section class="ws-home-intro" aria-labelledby="ws-home-h">
 <p class="ws-home-k"><?= Site::e(Site::BRAND) ?> · <?= Site::e(Site::BRAND_DESC) ?></p>
-<h1 id="ws-home-h">AI 코딩 보안 취약점 점검 지원</h1>
-<p class="ws-home-lead"><span><?= Site::e(Site::HOME_DESC) ?></span></p>
+<h1 id="ws-home-h">AI 코딩 보안 점검 에이전트</h1>
+<p class="ws-home-lead"><?= implode('', array_map(fn($x) => '<span>' . Site::e($x) . '</span>', explode(' · ', Site::HOME_DESC))) ?></p>
 <p class="ws-scope"><span>흔한 실수를 크게 줄이는 용도</span><i></i><span>보안 감사를 대신하지 않음</span></p>
 </section>
 

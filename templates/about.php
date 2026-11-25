@@ -9,7 +9,7 @@
 <h2>사용 방법</h2>
 <ul>
 <li>필요할 때, 특히 배포 전에 대화창에 <code>보안 점검해 줘</code> 한마디로 프로젝트 전체 읽기 전용 검토.</li>
-<li>확실하게 실행하려면 <code>/white-security:review</code>.</li>
+<li>확실하게 실행하려면 Claude Code는 <code>/white-security:review</code>, Codex는 <code>$white-security</code>.</li>
 <li>요청할 때만 실행. “배포할게”처럼 배포 이야기가 나오면 점검 여부를 먼저 질문.</li>
 <li>판단은 AI 코딩 도구의 모델이 직접 수행. 스킬은 검토 범위·놓치기 쉬운 항목·안전 규칙·보고 형식만 안내하고, 규칙 문서는 고칠 때만 사용.</li>
 </ul>
@@ -30,6 +30,23 @@
 <section class="ws-sec">
 <h2>작성 기준</h2>
 <p>OWASP·CWE·국내 진단가이드 등 <?= count($site->repo->frameworks()) ?>개 기준에 맞춰 작성 · <a href="<?= Site::e($site->url('coverage')) ?>">점검 기준 대응표</a></p>
+<?php
+/** 국내 기준 대응 수: 대응 이슈가 있는 항목 / 전체(지원 스택 밖 항목은 사유와 함께 대응표에 표시) */
+$kr = static function (string $fw) use ($site): array {
+    $rows = $site->repo->coverage()[$fw] ?? [];
+    return [count(array_filter($rows, fn($r) => $r['issues'] !== [])), count($rows)];
+};
+[$ciipN, $ciipT] = $kr('kr_ciip');
+[$guideN, $guideT] = $kr('kr_guide');
+?>
+<?php if ($ciipT && $guideT): ?>
+<ul>
+<li>주요정보통신기반시설 웹 취약점 <?= $ciipT ?>개 중 <?= $ciipN ?>개 대응</li>
+<li>행정안전부 구현단계 보안약점 <?= $guideT ?>개 중 <?= $guideN ?>개 대응<?= $guideN < $guideT ? ' (나머지는 C·C++ 메모리 항목으로 지원 언어에 해당 없음)' : '' ?></li>
+<li>개인정보 보호 기준: 주민등록번호 처리 제한, 고유식별정보 암호화 저장, 개인정보 접속기록</li>
+</ul>
+<p>공식 진단이나 인증을 대신하지 않음.</p>
+<?php endif ?>
 </section>
 <?= $site->render('_stacks', []) ?>
 <section class="ws-sec">

@@ -124,6 +124,8 @@ test('버전 검사(git): 기준 이후 플러그인 변경에 버전·CHANGELOG
 test('금지어(판정): 대소문자 무시·한글, 첫 글자만 남기고 가림, 경로 속 낱말도 가림', function () {
     $words = ['acme', '비밀회사'];
     assert_same([['line' => 2, 'mask' => 'a***'], ['line' => 3, 'mask' => '비***']], ws_forbidden_hits("ok\nhello ACME\n(주)비밀회사 문서\n", $words));
+    // `!` 허용 문구: 정해진 표기 하나만 통과, 같은 낱말의 다른 표기는 계속 걸림
+    assert_same([['line' => 2, 'mask' => 'a***']], ws_forbidden_hits("see docs.acme.example\nmail@acme.example\n", ['acme', '!docs.acme.example']));
     assert_same('docs/a***-notes.md', ws_forbidden_redact('docs/Acme-notes.md', $words));
     $f = tempnam(sys_get_temp_dir(), 'wsf');
     file_put_contents($f, "# 주석\n\n  Acme  \nacme\n비밀회사\r\n");

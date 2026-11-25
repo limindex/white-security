@@ -147,7 +147,7 @@ final class Site
         return '<span class="ws-badge ws-badge--' . self::e($severity) . '">' . self::e($label . $suffix) . '</span>';
     }
 
-    public const HOME_DESC = '바이브 코딩 개발자 누구나 활용하는 공개 점검 스킬 · 국내외 보안 기준 반영';
+    public const HOME_DESC = 'AI 코딩 도구가 만든 코드를 배포 전에 읽기 전용으로 점검 · 행정안전부 보안약점·주요정보통신기반시설·개인정보 보호 기준 대응';
     public const DEFAULT_DESC = 'AI 코딩 도구가 자주 만드는 보안 실수를 정리한 보안 이슈 문서와 AI 코딩 도구용 점검 스킬';
 
     /** data/site.json 설정값 (없으면 빈 문자열) */
