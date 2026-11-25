@@ -127,19 +127,37 @@ test('공유 메타: 페이지별 title·description·og, 이슈는 article', fu
     assert_contains('<meta property="og:url" content="https://docs.example.org/white-security/severity">', $o);
 });
 
-test('홈: 한 줄 소개 → 시작점 3갈래 → 최근 개정 → 묶음 색인 순서(점검 기준 대응 줄 없음)', function () {
+test('홈: 한 줄 소개 → 시작점 3갈래 → 묶음 요약 순서(최근 개정·전체 이슈 목록·점검 기준 대응 줄·작은 라벨·머리 브랜드 반복 없음)', function () {
     $b = nav_site()->route('')['body'];
     $pos = [];
-    foreach (['class="ws-home-intro"', 'class="ws-paths"', 'class="ws-recent"', 'class="ws-grp-index"'] as $k) {
+    foreach (['class="ws-home-intro"', 'class="ws-paths"', 'class="ws-grp-index"'] as $k) {
         $pos[$k] = strpos($b, $k);
         assert_true($pos[$k] !== false, $k);
     }
-    assert_true($pos['class="ws-home-intro"'] < $pos['class="ws-paths"'] && $pos['class="ws-paths"'] < $pos['class="ws-recent"'] && $pos['class="ws-recent"'] < $pos['class="ws-grp-index"'], '순서');
-    assert_true(!str_contains($b, 'ws-cov-line') && !str_contains($b, 'href="/white-security/coverage"'), '홈에 점검 기준 대응 줄 없음');
+    assert_true($pos['class="ws-home-intro"'] < $pos['class="ws-paths"'] && $pos['class="ws-paths"'] < $pos['class="ws-grp-index"'], '순서');
+    foreach (['class="ws-recent"', '최근 개정', 'ws-path-k', 'ws-home-k', 'ws-scope'] as $w) assert_true(!str_contains($b, $w), "홈에 없음: $w");
+    assert_true(!str_contains($b, 'ws-cov-line'), '홈에 점검 기준 대응 줄 없음');
     preg_match('#class="ws-paths"(.*?)</section>\s*<section class="ws-home-sec"#s', $b, $m);
     foreach (['/white-security/start', '/white-security/guide', '/white-security/install'] as $h) assert_contains('href="' . $h . '"', $m[1]);
     assert_true(!str_contains($m[1], '/white-security/check'), 'check 꺼짐: 시작점에 없음');
     assert_same(3, preg_match_all('#<h3[^>]*>#', $m[1]), '시작점 3개');
+    foreach (['공부하기', '이해하기', '검토하기'] as $w) assert_true(!str_contains($m[1], $w), "카드 라벨 없음: $w");
+});
+
+test('홈 묶음 요약: 묶음마다 접힘(이름·이슈 수·한 줄 설명), 펼치면 그 묶음 이슈 목록 — 실제 데이터 11묶음', function () {
+    $s = new Site(Repository::load(dirname(__DIR__)), '/white-security/', 'live');
+    $b = nw_strip($s->route('')['body']);
+    preg_match('#<ul class="ws-grp-index">(.*)</ul>\s*</section>#s', $b, $m);
+    $groups = $s->repo->groups();
+    assert_same(count($groups), preg_match_all('#<li id="grp-[a-z-]+">\s*<details>\s*<summary>#', $m[1]), '묶음마다 접힘');
+    assert_same(11, count($groups));
+    $by = $s->repo->byGroup();
+    foreach ($groups as $g) {
+        assert_true((bool)preg_match('#<li id="grp-' . $g['id'] . '">\s*<details>\s*<summary>\s*<span class="ws-grp-main"><span class="ws-grp-name">' . preg_quote(Site::e($g['name']), '#') . '</span><span class="ws-grp-when">.+?</span></span>\s*<span class="ws-grp-n">' . count($by[$g['id']]) . '건</span>#su', $m[1]), $g['id']);
+    }
+    assert_same(count($s->repo->all()), substr_count($m[1], 'href="/white-security/issues/'), '이슈 링크는 묶음 안에만 한 번씩');
+    assert_true(!str_contains($b, '<details open>'), '기본 접힘');
+    assert_contains('문서만, 스킬 점검 없음', $m[1]);
 });
 
 test('404: 디자인된 안내와 주요 링크', function () {

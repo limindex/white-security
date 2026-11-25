@@ -278,21 +278,6 @@ final class Site
     }
 
     /**
-     * 최근 개정: 이슈마다 가장 최근 개정 한 건(없으면 마지막 확인일), 날짜 최신순·같은 날은 id 순.
-     * @return list<array{issue:Issue,date:string,note:string}>
-     */
-    public function recentRevisions(int $n = 5): array
-    {
-        $rows = [];
-        foreach ($this->repo->all() as $i) {
-            $r = $i->revisions[0] ?? ['date' => $i->checked->format('Y-m-d'), 'note' => '내용 확인'];
-            $rows[] = ['issue' => $i, 'date' => $r['date'], 'note' => $r['note']];
-        }
-        usort($rows, fn($a, $b) => [$b['date'], $a['issue']->id] <=> [$a['date'], $b['issue']->id]);
-        return array_slice($rows, 0, $n);
-    }
-
-    /**
      * 개정 이력 페이지: 모든 이슈의 개정 기록 전부, 날짜 최신순·같은 날은 id 순.
      * @return list<array{issue:Issue,date:string,note:string}>
      */

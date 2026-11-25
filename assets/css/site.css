@@ -118,7 +118,7 @@ a:hover { text-decoration-thickness: 2px; }
 h1, h2, h3 { color: var(--ink); font-family: var(--font-display); font-style: normal; word-break: keep-all; overflow-wrap: anywhere; min-width: 0; text-wrap: balance; }
 /* 줄바꿈: 본문(문단·목록·정의·점검 항목)은 pretty, 제목·리드·짧은 이름 줄만 balance. 외톨이 줄은 site.js fixLong 이 보정 */
 p, li, dd, td, label { text-wrap: pretty; }
-.ws-page-lead, .ws-home-lead, .ws-path p, .ws-grp-when, .ws-cov-note, .ws-recent-title, .ws-recent-note, .ws-nav a, .ws-meter-name a { text-wrap: balance; }
+.ws-page-lead, .ws-home-lead, .ws-path p, .ws-grp-when, .ws-grp-title, .ws-cov-note, .ws-recent-title, .ws-recent-note, .ws-nav a, .ws-meter-name a { text-wrap: balance; }
 code { font-family: var(--font-mono); }
 [hidden] { display: none !important; }
 .ws-nw { white-space: nowrap; }
@@ -126,10 +126,10 @@ code { font-family: var(--font-mono); }
 
 /* 한 줄 글자 상자: 세로 가운데 (flex 상자 안 글자는 .ws-tx·span 으로 감쌈) */
 .ws-tx, .ws-badge, .ws-chip, .ws-btn, .ws-id, .ws-nav-count, .ws-brand-name, .ws-brand-desc, .ws-publisher, .ws-kbd,
-.ws-scope > span, .ws-foot span, .ws-foot a, .ws-snippet-label, .ws-block-label, .ws-docid > span, .ws-checked > span,
+.ws-foot span, .ws-foot a, .ws-snippet-label, .ws-block-label, .ws-docid > span, .ws-checked > span,
 .ws-recent-date, .ws-code-head h2, .ws-toc h2, .ws-crumbs li, .ws-menu-where, .ws-nav-grp-name, .ws-cov-line > span,
-.ws-fold-count, .ws-fold-hint span, .ws-path-k, .ws-grp-n, .ws-cov-num, .ws-check-n, .ws-grp-when, .ws-grp-issues a,
-.ws-home-sec-head h2, .ws-grp-row h3, .ws-cov-chart-head h2, .ws-fold summary h2, .ws-sec-head h2,
+.ws-fold-count, .ws-fold-hint span, .ws-grp-n, .ws-cov-num, .ws-check-n, .ws-grp-when, .ws-grp-name, .ws-grp-title,
+.ws-home-sec-head h2, .ws-cov-chart-head h2, .ws-fold summary h2, .ws-sec-head h2,
 .ws-sec > h2, .ws-sec > h3, .ws-page-head h1, .ws-doc h1, .ws-home-intro h1, .ws-related h2, .ws-toc h2, .ws-code-num,
 .ws-recent-title, .ws-recent-note, .ws-readlist-title, .ws-readlist-why, .ws-st-note, .ws-nav-pages a, .ws-nav-grp li a, .ws-path-cmd, .ws-crumbs li > * {
   line-height: 1.2;
@@ -138,7 +138,7 @@ code { font-family: var(--font-mono); }
 .ws-tx { display: block; }
 
 /* 1px 세로선 구분 (가운뎃점 나열 대신) */
-.ws-scope i, .ws-foot i, .ws-checked i, .ws-docid i, .ws-cov-line i {
+.ws-foot i, .ws-checked i, .ws-docid i, .ws-cov-line i {
   display: inline-block;
   width: 1px;
   height: 10px;
@@ -491,12 +491,10 @@ html:not(.js) .ws-copy, html:not(.js) .ws-tabs, html:not(.js) .ws-check-status {
 /* ---------- 홈 ---------- */
 .ws-home { max-width: var(--col-wide); }
 .ws-home-intro { max-width: 760px; padding: 20px 0 8px; }
-.ws-home-k { margin: 0 0 16px; font: 700 .8rem var(--font-display); letter-spacing: -0.01em; color: var(--ink-3); line-height: 1.2; text-box: trim-both cap alphabetic; }
 .ws-home-intro h1 { margin: 0; font-size: clamp(2rem, 1.5rem + 1.6vw, 2.75rem); font-weight: 800; letter-spacing: -0.05em; line-height: 1.12; }
 .ws-home-lead { margin: 16px 0 0; max-width: 40em; font-size: clamp(1.04rem, 1rem + .25vw, 1.16rem); line-height: 1.65; color: var(--ink-2); }
 .ws-home-lead > span { display: block; text-wrap: balance; }
 .ws-home-lead > span + span { margin-top: 4px; }
-.ws-scope { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 16px 0 0; font-size: .84rem; color: var(--ink-3); }
 
 .ws-paths {
   display: grid;
@@ -527,8 +525,7 @@ html:not(.js) .ws-copy, html:not(.js) .ws-tabs, html:not(.js) .ws-check-status {
 .ws-path-go:hover { text-decoration: underline; }
 .ws-path-steps li { display: flex; align-items: center; gap: 12px; padding: 8px 0; box-shadow: inset 0 1px 0 var(--line-strong); counter-increment: step; line-height: 1.4; }
 .ws-path-steps li::before { content: counter(step); flex: none; display: grid; place-items: center; width: 22px; height: 22px; border-radius: var(--r-pill); background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-strong); font: 700 .72rem var(--font-display); color: var(--ink-2); }
-.ws-path-k { align-self: flex-start; font: 700 .76rem var(--font-display); color: var(--accent); letter-spacing: -0.01em; }
-.ws-path h3 { margin: 4px 0 0; font-size: 1.2rem; font-weight: 800; letter-spacing: -0.04em; line-height: 1.25; }
+.ws-path h3 { margin: 0; font-size: 1.2rem; font-weight: 800; letter-spacing: -0.04em; line-height: 1.25; }
 .ws-path--lead h3 { font-size: clamp(1.5rem, 1.2rem + .8vw, 1.85rem); letter-spacing: -0.05em; }
 .ws-path p { margin: 0; font-size: .9rem; line-height: 1.55; color: var(--ink-2); }
 .ws-path-cmd {
@@ -584,18 +581,26 @@ html:not(.js) .ws-copy, html:not(.js) .ws-tabs, html:not(.js) .ws-check-status {
 }
 .ws-cov-line b { font: 800 1em var(--font-display); color: var(--ink); font-variant-numeric: lining-nums tabular-nums; letter-spacing: -0.02em; }
 
-.ws-grp-index { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: 48px; }
-.ws-grp-index > li { break-inside: avoid; padding: 16px 0 20px; box-shadow: inset 0 1px 0 var(--line); scroll-margin-top: calc(var(--top-h) + 16px); }
-.ws-grp-index > li:target h3 { color: var(--accent); }
-.ws-grp-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.ws-grp-row h3 { margin: 0; font-size: 1rem; font-weight: 800; letter-spacing: -0.035em; line-height: 1.35; }
-.ws-grp-n { flex: none; font: 600 .8rem var(--font-display); color: var(--ink-3); font-variant-numeric: lining-nums tabular-nums; }
-/* 제목→설명 16 · 설명→목록 32(목록 안 16 + 16) · 설명은 보조(작게·흐리게), 이슈는 본문색 */
-.ws-grp-when { margin: 16px 0 0; font-size: .8rem; line-height: 1.55; color: var(--ink-3); }
-.ws-grp-issues { list-style: none; margin: 24px 0 0; padding: 0; font-size: .92rem; line-height: 1.45; }
-.ws-grp-issues a { display: block; padding: 8px 0; color: var(--ink); text-decoration: none; }
-.ws-grp-issues a:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
-.ws-grp-index > li.is-empty h3 { color: var(--ink-3); }
+.ws-home-sec-head .ws-fold-count { margin-right: auto; }
+/* 보안 이슈 묶음: 한 줄 = 묶음 이름 + 한 줄 설명 · 이슈 수 · 펼치기, 펼치면 그 묶음 이슈 목록 */
+.ws-grp-index { list-style: none; margin: 0; padding: 0; box-shadow: inset 0 1px 0 var(--line); }
+.ws-grp-index > li { box-shadow: inset 0 -1px 0 var(--line); scroll-margin-top: calc(var(--top-h) + 16px); }
+.ws-grp-index summary { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 24px; padding: 16px 0; list-style: none; cursor: pointer; }
+.ws-grp-index summary::-webkit-details-marker { display: none; }
+.ws-grp-main { display: grid; gap: 8px; min-width: 0; }
+.ws-grp-name { font: 800 1rem var(--font-display); letter-spacing: -0.035em; color: var(--ink); }
+.ws-grp-when { font-size: .84rem; color: var(--ink-3); }
+.ws-grp-n { flex: none; font: 600 .82rem var(--font-display); color: var(--ink-2); font-variant-numeric: lining-nums tabular-nums; white-space: nowrap; }
+.ws-grp-index summary:hover .ws-grp-name, .ws-grp-index summary:hover .ws-fold-hint, .ws-grp-index > li:target .ws-grp-name { color: var(--accent); }
+.ws-grp-index details[open] .ws-fold-hint::after { transform: rotate(-135deg); margin-top: 3px; }
+.ws-grp-index details[open] .ws-fold-open { display: inline; }
+.ws-grp-index details[open] .ws-fold-closed { display: none; }
+.ws-grp-issues { list-style: none; margin: 0 0 16px; padding: 0 16px; border-radius: var(--r-lg); background: var(--sunken); }
+.ws-grp-issues li + li { box-shadow: inset 0 1px 0 var(--line); }
+.ws-grp-issues a { display: grid; grid-template-columns: minmax(0, 1fr) auto 3.6em; align-items: center; gap: 16px; padding: 12px 0; color: var(--ink); text-decoration: none; }
+.ws-grp-issues .ws-badge { justify-self: end; }
+.ws-grp-title { font-size: .92rem; font-weight: 600; }
+.ws-grp-issues a:hover .ws-grp-title { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 
 /* ---------- 일반 페이지 ---------- */
 .ws-page { max-width: var(--col-page); }
@@ -1196,7 +1201,13 @@ html:not(.js) .ws-itabs-list { display: none; }
 @media (max-width: 759.98px) {
   .ws-paths { grid-template-columns: minmax(0, 1fr); }
   .ws-path--lead { grid-row: auto; padding: 20px 24px 24px; }
-  .ws-grp-index { columns: 1; }
+  .ws-grp-index summary { grid-template-columns: minmax(0, 1fr) auto auto; gap: 12px; }
+  .ws-grp-index .ws-fold-hint > span { display: none; }
+  .ws-grp-issues { padding: 0 12px; }
+  .ws-grp-issues a { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "title badge" "id id"; gap: 8px 12px; }
+  .ws-grp-title { grid-area: title; }
+  .ws-grp-issues .ws-id { grid-area: id; }
+  .ws-grp-issues .ws-badge { grid-area: badge; }
   .ws-recent a {
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas: "main badges" "date id";
@@ -1263,8 +1274,7 @@ html:not(.js) .ws-itabs-list { display: none; }
   .ws-nav-pages a, .ws-nav-grp li a { padding: 20px 12px; }
   .ws-links a, .ws-gh, .ws-menu-bar { min-height: 48px; }
   .ws-more { min-height: 44px; margin-block: -16px; }
-  .ws-grp-issues { margin-top: 28px; }
-  .ws-grp-issues a { display: flex; align-items: center; min-height: 44px; padding: 8px 0; }
+  .ws-grp-index summary { min-height: 48px; }
   .ws-nav-grp summary { min-height: 48px; }
   .ws-checklist input { width: 24px; height: 24px; margin-top: 2px; }
   .ws-checklist li { grid-template-columns: 24px minmax(0, 1fr); }

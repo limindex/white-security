@@ -9,5 +9,5 @@
   {"id": "data", "name": "개인정보 보호", "order": 8, "site_only": false, "when": "개인정보의 저장·조회·로그·내보내기, Supabase·Firebase 접근 규칙"},
   {"id": "supply", "name": "소프트웨어 공급망", "order": 9, "site_only": false, "when": "패키지 설치·업데이트·외부 코드와 모델 사용"},
   {"id": "mobile", "name": "모바일 앱", "order": 10, "site_only": false, "when": "React Native·Expo·Flutter 등 모바일 앱의 키·저장·딥링크·WebView·결제 확인·통신"},
-  {"id": "people", "name": "사용자 보안", "order": 11, "site_only": true, "when": "사람을 노리는 사기·계정 탈취 (사이트 전용)"}
+  {"id": "people", "name": "사용자 보안", "order": 11, "site_only": true, "when": "사람을 노리는 사기·계정 탈취 (문서만, 스킬 점검 없음)"}
 ]

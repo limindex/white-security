@@ -53,30 +53,17 @@ test('이슈 화면: 본문 절·출처·최종 확인일, 현재 이슈 강조'
     assert_true((bool)preg_match('#<a[^>]*href="/white-security/issues/WS-INJ-001"[^>]*aria-current="page"#', $b), '현재 이슈 aria-current');
 });
 
-test('홈: 약속 문구·시작점(스킬 설치)·묶음 색인·최근 개정', function () {
+test('홈: 제목·시작점(스킬 설치)·묶음 요약, 면책 문구는 바닥글에만', function () {
     $b = tpl_site()->route('')['body'];
     assert_contains('AI 코딩 보안 점검 스킬', $b);
-    assert_contains('흔한 실수를 크게 줄', $b);
-    assert_contains('보안 감사를 대신하지 않', $b);
     assert_true(!preg_match('/완벽|보장/u', $b), '과장 문구');
     assert_true((bool)preg_match('#<a[^>]*href="/white-security/install"[^>]*>.*?스킬 설치#su', $b), '스킬 설치 시작점');
     assert_true((bool)preg_match('#<li id="grp-web">.*?웹 애플리케이션#su', $b), '묶음 색인 앵커');
-    assert_contains('최근 개정', $b);
-    assert_true((bool)preg_match('#class="ws-recent".*WS-INJ-001.*본문 고정 제목 변경#s', $b), '최근 개정에 fixture 와 변경 요지');
-});
-
-test('홈: 최근 개정은 이슈마다 최신 개정 1건, 최대 5건, 날짜 최신순', function () {
-    $extra = [];
-    foreach (range(2, 8) as $n) {
-        $raw = file_get_contents(__DIR__ . '/fixtures/issues/web/WS-INJ-001-sql-injection.md');
-        $raw = str_replace(['WS-INJ-001', '- date: 2026-11-18'], [sprintf('WS-INJ-%03d', $n), sprintf('- date: 2026-10-%02d', $n)], $raw);
-        $extra[sprintf('WS-INJ-%03d-x.md', $n)] = $raw;
-    }
-    $b = tpl_site('2026-11-18', $extra)->route('')['body'];
-    assert_true((bool)preg_match('#<ol class="ws-recent">(.*?)</ol>#s', $b, $m), 'ws-recent 목록');
-    preg_match_all('#WS-INJ-\d{3}#', $m[1], $ids);
-    assert_same(['WS-INJ-001', 'WS-INJ-008', 'WS-INJ-007', 'WS-INJ-006', 'WS-INJ-005'], array_values(array_unique($ids[0])));
-    assert_same(5, substr_count($m[1], '<li>'), '5건');
+    assert_true(!str_contains($b, '최근 개정') && !str_contains($b, 'recentRevisions'), '최근 개정 절 없음');
+    $main = substr($b, 0, (int)strpos($b, '<footer class="ws-foot">'));
+    assert_true(!str_contains($main, '대신하지 않'), '본문에는 면책 문구 없음');
+    assert_true((bool)preg_match('#<footer class="ws-foot">.*흔한 실수를 크게 줄이는 용도.*대신하지 않음#su', nw_strip($b)), '바닥글 면책');
+    assert_true(!method_exists('Site', 'recentRevisions'), '최근 개정 계산 코드 제거');
 });
 
 test('180일 재확인 폐기: 오래돼도 "확인 필요" 배지·다음 검토 예정일 없음, 최종 확인일만 표시', function () {
