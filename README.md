@@ -51,8 +51,6 @@ git clone https://github.com/limindex/white-security.git ~/white-security
 mkdir -p .agents/skills && cp -r ~/white-security/plugins/white-security/skills/white-security .agents/skills/
 ```
 
-`.agents/skills/`를 읽는 다른 에이전트(Cursor, GitHub Copilot, OpenCode 등)에서도 같은 방법으로 쓸 수 있을 것으로 예상하지만, 아직 시험하지 않았습니다.
-
 ## 사용법
 
 | | Claude Code | Codex |

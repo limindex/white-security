@@ -36,8 +36,6 @@ git clone https://github.com/limindex/white-security.git ~/white-security
 mkdir -p .agents/skills && cp -r ~/white-security/plugins/white-security/skills/white-security .agents/skills/
 ```
 
-Other agents that read `.agents/skills/` (Cursor, GitHub Copilot, OpenCode and others) should work the same way, but we haven't tested them yet.
-
 ## Usage
 
 | | Claude Code | Codex |
