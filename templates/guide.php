@@ -36,7 +36,9 @@ $chips = [['owasp2025', 'A05'], ['asvs5', 'V1.2'], ['cwe', 'CWE-89']];
 <div><dt>번호</dt><dd>분류 안의 세 자리 일련번호</dd></div>
 <div><dt>번호 불변</dt><dd>제목·내용·묶음이 바뀌어도 같은 번호 유지 · 인용과 링크의 기준 · 폐지한 번호의 재사용 없음</dd></div>
 </dl>
-<?php if ($prefixes): ?>
+<?php if ($prefixes): /* 약어 전체 표(약 40줄)는 접어 둠: 읽는 법 본문이 먼저 보이게 */ ?>
+<details class="ws-subfold">
+<summary><span class="ws-tx">분류 약어 전체 <?= count($prefixes) ?>개</span><span class="ws-fold-hint" aria-hidden="true"><span class="ws-fold-closed">펼치기</span><span class="ws-fold-open">접기</span></span></summary>
 <div class="ws-table-wrap">
 <table class="ws-table ws-table--def">
 <caption class="ws-sr">현재 쓰는 분류 약어</caption>
@@ -48,6 +50,7 @@ $chips = [['owasp2025', 'A05'], ['asvs5', 'V1.2'], ['cwe', 'CWE-89']];
 </tbody>
 </table>
 </div>
+</details>
 <?php endif ?>
 </section>
 

@@ -342,3 +342,12 @@ test('제보 경로: 바닥글에 취약점(비공개 제보)·문서 오류 링
     $none = nav_site()->route('issues/WS-INJ-001')['body'];
     assert_true(!str_contains($none, '제보'), 'github 없으면 제보 링크 없음');
 });
+
+test('문서 읽는 법: 분류 약어 전체 표는 기본 접힘(읽는 법 본문이 먼저), 정의 칸에 예 2개', function () {
+    $s = new Site(Repository::load(dirname(__DIR__)), '/white-security/', 'live');
+    $b = nw_strip($s->route('guide')['body']);
+    assert_true((bool)preg_match('#<details class="ws-subfold">\s*<summary><span class="ws-tx">분류 약어 전체 (\d+)개</span>.*?<table class="ws-table ws-table--def">.*?</table>\s*</div>\s*</details>#su', $b, $m), '접힌 약어 표');
+    assert_true((int)$m[1] >= 30, '약어 수');
+    assert_true(!str_contains($b, '<details class="ws-subfold" open'), '기본 접힘');
+    assert_contains('<code>INJ</code>(인젝션) · <code>SSRF</code>', $b);
+});
