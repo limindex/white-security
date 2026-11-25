@@ -200,5 +200,5 @@ test('실제 data/out_of_scope.json: ASVS V17·CWE 메모리 6·kr_guide 입력�
     $oos = [];
     foreach ($repo->coverage() as $fw => $rows) foreach ($rows as $r) if ($r['out_of_scope'] !== null) $oos[] = "$fw:{$r['item']}";
     sort($oos);
-    assert_same(['asvs5:V17', 'cwe:CWE-120', 'cwe:CWE-121', 'cwe:CWE-122', 'cwe:CWE-125', 'cwe:CWE-416', 'cwe:CWE-787', 'kr_guide:입력데이터 검증 및 표현-16'], $oos);
+    assert_same(['asvs5:V17', 'cwe:CWE-120', 'cwe:CWE-121', 'cwe:CWE-122', 'cwe:CWE-125', 'cwe:CWE-416', 'cwe:CWE-787', 'kr_guide:입력데이터 검증 및 표현-16', 'kr_guide:코드오류-3'], $oos);
 });

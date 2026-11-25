@@ -6,6 +6,8 @@
 
 **AI 코딩 도구가 만든 코드를 배포 전에 읽기 전용으로 점검하는 보안 검토 스킬**
 
+행정안전부 보안약점, 주요정보통신기반시설, 개인정보 보호 기준에 맞춰 점검합니다
+
 [![CI](https://github.com/limindex/white-security/actions/workflows/ci.yml/badge.svg)](https://github.com/limindex/white-security/actions/workflows/ci.yml)
 [![Version](https://img.shields.io/badge/version-0.1.1-2f6feb)](CHANGELOG.md)
 [![License](https://img.shields.io/badge/license-CC%20BY--SA%204.0%20%2B%20MIT-555)](#라이선스)
@@ -20,6 +22,16 @@
 White Security는 AI 코딩 도구가 만든 코드에서 흔한 보안 실수를 찾는 스킬입니다. `보안 점검해 줘`라고 요청하면 설정 파일을 포함한 프로젝트 전체를 읽기 전용으로 검토하고, 문제와 영향, 고칠 방법을 표로 보고합니다. 브랜치 변경분을 보는 Claude Code 내장 `/security-review`와 달리, 배포 전에 프로젝트 전체를 한 번 점검하는 용도입니다.
 
 이슈별 설명과 취약 코드·안전 코드 예시는 [바이브 코딩 보안 가이드](https://limindex.github.io/white-security/)에서 확인할 수 있습니다.
+
+## 국내 보안 기준
+
+| 기준 | 대응 |
+|---|---|
+| 주요정보통신기반시설 웹 취약점 | 21개 중 21개 |
+| 행정안전부 구현단계 보안약점 | 49개 중 47개 (나머지 2개는 C·C++ 메모리 항목) |
+| 개인정보 보호 기준 | 주민등록번호 처리 제한, 고유식별정보 암호화 저장, 개인정보 접속기록 |
+
+각 이슈 문서에 해당 기준의 항목 번호가 표기되어 있으며, 전체 대응 현황은 [점검 기준 대응표](https://limindex.github.io/white-security/coverage)에서 확인할 수 있습니다. 공식 진단이나 인증을 대신하지는 않습니다.
 
 ## 설치
 
@@ -78,16 +90,6 @@ mkdir -p .agents/skills && cp -r ~/white-security/plugins/white-security/skills/
 | 모바일 앱 | 6 | 앱 번들 속 비밀값, 딥링크, WebView |
 
 OWASP Top 10:2025, LLM·Agentic Top 10 2026, ASVS 5.0, CWE Top 25에 대응합니다. 지원 스택은 Python, JavaScript/TypeScript, PHP, Supabase, Firebase, React Native, Expo, Flutter입니다. 심각한 CVE는 감시 목록으로 manifest와 lockfile의 버전을 대조합니다.
-
-## 국내 보안 기준
-
-국내 보안 점검에서 쓰는 기준에도 대응합니다.
-
-- 행정안전부 구현단계 보안약점 49개
-- 주요정보통신기반시설 웹 취약점 21개
-- 개인정보 보호 기준: 주민등록번호 처리 제한, 고유식별정보 암호화 저장, 개인정보 접속기록
-
-각 이슈 문서에 해당 기준의 항목 번호가 표기되어 있으며, 기준별 대응 현황은 [점검 기준 대응표](https://limindex.github.io/white-security/coverage)에 정리되어 있습니다. 공식 진단이나 인증을 대신하지는 않습니다.
 
 ## 실측 결과
 
