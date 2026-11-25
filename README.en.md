@@ -27,9 +27,9 @@ Every issue has a page with vulnerable and safe code examples in the [guide](htt
 /plugin install white-security@limindex
 ```
 
-**Codex**
+**Codex · OpenCode**
 
-Run this in your project folder. The skill is copied into `.agents/skills/`, where Codex picks it up.
+Run this in your project folder. The skill is copied into `.agents/skills/`, where Codex and OpenCode pick it up.
 
 ```
 git clone https://github.com/limindex/white-security.git ~/white-security
@@ -38,13 +38,13 @@ mkdir -p .agents/skills && cp -r ~/white-security/plugins/white-security/skills/
 
 ## Usage
 
-| | Claude Code | Codex |
-|---|---|---|
-| Whole project | `/white-security:review` | `$white-security` |
-| Changed files | `/white-security:review changed` | `$white-security changed` |
-| One folder | `/white-security:review src/api` | `$white-security src/api` |
+| | Claude Code | Codex | OpenCode |
+|---|---|---|---|
+| Whole project | `/white-security:review` | `$white-security` | `@white-security` |
+| Changed files | `/white-security:review changed` | `$white-security changed` | `@white-security changed` |
+| One folder | `/white-security:review src/api` | `$white-security src/api` | `@white-security src/api` |
 
-In both, just asking for a "security review" runs the whole-project check. The review runs only when you ask and changes no files. After the report, you pick which items to fix.
+In all three, just asking for a "security review" runs the whole-project check. The review runs only when you ask and changes no files. After the report, you pick which items to fix.
 
 ## Example
 

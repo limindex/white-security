@@ -42,9 +42,9 @@ White Security는 AI 코딩 도구가 만든 코드에서 흔한 보안 실수�
 /plugin install white-security@limindex
 ```
 
-**Codex**
+**Codex · OpenCode**
 
-점검할 프로젝트 폴더에서 실행하십시오. 스킬이 `.agents/skills/`에 복사되며 Codex가 자동으로 인식합니다.
+점검할 프로젝트 폴더에서 실행하십시오. 스킬이 `.agents/skills/`에 복사되며 Codex와 OpenCode가 자동으로 인식합니다.
 
 ```
 git clone https://github.com/limindex/white-security.git ~/white-security
@@ -53,13 +53,13 @@ mkdir -p .agents/skills && cp -r ~/white-security/plugins/white-security/skills/
 
 ## 사용법
 
-| | Claude Code | Codex |
-|---|---|---|
-| 전체 | `/white-security:review` | `$white-security` |
-| 바뀐 파일 | `/white-security:review changed` | `$white-security changed` |
-| 폴더 하나 | `/white-security:review src/api` | `$white-security src/api` |
+| | Claude Code | Codex | OpenCode |
+|---|---|---|---|
+| 전체 | `/white-security:review` | `$white-security` | `@white-security` |
+| 바뀐 파일 | `/white-security:review changed` | `$white-security changed` | `@white-security changed` |
+| 폴더 하나 | `/white-security:review src/api` | `$white-security src/api` | `@white-security src/api` |
 
-두 도구 모두 `보안 점검해 줘`라고만 요청해도 전체 점검이 실행됩니다. 검토는 요청할 때만 실행되며, 검토 중에는 파일을 변경하지 않습니다. 보고 뒤 고칠 항목을 고르면 그 항목만 고칩니다.
+세 도구 모두 `보안 점검해 줘`라고만 요청해도 전체 점검이 실행됩니다. 검토는 요청할 때만 실행되며, 검토 중에는 파일을 변경하지 않습니다. 보고 뒤 고칠 항목을 고르면 그 항목만 고칩니다.
 
 ## 결과 예시
 
