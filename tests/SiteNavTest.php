@@ -251,13 +251,29 @@ test('data/frameworks: 기준 파일 모두 about 한 줄 풀이', function () {
     }
 });
 
-test('소개: 점검 기준 대응표 링크 한 줄과 사용 방법(배포 전 한마디 → 확실하게 → 요청할 때만)', function () {
+test('소개: 대응표 링크·안전 절(README 안전 4줄 + 별도 서버 없음), 사용 방법은 설치 페이지 링크만, 면책은 범위 절 한 곳', function () {
     $b = nw_strip(nav_site()->route('about')['body']);
     assert_true((bool)preg_match('#9개 기준에 맞춰 작성.*href="/white-security/coverage"[^>]*>점검 기준 대응표#su', $b), '대응표 링크');
-    $p1 = strpos($b, '보안 점검해 줘</code> 한마디'); $p2 = strpos($b, '확실하게 실행하려면'); $p3 = strpos($b, '요청할 때만 실행');
-    assert_true($p1 !== false && $p2 > $p1 && $p3 > $p2, '사용법 순서');
-    assert_contains('특히 배포 전에', $b);
-    foreach (['자동 점검', '코드 작성 중', '상시'] as $s) assert_true(!str_contains($b, $s), "소개에 \"$s\" 없음");
+    assert_true((bool)preg_match('#<h2>안전</h2>\s*<ul>(.*?)</ul>#su', $b, $m), '안전 절');
+    assert_same(5, substr_count($m[1], '<li>'));
+    foreach (['읽기 전용', '<code>.env</code>', '동의를 받은 뒤에만', '그 지시 자체를 발견 항목으로 보고', '별도 서버 없음', '모델 제공사로만'] as $w) assert_contains($w, $m[1]);
+    assert_true((bool)preg_match('#<h2>사용 방법</h2>\s*<p>[^<]*<a href="/white-security/install">스킬 설치</a>#u', $b), '사용 방법은 링크');
+    foreach (['보안 점검해 줘', '확실하게 실행하려면', '자동 점검', '코드 작성 중', '상시'] as $w) assert_true(!str_contains(strip_tags(substr($b, 0, (int)strpos($b, '<footer'))), $w), "소개 본문에 \"$w\" 없음");
+    $main = substr($b, 0, (int)strpos($b, '<footer'));
+    assert_same(1, substr_count($main, '대체 수단 아님'), '소개 면책 한 곳');
+    assert_true(!str_contains($main, '대신하지 않'), '다른 면책 문구 없음');
+});
+
+test('면책 문구: 바닥글과 소개에만(설치·홈·심각도·이슈 본문엔 없음)', function () {
+    $root = make_root();
+    file_put_contents($root . '/data/site.json', INST_JSON_8U);
+    $s = new Site(Repository::load($root), '/white-security/', 'live');
+    foreach (['', 'install', 'severity', 'guide', 'start', 'coverage', 'changelog', 'issues/WS-INJ-001'] as $p) {
+        $b = nw_strip($s->route($p)['body']);
+        $main = substr($b, 0, (int)strpos($b, '<footer'));
+        foreach (['대신하지 않', '대체 수단'] as $w) assert_true(!str_contains($main, $w), "$p: $w");
+        assert_contains('보안 감사·침투 테스트를 대신하지 않음', substr($b, (int)strpos($b, '<footer')));
+    }
 });
 
 test('홈 스킬 설치 카드: 배포 전 한마디 안내 · 읽기 전용 검토 한 줄(자동 점검 주장 없음)', function () {

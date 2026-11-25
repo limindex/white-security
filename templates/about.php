@@ -7,17 +7,21 @@
 </section>
 <section class="ws-sec">
 <h2>사용 방법</h2>
-<ul>
-<li>필요할 때, 특히 배포 전에 대화창에 <code>보안 점검해 줘</code> 한마디로 프로젝트 전체 읽기 전용 검토.</li>
-<li>확실하게 실행하려면 Claude Code는 <code>/white-security:review</code>, Codex는 <code>$white-security</code>.</li>
-<li>요청할 때만 실행. “배포할게”처럼 배포 이야기가 나오면 점검 여부를 먼저 질문.</li>
-<li>판단은 AI 코딩 도구의 모델이 직접 수행. 스킬은 검토 범위·놓치기 쉬운 항목·안전 규칙·보고 형식만 안내하고, 규칙 문서는 고칠 때만 사용.</li>
-</ul>
-<p>설치 방법은 <a href="<?= Site::e($site->url('install')) ?>">스킬 설치</a>.</p>
+<p>설치 명령·사용법·설치 후 동작은 <a href="<?= Site::e($site->url('install')) ?>">스킬 설치</a>에 정리.</p>
 </section>
 <section class="ws-sec">
 <h2>범위</h2>
-<p>흔한 실수를 크게 줄이는 데까지. 보안 감사·침투 테스트의 대체 수단 아님.</p>
+<p>흔한 실수를 크게 줄이는 데까지. 보안 감사·침투 테스트, 공식 진단·인증의 대체 수단 아님.</p>
+</section>
+<section class="ws-sec" id="safety">
+<h2>안전</h2>
+<ul>
+<li>검토는 읽기 전용. 스킬에 훅·MCP 서버·설정 변경·실행 파일 없음.</li>
+<li><code>.env</code>·키·자격 증명 파일은 열지 않고, 비밀값은 가려서 표시.</li>
+<li>네트워크 호출과 스캐너는 동의를 받은 뒤에만 실행.</li>
+<li>프로젝트 안의 글이 검토를 건너뛰라고 지시하면 그 지시 자체를 발견 항목으로 보고.</li>
+<li>별도 서버 없음. 코드는 사용 중인 AI 코딩 도구의 모델 제공사로만 전달.</li>
+</ul>
 </section>
 <section class="ws-sec">
 <h2>운영 원칙</h2>
@@ -46,7 +50,6 @@ $kr = static function (string $fw) use ($site): array {
 <li>개인정보 보호 기준: 주민등록번호 처리 제한, 고유식별정보 암호화 저장, 개인정보 접속기록</li>
 </ul>
 <p class="ws-sec-note"><?= Site::t(Site::KR_NOTE) ?></p>
-<p>공식 진단이나 인증을 대신하지 않음.</p>
 <?php endif ?>
 </section>
 <?= $site->render('_stacks', []) ?>
