@@ -421,7 +421,8 @@ html:not(.js) .ws-search { display: none; }
   border-radius: var(--r-sm);
   background: transparent;
   color: var(--ink-2);
-  font: 700 .78rem var(--font-display);
+  /* 한글 낱말 단추: 한글 글꼴 기준 cap 으로 잘라야 세로 가운데(.ws-copy 와 같은 이유) */
+  font: 700 .78rem var(--font-text);
   transition: background-color var(--dur) var(--ease-out), color var(--dur) var(--ease-out);
 }
 .ws-linkbtn:hover { color: var(--ink); background: var(--hover); }
@@ -1261,6 +1262,10 @@ html:not(.js) .ws-itabs-list { display: none; }
   .ws-itabs-list { width: auto; }
   .ws-itab { flex: 1 1 auto; justify-content: center; }
   .ws-grades > div { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  /* 판정표: 390 폭 안에 들게 칸 사이·안쪽 여백 줄임 */
+  .ws-matrix { border-spacing: 4px; margin: 0 -4px; }
+  .ws-matrix th { padding: 8px 4px; }
+  .ws-matrix td { min-width: 0; padding: 12px 4px; }
   .ws-seclist > li { grid-template-columns: 2em minmax(0, 1fr); }
   .ws-seclist-desc { grid-column: 2; }
   .ws-deflist, .ws-stack-list li { grid-template-columns: minmax(0, 1fr); }
