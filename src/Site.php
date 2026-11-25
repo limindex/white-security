@@ -147,6 +147,8 @@ final class Site
         return '<span class="ws-badge ws-badge--' . self::e($severity) . '">' . self::e($label . $suffix) . '</span>';
     }
 
+    /** 개정 이력의 첫 게시 메모(같은 날 여러 건이면 개정 이력 페이지에서 한 줄로 묶음) */
+    public const FIRST_NOTE = '최초 작성';
     /** 국내 기준 짧은 이름 풀이: 보고 예시 표·소개·대응표의 첫 등장에 같은 문장 */
     public const KR_NOTE = '행안부 = 행정안전부 구현단계 보안약점, 주통기 = 주요정보통신기반시설 웹 취약점';
     /** 대응표·JSON 에서 맨 위에 두는 국내 기준(행안부·주통기 순) */

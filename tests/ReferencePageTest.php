@@ -87,3 +87,15 @@ test('검색 결과 틀: 결과 없음·더 있음 안내 자리', function () {
     assert_contains('<p class="ws-results-none" hidden>', $b);
     assert_contains('<p class="ws-results-more" hidden></p>', $b);
 });
+
+test('개정 이력: 같은 날 \'최초 작성\' 여러 건은 "N개 문서 첫 게시" 한 줄(접힘 안에 문서 목록), 한 건이면 그대로', function () {
+    $mk = fn(string $id, string $date) => str_replace('note: 첫 작성 ' . $id, 'note: 최초 작성', ref_issue($id, $date, 'https://owasp.org/' . $id));
+    $s = ref_site(['WS-ZZZ-001-a.md' => $mk('WS-ZZZ-001', '2026-10-05'), 'WS-ZZZ-002-a.md' => $mk('WS-ZZZ-002', '2026-10-05'), 'WS-ZZZ-003-a.md' => $mk('WS-ZZZ-003', '2026-10-06')]);
+    $b = nw_strip($s->route('changelog')['body']);
+    preg_match('#<section class="ws-revday" aria-labelledby="rev-2026-10-05">(.*?)</section>#s', $b, $d5);
+    assert_true((bool)preg_match('#<details class="ws-subfold ws-revfirst">\s*<summary><span class="ws-tx">2개 문서 첫 게시</span>#u', $d5[1]), '묶은 한 줄');
+    assert_true(!str_contains($d5[1], 'class="ws-recent'), '개별 줄 없음');
+    assert_same(2, substr_count($d5[1], '<li><a href="/white-security/issues/WS-ZZZ-00'), '펼친 목록 2건');
+    preg_match('#<section class="ws-revday" aria-labelledby="rev-2026-10-06">(.*?)</section>#s', $b, $d6);
+    assert_true(!str_contains($d6[1], '첫 게시') && str_contains($d6[1], '최초 작성'), '한 건이면 그대로');
+});
