@@ -1,0 +1,70 @@
+# 문서 사이트를 GitHub Pages 로 배포한다: main 에 push 될 때(또는 손으로 실행)만. PR·포크에서는 돌지 않는다.
+# 액션은 40자리 커밋 SHA 로 고정한다(주석의 버전은 사람이 읽는 용도). 권한은 배포에 필요한 것만(pages·id-token), 저장소는 읽기만.
+# 저장소 설정: Settings → Pages → Source 를 "GitHub Actions" 로.
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+
+      - name: Set up PHP 8.4
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: '8.4'
+          extensions: mbstring
+          coverage: none
+          tools: none
+
+      - name: Tests
+        run: php tests/run.php
+
+      # 공개 주소·경로는 data/site.json 의 origin 과 build.php 기본 --base(/white-security/)를 쓴다
+      - name: Build site
+        run: php build.php --out=_site --today="$(date -u +%F)"
+
+      - name: Configure Pages
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4.0.0
+        with:
+          path: _site
+
+  deploy:
+    name: deploy
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0

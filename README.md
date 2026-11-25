@@ -2,11 +2,15 @@ English | [한국어](README.ko.md)
 
 # White Security
 
+[![CI](https://github.com/limindex/white-security/actions/workflows/ci.yml/badge.svg)](https://github.com/limindex/white-security/actions/workflows/ci.yml)
+[![Version](https://img.shields.io/badge/version-0.1.0-2f6feb)](CHANGELOG.md)
+[![License](https://img.shields.io/badge/license-CC%20BY--SA%204.0%20%2B%20MIT-555)](#license)
+
 A read-only security review for code your AI coding agent wrote. Run it before you deploy.
 
 Say "security review" (or `보안 점검해 줘`). Your agent reads the whole project, including its config, and gives you one table: what's wrong, what could happen, and how to fix it. It covers 84 issues, from SQL injection and IDOR to prompt injection, MCP tool poisoning and slopsquatting. Reports come in Korean by default, or in English if you write in English.
 
-> **Status:** v0.1.0, pre-release. Works in Claude Code and Codex. Docs site in Korean: [바이브 코딩 보안 가이드](https://limindex.github.io/white-security/).
+> **v0.1.0** · Tested in Claude Code and Codex · Docs site (Korean): [바이브 코딩 보안 가이드](https://limindex.github.io/white-security/)
 
 ## Install
 

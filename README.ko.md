@@ -2,11 +2,15 @@
 
 # White Security
 
+[![CI](https://github.com/limindex/white-security/actions/workflows/ci.yml/badge.svg)](https://github.com/limindex/white-security/actions/workflows/ci.yml)
+[![Version](https://img.shields.io/badge/version-0.1.0-2f6feb)](CHANGELOG.md)
+[![License](https://img.shields.io/badge/license-CC%20BY--SA%204.0%20%2B%20MIT-555)](#라이선스)
+
 AI 코딩 도구가 만든 코드를 배포 전에 읽기 전용으로 점검하는 보안 검토 스킬.
 
-`보안 점검해 줘` 한마디면 AI 코딩 도구가 설정 파일까지 프로젝트 전체를 읽음. 결과는 표 하나로 정리됨: 무엇이 문제인지, 어떤 피해가 나는지, 어떻게 고치는지. 점검 대상은 SQL Injection·IDOR부터 프롬프트 인젝션·MCP Tool Poisoning·Slopsquatting까지 84개 이슈. 보고서는 기본이 한국어이고, 영어로 요청하면 영어로 나옴.
+`보안 점검해 줘` 한마디면 AI 코딩 도구가 설정 파일까지 프로젝트 전체를 읽음. 결과는 무엇이 문제인지, 어떤 피해가 나는지, 어떻게 고치는지를 표 하나에 정리. 점검 대상은 SQL Injection·IDOR부터 프롬프트 인젝션·MCP Tool Poisoning·Slopsquatting까지 84개 이슈. 보고서는 기본 한국어이고 영어로 요청하면 영어로 나옴.
 
-> **상태:** v0.1.0 공개 전. Claude Code·Codex에서 동작 확인. 문서 사이트: [바이브 코딩 보안 가이드](https://limindex.github.io/white-security/)
+> **v0.1.0** · Claude Code·Codex에서 동작 확인 · 문서 사이트: [바이브 코딩 보안 가이드](https://limindex.github.io/white-security/)
 
 ## 설치
 
@@ -24,7 +28,7 @@ git clone https://github.com/limindex/white-security.git ~/white-security
 mkdir -p .agents/skills && cp -r ~/white-security/plugins/white-security/skills/white-security .agents/skills/
 ```
 
-**다른 에이전트**: 스킬은 [Agent Skills](https://agentskills.io) 형식의 일반 폴더(`SKILL.md`와 참고 파일). Cursor·GitHub Copilot·OpenCode 등 `.agents/skills/`를 읽는 도구라면 인식할 것으로 예상되지만, 아직 직접 시험하지 않음.
+**다른 에이전트**: 스킬은 [Agent Skills](https://agentskills.io) 형식의 일반 폴더(`SKILL.md`와 참고 파일). Cursor·GitHub Copilot·OpenCode 등 `.agents/skills/`를 읽는 도구에서도 인식될 것으로 예상하나 아직 직접 시험하지 않음.
 
 ## 사용법
 
@@ -37,7 +41,7 @@ mkdir -p .agents/skills && cp -r ~/white-security/plugins/white-security/skills/
 
 요청할 때만 실행됨. "배포할게"처럼 배포 이야기가 나오면 점검을 먼저 돌릴지 한 번 물어봄.
 
-보고 뒤에는 고칠 항목을 사용자가 직접 고르고, 고르기 전에는 아무것도 바꾸지 않음. 고칠 때는 그 이슈의 규칙 문서를 따르고, 설치나 명령 실행이 필요하면 먼저 보여 주고 확인을 받음.
+보고 뒤 고칠 항목은 사용자가 직접 고르며 고르기 전에는 아무것도 바꾸지 않음. 고칠 때는 해당 이슈의 규칙 문서를 따르고 설치나 명령 실행이 필요하면 먼저 보여 준 뒤 확인을 받음.
 
 ## 결과 예시
 
@@ -61,7 +65,7 @@ mkdir -p .agents/skills && cp -r ~/white-security/plugins/white-security/skills/
 - 3. WS-XSS-001 app/main.py:30 — 응답에 CSP 헤더 없음
 ```
 
-- 발견 항목마다 `WS-INJ-001` 같은 번호가 붙음. 번호는 [가이드](https://limindex.github.io/white-security/)의 문서와 같고, 문서에는 공격 설명과 스택별 취약 코드·안전 코드가 있음.
+- 발견 항목마다 `WS-INJ-001` 같은 번호가 붙음. 번호는 [가이드](https://limindex.github.io/white-security/)의 문서와 같음. 문서에는 공격 설명과 스택별 취약 코드·안전 코드가 있음.
 - 영어 보고서가 필요하면 영어로 요청하거나 `.white-security.yml`에 `report_language: en` 설정.
 
 ## 점검 범위
@@ -87,7 +91,7 @@ mkdir -p .agents/skills && cp -r ~/white-security/plugins/white-security/skills/
 
 ## 실측 결과
 
-파일 19~23개짜리 작은 앱 5개에 문제 46개를 심고, Claude Code에서 스킬을 켠 경우와 끈 경우를 비교(`"보안 점검해 줘"`, 2026년 11월, 앱마다 모델별 2회).
+파일 19~23개짜리 작은 앱 5개에 문제 46개를 심은 뒤 Claude Code에서 스킬을 켠 경우와 끈 경우를 비교(`"보안 점검해 줘"`, 2026년 11월, 앱마다 모델별 2회).
 
 | 모델 | 찾은 수(스킬 켬) | 찾은 수(스킬 끔) | 비용(끔 대비) | 시간(끔 대비) |
 |---|---|---|---|---|
@@ -95,14 +99,14 @@ mkdir -p .agents/skills && cp -r ~/white-security/plugins/white-security/skills/
 | Claude Haiku 5.5 | 92 / 92 | 89 / 92 | 1.9배(1회 약 $0.02) | 약 2.2배 |
 | Claude Opus 5.5 | 32 / 32 | 32 / 32 | 1.5배(1회 약 $0.60) | 약 2배 |
 
-**해석:** 요즘 모델은 이런 문제를 대부분 이미 알고 있음. 스킬이 모델을 더 똑똑하게 만들지는 않으며, 심어 둔 문제를 찾는 수는 스킬이 없을 때와 비슷함. 추가 비용으로 얻는 것은 아래 네 가지.
+**해석:** 요즘 모델은 이런 문제를 대부분 이미 알고 있음. 스킬을 켠다고 모델이 더 똑똑해지지는 않음. 심어 둔 문제를 찾는 수도 스킬이 없을 때와 비슷함. 추가 비용으로 얻는 것은 아래 네 가지.
 
-- **허락 창 없음.** Claude Code에서는 읽기 전용 검토 에이전트가 파일을 읽음. 스킬 켬 25회에서 허락 요청 0건, 스킬 끔에서는 1회 평균 1.6건의 명령이 거절됨.
+- **허락 창 없음.** Claude Code에서는 읽기 전용 검토 에이전트가 파일을 읽음. 스킬 켬 25회에서는 허락 요청 0건, 스킬 끔에서는 1회 평균 1.6건의 명령이 거절됨.
 - **매번 같은 보고서.** 결론 한 줄, 쉬운 말로 쓴 영향, 구체적인 고칠 방법, 이슈 번호. 스킬 켬 25회 중 25회, 끔 25회 중 0~1회.
-- **버전 대조.** React2Shell 영향 버전 실행 11회 중 스킬 켬은 11회, 끔은 1회 지적. 감시 목록이 최신일 때만 생기는 이점.
+- **버전 대조.** React2Shell 영향 버전이 들어간 실행 11회 중 스킬 켬은 11회, 끔은 1회 지적. 감시 목록이 최신일 때만 생기는 이점.
 - **프로젝트 전체.** 브랜치 변경분만이 아니라 설정·CI·에이전트 설정·DB 규칙까지 읽음.
 
-Codex에서는 `보안 점검해 줘`만으로 스킬이 발동했고, 앱 3개에서 심은 문제를 10/10·10/10·8/8 찾음(각 1회). 스캐너 실행과 비밀값 파일 열기는 0건.
+Codex에서는 `보안 점검해 줘`만으로 스킬이 발동했고 앱 3개에 심은 문제를 10/10·10/10·8/8 찾음(각 1회). 스캐너 실행과 비밀값 파일 열기는 0건.
 
 Opus는 어려운 앱 2개(문제 16개)에서만 실행. 한계: 문제를 심은 작은 앱이고 설정마다 2회뿐이라 1~3건 차이는 오차 범위. 비용은 Claude Code가 집계한 정가 기준.
 
@@ -116,17 +120,17 @@ Opus는 어려운 앱 2개(문제 16개)에서만 실행. 한계: 문제를 심�
 | 프롬프트 인젝션·오래된 의존성·규칙 파일 | 포함 | 설계상 제외([명령 원문](https://github.com/anthropics/claude-code-security-review/blob/main/.claude/commands/security-review.md)) | — |
 | 보고 | 이슈 번호·수정 문서 링크가 있는 고정 표, 한국어 또는 영어 | 발견 목록 | 에이전트에게 피드백 |
 
-역할이 다름. `security-guidance`는 코딩하는 동안 지켜보고, `/security-review`는 브랜치 변경분을 보며, White Security는 배포 전 프로젝트 전체를 한 번 훑음. 셋을 함께 써도 됨(2026년 11월 확인).
+역할이 다름. `security-guidance`는 코딩하는 동안 지켜보고 `/security-review`는 브랜치 변경분을 봄. White Security는 배포 전에 프로젝트 전체를 한 번 훑음. 셋을 함께 써도 됨(2026년 11월 확인).
 
 ## 안전
 
 보안 도구 때문에 보안이 약해지면 안 되므로 아래 원칙을 지킴.
 
-- **읽기 전용 검토.** Claude Code 검토 에이전트의 도구는 Read·Grep·Glob뿐. plugin에는 훅·MCP 서버·설정·스크립트·실행 파일·`allowed-tools` 권한이 없고, 테스트로 강제함.
-- **비밀값을 읽지 않음.** `.env`·키·자격 증명 파일은 열지 않고, 있는지와 git이 추적하는지만 확인. 다른 곳에서 보인 비밀값은 가려서 표시.
+- **읽기 전용 검토.** Claude Code 검토 에이전트의 도구는 Read·Grep·Glob뿐. plugin에는 훅·MCP 서버·설정·스크립트·실행 파일·`allowed-tools` 권한이 없으며 이를 테스트로 강제함.
+- **비밀값을 읽지 않음.** `.env`·키·자격 증명 파일은 열지 않고 파일이 있는지, git이 추적하는지만 확인. 다른 곳에서 보인 비밀값은 가려서 표시.
 - **동의 없이 네트워크·스캐너 실행 안 함.** 기본 의존성 스캐너는 `osv-scanner`. 저장소 설정을 따르는 `npm`/`yarn`/`pnpm audit`은 신뢰하지 않는 코드에서 실행하지 않음.
-- **프로젝트 글은 데이터.** 주석·README·`AGENTS.md`가 점검을 건너뛰라고 하거나 다른 경로를 열라고 하면 그것 자체를 발견 항목으로 보고.
-- **내가 만든·신뢰하는 코드 대상.** 남이 만든 코드에서는 읽기 전용으로만 검토하고 보고서에 그렇게 표시.
+- **프로젝트 글은 데이터.** 주석·README·`AGENTS.md`가 점검을 건너뛰라고 하거나 다른 경로를 열라고 하면 그 지시 자체를 발견 항목으로 보고.
+- **직접 만들었거나 신뢰하는 코드 대상.** 남이 만든 코드는 읽기 전용으로만 검토하고 보고서에도 그 사실을 표시.
 - **보안 감사가 아님.** 흔한 실수를 줄이는 용도이며 보안 감사·침투 테스트를 대신하지 않음. 프로젝트가 "안전하다"고 말하지 않음.
 
 이 프로젝트 자체의 취약점 제보는 [SECURITY.md](SECURITY.md) 참고.
@@ -135,13 +139,13 @@ Opus는 어려운 앱 2개(문제 16개)에서만 실행. 한계: 문제를 심�
 
 **비용이 많이 드나?** 실측에서 스킬 없이 "보안 점검해 줘"라고 할 때의 약 1.5~1.9배. 작은 앱 기준 정가로 Sonnet 약 $0.26, Opus 약 $0.60, 1~2분. 프로젝트가 크면 더 듦.
 
-**코딩하는 동안 계속 지켜보나?** 아님. 요청할 때만 실행. 실측에서 상시 모드는 비용이 약 3분의 1 늘었지만 더 찾지 못함.
+**코딩하는 동안 계속 지켜보나?** 아님. 요청할 때만 실행. 실측에서 상시 모드는 비용이 약 3분의 1 늘었으나 더 찾은 문제는 없음.
 
 **코드를 고치나?** 검토 중에는 고치지 않음. 보고 뒤 고칠 항목을 사용자가 고름.
 
-**왜 한국어인가?** 국내 팀을 위한 가이드로 시작해 주민등록번호 처리·접속기록 같은 국내 개인정보 기준도 점검함. 보고서는 기본 한국어이고, 영어로 요청하거나 `report_language: en`을 설정하면 영어.
+**왜 한국어인가?** 국내 팀을 위한 가이드로 시작해 주민등록번호 처리·접속기록 같은 국내 개인정보 기준도 점검함. 보고서는 기본 한국어이며 영어로 요청하거나 `report_language: en`을 설정하면 영어로 나옴.
 
-**특정 발견 항목을 끌 수 있나?** 가능. `.white-security.yml`의 만료일 있는 예외나 `white-security-ignore` 주석 사용. 규칙은 스킬의 `references/config.md`. 인증·웹·배포 묶음은 통째로 끌 수 없음.
+**특정 발견 항목을 끌 수 있나?** 가능. `.white-security.yml`의 만료일 있는 예외나 `white-security-ignore` 주석 사용. 규칙은 스킬의 `references/config.md` 참고. 인증·웹·배포 묶음은 통째로 끌 수 없음.
 
 ## 기여
 
