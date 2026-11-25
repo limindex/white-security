@@ -136,3 +136,22 @@ test('이슈 머리 기준 번호: 접을 수 있는 details(기본 펼침, 요�
     assert_same((int)$m[1], substr_count(preg_replace('#.*<ul class="ws-maps"[^>]*>(.*?)</ul>.*#su', '$1', $b), '<li class="ws-chip"'), '개수 = 칩 수');
     assert_contains('initMapsFold', file_get_contents(__DIR__ . '/../assets/js/site.js'));
 });
+
+test('이슈 배치: 본문 → 코드 예시 → 출처·개정 이력 순서(목차와 같음), 화면의 최종 확인 날짜는 머리 한 곳', function () {
+    $b = ip_body();
+    $order = ['<div class="ws-doc">', 'id="detection"', '<aside class="ws-code" id="code"', '<div class="ws-doc-end">', 'id="sources"', 'id="revisions"'];
+    $last = -1;
+    foreach ($order as $k) { $p = strpos($b, $k); assert_true($p !== false && $p > $last, "순서 $k"); $last = $p; }
+    preg_match('#<nav class="ws-toc"[^>]*>(.*?)</nav>#s', $b, $m);
+    preg_match_all('#href="\#([a-z]+)"#', $m[1], $toc);
+    assert_same(['detection', 'code', 'sources', 'revisions'], array_slice($toc[1], -4), '목차 끝 순서');
+    $screen = (string)preg_replace('#<p class="ws-print-meta">.*?</p>#s', '', $b);
+    assert_same(1, substr_count($screen, '최종 확인'), '최종 확인 한 번');
+    assert_true(!str_contains($b, 'ws-checked'), '아래쪽 최종 확인 없음');
+});
+
+test('site.css: 오른쪽 칸(목차·코드)은 1440 이상에서만', function () {
+    $css = file_get_contents(__DIR__ . '/../assets/css/site.css');
+    assert_true((bool)preg_match('#@media \(min-width: 1440px\) \{\s*\.ws-issue \{ grid-template-columns: minmax\(0, 1fr\) minmax\(0, \.9fr\)#', $css), '1440 두 칸');
+    assert_true((bool)preg_match('#\.ws-issue \{\s*display: grid;\s*grid-template-columns: minmax\(0, 1fr\);#', $css), '기본 한 칸');
+});

@@ -23,10 +23,10 @@ test('이슈 화면: 심각도 배지·id·기준 번호·언어 탭', function 
     assert_contains('위험', $b);
 });
 
-test('이슈 화면: 3단 구조(nav.ws-nav · article.ws-doc · aside.ws-code)', function () {
+test('이슈 화면: 구조(nav.ws-nav · article.ws-issue > div.ws-doc · aside.ws-code)', function () {
     $b = tpl_site()->route('issues/WS-INJ-001')['body'];
     assert_true((bool)preg_match('/<nav[^>]*class="ws-nav"/', $b), 'nav.ws-nav');
-    assert_true((bool)preg_match('/<article[^>]*class="ws-doc"/', $b), 'article.ws-doc');
+    assert_true((bool)preg_match('#<article class="ws-issue">\s*<div class="ws-doc">#', $b), 'article.ws-issue > div.ws-doc');
     assert_true((bool)preg_match('/<aside[^>]*class="ws-code"/', $b), 'aside.ws-code');
     assert_true((bool)preg_match('/<input[^>]*type="search"/', $b), '검색 입력');
     assert_contains('data-search="/white-security/api/search.json"', $b);
@@ -145,7 +145,7 @@ test('오류 띠: live 에서 groups.json 문제도 보인다', function () {
 
 test('이슈 화면: 게시일·최종 확인일·적용 대상·심각도 근거·개정 이력', function () {
     $b = tpl_site()->route('issues/WS-INJ-001')['body'];
-    assert_true((bool)preg_match('#<article[^>]*class="ws-doc".*게시.*2026-09-01.*최종 확인.*2026-11-18.*</article>#s', $b), '게시일·최종 확인일');
+    assert_true((bool)preg_match('#<div class="ws-doc">.*게시.*2026-09-01.*최종 확인.*2026-11-18.*</article>#s', $b), '게시일·최종 확인일');
     assert_true(!str_contains($b, '다음 검토'), '다음 검토 예정일 폐기');
     assert_contains('적용 대상', $b);
     assert_contains('모든 웹 애플리케이션', $b);

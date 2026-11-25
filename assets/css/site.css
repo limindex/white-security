@@ -126,7 +126,7 @@ code { font-family: var(--font-mono); }
 
 /* 한 줄 글자 상자: 세로 가운데 (flex 상자 안 글자는 .ws-tx·span 으로 감쌈) */
 .ws-tx, .ws-badge, .ws-chip, .ws-btn, .ws-id, .ws-nav-count, .ws-brand-name, .ws-brand-desc, .ws-publisher, .ws-kbd,
-.ws-foot span, .ws-foot a, .ws-snippet-label, .ws-block-label, .ws-docid > span, .ws-checked > span,
+.ws-foot span, .ws-foot a, .ws-snippet-label, .ws-block-label, .ws-docid > span,
 .ws-recent-date, .ws-code-head h2, .ws-toc h2, .ws-crumbs li, .ws-menu-where, .ws-nav-grp-name, .ws-cov-line > span,
 .ws-fold-count, .ws-fold-hint span, .ws-grp-n, .ws-cov-num, .ws-check-n, .ws-grp-when, .ws-grp-name, .ws-grp-title,
 .ws-home-sec-head h2, .ws-cov-chart-head h2, .ws-fold summary h2, .ws-sec-head h2,
@@ -138,7 +138,7 @@ code { font-family: var(--font-mono); }
 .ws-tx { display: block; }
 
 /* 1px 세로선 구분 (가운뎃점 나열 대신) */
-.ws-foot i, .ws-checked i, .ws-docid i {
+.ws-foot i, .ws-docid i {
   display: inline-block;
   width: 1px;
   height: 10px;
@@ -769,16 +769,19 @@ button:disabled, button[aria-disabled="true"] { opacity: .45; cursor: not-allowe
 .ws-seclist-note { display: block; margin-top: 2px; font-size: .84rem; color: var(--ink-3); }
 .ws-hash { font: 700 1em var(--font-mono); color: var(--ink-3); }
 
-/* ---------- 이슈: 본문 + 오른쪽(목차·코드) ---------- */
+/* ---------- 이슈: 본문 → 코드 예시 → 출처·개정 이력 (1440 이상에서만 목차·코드가 오른쪽 칸) ---------- */
 .ws-shell--wide .ws-main { padding-right: 32px; }
 .ws-issue {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, .9fr);
-  gap: 48px;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "doc" "rail" "end";
+  gap: 40px;
   align-items: start;
 }
-.ws-issue--nocode { grid-template-columns: minmax(0, 1fr) 220px; }
-.ws-doc { min-width: 0; max-width: 700px; }
+.ws-doc { grid-area: doc; min-width: 0; max-width: 760px; }
+.ws-doc-end { grid-area: end; min-width: 0; max-width: 760px; }
+.ws-doc-end > .ws-fold:first-child { margin-top: 0; }
+.ws-issue--nocode .ws-rail { display: none; }
 
 .ws-print-meta { display: none; }
 .ws-docid { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 0 0 16px; font-size: .82rem; color: var(--ink-3); }
@@ -804,8 +807,8 @@ button:disabled, button[aria-disabled="true"] { opacity: .45; cursor: not-allowe
 .ws-docinfo-wide { grid-column: 1 / -1; }
 .ws-docinfo dt { color: var(--ink-3); font-size: .78rem; font-weight: 600; }
 .ws-docinfo dd { margin: 0; color: var(--ink); line-height: 1.5; }
-.ws-docinfo time, .ws-revlist time, .ws-checked time { font-family: var(--font-display); font-weight: 600; font-variant-numeric: lining-nums tabular-nums; }
-.ws-jump { display: none; margin: 16px 0 0; font-size: .88rem; }
+.ws-docinfo time, .ws-revlist time { font-family: var(--font-display); font-weight: 600; font-variant-numeric: lining-nums tabular-nums; }
+.ws-jump { margin: 16px 0 0; font-size: .88rem; }
 
 .ws-summary { margin-top: 28px; padding: 20px 24px 20px; border-radius: var(--r-lg); background: var(--sunken); box-shadow: inset 0 0 0 1px var(--line); }
 .ws-summary h2 { margin: 0 0 8px; font: 700 .78rem var(--font-display); color: var(--ink-3); letter-spacing: -0.01em; line-height: 1.2; text-box: trim-both cap alphabetic; }
@@ -916,28 +919,10 @@ button:disabled, button[aria-disabled="true"] { opacity: .45; cursor: not-allowe
 .ws-revlist li { display: grid; grid-template-columns: 7em minmax(0, 1fr); gap: 12px; }
 .ws-revlist time { color: var(--ink-3); }
 
-.ws-checked {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 12px;
-  margin: 40px 0 0;
-  font-size: .82rem;
-  color: var(--ink-3);
-  line-height: 1.5;
-}
 
-/* 오른쪽: 목차 + 코드 칸 (넓은 화면에서 함께 따라옴) */
-.ws-rail {
-  position: sticky;
-  top: calc(var(--top-h) + 24px);
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  min-width: 0;
-  max-height: calc(100vh - var(--top-h) - 40px);
-}
-.ws-toc { flex: none; }
+/* 목차 + 코드 칸: 1440 미만은 본문 아래 전체 폭(목차 숨김), 1440 이상은 오른쪽에서 함께 따라옴 */
+.ws-rail { grid-area: rail; display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.ws-toc { flex: none; display: none; }
 .ws-toc h2 { margin: 0 0 12px; font: 800 .76rem var(--font-display); color: var(--ink); letter-spacing: -0.01em; }
 .ws-toc ol { list-style: none; display: flex; flex-wrap: wrap; gap: 2px 4px; margin: 0; padding: 0; }
 .ws-toc a {
@@ -958,8 +943,6 @@ button:disabled, button[aria-disabled="true"] { opacity: .45; cursor: not-allowe
   flex: 0 1 auto;
   min-width: 0;
   min-height: 0;
-  overflow-y: auto;
-  overscroll-behavior: contain;
   scrollbar-width: thin;
   scrollbar-color: var(--code-ink-3) transparent;
   padding: 16px 0 8px;
@@ -1113,8 +1096,16 @@ html:not(.js) .ws-itabs-list { display: none; }
 .ws-cov-table td:first-child { min-width: 14em; }
 .ws-w-0{width:0%} .ws-w-1{width:1%} .ws-w-2{width:2%} .ws-w-3{width:3%} .ws-w-4{width:4%} .ws-w-5{width:5%} .ws-w-6{width:6%} .ws-w-7{width:7%} .ws-w-8{width:8%} .ws-w-9{width:9%} .ws-w-10{width:10%} .ws-w-11{width:11%} .ws-w-12{width:12%} .ws-w-13{width:13%} .ws-w-14{width:14%} .ws-w-15{width:15%} .ws-w-16{width:16%} .ws-w-17{width:17%} .ws-w-18{width:18%} .ws-w-19{width:19%} .ws-w-20{width:20%} .ws-w-21{width:21%} .ws-w-22{width:22%} .ws-w-23{width:23%} .ws-w-24{width:24%} .ws-w-25{width:25%} .ws-w-26{width:26%} .ws-w-27{width:27%} .ws-w-28{width:28%} .ws-w-29{width:29%} .ws-w-30{width:30%} .ws-w-31{width:31%} .ws-w-32{width:32%} .ws-w-33{width:33%} .ws-w-34{width:34%} .ws-w-35{width:35%} .ws-w-36{width:36%} .ws-w-37{width:37%} .ws-w-38{width:38%} .ws-w-39{width:39%} .ws-w-40{width:40%} .ws-w-41{width:41%} .ws-w-42{width:42%} .ws-w-43{width:43%} .ws-w-44{width:44%} .ws-w-45{width:45%} .ws-w-46{width:46%} .ws-w-47{width:47%} .ws-w-48{width:48%} .ws-w-49{width:49%} .ws-w-50{width:50%} .ws-w-51{width:51%} .ws-w-52{width:52%} .ws-w-53{width:53%} .ws-w-54{width:54%} .ws-w-55{width:55%} .ws-w-56{width:56%} .ws-w-57{width:57%} .ws-w-58{width:58%} .ws-w-59{width:59%} .ws-w-60{width:60%} .ws-w-61{width:61%} .ws-w-62{width:62%} .ws-w-63{width:63%} .ws-w-64{width:64%} .ws-w-65{width:65%} .ws-w-66{width:66%} .ws-w-67{width:67%} .ws-w-68{width:68%} .ws-w-69{width:69%} .ws-w-70{width:70%} .ws-w-71{width:71%} .ws-w-72{width:72%} .ws-w-73{width:73%} .ws-w-74{width:74%} .ws-w-75{width:75%} .ws-w-76{width:76%} .ws-w-77{width:77%} .ws-w-78{width:78%} .ws-w-79{width:79%} .ws-w-80{width:80%} .ws-w-81{width:81%} .ws-w-82{width:82%} .ws-w-83{width:83%} .ws-w-84{width:84%} .ws-w-85{width:85%} .ws-w-86{width:86%} .ws-w-87{width:87%} .ws-w-88{width:88%} .ws-w-89{width:89%} .ws-w-90{width:90%} .ws-w-91{width:91%} .ws-w-92{width:92%} .ws-w-93{width:93%} .ws-w-94{width:94%} .ws-w-95{width:95%} .ws-w-96{width:96%} .ws-w-97{width:97%} .ws-w-98{width:98%} .ws-w-99{width:99%} .ws-w-100{width:100%}
 
-/* 넓은 화면: 코드 칸이 화면보다 길면 아래쪽을 흐리게 해 안에서 스크롤됨을 알림 */
-@media (min-width: 1100px) {
+/* 넓은 화면(1440 이상): 본문 | 오른쪽 칸(목차·코드, 따라옴). 코드 칸이 화면보다 길면 아래쪽을 흐리게 해 안에서 스크롤됨을 알림 */
+@media (min-width: 1440px) {
+  .ws-issue { grid-template-columns: minmax(0, 1fr) minmax(0, .9fr); grid-template-areas: "doc rail" "end rail"; gap: 32px 48px; }
+  .ws-issue--nocode { grid-template-columns: minmax(0, 1fr) 220px; }
+  .ws-issue--nocode .ws-rail { display: flex; }
+  .ws-doc, .ws-doc-end { max-width: 700px; }
+  .ws-rail { grid-row: 1 / span 2; position: sticky; top: calc(var(--top-h) + 24px); max-height: calc(100vh - var(--top-h) - 40px); }
+  .ws-toc { display: block; }
+  .ws-jump { display: none; }
+  .ws-code { overflow-y: auto; overscroll-behavior: contain; }
   .ws-code::after {
     content: "";
     position: sticky;
@@ -1130,16 +1121,6 @@ html:not(.js) .ws-itabs-list { display: none; }
 @media (max-width: 1279.98px) {
   :root { --nav-w: 240px; }
   .ws-main { padding: 28px 36px 40px; }
-  .ws-issue { gap: 32px; }
-}
-
-@media (max-width: 1099.98px) {
-  .ws-issue, .ws-issue--nocode { grid-template-columns: minmax(0, 1fr); gap: 40px; }
-  .ws-doc { max-width: 760px; }
-  .ws-rail { position: static; max-height: none; max-width: 760px; }
-  .ws-code { overflow: visible; }
-  .ws-toc { display: none; }
-  .ws-jump { display: block; }
 }
 
 @media (max-width: 899.98px) {
@@ -1300,7 +1281,7 @@ html:not(.js) .ws-itabs-list { display: none; }
   .ws-itabs-list, .ws-top, .ws-side, .ws-crumbs, .ws-toc, .ws-tabs, .ws-copy, .ws-anchor, .ws-skip, .ws-jump, .ws-check-status, .ws-fold-hint, .ws-foot-links, .ws-related, .ws-search, .ws-alert { display: none !important; }
   .ws-shell, .ws-issue { display: block; }
   .ws-main, .ws-shell--wide .ws-main { padding: 0; }
-  .ws-doc, .ws-page, .ws-home { max-width: none; }
+  .ws-doc, .ws-doc-end, .ws-page, .ws-home { max-width: none; }
   .ws-print-meta { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0 0 14pt; padding-bottom: 6pt; box-shadow: inset 0 -1px 0 var(--print-line); font: 600 8.5pt var(--font-display); color: var(--print-ink-2); }
   details::details-content { content-visibility: visible; display: block; }
   .ws-fold, .ws-sec, .ws-summary, .ws-block, .ws-snippet, .ws-checklist li { break-inside: avoid; }
@@ -1314,7 +1295,6 @@ html:not(.js) .ws-itabs-list { display: none; }
   .ws-snippet pre, .ws-snippet code, .ws-block pre { white-space: pre-wrap; overflow-wrap: anywhere; overflow: visible; }
   .ws-checklist input { appearance: none; -webkit-appearance: none; width: 12pt; height: 12pt; border: 1px solid var(--print-ink-2); border-radius: 2px; background: var(--print-paper); }
   .ws-checklist input:checked + label { color: inherit; }
-  .ws-checked { margin-top: 14pt; color: var(--print-ink-2); }
   .ws-foot { margin-top: 18pt; }
   a { color: inherit; }
   .ws-sources a::after { content: " " attr(href); font-size: 8pt; color: var(--print-ink-3); overflow-wrap: anywhere; }
