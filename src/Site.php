@@ -6,7 +6,7 @@ final class Site
     /** 일반 페이지: 주소 → 제목 · 메뉴 구역 · 한 줄 설명(명사형). nav=false 는 왼쪽 메뉴에서만 뺌. 왼쪽 메뉴·경로 표시·설명 메타가 모두 여기서 나온다. */
     public const PAGES = [
         'about' => ['title' => '소개', 'section' => '시작하기', 'lead' => 'AI와 함께 코딩하는 사람을 위한 한국어 보안 문서와 점검 스킬의 목적·범위·운영 원칙'],
-        'start' => ['title' => '처음이라면', 'section' => '시작하기', 'lead' => '바이브 코딩을 시작한 사람이 가장 먼저 읽을 보안 이슈 10건과 읽는 순서'],
+        'start' => ['title' => '처음이라면', 'section' => '시작하기', 'lead' => '흔하고 피해가 큰 보안 이슈 10건과 읽는 순서'],
         'install' => ['title' => '스킬 설치', 'section' => '시작하기', 'lead' => '코딩 도구에 점검 스킬 설치 · 이후 필요할 때, 특히 배포 전에 한마디로 읽기 전용 검토'],
         'check' => ['title' => '내 사이트 점검', 'section' => '시작하기', 'lead' => '사용 기술과 기능에 맞춘 점검표와 AI 점검 지시문'],
         'severity' => ['title' => '심각도 기준', 'section' => '시작하기', 'lead' => '위험·주의·참고 등급의 판정 기준 · 영향과 악용 쉬움의 조합'],
@@ -20,7 +20,7 @@ final class Site
     public const NAV_SECTIONS = ['시작하기', '참고'];
     public const BRAND = 'White Security';
     /** 사이트 성격: 웹사이트는 가이드, 제품은 스킬 */
-    public const BRAND_DESC = '바이브 코딩 보안 가이드';
+    public const BRAND_DESC = 'AI 코딩 보안 가이드';
     private const ID_RE = '/^WS-[A-Z]{2,5}-\d{3}$/';
     public const SEVERITY_LABELS = ['high' => '위험', 'medium' => '주의', 'low' => '참고'];
     /**

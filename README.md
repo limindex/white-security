@@ -4,9 +4,9 @@
 
 # White Security
 
-**AI 코딩 도구가 만든 코드를 배포 전에 읽기 전용으로 점검하는 보안 검토 스킬**
+**AI 코딩 보안 점검 스킬**
 
-행정안전부 보안약점, 주요정보통신기반시설, 개인정보 보호 기준에 맞춰 점검합니다
+AI 코딩 도구가 만든 코드를 배포 전에 읽기 전용으로 점검합니다<br>행정안전부 보안약점, 주요정보통신기반시설, 개인정보 보호 기준에 맞춰 점검합니다
 
 [![CI](https://github.com/limindex/white-security/actions/workflows/ci.yml/badge.svg)](https://github.com/limindex/white-security/actions/workflows/ci.yml)
 [![Version](https://img.shields.io/badge/version-0.1.2-2f6feb)](CHANGELOG.md)
@@ -19,9 +19,9 @@
 > 🌐 A read-only security review for code your AI coding agent wrote. Run it before you deploy.\
 > English docs: [README.en.md](README.en.md)
 
-White Security는 AI 코딩 도구가 만든 코드에서 흔한 보안 실수를 찾는 스킬입니다. `보안 점검해 줘`라고 요청하면 설정 파일을 포함한 프로젝트 전체를 읽기 전용으로 검토하고, 문제와 영향, 고칠 방법을 표로 보고합니다. 브랜치 변경분을 보는 Claude Code 내장 `/security-review`와 달리, 배포 전에 프로젝트 전체를 한 번 점검하는 용도입니다.
+White Security는 AI 코딩 도구가 만든 코드에서 흔한 보안 실수를 찾는 보안 점검 스킬입니다. `보안 점검해 줘`라고 요청하면 설정 파일을 포함한 프로젝트 전체를 읽기 전용으로 검토하고, 문제와 영향, 고칠 방법을 표로 보고합니다. 브랜치 변경분을 보는 Claude Code 내장 `/security-review`와 달리, 배포 전에 프로젝트 전체를 한 번 점검하는 용도입니다.
 
-이슈별 설명과 취약 코드·안전 코드 예시는 [바이브 코딩 보안 가이드](https://limindex.github.io/white-security/)에서 확인할 수 있습니다.
+이슈별 설명과 취약 코드·안전 코드 예시는 [AI 코딩 보안 가이드](https://limindex.github.io/white-security/)에서 확인할 수 있습니다.
 
 ## 국내 보안 기준
 

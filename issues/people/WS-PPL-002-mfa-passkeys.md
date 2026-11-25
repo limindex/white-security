@@ -22,7 +22,7 @@ checked: 2026-11-18
 revisions:
   - date: 2026-11-18
     note: 최초 작성
-applies_to: [메일·클라우드·코드 저장소·도메인·결제·AI 도구 계정, 바이브 코딩에 쓰는 GitHub·Supabase·Vercel·Firebase 콘솔 계정]
+applies_to: [메일·클라우드·코드 저장소·도메인·결제·AI 도구 계정, AI 코딩에 쓰는 GitHub·Supabase·Vercel·Firebase 콘솔 계정]
 severity_reason: "영향: 메일·코드 저장소·클라우드 콘솔 계정 하나가 넘어가면 서비스 전체와 고객 데이터가 넘어감 · 악용: 다른 곳에서 새어 나간 비밀번호 재사용, 피싱 페이지로 받은 인증번호"
 sources:
   - title: "NIST SP 800-63B-4 Digital Identity Guidelines: Authentication and Authenticator Management (문자·음성 인증번호는 제한적 방식)"

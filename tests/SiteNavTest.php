@@ -86,7 +86,7 @@ test('경로 표시: 모든 페이지(홈 제외)에 nav[aria-label=경로] ol, 
 
 test('상단: 브랜드·검색(단축키 /)·발행 주체와 GitHub 는 설정값이 있을 때만', function () {
     $b = nav_site()->route('')['body'];
-    assert_true((bool)preg_match('#<header class="ws-top">.*?White Security.*?바이브 코딩 보안 가이드.*?</header>#s', $b), '브랜드');
+    assert_true((bool)preg_match('#<header class="ws-top">.*?White Security.*?AI 코딩 보안 가이드.*?</header>#s', $b), '브랜드');
     assert_true((bool)preg_match('#<header class="ws-top">.*?<input[^>]*type="search"[^>]*data-search="/white-security/api/search.json".*?</header>#s', $b), '상단 검색');
     assert_true((bool)preg_match('#<kbd[^>]*>/</kbd>#', $b), '단축키 표시');
     assert_true(!str_contains($b, 'ws-publisher'), '발행 주체 기본 빈 값');
@@ -111,10 +111,10 @@ test('site.json: 형식 오류는 오류 띠로, 기본값으로 계속', functi
 test('공유 메타: 페이지별 title·description·og, 이슈는 article', function () {
     $s = nav_site();
     $b = $s->route('severity')['body'];
-    assert_contains('<title>심각도 기준 — White Security 바이브 코딩 보안 가이드</title>', $b);
-    assert_contains('<title>White Security — 바이브 코딩 보안 가이드</title>', $s->route('')['body']);
+    assert_contains('<title>심각도 기준 — White Security AI 코딩 보안 가이드</title>', $b);
+    assert_contains('<title>White Security — AI 코딩 보안 가이드</title>', $s->route('')['body']);
     assert_contains('<meta name="description" content="' . Site::e(Site::PAGES['severity']['lead']) . '">', $b);
-    assert_contains('<meta property="og:title" content="심각도 기준 — White Security 바이브 코딩 보안 가이드">', $b);
+    assert_contains('<meta property="og:title" content="심각도 기준 — White Security AI 코딩 보안 가이드">', $b);
     assert_contains('<meta property="og:type" content="website">', $b);
     assert_contains('<meta property="og:locale" content="ko_KR">', $b);
     $i = $s->route('issues/WS-INJ-001')['body'];
