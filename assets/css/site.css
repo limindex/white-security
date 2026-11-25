@@ -131,7 +131,7 @@ code { font-family: var(--font-mono); }
 .ws-fold-count, .ws-fold-hint span, .ws-grp-n, .ws-cov-num, .ws-check-n, .ws-grp-when, .ws-grp-name, .ws-grp-title,
 .ws-home-sec-head h2, .ws-cov-chart-head h2, .ws-fold summary h2, .ws-sec-head h2,
 .ws-sec > h2, .ws-sec > h3, .ws-page-head h1, .ws-doc h1, .ws-home-intro h1, .ws-related h2, .ws-toc h2, .ws-code-num,
-.ws-recent-title, .ws-recent-note, .ws-readlist-title, .ws-readlist-why, .ws-st-note, .ws-nav-pages a, .ws-nav-grp li a, .ws-path-cmd, .ws-crumbs li > * {
+.ws-step-n > span, .ws-recent-title, .ws-recent-note, .ws-readlist-title, .ws-readlist-why, .ws-st-note, .ws-nav-pages a, .ws-nav-grp li a, .ws-path-cmd, .ws-crumbs li > * {
   line-height: 1.2;
   text-box: trim-both cap alphabetic;
 }
@@ -1029,7 +1029,8 @@ a.ws-id:hover { color: var(--accent); text-decoration-color: currentColor; }
   border-radius: var(--r-sm);
   background: transparent;
   color: var(--ink-2);
-  font: 700 .86rem var(--font-display);
+  /* 한글 글꼴 기준 cap 으로 잘라야 세로 가운데(Manrope 는 range -0.55px, 잉크 실측 .85rem 에서 0.5 이내) */
+  font: 700 .85rem var(--font-text);
   letter-spacing: -0.01em;
   white-space: nowrap;
   transition: background-color var(--dur) var(--ease-out), color var(--dur) var(--ease-out);
@@ -1062,6 +1063,10 @@ html:not(.js) .ws-itabs-list { display: none; }
 .ws-out figcaption { padding: 12px 16px 0; font: 700 .74rem var(--font-display); color: var(--code-ink-3); line-height: 1.2; text-box: trim-both cap alphabetic; }
 .ws-out pre { margin: 0; padding: 12px 16px 16px; font: 450 .8rem/1.7 var(--font-mono); white-space: pre; overflow-x: auto; scrollbar-width: thin; scrollbar-color: var(--code-ink-3) transparent; }
 .ws-out code { font: inherit; }
+/* 사용법 표(범위 × 도구): 좁은 화면은 범위마다 도구 이름 | command 로 쌓음 */
+.ws-ipanel > .ws-table-wrap { margin-top: 32px; }
+.ws-table--usage tbody th { width: 7em; }
+.ws-table--usage code { white-space: nowrap; }
 .ws-trouble { margin-top: 32px; box-shadow: inset 0 1px 0 var(--line), inset 0 -1px 0 var(--line); }
 .ws-trouble > summary { display: flex; align-items: center; gap: 12px; min-height: 60px; list-style: none; cursor: pointer; font: 800 1.12rem var(--font-display); letter-spacing: -0.03em; }
 .ws-trouble > summary::-webkit-details-marker { display: none; }
@@ -1242,6 +1247,13 @@ html:not(.js) .ws-itabs-list { display: none; }
   .ws-deflist > div { row-gap: 4px; }
   .ws-foot { margin-top: 64px; }
   .ws-meter { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "name num" "bar bar"; gap: 12px 16px; padding: 16px 0; }
+  .ws-table--usage, .ws-table--usage tbody, .ws-table--usage caption { display: block; }
+  .ws-table--usage thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .ws-table--usage tr { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); align-items: baseline; gap: 8px 12px; padding: 12px 0; box-shadow: inset 0 -1px 0 var(--line); }
+  .ws-table--usage tbody th { display: block; grid-column: 1 / -1; width: auto; padding: 0; box-shadow: none; }
+  .ws-table--usage td { display: contents; }
+  .ws-table--usage td::before { content: attr(data-label); font: 700 .76rem/1.4 var(--font-display); color: var(--ink-3); }
+  .ws-table--usage td > code { justify-self: start; }
   /* 대응표 항목표: 항목 이름 한 줄 → 대응 이슈 · 상태(가로 스크롤 없음) */
   .ws-cov-table, .ws-cov-table tbody { display: block; }
   .ws-cov-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }

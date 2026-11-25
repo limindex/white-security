@@ -54,7 +54,8 @@ test('설치(Claude Code): 번호 단계 4개, command 는 한 상자에 하나,
     foreach ($cmds[1] as $c) assert_true(!str_contains(html_entity_decode($c), "\n"), "한 상자에 command 하나: $c");
     foreach (['claude', '/plugin marketplace add limindex/skills', '/plugin install white-security@limindex', '/white-security:review'] as $c) assert_true(in_array($c, $cmds[1], true), "command $c");
     assert_contains('최초 1회', $p);
-    assert_contains('② 완료 후 실행', $p);
+    assert_contains('2단계 뒤 실행', $p);
+    assert_true(!preg_match('/[①-⑳]/u', $p), '원문자 태그 없음');
     assert_contains('href="https://code.claude.com/docs/en/setup"', $p);
     assert_true(substr_count($p, 'class="ws-out"') >= 3, '예시 출력 상자');
     assert_true(substr_count($p, '예시 출력') >= 3, '예시 표시');
@@ -147,4 +148,22 @@ test('보고 예시: 문서 번호는 이슈 링크(있는 이슈만), 표 아�
     $css = file_get_contents(__DIR__ . '/../assets/css/site.css');
     assert_true((bool)preg_match('#@container report \(max-width: 999\.98px\)#', $css), '카드형 컨테이너 조건');
     assert_true((bool)preg_match('#@container report[^@]*word-break: keep-all; overflow-wrap: normal#s', $css), '낱말 중간 꺾임 없음');
+});
+
+test('설치(Codex · OpenCode): 탭 이름·OpenCode 준비 명령·@white-security, 판마다 사용법 표(README 와 같은 값)', function () {
+    $b = nw_strip(inst_body());
+    assert_contains('<span class="ws-tx">Codex · OpenCode</span>', $b);
+    assert_true((bool)preg_match('#<section[^>]*id="inst-codex"[^>]*>(.*?)</section>#s', $b, $m), 'Codex 판');
+    $p = $m[1];
+    foreach (['<code>opencode</code>', '<code>@white-security 보안 점검해 줘</code>', 'href="https://opencode.ai/docs/"', 'Codex와 OpenCode가 이 폴더의 스킬을 자동으로 인식'] as $w) assert_contains($w, $p);
+    $rows = [['전체', '', ''], ['바뀐 파일', ' changed', ''], ['폴더 하나', ' src/api', '']];
+    assert_true((bool)preg_match('#<table class="ws-table ws-table--usage">.*?</table>#s', $p, $t), 'Codex 판 사용법 표');
+    foreach ($rows as [$name, $arg]) {
+        assert_true((bool)preg_match('#<th scope="row">' . $name . '</th><td data-label="Codex"><code>\$white-security' . preg_quote($arg, '#') . '</code></td><td data-label="OpenCode"><code>@white-security' . preg_quote($arg, '#') . '</code></td>#u', $t[0]), "Codex·OpenCode $name");
+    }
+    assert_true((bool)preg_match('#<section[^>]*id="inst-claude"[^>]*>.*?<table class="ws-table ws-table--usage">.*?<th scope="row">폴더 하나</th><td data-label="Claude Code"><code[^>]*>/white-security:review src/api</code></td>#s', $b), 'Claude Code 사용법 표');
+    // README 사용법 표와 같은 값
+    $readme = file_get_contents(__DIR__ . '/../README.md');
+    foreach (['`/white-security:review changed`', '`$white-security src/api`', '`@white-security changed`'] as $w) assert_contains($w, $readme);
+    assert_true(strpos($b, 'ws-table--usage') > strpos($b, '동작 확인'), '사용법 표는 4단계 아래');
 });
