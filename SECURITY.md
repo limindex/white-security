@@ -68,15 +68,15 @@ Only the latest plugin version receives fixes. Update with `/plugin marketplace 
 ### 범위
 
 - 이 저장소의 문서 사이트 생성기(`build.php`·`index.php`·`src/`·`templates/`·`assets/`)와 생성된 정적 사이트.
-- `plugins/white-security/` 의 plugin: `white-security` 스킬(Claude Code 에서는 `/white-security:review`), Claude Code 에서 검토를 맡는 읽기 전용 보안 검토 에이전트, 고칠 때 쓰는 규칙 파일.
-- 이슈 문서(`issues/`)·규칙 파일의 내용 오류 중 안전하지 않은 조언으로 이어질 수 있는 것. 예: 여전히 공격 가능한 안전 코드 예시, 실제 위험을 건너뛰게 만드는 스킬 안내.
+- `plugins/white-security/` 의 plugin: `white-security` 스킬(Claude Code 에서는 `/white-security:review`), Claude Code 에서 검토를 맡는 읽기 전용 보안 에이전트, 고칠 때 쓰는 규칙 파일.
+- 이슈 문서(`issues/`)·규칙 파일의 내용 오류 중 안전하지 않은 조언으로 이어질 수 있는 것. 예: 여전히 공격 가능한 안전 코드 예시, 검토가 실제 위험을 건너뛰게 하는 스킬 안내.
 - 이 프로젝트를 사칭하는 marketplace·plugin.
 
 ### 제보 방법
 
 GitHub Security Advisories 비공개 제보만 사용. 저장소 **Security** 탭에서 **Report a vulnerability** 를 누르거나 <https://github.com/limindex/white-security/security/advisories/new> 로 이동.
 
-고쳐지지 않은 취약점은 공개 Issue·Discussion·Pull Request 로 올리지 않아야 한다.
+아직 고치지 않은 취약점은 공개 Issue·Discussion·Pull Request 로 올리지 않아야 한다.
 
 있으면 좋은 내용:
 
@@ -85,23 +85,23 @@ GitHub Security Advisories 비공개 제보만 사용. 저장소 **Security** �
 - 확인한 영향.
 - 고칠 방법(있으면).
 
-한국어·영어 모두 가능.
+제보는 한국어·영어 모두 가능.
 
 ### 제보 대상이 아닌 것
 
 - 플러그인으로 검토한 다른 프로젝트의 취약점. 그 프로젝트 관리자에게 제보.
-- 내 코드에서 검토가 놓치거나 잘못 지적한 결과 중 안전하지 않은 조언을 하는 규칙이 원인이 아닌 것. 검토는 안내에 따른 모델 검토이며 보안 감사를 대신하지 않음. 일반 Issue 로 제보.
+- 본인 코드에서 검토가 놓치거나 잘못 지적한 결과(안전하지 않은 조언을 하는 규칙이 원인이 아닌 경우). 검토는 안내에 따른 모델 검토이며 보안 감사를 대신하지 않음. 일반 Issue 로 제보.
 - 보안 영향이 없는 내용 오류(오타·깨진 링크). 일반 Issue 로 제보.
 - Claude Code·GitHub·GitHub Pages 등 플랫폼 자체의 취약점. 각 제공사에 제보.
 - 정적 호스팅에서 설정할 수 없는 헤더(GitHub Pages 의 `frame-ancestors` 등), 정적 사이트의 요청 횟수 제한 부재, 실제 영향이 확인되지 않은 스캐너 결과.
-- `plugins/white-security/skills/white-security/references/` 의 코드 예시에 대한 스킬 스캐너 경고. 취약 코드로 표시한 예시(모델 출력에 `eval` 사용 등)는 일부러 안전하지 않게 쓴 문서이며, 스킬은 읽기만 하고 실행하지 않음.
-- 사회공학, 물리적 공격, 서비스 거부(DoS).
+- `plugins/white-security/skills/white-security/references/` 의 코드 예시에서 나온 스킬 스캐너 경고. 취약 코드로 표시한 예시(모델 출력에 `eval` 사용 등)는 일부러 안전하지 않게 쓴 문서. 스킬은 읽기만 하고 실행하지 않음.
+- 사회공학·물리적 공격·서비스 거부(DoS).
 
 ### 응답
 
-관리자 한 명이 운영하는 개인 프로젝트. 제보는 월간 정기 점검 때 확인하고, 심각한 문제는 가능하면 더 빨리 확인. 정해진 응답 기한 없음.
+관리자 한 명이 운영하는 개인 프로젝트. 제보는 월간 정기 점검 때 확인. 심각한 문제는 가능하면 그 전에 확인. 정해진 응답 기한 없음.
 
-진행 상황은 비공개 advisory 안에서 공유. 수정은 새 플러그인 버전과 `CHANGELOG.md` 기록으로 배포. 원하면 수정 공개 뒤 제보자 이름 표기.
+진행 상황은 비공개 advisory 안에서 공유. 수정은 새 플러그인 버전과 `CHANGELOG.md` 기록으로 배포. 제보자가 원하면 수정 공개 뒤 이름 표기.
 
 ### 보상
 
@@ -116,8 +116,8 @@ GitHub Security Advisories 비공개 제보만 사용. 저장소 **Security** �
 - 본인 것이 아닌 데이터에 접근하거나 바꾸거나 지우지 않아야 한다.
 - 수정이 공개될 때까지 세부 내용을 공개하지 않아야 한다.
 
-이 약속은 이 프로젝트에만 해당하며, GitHub 를 포함한 제3자 시스템의 시험을 허락하지 않음.
+이 약속은 이 프로젝트에만 해당. GitHub 를 포함한 제3자 시스템의 시험은 허락하지 않음.
 
 ### 지원 버전
 
-최신 플러그인 버전만 수정. 업데이트는 `/plugin marketplace update limindex`.
+수정은 최신 플러그인 버전에만 반영. 업데이트는 `/plugin marketplace update limindex`.
