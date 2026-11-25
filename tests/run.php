@@ -1,5 +1,6 @@
 <?php
 // 의존성 없는 테스트 러너. 사용: php tests/run.php [디렉터리|파일]
+if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
 $GLOBALS['__tests'] = [];
 function test(string $name, callable $fn): void { $GLOBALS['__tests'][] = [$name, $fn]; }
 function assert_true($cond, string $msg = ''): void {

@@ -9,7 +9,7 @@
 AI 코딩 도구가 만든 코드를 배포 전에 읽기 전용으로 점검합니다<br>행정안전부 보안약점, 주요정보통신기반시설, 개인정보 보호 기준에 맞춰 점검합니다
 
 [![CI](https://github.com/limindex/white-security/actions/workflows/ci.yml/badge.svg)](https://github.com/limindex/white-security/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-0.1.2-2f6feb)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.1.3-2f6feb)](CHANGELOG.md)
 [![License](https://img.shields.io/badge/license-CC%20BY--SA%204.0%20%2B%20MIT-555)](#라이선스)
 
 **한국어** | [English](README.en.md)

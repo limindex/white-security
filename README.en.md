@@ -7,7 +7,7 @@
 **A read-only security review for code your AI coding agent wrote.<br>Run it before you deploy.**
 
 [![CI](https://github.com/limindex/white-security/actions/workflows/ci.yml/badge.svg)](https://github.com/limindex/white-security/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-0.1.2-2f6feb)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.1.3-2f6feb)](CHANGELOG.md)
 [![License](https://img.shields.io/badge/license-CC%20BY--SA%204.0%20%2B%20MIT-555)](#license)
 
 [한국어](README.md) | **English**
