@@ -21,7 +21,7 @@ checked: 2026-11-18
 revisions:
   - date: 2026-11-18
     note: 최초 작성
-applies_to: [Python(pip), Node.js(npm), PHP(Composer)]
+applies_to: [Python(pip), JavaScript(npm), PHP(Composer)]
 severity_reason: "영향: 개발자 컴퓨터·서버에서 남의 코드 실행 · 악용: AI가 지어낸 이름을 먼저 등록해 두는 것만으로 가능"
 sources:
   - title: "Spracklen 외, We Have a Package for You! A Comprehensive Analysis of Package Hallucinations by Code Generating LLMs (USENIX Security 2025, arXiv:2406.10279)"

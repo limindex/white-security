@@ -21,7 +21,7 @@ checked: 2026-11-18
 revisions:
   - date: 2026-11-18
     note: 최초 작성
-applies_to: [Python, Node.js·Next.js 서버 코드, Laravel·PHP, 개인정보·토큰을 암호화하거나 외부 API를 HTTPS로 부르는 모든 서비스]
+applies_to: [Python, Next.js·JavaScript 서버 코드, Laravel·PHP, 개인정보·토큰을 암호화하거나 외부 API를 HTTPS로 부르는 모든 서비스]
 severity_reason: "영향: 암호화한 개인정보 복원·위조, 토큰 추측으로 계정 탈취, 통신 엿보기·변조 · 악용: 같은 망(공용 와이파이·클라우드 내부)이나 공개된 암호문만으로 가능"
 sources:
   - title: 개인정보의 안전성 확보조치 기준 (개인정보보호위원회고시 제2026-9호) 제7조

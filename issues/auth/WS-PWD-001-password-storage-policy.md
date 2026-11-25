@@ -21,7 +21,7 @@ checked: 2026-11-18
 revisions:
   - date: 2026-11-18
     note: 최초 작성
-applies_to: [Laravel, Next.js·Node.js, Django, 회원 비밀번호를 직접 저장하는 모든 서비스]
+applies_to: [Laravel, Next.js·JavaScript, Django, 회원 비밀번호를 직접 저장하는 모든 서비스]
 severity_reason: "영향: DB 유출 시 회원 비밀번호 원문 복원·다른 사이트 계정까지 탈취 · 악용: 새어 나간 해시를 GPU로 대입"
 sources:
   - title: 개인정보의 안전성 확보조치 기준 (개인정보보호위원회고시 제2026-9호) 제7조

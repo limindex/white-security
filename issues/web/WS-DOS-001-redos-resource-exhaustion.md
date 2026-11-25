@@ -21,7 +21,7 @@ checked: 2026-11-18
 revisions:
   - date: 2026-11-18
     note: 최초 작성
-applies_to: [Express·Node.js, FastAPI·Python, Laravel·PHP, 입력 검사·목록·내보내기 기능]
+applies_to: [Express·JavaScript, FastAPI·Python, Laravel·PHP, 입력 검사·목록·내보내기 기능]
 severity_reason: "영향: 서버 CPU·메모리 독점으로 서비스 멈춤 · 악용: 특정 모양의 긴 문자열이나 큰 숫자 하나로 가능"
 sources:
   - title: "OWASP - Regular expression Denial of Service (ReDoS)"

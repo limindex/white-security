@@ -21,7 +21,7 @@ checked: 2026-11-18
 revisions:
   - date: 2026-11-18
     note: 최초 작성
-applies_to: [Python, Node.js, PHP, LLM 연동 웹 애플리케이션]
+applies_to: [Python, JavaScript, PHP, LLM 연동 웹 애플리케이션]
 severity_reason: "영향: 서버 명령·코드 실행, 사용자 화면 스크립트 실행 · 악용: AI가 읽는 글 한 편으로 가능"
 sources:
   - title: "OWASP Top 10 for LLM Applications 2026 - LLM10:2026 Improper Output Handling"

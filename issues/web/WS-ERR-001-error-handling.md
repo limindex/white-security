@@ -21,7 +21,7 @@ checked: 2026-11-18
 revisions:
   - date: 2026-11-18
     note: 최초 작성
-applies_to: [Laravel, Express·Node.js, FastAPI, 모든 웹 애플리케이션·API]
+applies_to: [Laravel, Express·JavaScript, FastAPI, 모든 웹 애플리케이션·API]
 severity_reason: "영향: 오류 문장으로 DB 구조·경로·키 노출, 검사 실패를 성공으로 처리해 인증·결제 우회 · 악용: 잘못된 값 하나로 오류를 일으키는 것만으로 가능"
 sources:
   - title: OWASP Error Handling Cheat Sheet

@@ -21,7 +21,7 @@ checked: 2026-11-18
 revisions:
   - date: 2026-11-18
     note: 최초 작성
-applies_to: [FastAPI·Python, Express·Node.js, Laravel·PHP, 외부 프로그램을 부르는 모든 서버]
+applies_to: [FastAPI·Python, Express·JavaScript, Laravel·PHP, 외부 프로그램을 부르는 모든 서버]
 severity_reason: "영향: 서버에서 임의 명령 실행·파일 탈취·서버 장악 · 악용: 파일 이름·주소 칸에 넣는 글자만으로 가능"
 sources:
   - title: OWASP OS Command Injection Defense Cheat Sheet

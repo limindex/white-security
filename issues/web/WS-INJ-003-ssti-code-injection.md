@@ -21,7 +21,7 @@ checked: 2026-11-18
 revisions:
   - date: 2026-11-18
     note: 최초 작성
-applies_to: [Flask(Jinja2), Python, Express·Node.js, Laravel(Blade), 문구·계산식을 사용자에게 받는 기능]
+applies_to: [Flask(Jinja2), Python, Express·JavaScript, Laravel(Blade), 문구·계산식을 사용자에게 받는 기능]
 severity_reason: "영향: 서버에서 임의 코드 실행·환경 변수와 비밀키 노출 · 악용: 이름·문구 칸에 넣는 글자만으로 가능"
 sources:
   - title: "PortSwigger Web Security Academy - Server-side template injection"

@@ -21,7 +21,7 @@ checked: 2026-11-18
 revisions:
   - date: 2026-11-18
     note: 최초 작성
-applies_to: [Express·Node.js, FastAPI·Python, Laravel·PHP, 한국어 Windows 서버, 파일을 내려주거나 읽는 모든 기능]
+applies_to: [Express·JavaScript, FastAPI·Python, Laravel·PHP, 한국어 Windows 서버, 파일을 내려주거나 읽는 모든 기능]
 severity_reason: "영향: 설정 파일·비밀키·소스 코드 노출, 쓰기 기능이면 서버 장악 · 악용: 파일 이름 칸에 ../ 몇 개로 가능"
 sources:
   - title: "OWASP - Path Traversal"

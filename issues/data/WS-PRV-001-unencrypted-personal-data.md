@@ -21,7 +21,7 @@ checked: 2026-11-18
 revisions:
   - date: 2026-11-18
     note: 최초 작성
-applies_to: [Laravel, Django, Next.js·Node.js, 여권번호·운전면허번호·외국인등록번호·카드번호·계좌번호·생체인식정보를 저장하는 서비스]
+applies_to: [Laravel, Django, Next.js·JavaScript, 여권번호·운전면허번호·외국인등록번호·카드번호·계좌번호·생체인식정보를 저장하는 서비스]
 severity_reason: "영향: DB·백업이 한 번 새면 고유식별정보·금융정보가 원문 그대로 유출 · 악용: SQL 삽입·DB 계정 탈취·백업 파일 노출 중 하나면 충분"
 sources:
   - title: 개인정보의 안전성 확보조치 기준 (개인정보보호위원회고시 제2026-9호) 제7조

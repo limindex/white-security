@@ -351,3 +351,13 @@ test('문서 읽는 법: 분류 약어 전체 표는 기본 접힘(읽는 법 �
     assert_true(!str_contains($b, '<details class="ws-subfold" open'), '기본 접힘');
     assert_contains('<code>INJ</code>(인젝션) · <code>SSRF</code>', $b);
 });
+
+test('작은 표기: 심각도 보고 열에 국내 기준·응답 헤더(머리말 아님), 적용 대상의 JS 스택 표기는 JavaScript 하나', function () {
+    $sev = nw_strip(nav_site()->route('severity')['body']);
+    assert_contains('행마다 문서 번호·국내 기준·파일:줄·영향·이유·고칠 방법', $sev);
+    assert_contains('응답 헤더의 서버 버전 노출', $sev);
+    assert_true(!str_contains($sev, '머리말'), '머리말 없음');
+    foreach (Repository::load(dirname(__DIR__))->all() as $i) {
+        foreach ($i->appliesTo as $a) assert_true(!str_contains($a, 'Node.js'), "{$i->id}: $a");
+    }
+});

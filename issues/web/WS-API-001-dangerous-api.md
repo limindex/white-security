@@ -21,7 +21,7 @@ checked: 2026-11-18
 revisions:
   - date: 2026-11-18
     note: 최초 작성
-applies_to: [Express·Node.js, Python, PHP, 접근 허용·비밀값 비교·임시 파일을 다루는 코드]
+applies_to: [Express·JavaScript, Python, PHP, 접근 허용·비밀값 비교·임시 파일을 다루는 코드]
 severity_reason: "영향: 관리 기능 접근 제한 우회, 임시 파일 가로채기, 토큰 비교 약화 · 악용: 역방향 DNS 기록이나 요청 값 조작으로 가능"
 sources:
   - title: "CWE-350: Reliance on Reverse DNS Resolution for a Security-Critical Action"

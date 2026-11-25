@@ -22,7 +22,7 @@ checked: 2026-11-18
 revisions:
   - date: 2026-11-18
     note: 최초 작성
-applies_to: [Express·Node.js(node-postgres), Laravel·PHP, FastAPI·SQLAlchemy, DB 연결·금액 계산이 있는 서버]
+applies_to: [Express·JavaScript(node-postgres), Laravel·PHP, FastAPI·SQLAlchemy, DB 연결·금액 계산이 있는 서버]
 severity_reason: "영향: 연결 고갈로 서비스 멈춤, 음수·넘친 수량으로 잘못된 금액 · 악용: 특정 값을 반복해 보내는 것만으로 가능"
 sources:
   - title: "CWE-476: NULL Pointer Dereference"

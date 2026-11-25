@@ -21,7 +21,7 @@ checked: 2026-11-18
 revisions:
   - date: 2026-11-18
     note: 최초 작성
-applies_to: [Python, Node.js, 멀티 에이전트·서비스 계정 기반 에이전트]
+applies_to: [Python, JavaScript, 멀티 에이전트·서비스 계정 기반 에이전트]
 severity_reason: "영향: 사용자 권한 밖 데이터 조회·작업 실행 · 악용: 에이전트에 요청하거나 가짜 에이전트 메시지 하나로 가능"
 sources:
   - title: OWASP Top 10 for Agentic Applications 2026

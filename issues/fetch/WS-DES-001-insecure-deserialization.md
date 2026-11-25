@@ -21,7 +21,7 @@ checked: 2026-11-18
 revisions:
   - date: 2026-11-18
     note: 최초 작성
-applies_to: [Python, Node.js, PHP, 모든 웹 애플리케이션]
+applies_to: [Python, JavaScript, PHP, 모든 웹 애플리케이션]
 severity_reason: "영향: 서버 원격 코드 실행 · 악용: 쿠키·업로드 등 조작한 데이터 하나로 가능"
 sources:
   - title: OWASP Deserialization Cheat Sheet

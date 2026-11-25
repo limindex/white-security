@@ -24,7 +24,7 @@ revisions:
     note: 탐지 규칙 찾는 곳 신호 정리(DB::raw 추가, 스킬 INDEX 크기 맞춤)
   - date: 2026-11-18
     note: 최초 작성
-applies_to: [Python, Node.js, PHP, SQL DB를 쓰는 모든 웹 애플리케이션]
+applies_to: [Python, JavaScript, PHP, SQL DB를 쓰는 모든 웹 애플리케이션]
 severity_reason: "영향: DB 전체 조회·변조·삭제 · 악용: 입력 칸 하나에 넣는 글자만으로 가능, 자동화 도구 흔함"
 sources:
   - title: OWASP SQL Injection Prevention Cheat Sheet

@@ -21,7 +21,7 @@ checked: 2026-11-18
 revisions:
   - date: 2026-11-18
     note: 최초 작성
-applies_to: [Express·Node.js, FastAPI, Laravel(Octane 포함), 프로세스가 오래 사는 웹 서버]
+applies_to: [Express·JavaScript, FastAPI, Laravel(Octane 포함), 프로세스가 오래 사는 웹 서버]
 severity_reason: "영향: 다른 사용자의 개인정보 노출, 비밀번호 해시·내부 주소 유출 · 악용: 동시에 요청하거나 남은 디버그 주소를 여는 것만으로 가능"
 sources:
   - title: "CWE-488: Exposure of Data Element to Wrong Session"

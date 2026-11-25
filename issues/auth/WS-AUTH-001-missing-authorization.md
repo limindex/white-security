@@ -22,7 +22,7 @@ checked: 2026-11-18
 revisions:
   - date: 2026-11-18
     note: 최초 작성
-applies_to: [Python, Node.js, PHP, 로그인 기능이 있는 모든 웹 애플리케이션]
+applies_to: [Python, JavaScript, PHP, 로그인 기능이 있는 모든 웹 애플리케이션]
 severity_reason: "영향: 남의 주문·파일·개인정보 열람·수정 · 악용: 주소의 번호를 바꾸는 것만으로 가능"
 sources:
   - title: "OWASP Top 10:2025 - A01 Broken Access Control"

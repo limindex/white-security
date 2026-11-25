@@ -21,7 +21,7 @@ checked: 2026-11-18
 revisions:
   - date: 2026-11-18
     note: 최초 작성
-applies_to: [PHP, Python, Express·Node.js, 문의 메일·파일 내려받기 기능]
+applies_to: [PHP, Python, Express·JavaScript, 문의 메일·파일 내려받기 기능]
 severity_reason: "영향: 메일 수신자 몰래 추가(스팸 발송 통로)·응답 헤더 조작·내려받기 이름 위조 · 악용: 이메일·파일 이름 칸에 줄바꿈 글자를 넣는 것만으로 가능"
 sources:
   - title: "CWE-113: Improper Neutralization of CRLF Sequences in HTTP Headers ('HTTP Request/Response Splitting')"

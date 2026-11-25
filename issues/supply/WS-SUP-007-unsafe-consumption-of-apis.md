@@ -21,7 +21,7 @@ checked: 2026-11-18
 revisions:
   - date: 2026-11-18
     note: 최초 작성
-applies_to: [FastAPI·Python(requests·httpx), Next.js·Node.js(fetch), 결제·지도·환율·제휴사·외부 데이터 API를 서버에서 부르는 기능]
+applies_to: [FastAPI·Python(requests·httpx), Next.js·JavaScript(fetch), 결제·지도·환율·제휴사·외부 데이터 API를 서버에서 부르는 기능]
 severity_reason: "영향: 외부 서비스가 뚫리거나 응답이 바뀌면 내 DB·화면·결제 판단이 그대로 오염 · 악용: 외부 API 탈취, 응답 위조, 느린 응답으로 서버 자원 고갈"
 sources:
   - title: "OWASP API Security Top 10 2023 - API10 Unsafe Consumption of APIs"

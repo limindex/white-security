@@ -21,7 +21,7 @@ checked: 2026-11-18
 revisions:
   - date: 2026-11-18
     note: 최초 작성
-applies_to: [FastAPI·Python, Next.js·Node.js, 오류 추적·세션 리플레이·로그 수집 서비스를 쓰는 모든 앱]
+applies_to: [FastAPI·Python, Next.js·JavaScript, 오류 추적·세션 리플레이·로그 수집 서비스를 쓰는 모든 앱]
 severity_reason: "영향: 로그·외부 오류 추적 서비스에 회원 개인정보·토큰이 쌓여 그 서비스 계정 하나로 대량 유출 · 악용: 로그 열람 권한이나 외부 서비스 계정만 있으면 가능"
 sources:
   - title: "OWASP ASVS 5.0 - V14 Data Protection, V16 Security Logging and Error Handling"
