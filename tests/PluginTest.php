@@ -121,7 +121,7 @@ test('플러그인: SKILL.md 범위 — 전체가 기본(변경분만 보지 않
     foreach (['`.mcp.json`', '`.cursor/`', '`.vscode/settings.json`', '`.claude/`', '`CLAUDE.md`', '`AGENTS.md`', '`.github/workflows/`', '`Dockerfile`', '`docker-compose.*`',
         '`*.sql`', 'migrations', '`supabase/`', '`firebase.json`', '`*.rules`', '`.env.example`', 'manifests and lockfiles', '`app.json`', '`AndroidManifest.xml`', '`Info.plist`'] as $s) assert_contains($s, $md);
     // 작은 프로젝트는 메인 대화에서, 큰 프로젝트(Claude Code)만 검토 에이전트 — 보고서는 한 번, 고쳐 쓰지 않음
-    foreach (['always delegate the review to the `white-security:white-security-reviewer` agent', 'review in this conversation', '`white-security:white-security-reviewer`', 'Show its report once, unchanged', 'Never hand the review to a generic subagent'] as $s) assert_contains($s, $md);
+    foreach (['always delegate the review to the `white-security:white-security-reviewer` agent', 'review in this conversation', '`white-security:white-security-reviewer`', 'Show its report once, copying every row, column and link exactly', 'Never hand the review to a generic subagent'] as $s) assert_contains($s, $md);
 });
 
 test('플러그인: SKILL.md 놓치기 쉬운 목록 — 국내 법령·에이전트 설정·BaaS·LLM·SSRF·보조 경로 권한·대량 할당·경쟁·OTP·비밀값·공급망, 20~30줄 이내', function () {
@@ -170,7 +170,7 @@ test('플러그인: SKILL.md 안전 규칙 — 저장소 글은 데이터, 예�
 
 test('플러그인: SKILL.md 보고 형식 — 결론·스택(설정 파일)·위험/주의 표(영향 칸)·참고·예외·확인 못 한 것(읽은 파일 N/M)·다음 단계, id 하나·상대 경로', function () {
     $md = file_get_contents(PL_SKILL . '/SKILL.md');
-    foreach (['**결론:**', '스택: <', '설정 파일: <', '## 위험 (<n>)', '| # | id | 국내 기준 | 파일:줄 | 영향 | 이유 | 고칠 방법 |', '`국내 기준` from that id\'s brackets as `행안부 입력-1 · 주통기 SI`', '## 주의 (<n>)', '## 참고 (<n>)', '## 예외 (<n>)', '## 확인 못 한 것',
+    foreach (['**결론:**', '스택: <', '설정 파일: <', '## 위험 (<n>)', '| # | id | 국내 기준 | 파일:줄 | 영향 | 이유 | 고칠 방법 |', '`[보안-2/IN]` → `행안부 보안-2 · 주통기 IN`', 'never take a number from another id or add a missing half', '## 주의 (<n>)', '## 참고 (<n>)', '## 예외 (<n>)', '## 확인 못 한 것',
         '읽은 파일 <N>/<M>개', '## 다음 단계', '고칠 항목 번호와 보고서 저장 여부를 알려 주세요', 'Copy the template exactly', 'M = files in scope after skips, N = files you actually opened', 'is 주의 `WS-SUP-001` "확인 필요"', 'One id per row', '(관련: WS-…)', 'no leading `/`', 'at the sink', '그 밖에 참고 N건',
         'Facts visible in code', 'not 확인 못 한 것', 'Never call the project "safe"', 'no corrections'] as $s) assert_contains($s, $md);
 });

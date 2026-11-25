@@ -94,10 +94,11 @@ Write each issue id as a link to its guide page: `[WS-INJ-001](https://limindex.
 |---|---|---|---|---|---|---|
 
 ## 주의 (<n>)
-(같은 표)
+| # | id | 국내 기준 | 파일:줄 | 영향 | 이유 | 고칠 방법 |
+|---|---|---|---|---|---|---|
 
 ## 참고 (<n>)
-- <#>. <id> <파일:줄> — <이유>
+- <#>. <WS-id> <파일:줄> — <이유>
 
 ## 예외 (<n>)
 | id | 파일:줄 | 예외 근거 | 이유 | 만료일 |
@@ -110,5 +111,5 @@ Write each issue id as a link to its guide page: `[WS-INJ-001](https://limindex.
 - 고칠 항목 번호와 보고서 저장 여부를 알려 주세요. 고른 항목만 고칩니다.
 ```
 
-Rules: one row = one cause in one place, numbered across grades (repeats → "외 N곳"). One id per row; related ids end `이유` as `(관련: WS-…)`. `파일:줄` relative, no leading `/`, at the sink. `국내 기준` from that id's brackets as `행안부 입력-1 · 주통기 SI` (only what the brackets give; none → `—`). `영향` for a non-developer ("남의 주문 삭제 가능"); `이유` names source and sink; `고칠 방법` one concrete change. 참고 ≤5 lines, then "그 밖에 참고 N건". Empty grade → `없음`; omit 예외 if none. Facts visible in code (unpinned package, no lockfile, old version) are findings, not 확인 못 한 것; a package you can't confirm exists is 주의 `WS-SUP-001` "확인 필요". `읽은 파일 N/M`: M = files in scope after skips, N = files you actually opened; N < M whenever you skipped any, and list them.
+Rules: one row = one cause in one place, numbered across grades (repeats → "외 N곳"). One id per row; related ids end `이유` as `(관련: WS-…)`. `파일:줄` relative, no leading `/`, at the sink. `국내 기준` copies that id's own brackets: `[보안-2/IN]` → `행안부 보안-2 · 주통기 IN`, `[보안-3]` → `행안부 보안-3`, `[AU]` → `주통기 AU`, no brackets → `—`; never take a number from another id or add a missing half. `영향` for a non-developer ("남의 주문 삭제 가능"); `이유` names source and sink; `고칠 방법` one concrete change. 참고 ≤5 lines, then "그 밖에 참고 N건". Empty grade → `없음`; omit 예외 if none. Facts visible in code (unpinned package, no lockfile, old version) are findings, not 확인 못 한 것; a package you can't confirm exists is 주의 `WS-SUP-001` "확인 필요". `읽은 파일 N/M`: M = files in scope after skips, N = files you actually opened; N < M whenever you skipped any, and list them.
 <!-- reviewer:end -->
