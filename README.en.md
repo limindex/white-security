@@ -74,7 +74,7 @@ Reports are grouped by severity (위험 / 주의 / 참고 = high / medium / low)
 | Supply chain | 8 | Slopsquatting, vulnerable dependencies, unpinned Actions |
 | Mobile apps | 6 | Secrets in the app bundle, deep links, WebViews |
 
-Mapped to OWASP Top 10:2025, the LLM and Agentic Top 10 2026, ASVS 5.0, CWE Top 25 and Korean secure coding and privacy rules. Supported stacks: Python, JavaScript/TypeScript, PHP, Supabase, Firebase, React Native, Expo and Flutter. A watch list of serious CVEs is checked against your manifests and lockfiles.
+Mapped to OWASP Top 10:2025, the LLM and Agentic Top 10 2026, ASVS 5.0 and CWE Top 25. It also covers Korean standards: the 49 secure coding weaknesses from the Ministry of the Interior and Safety, the 21 web checks for critical information infrastructure, and Korean privacy rules (resident registration numbers, encryption of unique identifiers, access records). See the [coverage table](https://limindex.github.io/white-security/coverage). Supported stacks: Python, JavaScript/TypeScript, PHP, Supabase, Firebase, React Native, Expo and Flutter. A watch list of serious CVEs is checked against your manifests and lockfiles.
 
 ## Measured
 

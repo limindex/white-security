@@ -77,7 +77,17 @@ mkdir -p .agents/skills && cp -r ~/white-security/plugins/white-security/skills/
 | 소프트웨어 공급망 | 8 | Slopsquatting, 취약한 의존성, SHA 고정 안 된 Actions |
 | 모바일 앱 | 6 | 앱 번들 속 비밀값, 딥링크, WebView |
 
-OWASP Top 10:2025, LLM·Agentic Top 10 2026, ASVS 5.0, CWE Top 25 등과 국내 보안약점·개인정보 기준에 대응합니다. 지원 스택은 Python, JavaScript/TypeScript, PHP, Supabase, Firebase, React Native, Expo, Flutter입니다. 심각한 CVE는 감시 목록으로 manifest와 lockfile의 버전을 대조합니다.
+OWASP Top 10:2025, LLM·Agentic Top 10 2026, ASVS 5.0, CWE Top 25에 대응합니다. 지원 스택은 Python, JavaScript/TypeScript, PHP, Supabase, Firebase, React Native, Expo, Flutter입니다. 심각한 CVE는 감시 목록으로 manifest와 lockfile의 버전을 대조합니다.
+
+## 국내 보안 기준
+
+국내 보안 점검에서 쓰는 기준에도 대응합니다.
+
+- 행정안전부 구현단계 보안약점 49개
+- 주요정보통신기반시설 웹 취약점 21개
+- 개인정보 보호 기준: 주민등록번호 처리 제한, 고유식별정보 암호화 저장, 개인정보 접속기록
+
+각 이슈 문서에 해당 기준의 항목 번호가 표기되어 있으며, 기준별 대응 현황은 [점검 기준 대응표](https://limindex.github.io/white-security/coverage)에 정리되어 있습니다. 공식 진단이나 인증을 대신하지는 않습니다.
 
 ## 실측 결과
 
