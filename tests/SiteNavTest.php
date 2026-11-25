@@ -45,10 +45,13 @@ test('왼쪽 메뉴: 시작하기 · 보안 이슈(총 개수) · 참고 순서�
     $nav = $m[1];
     $p1 = strpos($nav, '시작하기'); $p2 = strpos($nav, '보안 이슈'); $p3 = strpos($nav, '참고');
     assert_true($p1 !== false && $p2 > $p1 && $p3 > $p2, '구역 순서');
-    foreach (['about', 'start', 'install', 'severity', 'guide', 'changelog', 'sources'] as $p) {
+    foreach (['about', 'start', 'install', 'severity', 'guide', 'coverage', 'changelog', 'sources'] as $p) {
         assert_contains('href="/white-security/' . $p . '"', $nav);
     }
-    foreach (['check', 'glossary', 'coverage'] as $p) assert_true(!str_contains($nav, 'href="/white-security/' . $p . '"'), "메뉴에 없음: $p");
+    assert_true((bool)preg_match('#<h2 class="ws-nav-h">참고</h2><ul class="ws-nav-pages"><li><a href="/white-security/coverage">점검 기준 대응표</a>#u', $nav), '대응표는 참고 맨 위');
+    $cov = nav_site()->route('coverage')['body'];
+    assert_true((bool)preg_match('#href="/white-security/coverage" aria-current="page"#', $cov), '대응표 현재 위치');
+    foreach (['check', 'glossary'] as $p) assert_true(!str_contains($nav, 'href="/white-security/' . $p . '"'), "메뉴에 없음: $p");
     assert_true((bool)preg_match('#보안 이슈</span>\s*<span class="ws-nav-count">1</span>#u', $nav), '보안 이슈 총 개수');
     assert_true((bool)preg_match('#href="/white-security/about"[^>]*aria-current="page"#', $nav), '현재 페이지');
 });

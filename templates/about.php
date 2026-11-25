@@ -41,10 +41,11 @@ $kr = static function (string $fw) use ($site): array {
 ?>
 <?php if ($ciipT && $guideT): ?>
 <ul>
-<li>주요정보통신기반시설 웹 취약점 <?= $ciipT ?>개 중 <?= $ciipN ?>개 대응</li>
-<li>행정안전부 구현단계 보안약점 <?= $guideT ?>개 중 <?= $guideN ?>개 대응<?= $guideN < $guideT ? ' (나머지는 C·C++ 메모리 항목으로 지원 언어에 해당 없음)' : '' ?></li>
+<li>행안부 구현단계 보안약점 <?= $guideT ?>개 중 <?= $guideN ?>개 대응<?= $guideN < $guideT ? ' (나머지는 C·C++ 메모리 항목으로 지원 언어에 해당 없음)' : '' ?></li>
+<li>주통기 웹 취약점 <?= $ciipT ?>개 중 <?= $ciipN ?>개 대응</li>
 <li>개인정보 보호 기준: 주민등록번호 처리 제한, 고유식별정보 암호화 저장, 개인정보 접속기록</li>
 </ul>
+<p class="ws-sec-note"><?= Site::t(Site::KR_NOTE) ?></p>
 <p>공식 진단이나 인증을 대신하지 않음.</p>
 <?php endif ?>
 </section>

@@ -1,12 +1,15 @@
 <?php
 /**
- * 점검 기준 대응표: 기준별 미터(덮음·사이트 전용·빈칸·지원 스택 밖, 각 기준 전체 대비) → 기준별 표(기본 접힘).
+ * 점검 기준 대응표: 기준별 미터(대응·문서만·빈칸·지원 스택 밖, 각 기준 전체 대비) → 기준별 표(기본 접힘). 국내 기준(행안부·주통기)이 맨 위(Site::KR_FIRST).
+ * 문서만 = 대응 이슈가 모두 사용자 보안처럼 스킬이 점검하지 않는 문서(site_only).
  * 지원 스택 밖(data/out_of_scope.json): 지원 언어·기능에 해당 없는 항목. 빈칸과 따로 센다.
  * @var Site $site @var string $title @var string $lead @var list<array<string,mixed>> $coverage
  */
-$status = function (array $it): array {
+/** 문서만(스킬 점검 없음) 표기 한곳 */
+$docOnly = '문서만(스킬 점검 없음)';
+$status = function (array $it) use ($docOnly): array {
     if (!$it['issues']) return $it['out_of_scope'] !== null ? ['oos', '지원 스택 밖'] : ['gap', '빈칸'];
-    return $it['site_only'] ? ['site', '사이트 전용'] : ['covered', '덮음'];
+    return $it['site_only'] ? ['site', $docOnly] : ['covered', '대응'];
 };
 $sum = [];
 $all = ['items' => 0, 'covered' => 0, 'site' => 0, 'oos' => 0];
@@ -29,14 +32,15 @@ $w = fn(int $n, int $m): string => 'ws-w-' . ($m && $n ? max(1, (int)round($n * 
 <?php if (!$coverage): ?>
 <p class="ws-empty">표준 항목 파일을 읽지 못했습니다.</p>
 <?php else: ?>
-<p class="ws-cov-line"><span>기준 <b><?= count($coverage) ?></b>종</span><i></i><span>항목 <b><?= $all['items'] ?></b>개 중 대응 <b><?= $all['covered'] + $all['site'] ?></b>개</span><i></i><span>대응률 <b><?= $pct($all['covered'] + $all['site'], $all['items']) ?></b>%</span><?php if ($all['oos']): ?><i></i><span>지원 스택 밖 <b><?= $all['oos'] ?></b>개</span><?php endif ?></p>
+<p class="ws-cov-line ws-seps"><span>기준 <b><?= count($coverage) ?></b>종</span><span>항목 <b><?= $all['items'] ?></b>개 중 대응 <b><?= $all['covered'] + $all['site'] ?></b>개</span><span>대응률 <b><?= $pct($all['covered'] + $all['site'], $all['items']) ?></b>%</span><?php if ($all['oos']): ?><span>지원 스택 밖 <b><?= $all['oos'] ?></b>개</span><?php endif ?></p>
+<p class="ws-cov-note ws-cov-kr"><?= Site::t(Site::KR_NOTE) ?></p>
 
 <section class="ws-sec ws-cov-chart" aria-labelledby="cov-chart-h">
 <div class="ws-cov-chart-head">
 <h2 id="cov-chart-h">기준별 대응</h2>
 <ul class="ws-legend" aria-label="범례">
-<li><span class="ws-legend-key ws-meter-fill--covered" aria-hidden="true"></span><span class="ws-tx">덮음</span></li>
-<li><span class="ws-legend-key ws-meter-fill--site" aria-hidden="true"></span><span class="ws-tx">사이트 전용</span></li>
+<li><span class="ws-legend-key ws-meter-fill--covered" aria-hidden="true"></span><span class="ws-tx">대응</span></li>
+<li><span class="ws-legend-key ws-meter-fill--site" aria-hidden="true"></span><span class="ws-tx"><?= $docOnly ?></span></li>
 <li><span class="ws-legend-key ws-legend-key--gap" aria-hidden="true"></span><span class="ws-tx">빈칸</span></li>
 <?php if ($all['oos']): ?><li><span class="ws-legend-key ws-meter-fill--oos" aria-hidden="true"></span><span class="ws-tx">지원 스택 밖</span></li><?php endif ?>
 </ul>
@@ -46,7 +50,7 @@ $w = fn(int $n, int $m): string => 'ws-w-' . ($m && $n ? max(1, (int)round($n * 
 <?php foreach ($coverage as $fw): $c = $sum[$fw['id']]; $m = count($fw['items']); $name = (string)$fw['name']; ?>
 <li class="ws-meter">
 <span class="ws-meter-name"><a href="#fw-<?= Site::e($fw['id']) ?>"><?= Site::e($name) ?></a></span>
-<span class="ws-meter-bar" role="img" aria-label="<?= Site::e($name) ?>: 항목 <?= $m ?>개 중 덮음 <?= $c['covered'] ?>, 사이트 전용 <?= $c['site'] ?>, 빈칸 <?= $c['gap'] ?><?= $c['oos'] ? ', 지원 스택 밖 ' . $c['oos'] : '' ?>"><?php if ($c['covered']): ?><span class="ws-meter-fill ws-meter-fill--covered <?= $w($c['covered'], $m) ?>"></span><?php endif ?><?php if ($c['site']): ?><span class="ws-meter-fill ws-meter-fill--site <?= $w($c['site'], $m) ?>"></span><?php endif ?><?php if ($c['oos']): ?><span class="ws-meter-fill ws-meter-fill--oos <?= $w($c['oos'], $m) ?>"></span><?php endif ?></span>
+<span class="ws-meter-bar" role="img" aria-label="<?= Site::e($name) ?>: 항목 <?= $m ?>개 중 대응 <?= $c['covered'] ?>, <?= $docOnly ?> <?= $c['site'] ?>, 빈칸 <?= $c['gap'] ?><?= $c['oos'] ? ', 지원 스택 밖 ' . $c['oos'] : '' ?>"><?php if ($c['covered']): ?><span class="ws-meter-fill ws-meter-fill--covered <?= $w($c['covered'], $m) ?>"></span><?php endif ?><?php if ($c['site']): ?><span class="ws-meter-fill ws-meter-fill--site <?= $w($c['site'], $m) ?>"></span><?php endif ?><?php if ($c['oos']): ?><span class="ws-meter-fill ws-meter-fill--oos <?= $w($c['oos'], $m) ?>"></span><?php endif ?></span>
 <span class="ws-meter-num"><span class="ws-cov-num"><b><?= $c['covered'] + $c['site'] ?></b> / <?= $m ?></span><span class="ws-cov-num ws-meter-pct"><?= $pct($c['covered'] + $c['site'], $m) ?>%</span></span>
 </li>
 <?php endforeach ?>
@@ -61,7 +65,7 @@ $w = fn(int $n, int $m): string => 'ws-w-' . ($m && $n ? max(1, (int)round($n * 
 <details>
 <summary><h2><?= Site::e($fw['name']) ?></h2><span class="ws-fold-count"><?= $c['covered'] + $c['site'] ?> / <?= count($fw['items']) ?></span><span class="ws-fold-hint" aria-hidden="true"><span class="ws-fold-closed">펼치기</span><span class="ws-fold-open">접기</span></span></summary>
 <div class="ws-fold-body">
-<p class="ws-cov-meta"><?= Site::e((string)$fw['year']) ?>년판 · 항목 <?= count($fw['items']) ?>개 중 덮음 <?= $c['covered'] ?> · 사이트 전용 <?= $c['site'] ?> · 빈칸 <?= $c['gap'] ?><?= $c['oos'] ? ' · 지원 스택 밖 ' . $c['oos'] : '' ?> · <a href="<?= Site::e($fw['url']) ?>" rel="noopener noreferrer">공식 출처</a><?php if (!$fw['verified']): ?> · 원문 대조 전 항목 포함<?php endif ?></p>
+<p class="ws-cov-meta"><?= Site::e((string)$fw['year']) ?>년판 · 항목 <?= count($fw['items']) ?>개 중 대응 <?= $c['covered'] ?> · <?= $docOnly ?> <?= $c['site'] ?> · 빈칸 <?= $c['gap'] ?><?= $c['oos'] ? ' · 지원 스택 밖 ' . $c['oos'] : '' ?> · <a href="<?= Site::e($fw['url']) ?>" rel="noopener noreferrer">공식 출처</a><?php if (!$fw['verified']): ?> · 원문 대조 전 항목 포함<?php endif ?></p>
 <div class="ws-table-wrap">
 <table class="ws-table ws-cov-table">
 <thead>

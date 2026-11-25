@@ -11,8 +11,8 @@ final class Site
         'check' => ['title' => '내 사이트 점검', 'section' => '시작하기', 'lead' => '사용 기술과 기능에 맞춘 점검표와 AI 점검 지시문'],
         'severity' => ['title' => '심각도 기준', 'section' => '시작하기', 'lead' => '위험·주의·참고 등급의 판정 기준 · 영향과 악용 쉬움의 조합'],
         'guide' => ['title' => '문서 읽는 법', 'section' => '시작하기', 'lead' => '문서 번호 체계·절 구성·문서 정보·기준 번호의 의미'],
+        'coverage' => ['title' => '점검 기준 대응표', 'section' => '참고', 'lead' => '국내·국제 보안 기준의 항목별 대응 이슈와 빈칸'],
         'glossary' => ['title' => '용어 사전', 'section' => '참고', 'lead' => '보안 업계 용어와 국내 기준 용어의 쉬운 풀이·관련 이슈'],
-        'coverage' => ['title' => '점검 기준 대응표', 'section' => '참고', 'nav' => false, 'lead' => '주요 보안 기준의 항목별 대응 이슈와 빈칸'],
         'changelog' => ['title' => '개정 이력', 'section' => '참고', 'lead' => '스킬과 문서의 버전별 변경 내역'],
         'sources' => ['title' => '출처·라이선스', 'section' => '참고', 'lead' => '문서·코드·글꼴의 라이선스와 인용 원칙'],
     ];
@@ -145,6 +145,21 @@ final class Site
     {
         $label = self::SEVERITY_LABELS[$severity] ?? $severity;
         return '<span class="ws-badge ws-badge--' . self::e($severity) . '">' . self::e($label . $suffix) . '</span>';
+    }
+
+    /** 국내 기준 짧은 이름 풀이: 보고 예시 표·소개·대응표의 첫 등장에 같은 문장 */
+    public const KR_NOTE = '행안부 = 행정안전부 구현단계 보안약점, 주통기 = 주요정보통신기반시설 웹 취약점';
+    /** 대응표·JSON 에서 맨 위에 두는 국내 기준(행안부·주통기 순) */
+    public const KR_FIRST = ['kr_guide', 'kr_ciip'];
+
+    /**
+     * 왼쪽 메뉴용 짧은 이름: 제목에서 괄호 풀이를 뗀 앞부분(`SQL Injection (SQL 인젝션)` → `SQL Injection`).
+     * 떼고 나면 빈 제목이면 원래 제목. 문서 제목은 그대로 두고 메뉴에서만 쓴다(넘치면 CSS 줄임표, title 속성에 전체 제목).
+     */
+    public static function navTitle(string $title): string
+    {
+        $t = trim((string)preg_replace(['/\s*\([^()]*\)/u', '/\s{2,}/u'], ['', ' '], $title));
+        return $t !== '' ? $t : $title;
     }
 
     public const HOME_DESC = 'AI 코딩 도구가 만든 코드를 배포 전에 읽기 전용으로 점검 · 행정안전부 보안약점·주요정보통신기반시설·개인정보 보호 기준 대응';
@@ -369,7 +384,9 @@ final class Site
     {
         $built = $this->repo->coverage();
         $out = [];
-        foreach ($this->repo->frameworks() as $fw) {
+        $fws = $this->repo->frameworks();
+        usort($fws, fn($a, $b) => [self::krRank($a['id'])] <=> [self::krRank($b['id'])]);
+        foreach ($fws as $fw) {
             $items = [];
             foreach ($built[$fw['id']] ?? [] as $row) {
                 $items[] = ['id' => $row['item'], 'title' => $row['title'], 'title_ko' => $row['title_ko'], 'issues' => $row['issues'], 'site_only' => $row['site_only'], 'verified' => $row['verified'], 'out_of_scope' => $row['out_of_scope']];
@@ -377,6 +394,29 @@ final class Site
             $out[] = ['id' => $fw['id'], 'name' => $fw['name'], 'year' => $fw['year'], 'url' => $fw['url'], 'verified' => !in_array(false, array_column($items, 'verified'), true), 'items' => $items];
         }
         return $out;
+    }
+
+    /** 국내 기준(KR_FIRST)은 앞에서부터 0·1, 나머지는 원래 순서 유지(usort 는 안정 정렬) */
+    private static function krRank(string $id): int
+    {
+        $k = array_search($id, self::KR_FIRST, true);
+        return $k === false ? count(self::KR_FIRST) : (int)$k;
+    }
+
+    /**
+     * 검색 색인: 이슈(요약·점검 항목) + 켜진 일반 페이지(제목·한 줄 설명). 일반 페이지는 id·severity 가 빈 값, group 은 'page'.
+     * @return list<array{id:string,title:string,group:string,severity:string,url:string,text:string}>
+     */
+    public function searchRows(): array
+    {
+        $rows = array_map(fn(array $r) => [
+            'id' => $r['id'], 'title' => $r['title'], 'group' => $r['group'], 'severity' => $r['severity'],
+            'url' => $this->url('issues/' . $r['id']), 'text' => $r['text'],
+        ], $this->repo->searchIndex());
+        foreach ($this->pages() as $slug => $m) {
+            $rows[] = ['id' => '', 'title' => $m['title'], 'group' => 'page', 'severity' => '', 'url' => $this->url($slug), 'text' => $m['lead']];
+        }
+        return $rows;
     }
 
     /** @param array<string,mixed> $vars */

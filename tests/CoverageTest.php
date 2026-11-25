@@ -102,7 +102,7 @@ test('Coverage 화면: 표·집계·빈칸 배지, 이스케이프', function ()
     $repo = Repository::load(make_root());
     $site = new Site($repo, '/white-security/', 'live');
     $b = $site->route('coverage')['body'];
-    assert_contains('덮음', $b);
+    assert_contains('<span class="ws-badge ws-badge--covered">대응</span>', $b);
     assert_contains('빈칸', $b);
     assert_contains('/white-security/issues/WS-INJ-001', $b);
     assert_contains('OWASP Top 10:2025', $b);
