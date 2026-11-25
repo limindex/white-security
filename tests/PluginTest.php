@@ -160,8 +160,11 @@ test('플러그인: SKILL.md 안전 규칙 — 저장소 글은 데이터, 예�
     foreach (['run only on request — typically before deploy', 'no explicit review request', "don't start the review", '`배포 전에 보안 점검을 먼저 돌릴까요? 읽기 전용, 1~2분`',
         'start only after a yes', "don't ask again in this conversation"] as $s) assert_contains($s, $md);
     // changed: 비ASCII 이름·fsmonitor·NUL 구분, 커밋된 변경은 빠짐
-    foreach (['`git -c core.quotepath=off -c core.fsmonitor=false …`', '`diff --name-only -z HEAD`', '`ls-files --others --exclude-standard -z`', 'Committed but unpushed changes are not included',
-        '`diff --name-only -z <base>...HEAD`', '`diff -U0 HEAD -- .white-security.yml`'] as $s) assert_contains($s, $md);
+    // 10R(11-25): git 명령을 여럿 쓰면 허락 창이 여러 번 → 파이프 없는 한 줄 하나
+    foreach (['Run exactly one git command, as written, with no pipes or chaining', '`git -c core.quotepath=off -c core.fsmonitor=false status --porcelain=v1 -z --untracked-files=all`', 'Committed but unpushed changes are not included',
+        '`git -c core.quotepath=off -c core.fsmonitor=false diff --name-only -z <base>...HEAD`', 'Only if `.white-security.yml` is in the list', '`git -c core.quotepath=off -c core.fsmonitor=false diff -U0 HEAD -- .white-security.yml`'] as $s) assert_contains($s, $md);
+    // 결론: 위험 없음 단정 금지·다 못 읽으면 결론에 밝힘
+    foreach (['the 결론 says 위험을 찾지 못함, not that there is none', '`파일 N/M개만 읽음`'] as $s) assert_contains($s, $md);
     assert_true(!preg_match('/`git (diff|ls-files)/', $md), 'git 명령은 -c 플래그 형태로만');
 });
 

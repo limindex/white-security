@@ -2,6 +2,11 @@
 
 플러그인(`plugins/white-security/`) 버전별 변경. 버전은 `plugins/white-security/.claude-plugin/plugin.json` 의 `version` 과 같아야 한다.
 
+## 0.1.1
+
+- `changed` 범위의 git 명령을 파이프 없는 한 줄(`git status --porcelain=v1 -z --untracked-files=all`)로 줄임. 실사용 시험에서 git 명령 세 번에 허락 창이 세 번 뜨던 문제.
+- 결론 줄 규칙: 위험이 없으면 "없음"이 아니라 "찾지 못함"으로, 범위 안 파일을 다 읽지 못했으면 결론에 `파일 N/M개만 읽음`을 밝힘. 큰 프로젝트에서 일부만 읽고 "위험 없음"으로 단정하던 문제.
+
 ## 0.1.0
 
 - 첫 판: `white-security` 스킬(Agent Skills 형식)과 Claude Code 용 `/white-security:review` 명령. 요청할 때만 실행하는 프로젝트 전체 읽기 전용 검토(변경분만 보지 않음), 배포 전 점검 권장(배포 이야기에는 점검 여부를 먼저 질문).

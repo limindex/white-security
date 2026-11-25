@@ -1,6 +1,6 @@
 {
   "name": "white-security",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Security review for AI-assisted coding: read-only, on request, typically before deploy. 바이브 코딩 보안 점검 — 필요할 때, 특히 배포 전에 프로젝트 전체를 읽기 전용으로 검토합니다.",
   "author": {
     "name": "LimIndex (Lim Ho Jae)",

@@ -37,7 +37,7 @@ $tabs = ['claude' => 'Claude Code', 'codex' => 'Codex'];
 $src = '~/' . ($pluginName ?: 'white-security');
 $report = $site->render('_report', []);
 /** 허용 안내(11-19 가벼운 안내 스킬): 검토는 프로젝트 파일만 읽어 규칙 폴더 허용이 필요 없음. 고칠 때 그 항목의 규칙 파일을 읽으면 한 번 확인할 수 있음 */
-$allow = '<p class="ws-step-note">' . Site::t('검토 중에는 프로젝트 파일만 읽어 별도 허용 설정 불필요. 고칠 항목을 고른 뒤 그 항목의 규칙 문서를 열 때 Claude Code가 읽기 허용을 한 번 확인할 수 있음. 훅 설치나 설정 변경 없음.') . '</p>';
+$allow = '<p class="ws-step-note">' . Site::t('검토 중에는 프로젝트 파일만 읽어 별도 허용 설정 불필요. 바뀐 파일만 검토(changed)할 때는 변경 목록을 얻는 git 명령을 한 번 허락. 고칠 항목을 고른 뒤 그 항목의 규칙 문서를 열 때 Claude Code가 읽기 허용을 한 번 확인할 수 있음. 훅 설치나 설정 변경 없음.') . '</p>';
 ?>
 <div class="ws-page">
 <?= $site->render('_pagehead', ['title' => $title, 'lead' => $lead]) ?>
