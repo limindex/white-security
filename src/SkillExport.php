@@ -40,12 +40,13 @@ final class SkillExport
     public const HAND_FILES = ['deps.md', 'advisories.md', 'config.md'];
     /**
      * SKILL.md 전체(머리말·생성 블록 포함) 상한(estimateTokens 기준). 넘으면 빌드 실패.
+     * 11-25: 이슈 id 목록에 국내 기준 대표 항목([입력-1/SI])을 붙여 ~0.5k 늘림(사용자 결정, 보고서 '국내 기준' 열) → 상한 4500→5000.
      * 정해진 내용만으로 약 4k: 이슈 id 목록 ~0.9k(84개 영어 업계 용어, 이슈 하나에 ~11씩 늘어남) · 놓치기 쉬운 목록 ~0.55k ·
      * 보고 형식 ~0.6k · 안전 규칙 ~0.4k · 감시 목록 ~0.25k · 범위·실행 위치·변경 목록 ~0.6k.
      * 상한은 새 이슈 몇 개분 여유만 두고, 규칙을 다시 본문에 쌓는 되돌림을 막는다
      * (옛 설계: SKILL ~2.9k + 에이전트 ~5.1k + INDEX·이슈 파일 10~27k자를 매 검토마다 읽음).
      */
-    public const SKILL_MAX_TOKENS = 4500;
+    public const SKILL_MAX_TOKENS = 5000;
     /** 감시 목록 항목 상한(advisories.md 머리 규칙과 같음) */
     public const WATCH_MAX = 10;
     public const HEADER = self::TEXT['header'] . "\n";
@@ -142,10 +143,27 @@ final class SkillExport
     {
         $lines = [];
         foreach (self::groups($repo) as $g) {
-            $items = array_map(fn(Issue $i) => substr($i->id, 3) . ' ' . self::shortTitle($i), $g['issues']);
+            $items = array_map(fn(Issue $i) => substr($i->id, 3) . ' ' . self::shortTitle($i) . self::krTag($i), $g['issues']);
             $lines[] = $g['id'] . ': ' . implode('; ', $items);
         }
         return self::IDS_START . "\n" . implode("\n", $lines) . "\n" . self::IDS_END;
+    }
+
+    /** 행정안전부 구현단계 보안약점 묶음 이름 → 목록용 줄임말(SKILL.md Issue ids 절의 풀이와 같아야 함) */
+    public const KR_GUIDE_ABBR = ['입력데이터 검증 및 표현' => '입력', '보안기능' => '보안', '시간 및 상태' => '시간', '에러처리' => '에러', '코드오류' => '코드', '캡슐화' => '캡슐', 'API 오용' => 'API'];
+
+    /**
+     * 국내 기준 표시(11-25, 보고서 '국내 기준' 열): 대표 항목 하나씩 — 행안부 보안약점 첫 항목(묶음 줄임말-번호)과 주통기 첫 코드.
+     * 예: ` [입력-1/SI]`, 하나만 있으면 ` [보안-6]`·` [SI]`, 없으면 빈 문자열. 토큰을 아끼려고 전체가 아닌 첫 항목만(전체는 이슈 문서).
+     */
+    public static function krTag(Issue $i): string
+    {
+        $parts = [];
+        $g = $i->maps['kr_guide'][0] ?? null;
+        if (is_string($g) && preg_match('/^(.+)-(\d+)$/u', $g, $m)) $parts[] = (self::KR_GUIDE_ABBR[$m[1]] ?? $m[1]) . '-' . $m[2];
+        $c = $i->maps['kr_ciip'][0] ?? null;
+        if (is_string($c) && $c !== '') $parts[] = $c;
+        return $parts ? ' [' . implode('/', $parts) . ']' : '';
     }
 
     /**

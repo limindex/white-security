@@ -9,7 +9,7 @@
 행정안전부 보안약점, 주요정보통신기반시설, 개인정보 보호 기준에 맞춰 점검합니다
 
 [![CI](https://github.com/limindex/white-security/actions/workflows/ci.yml/badge.svg)](https://github.com/limindex/white-security/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-0.1.1-2f6feb)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.1.2-2f6feb)](CHANGELOG.md)
 [![License](https://img.shields.io/badge/license-CC%20BY--SA%204.0%20%2B%20MIT-555)](#라이선스)
 
 **한국어** | [English](README.en.md)
@@ -31,7 +31,7 @@ White Security는 AI 코딩 도구가 만든 코드에서 흔한 보안 실수�
 | 행정안전부 구현단계 보안약점 | 49개 중 47개 (나머지 2개는 C·C++ 메모리 항목) |
 | 개인정보 보호 기준 | 주민등록번호 처리 제한, 고유식별정보 암호화 저장, 개인정보 접속기록 |
 
-각 이슈 문서에 해당 기준의 항목 번호가 표기되어 있으며, 전체 대응 현황은 [점검 기준 대응표](https://limindex.github.io/white-security/coverage)에서 확인할 수 있습니다. 공식 진단이나 인증을 대신하지는 않습니다.
+보고서의 발견 항목마다 해당하는 기준 번호(예: 행안부 입력-1 · 주통기 SI)가 함께 표시되며, 전체 대응 현황은 [점검 기준 대응표](https://limindex.github.io/white-security/coverage)에서 확인할 수 있습니다. 공식 진단이나 인증을 대신하지는 않습니다.
 
 ## 설치
 
@@ -65,10 +65,10 @@ mkdir -p .agents/skills && cp -r ~/white-security/plugins/white-security/skills/
 
 **결론:** 지금 고칠 위험 1건 — 검색어가 SQL에 그대로 들어가 DB 전체를 읽고 지울 수 있음.
 
-| # | id | 파일:줄 | 영향 | 이유 | 고칠 방법 |
-|---|---|---|---|---|---|
-| 1 | [WS-INJ-001](https://limindex.github.io/white-security/issues/WS-INJ-001) | `app/search.py:18` | DB 유출 | 검색어를 SQL에 붙임 | 바인딩 |
-| 2 | [WS-SEC-001](https://limindex.github.io/white-security/issues/WS-SEC-001) | `app/config.py:7` | 로그인 위조 | 비밀키 기본값 노출 | 기본값 삭제 |
+| # | id | 국내 기준 | 파일:줄 | 영향 | 이유 | 고칠 방법 |
+|---|---|---|---|---|---|---|
+| 1 | [WS-INJ-001](https://limindex.github.io/white-security/issues/WS-INJ-001) | 행안부 입력-1<br>주통기 SI | `search.py:18` | DB 유출 | SQL에 직접 연결 | 바인딩 |
+| 2 | [WS-SEC-001](https://limindex.github.io/white-security/issues/WS-SEC-001) | 행안부 보안-6<br>주통기 IL | `config.py:7` | 세션 위조 | 비밀키 하드코딩 | 환경 변수로 |
 
 실제 보고서는 위험·주의·참고 등급별로 나뉘며, 기본은 한국어입니다. 영어로 요청하면 영어로 작성합니다.
 

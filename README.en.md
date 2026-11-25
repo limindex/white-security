@@ -7,7 +7,7 @@
 **A read-only security review for code your AI coding agent wrote.<br>Run it before you deploy.**
 
 [![CI](https://github.com/limindex/white-security/actions/workflows/ci.yml/badge.svg)](https://github.com/limindex/white-security/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-0.1.1-2f6feb)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.1.2-2f6feb)](CHANGELOG.md)
 [![License](https://img.shields.io/badge/license-CC%20BY--SA%204.0%20%2B%20MIT-555)](#license)
 
 [한국어](README.md) | **English**
@@ -50,10 +50,10 @@ In both, just asking for a "security review" runs the whole-project check. The r
 
 **결론 (verdict):** 1 high-severity issue to fix now — the search term goes straight into SQL, so the whole database can be read or deleted.
 
-| # | id | 파일:줄 | 영향 | 이유 | 고칠 방법 |
-|---|---|---|---|---|---|
-| 1 | [WS-INJ-001](https://limindex.github.io/white-security/issues/WS-INJ-001) | `app/search.py:18` | DB 유출 | 검색어를 SQL에 붙임 | 바인딩 |
-| 2 | [WS-SEC-001](https://limindex.github.io/white-security/issues/WS-SEC-001) | `app/config.py:7` | 로그인 위조 | 비밀키 기본값 노출 | 기본값 삭제 |
+| # | id | 국내 기준 | 파일:줄 | 영향 | 이유 | 고칠 방법 |
+|---|---|---|---|---|---|---|
+| 1 | [WS-INJ-001](https://limindex.github.io/white-security/issues/WS-INJ-001) | 행안부 입력-1<br>주통기 SI | `search.py:18` | DB 유출 | SQL에 직접 연결 | 바인딩 |
+| 2 | [WS-SEC-001](https://limindex.github.io/white-security/issues/WS-SEC-001) | 행안부 보안-6<br>주통기 IL | `config.py:7` | 세션 위조 | 비밀키 하드코딩 | 환경 변수로 |
 
 Reports are grouped by severity (위험 / 주의 / 참고 = high / medium / low) and written in Korean by default. Ask in English, or set `report_language: en` in `.white-security.yml`, for an English report.
 
@@ -72,7 +72,7 @@ Reports are grouped by severity (위험 / 주의 / 참고 = high / medium / low)
 | Supply chain | 8 | Slopsquatting, vulnerable dependencies, unpinned Actions |
 | Mobile apps | 6 | Secrets in the app bundle, deep links, WebViews |
 
-Mapped to OWASP Top 10:2025, the LLM and Agentic Top 10 2026, ASVS 5.0 and CWE Top 25. It also covers Korean standards: the 49 secure coding weaknesses from the Ministry of the Interior and Safety, the 21 web checks for critical information infrastructure, and Korean privacy rules (resident registration numbers, encryption of unique identifiers, access records). See the [coverage table](https://limindex.github.io/white-security/coverage). Supported stacks: Python, JavaScript/TypeScript, PHP, Supabase, Firebase, React Native, Expo and Flutter. A watch list of serious CVEs is checked against your manifests and lockfiles.
+Mapped to OWASP Top 10:2025, the LLM and Agentic Top 10 2026, ASVS 5.0 and CWE Top 25. It also covers Korean standards: the 49 secure coding weaknesses from the Ministry of the Interior and Safety, the 21 web checks for critical information infrastructure, and Korean privacy rules (resident registration numbers, encryption of unique identifiers, access records). Each finding in the report shows its Korean standard item (for example `행안부 입력-1 · 주통기 SI`); see the [coverage table](https://limindex.github.io/white-security/coverage). Supported stacks: Python, JavaScript/TypeScript, PHP, Supabase, Firebase, React Native, Expo and Flutter. A watch list of serious CVEs is checked against your manifests and lockfiles.
 
 ## Measured
 

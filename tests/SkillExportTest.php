@@ -83,6 +83,9 @@ test('SkillExport: 실제 SKILL.md 이슈 id 목록에는 한국어가 없다(�
     $a = strpos($s, SkillExport::IDS_START); $b = strpos($s, SkillExport::IDS_END);
     assert_true($a !== false && $b > $a, '표시');
     $block = substr($s, $a + strlen(SkillExport::IDS_START), $b - $a - strlen(SkillExport::IDS_START));
+    // 국내 기준 표시([입력-1/SI])는 한국어 줄임말이라 빼고 본다(11-25)
+    assert_true((bool)preg_match('/INJ-001 SQL Injection \[입력-1\/SI\]/u', $block), '국내 기준 대표 항목 표시');
+    $block = (string)preg_replace('/ \[[^\]]*\]/u', '', $block);
     assert_true(!preg_match('/[\x{AC00}-\x{D7A3}]/u', $block), '한국어가 남은 항목: ' . implode(' | ', array_filter(preg_split('/; |\n/', $block), fn($x) => preg_match('/[\x{AC00}-\x{D7A3}]/u', $x))));
 });
 test('SkillExport: 감시 목록 — advisories.md 항목마다 Watch 줄 + CVE + 만료일, 줄·항목 수 규칙 어기면 실패', function () {

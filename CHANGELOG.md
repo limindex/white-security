@@ -2,6 +2,10 @@
 
 플러그인(`plugins/white-security/`) 버전별 변경. 버전은 `plugins/white-security/.claude-plugin/plugin.json` 의 `version` 과 같아야 한다.
 
+## 0.1.2
+
+- 보고서 표에 `국내 기준` 열 추가: 발견 항목마다 대표 기준 번호(예: 행안부 입력-1 · 주통기 SI)를 표시. 스킬의 이슈 id 목록에 국내 기준 대표 항목을 붙임(행정안전부 구현단계 보안약점 첫 항목, 주요정보통신기반시설 웹 취약점 첫 코드).
+
 ## 0.1.1
 
 - `changed` 범위의 git 명령을 파이프 없는 한 줄(`git status --porcelain=v1 -z --untracked-files=all`)로 줄임. 실사용 시험에서 git 명령 세 번에 허락 창이 세 번 뜨던 문제.
