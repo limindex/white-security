@@ -31,8 +31,8 @@ $where = $page !== null ? Site::PAGES[$page]['title'] ?? '' : ($group !== null ?
 <span class="ws-nav-count"><?= count($list) ?></span>
 </summary>
 <ul>
-<?php foreach ($list as $i): ?>
-<li><a href="<?= Site::e($site->url('issues/' . $i->id)) ?>"<?= $current === $i->id ? ' aria-current="page"' : '' ?>><span class="ws-nav-name"><?= Site::e($i->title) ?></span></a></li>
+<?php foreach ($list as $i): $short = Site::navTitle($i->title); /* 메뉴는 짧은 이름 한 줄(넘치면 줄임표), 전체 제목은 title 속성 */ ?>
+<li><a href="<?= Site::e($site->url('issues/' . $i->id)) ?>" title="<?= Site::e($i->title) ?>"<?= $current === $i->id ? ' aria-current="page"' : '' ?>><span class="ws-nav-name"><?= Site::e($short) ?></span></a></li>
 <?php endforeach ?>
 </ul>
 </details>

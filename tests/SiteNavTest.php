@@ -297,3 +297,16 @@ test('왼쪽 메뉴: 시작하기 맨 위에 홈 — 홈에서는 현재 위치,
     assert_contains('<ul class="ws-nav-pages"><li><a href="/white-security/" aria-current="page">홈</a></li>', $home);
     assert_contains('<ul class="ws-nav-pages"><li><a href="/white-security/">홈</a></li>', $about);
 });
+
+test('왼쪽 메뉴 이슈 링크: 괄호 풀이를 뗀 짧은 이름 + title 속성에 전체 제목, 문서 제목은 그대로', function () {
+    assert_same('SQL Injection', Site::navTitle('SQL Injection (SQL 인젝션)'));
+    assert_same('Install Scripts · Build Plugins', Site::navTitle('Install Scripts (postinstall) · Build Plugins (설치 스크립트·빌드 플러그인)'));
+    assert_same('(괄호만)', Site::navTitle('(괄호만)'));
+    $s = new Site(Repository::load(dirname(__DIR__)), '/white-security/', 'live');
+    $b = $s->route('issues/WS-INJ-001')['body'];
+    $i = $s->repo->find('WS-INJ-001');
+    assert_true((bool)preg_match('#<a href="/white-security/issues/WS-INJ-001" title="' . preg_quote(Site::e($i->title), '#') . '" aria-current="page"><span class="ws-nav-name">' . preg_quote(Site::e(Site::navTitle($i->title)), '#') . '</span></a>#u', nw_strip($b)), '메뉴 짧은 이름');
+    assert_contains('<h1>' . Site::e($i->title), nw_strip($b));
+    $css = file_get_contents(__DIR__ . '/../assets/css/site.css');
+    assert_true((bool)preg_match('#\.ws-nav-name \{[^}]*white-space: nowrap[^}]*text-overflow: ellipsis#', $css), '한 줄·줄임표');
+});

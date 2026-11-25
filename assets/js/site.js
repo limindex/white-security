@@ -353,7 +353,7 @@
       var gname = g.querySelector('.ws-nav-grp-name');
       each(g.querySelectorAll('li a'), function (a) {
         var name = a.querySelector('.ws-nav-name');
-        var r = { title: name ? name.textContent : a.textContent, url: a.getAttribute('href'), sub: gname ? gname.textContent : '', id: '', sev: '' };
+        var r = { title: a.getAttribute('title') || (name ? name.textContent : a.textContent), url: a.getAttribute('href'), sub: gname ? gname.textContent : '', id: '', sev: '' };
         r.hay = norm(r.title + ' ' + r.sub);
         rows.push(r);
         byUrl[r.url] = r;

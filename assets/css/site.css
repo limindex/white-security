@@ -360,6 +360,8 @@ html:not(.js) .ws-search { display: none; }
 .ws-nav-grp[open] > summary { color: var(--ink); font-weight: 600; }
 .ws-nav-grp ul { margin: 4px 0 16px 16px; }
 .ws-nav-grp li a { padding: 12px 12px; font-size: .86rem; }
+/* 이슈 링크: 짧은 이름 한 줄, 넘치면 줄임표(세로로는 자르지 않음) */
+.ws-nav-name { display: block; white-space: nowrap; overflow-x: clip; overflow-y: visible; text-overflow: ellipsis; }
 .ws-nav-grp li a .ws-badge { margin-left: 8px; padding: 4px 8px; font-size: .64rem; vertical-align: 1px; }
 .ws-nav-empty { margin: 2px 0 8px 32px; font-size: .8rem; color: var(--ink-3); }
 
