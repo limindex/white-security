@@ -759,6 +759,22 @@ button:disabled, button[aria-disabled="true"] { opacity: .45; cursor: not-allowe
 .ws-examples-why dd { margin: 0; color: var(--ink-2); }
 .ws-table--report code { white-space: nowrap; }
 .ws-table--report td:nth-child(-n+3) { white-space: nowrap; }
+a.ws-id { color: var(--ink-2); text-decoration-color: var(--line-strong); }
+a.ws-id:hover { color: var(--accent); text-decoration-color: currentColor; }
+.ws-report { container: report / inline-size; }
+.ws-sec > .ws-report + .ws-table-note { margin-top: 8px; }
+.ws-table-note { margin: 8px 0 0; font-size: .84rem; line-height: 1.6; color: var(--ink-3); text-wrap: balance; }
+/* 보고 예시 표: 칸 폭 1000 미만은 행마다 카드(등급·문서 번호·파일:줄 한 줄 → 항목 이름 | 값), 낱말 중간에서 꺾지 않음 */
+@container report (max-width: 999.98px) {
+  .ws-table--report, .ws-table--report tbody, .ws-table--report caption { display: block; }
+  .ws-table--report thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .ws-table--report tr { display: grid; grid-template-columns: auto auto minmax(0, 1fr); align-items: center; gap: 12px; padding: 16px 0; box-shadow: inset 0 -1px 0 var(--line); }
+  .ws-table--report tbody tr:first-child { box-shadow: inset 0 1px 0 var(--line-strong), inset 0 -1px 0 var(--line); }
+  .ws-table--report td { display: block; padding: 0; box-shadow: none; white-space: normal; word-break: keep-all; overflow-wrap: normal; }
+  .ws-table--report td.ws-report-loc { grid-row: 1; grid-column: 3; min-width: 0; }
+  .ws-table--report td[data-label] { grid-column: 1 / -1; display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); column-gap: 12px; align-items: baseline; }
+  .ws-table--report td[data-label]::before { content: attr(data-label); font: 700 .76rem/1.4 var(--font-display); color: var(--ink-3); }
+}
 
 /* 문서 읽는 법 */
 .ws-idform { margin: 0 0 16px; }
@@ -1245,14 +1261,6 @@ html:not(.js) .ws-itabs-list { display: none; }
   .ws-maps-fold[open] .ws-fold-open { display: inline; }
   .ws-maps-fold[open] .ws-fold-closed { display: none; }
   .ws-maps-fold .ws-maps { margin-top: 12px; }
-  /* 보고 예시 표: 좁은 화면은 행마다 쌓음(등급·문서 번호·위치 한 줄 → 이유 → 고칠 방법) */
-  .ws-table--report, .ws-table--report tbody, .ws-table--report caption { display: block; }
-  .ws-table--report thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-  .ws-table--report tr { display: grid; grid-template-columns: auto auto minmax(0, 1fr); align-items: center; gap: 12px; padding: 16px 0; box-shadow: inset 0 -1px 0 var(--line); }
-  .ws-table--report tbody tr:first-child { box-shadow: inset 0 1px 0 var(--line-strong), inset 0 -1px 0 var(--line); }
-  .ws-table--report td { display: block; padding: 0; box-shadow: none; }
-  .ws-table--report td[data-label] { grid-column: 1 / -1; }
-  .ws-table--report td[data-label]::before { content: attr(data-label); display: block; margin-bottom: 2px; font: 700 .76rem/1.4 var(--font-display); color: var(--ink-3); }
 }
 @media (max-width: 399.98px) {
   .ws-main, .ws-shell--wide .ws-main { padding-inline: 16px; }

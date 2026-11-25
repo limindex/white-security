@@ -132,3 +132,19 @@ test('보고 예시: 설치·심각도 기준이 같은 표(등급·문서 번�
     // 등급 판정 기준은 심각도 기준 페이지(영향 × 악용 쉬움)와 같다
     assert_contains('이 기준(영향 × 악용 쉬움)으로 판정', $sev);
 });
+
+test('보고 예시: 문서 번호는 이슈 링크(있는 이슈만), 표 아래 국내 기준 풀이 + 대응표 링크, 1000 미만 칸은 카드형', function () {
+    $root = make_root();
+    file_put_contents($root . '/data/site.json', INST_JSON);
+    $s = new Site(Repository::load($root), '/white-security/', 'live');
+    foreach (['install', 'severity'] as $p) {
+        $b = nw_strip($s->route($p)['body']);
+        assert_contains('<a class="ws-id" href="/white-security/issues/WS-INJ-001">WS-INJ-001</a>', $b);
+        assert_contains('<span class="ws-id">WS-SEC-001</span>', $b);
+        assert_contains('<p class="ws-table-note">' . Site::KR_NOTE . ' · <a href="/white-security/coverage">점검 기준 대응표</a></p>', $b);
+        assert_contains('<td data-label="이유"><span>', $b);
+    }
+    $css = file_get_contents(__DIR__ . '/../assets/css/site.css');
+    assert_true((bool)preg_match('#@container report \(max-width: 999\.98px\)#', $css), '카드형 컨테이너 조건');
+    assert_true((bool)preg_match('#@container report[^@]*word-break: keep-all; overflow-wrap: normal#s', $css), '낱말 중간 꺾임 없음');
+});
