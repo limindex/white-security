@@ -22,6 +22,8 @@ defaults:
 jobs:
   build:
     name: build
+    # 비공개 저장소는 Pages 를 쓸 수 없으므로 공개 전에는 건너뛴다(실패 알림 방지)
+    if: ${{ !github.event.repository.private }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -41,9 +43,10 @@ jobs:
       - name: Tests
         run: php tests/run.php
 
-      # 공개 주소·경로는 data/site.json 의 origin 과 build.php 기본 --base(/white-security/)를 쓴다
+      # 공개 주소·경로는 data/site.json 의 origin 과 build.php 기본 --base(/white-security/)를 쓴다.
+      # build.php 는 저장소의 dist/ 나 임시 폴더에만 출력한다
       - name: Build site
-        run: php build.php --out=_site --today="$(date -u +%F)"
+        run: php build.php --out=dist --today="$(date -u +%F)"
 
       - name: Configure Pages
         uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
@@ -51,7 +54,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4.0.0
         with:
-          path: _site
+          path: dist
 
   deploy:
     name: deploy
