@@ -8,8 +8,8 @@ English | [한국어](README.ko.md)
 
 A read-only security review for code your AI coding agent wrote. Run it before you deploy.
 
-> 🇰🇷 AI 코딩 도구가 만든 코드를 배포 전에 읽기 전용으로 점검하는 보안 검토 스킬.
-> "보안 점검해 줘" 한마디로 프로젝트 전체를 보고, 문제·영향·고칠 방법을 한국어 표로 보고.
+> 🇰🇷 AI 코딩 도구가 만든 코드를 배포 전에 읽기 전용으로 점검하는 보안 검토 스킬.\
+> "보안 점검해 줘" 한마디로 프로젝트 전체를 보고, 문제·영향·고칠 방법을 한국어 표로 보고.\
 > → 한국어 전체 문서: [README.ko.md](README.ko.md) · 가이드 사이트: [바이브 코딩 보안 가이드](https://limindex.github.io/white-security/)
 
 Say "security review" (or `보안 점검해 줘`). Your agent reads the whole project, including its config, and gives you one table: what's wrong, what could happen, and how to fix it. It covers 84 issues, from SQL injection and IDOR to prompt injection, MCP tool poisoning and slopsquatting. Reports come in Korean by default, or in English if you write in English.
