@@ -363,6 +363,7 @@
       var r = { title: a.textContent, url: a.getAttribute('href'), sub: '안내 문서', id: '', sev: '' };
       r.hay = norm(r.title);
       rows.push(r);
+      byUrl[r.url] = r;
     });
 
     var loaded = false;
@@ -374,8 +375,12 @@
         .then(function (data) {
           if (!Array.isArray(data)) return;
           data.forEach(function (d) {
-            var r = d && byUrl[d.url];
+            if (!d || !d.url) return;
+            var r = byUrl[d.url];
+            // 일반 페이지(설치·심각도·대응표 등): 메뉴에 없던 쪽도 색인에서 더함
+            if (!r && d.group === 'page') { r = { title: d.title || '', url: d.url, sub: '안내 문서', id: '', sev: '' }; rows.push(r); byUrl[d.url] = r; }
             if (!r) return;
+            if (d.title) r.title = d.title;
             r.id = d.id || '';
             r.sev = d.severity || '';
             r.hay = norm(r.title + ' ' + r.id + ' ' + r.sub + ' ' + (d.text || ''));
@@ -440,11 +445,16 @@
       list.textContent = '';
       if (!words.length) { open(false); status.textContent = ''; return; }
       var hits = rows.filter(function (r) { return words.every(function (w) { return r.hay.indexOf(w) !== -1; }); });
-      hits.sort(function (a, b) {
-        var ah = words.every(function (w) { return (a.head || a.hay).indexOf(w) !== -1; }) ? 0 : 1;
-        var bh = words.every(function (w) { return (b.head || b.hay).indexOf(w) !== -1; }) ? 0 : 1;
-        return ah - bh;
-      });
+      // 순위: 제목이 검색어로 시작 → 제목·번호에 모든 낱말 → 본문에만. 같은 순위는 원래 순서(이슈 → 안내 문서)
+      var q = words.join(' ');
+      var rank = function (r) {
+        var t = norm(r.title);
+        if (t.indexOf(q) === 0 || t.indexOf(words[0]) === 0) return 0;
+        return words.every(function (w) { return (r.head || norm(r.title + ' ' + r.id)).indexOf(w) !== -1; }) ? 1 : 2;
+      };
+      hits = hits.map(function (r, i) { return { r: r, k: rank(r), i: i }; })
+        .sort(function (a, b) { return a.k - b.k || a.i - b.i; })
+        .map(function (x) { return x.r; });
       shown = hits.slice(0, MAX);
       shown.forEach(function (r, i) {
         var li = document.createElement('li');

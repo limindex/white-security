@@ -108,3 +108,16 @@ test('route: 이슈 JSON 에 문서 메타(다음 검토 예정일 없음)', fun
     foreach (['published' => '2026-09-01', 'checked' => '2026-11-18'] as $k => $v) assert_same($v, $l[$k], $k);
     assert_true(!array_key_exists('next_review', $l), '목록에도 next_review 없음');
 });
+
+test('api/search.json: 이슈 + 켜진 일반 페이지(설치·심각도·대응표 등, group=page), 꺼진 페이지는 없음', function () {
+    $a = json_decode(mk_site()->route('api/search.json')['body'], true);
+    $pages = array_values(array_filter($a, fn($r) => $r['group'] === 'page'));
+    $urls = array_column($pages, 'url');
+    foreach (['install', 'severity', 'coverage', 'guide', 'changelog'] as $p) assert_true(in_array('/white-security/' . $p, $urls, true), $p);
+    assert_true(!in_array('/white-security/check', $urls, true), '꺼진 페이지 없음');
+    foreach ($pages as $r) { assert_same('', $r['id']); assert_true($r['text'] !== '', $r['url']); }
+    assert_true(count($a) > count($pages), '이슈도 있음');
+    $js = file_get_contents(__DIR__ . '/../assets/js/site.js');
+    assert_contains("d.group === 'page'", $js);
+    assert_contains('t.indexOf(q) === 0', $js, '제목 앞부분 일치 우선');
+});

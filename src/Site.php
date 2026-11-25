@@ -370,12 +370,7 @@ final class Site
                 'url' => $this->url('issues/' . $i->id),
             ]);
         }
-        if ($path === 'api/search.json') {
-            return $this->json(array_map(fn(array $r) => [
-                'id' => $r['id'], 'title' => $r['title'], 'group' => $r['group'], 'severity' => $r['severity'],
-                'url' => $this->url('issues/' . $r['id']), 'text' => $r['text'],
-            ], $this->repo->searchIndex()));
-        }
+        if ($path === 'api/search.json') return $this->json($this->searchRows());
         if ($path === self::SECURITY_TXT && ($txt = $this->securityTxt()) !== null) return ['status' => 200, 'type' => 'text', 'body' => $txt];
         if ($path === 'api/coverage.json') return $this->json(['frameworks' => $this->coverage(), 'gaps' => Coverage::gaps($this->repo->coverage())]);
         return $this->html(404, 'error', ['title' => '찾을 수 없음', 'message' => '주소 변경 또는 삭제된 페이지']);
@@ -416,7 +411,7 @@ final class Site
             'url' => $this->url('issues/' . $r['id']), 'text' => $r['text'],
         ], $this->repo->searchIndex());
         foreach ($this->pages() as $slug => $m) {
-            $rows[] = ['id' => '', 'title' => $m['title'], 'group' => 'page', 'severity' => '', 'url' => $this->url($slug), 'text' => $m['lead']];
+            $rows[] = ['id' => '', 'title' => $m['title'], 'group' => 'page', 'severity' => '', 'url' => $this->url($slug), 'text' => $m['lead'] . ($slug === 'coverage' ? ' ' . self::KR_NOTE : '')];
         }
         return $rows;
     }
