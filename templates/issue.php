@@ -123,5 +123,8 @@ if ($issue->revisions) {
     echo $fold('revisions', '개정 이력', $rev . '</ol>', count($issue->revisions) . '건');
 }
 ?>
+<?php if (($slug = $site->repoSlug()) !== ''): ?>
+<p class="ws-doc-report"><a href="https://github.com/<?= Site::e($slug) ?>/issues/new?title=<?= Site::e(rawurlencode($issue->id . ' 문서 오류')) ?>" rel="noopener noreferrer">이 문서 오류 제보</a></p>
+<?php endif ?>
 </div>
 </article>

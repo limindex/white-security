@@ -138,7 +138,7 @@ code { font-family: var(--font-mono); }
 .ws-tx { display: block; }
 
 /* 1px 세로선 구분 (가운뎃점 나열 대신) */
-.ws-foot i, .ws-docid i {
+.ws-docid i {
   display: inline-block;
   width: 1px;
   height: 10px;
@@ -487,6 +487,7 @@ html:not(.js) .ws-copy, html:not(.js) .ws-tabs, html:not(.js) .ws-check-status {
 .ws-main:has(> .ws-page:not(.ws-page--wide)) .ws-foot { max-width: var(--col-page); }
 .ws-main:has(> .ws-home, > .ws-page--wide) .ws-foot { max-width: var(--col-wide); }
 .ws-foot p { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 0; font-size: .78rem; color: var(--ink-3); }
+.ws-foot .ws-seps { --sep-gap: 25px; column-gap: var(--sep-gap); }
 .ws-foot a { padding-block: 8px; margin-block: -8px; color: var(--ink-2); }
 
 /* ---------- 500 ---------- */
@@ -799,6 +800,9 @@ a.ws-id:hover { color: var(--accent); text-decoration-color: currentColor; }
 .ws-doc { grid-area: doc; min-width: 0; max-width: 760px; }
 .ws-doc-end { grid-area: end; min-width: 0; max-width: 760px; }
 .ws-doc-end > .ws-fold:first-child { margin-top: 0; }
+.ws-doc-report { margin: 24px 0 0; font-size: .86rem; }
+.ws-doc-report a { color: var(--ink-2); }
+.ws-doc-report a:hover { color: var(--accent); }
 .ws-issue--nocode .ws-rail { display: none; }
 
 .ws-print-meta { display: none; }
@@ -1262,9 +1266,6 @@ html:not(.js) .ws-itabs-list { display: none; }
   .ws-cov-table td:first-child { grid-column: 1 / -1; min-width: 0; }
   .ws-anchor.is-done::after { margin-left: 0; margin-top: 52px; }
   .ws-sec.ws-fold > .ws-anchor { top: 8px; }
-  /* 바닥글 범위 문구: 줄이 꺾이면 구분선이 줄 끝에 매달리므로 두 줄로 */
-  .ws-foot .ws-foot-scope { flex-direction: column; align-items: flex-start; }
-  .ws-foot-scope i { display: none; }
   .ws-block--cmd pre { font-size: .8rem; }
   .ws-maps-fold { margin-top: 16px; }
   .ws-maps-fold > summary { display: flex; align-items: center; gap: 12px; min-height: 45px; padding: 0 12px; border-radius: var(--r-md); box-shadow: inset 0 0 0 1px var(--line); list-style: none; cursor: pointer; font: 700 .86rem var(--font-display); color: var(--ink-2); }

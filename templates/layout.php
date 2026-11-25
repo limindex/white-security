@@ -77,9 +77,10 @@ $github = $site->setting('github');
 <?php endif ?>
 <?= $content ?>
 <footer class="ws-foot">
-<p class="ws-foot-scope"><span>흔한 실수를 크게 줄이는 용도</span><i></i><span><?= Site::t('보안 감사·침투 테스트를 대신하지 않음') ?></span></p>
-<p class="ws-foot-links"><?php if ($publisher !== ''): ?><span><?= Site::e($publisher) ?> 발행</span><i></i><?php endif ?><?php if ($site->pageOn('sources')): ?><a href="<?= Site::e($site->url('sources')) ?>"><?= Site::t('출처·라이선스') ?></a><?php endif ?></p>
-<p class="ws-foot-license"><span>문서 CC BY-SA 4.0</span><i></i><span>예시 코드 MIT</span></p>
+<?php $slug = $site->repoSlug(); /* 구분선은 CSS(.ws-seps): 줄이 꺾여도 줄 머리에 선이 오지 않음 */ ?>
+<p class="ws-foot-scope ws-seps"><span>흔한 실수를 크게 줄이는 용도</span><span><?= Site::t('보안 감사·침투 테스트를 대신하지 않음') ?></span></p>
+<p class="ws-foot-links ws-seps"><?php if ($publisher !== ''): ?><span><?= Site::e($publisher) ?> 발행</span><?php endif ?><?php if ($site->pageOn('sources')): ?><a href="<?= Site::e($site->url('sources')) ?>"><?= Site::t('출처·라이선스') ?></a><?php endif ?><?php if ($slug !== ''): ?><a href="https://github.com/<?= Site::e($slug) ?>/security/advisories/new" rel="noopener noreferrer">취약점 제보</a><a href="https://github.com/<?= Site::e($slug) ?>/issues/new" rel="noopener noreferrer">문서 오류 제보</a><?php endif ?></p>
+<p class="ws-foot-license ws-seps"><span>문서 CC BY-SA 4.0</span><span>예시 코드 MIT</span></p>
 </footer>
 </main>
 </div>

@@ -326,3 +326,19 @@ test('왼쪽 메뉴 이슈 링크: 괄호 풀이를 뗀 짧은 이름 + title �
     $css = file_get_contents(__DIR__ . '/../assets/css/site.css');
     assert_true((bool)preg_match('#\.ws-nav-name \{[^}]*white-space: nowrap[^}]*text-overflow: ellipsis#', $css), '한 줄·줄임표');
 });
+
+test('제보 경로: 바닥글에 취약점(비공개 제보)·문서 오류 링크, 이슈 문서 끝에 "이 문서 오류 제보" 하나 — github 설정 있을 때만', function () {
+    $s = nav_site([], INST_JSON_8U);
+    foreach (['', 'about', 'issues/WS-INJ-001'] as $p) {
+        $b = $s->route($p)['body'];
+        $foot = substr($b, (int)strpos($b, '<footer'));
+        assert_contains('<a href="https://github.com/limindex/white-security/security/advisories/new" rel="noopener noreferrer">취약점 제보</a>', $foot);
+        assert_contains('<a href="https://github.com/limindex/white-security/issues/new" rel="noopener noreferrer">문서 오류 제보</a>', $foot);
+        assert_true(!str_contains($foot, '<i></i>'), '바닥글 구분선은 CSS');
+    }
+    $i = $s->route('issues/WS-INJ-001')['body'];
+    assert_same(1, substr_count($i, '이 문서 오류 제보'));
+    assert_true((bool)preg_match('#<div class="ws-doc-end">.*<p class="ws-doc-report"><a href="https://github.com/limindex/white-security/issues/new\?title=WS-INJ-001%20[^"]+" rel="noopener noreferrer">이 문서 오류 제보</a></p>\s*</div>#su', $i), '이슈 끝 링크');
+    $none = nav_site()->route('issues/WS-INJ-001')['body'];
+    assert_true(!str_contains($none, '제보'), 'github 없으면 제보 링크 없음');
+});
